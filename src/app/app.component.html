@@ -1,12 +1,14 @@
-
-  <mat-sidenav-container class="menu-container">
-    <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-      <p class="menu-title">Μενού</p>
-      <mat-list  class="menu-list"*ngFor="let item of menuItems">
-        <mat-list-item class="menu-items" (click)="onMenuItemClick(item.Id)" >{{item.Name}}</mat-list-item>
-       </mat-list>
-    </mat-sidenav>
-  <mat-sidenav-content class="main-content"><router-outlet></router-outlet>
+<mat-sidenav-container class="menu-container">
+  <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
+    <p class="menu-title">Menu</p>
+    <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->
+    <mat-list class="menu-list" *ngFor="let item of menuItems">
+      <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
+        {{ item.Name }}</mat-list-item
+      >
+    </mat-list>
+  </mat-sidenav>
+  <mat-sidenav-content class="main-content">
+    <div><router-outlet></router-outlet></div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
