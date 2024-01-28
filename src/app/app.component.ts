@@ -1,23 +1,29 @@
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Route, Router, RouterOutlet } from '@angular/router';
 import {MatListModule} from '@angular/material/list';
 import { CommonModule } from '@angular/common';
+import { Guid } from 'guid-typescript';
+import { WebAppBase } from './base/web-app-base';
+import { CustomersModule } from './customers/customers.module';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatSidenavModule,MatListModule, CommonModule],
+  imports: [RouterOutlet, MatSidenavModule,MatListModule, CommonModule,CustomersModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
   title = 'DataNexApp';
 
-  menuItems =[
-    {Id:1, Name:"Customers"},
-    {Id:2, Name:"Orders"},
-    {Id:3, Name:"Products"},
-    {Id:4, Name:"Users"},
-  ]
+  constructor(private router:Router){
+
+  }
+  menuItems =WebAppBase.menu
+
+
+  onMenuItemClick(id:Guid){
+  this.router.navigate(["customer-edit"])
+  }
 }

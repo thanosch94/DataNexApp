@@ -1,11 +1,11 @@
 .menu-container{
   height: 100%;
-  width:30%;
+  width:100%;
 
 }
 
 .menu{
-  width:80%;
+  width:15%;
 
 }
 .menu-list{
@@ -24,5 +24,12 @@
 .menu-title{
 font-weight: bold;
 margin-top:7%;
+margin-bottom:12%;
+
 text-align: center;
+}
+
+.main-content{
+  width: 300% !important;;
+
 }
