@@ -1,0 +1,28 @@
+.menu-container{
+  height: 100%;
+  width:30%;
+
+}
+
+.menu{
+  width:80%;
+
+}
+.menu-list{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+
+}
+.menu-items:hover{
+  background-color: lightgrey;
+  cursor: pointer;
+}
+.menu-items{
+
+}
+
+.menu-title{
+font-weight: bold;
+margin-top:7%;
+text-align: center;
+}
