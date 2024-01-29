@@ -1,1 +1,99 @@
-<p>customers-list works!</p>
+
+<div class="margin">
+<mat-form-field>
+  <mat-label>Search</mat-label>
+  <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Maria" #input>
+</mat-form-field>
+
+<div class="mat-elevation-z8">
+  <table mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container matColumnDef="Name">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BAddress </th>
+      <td mat-cell *matCellDef="let row"> {{row.bAddress}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BRegion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BRegion </th>
+      <td mat-cell *matCellDef="let row"> {{row.bRegion}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BPostalCode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BPostalCode </th>
+      <td mat-cell *matCellDef="let row"> {{row.bPostalCode}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BCity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BCity </th>
+      <td mat-cell *matCellDef="let row"> {{row.bCity}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BCountry">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BCountry </th>
+      <td mat-cell *matCellDef="let row"> {{row.bCountry}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BPhone1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BPhone1 </th>
+      <td mat-cell *matCellDef="let row"> {{row.bPhone1}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="BPhone2">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> BPhone2 </th>
+      <td mat-cell *matCellDef="let row"> {{row.bPhone2}} </td>
+    </ng-container>
+
+
+<!--
+    <ng-container matColumnDef="SAddress">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SAddress </th>
+      <td mat-cell *matCellDef="let row"> {{row.SAddress}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SRegion">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SRegion </th>
+      <td mat-cell *matCellDef="let row"> {{row.SRegion}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SPostalCode">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPostalCode </th>
+      <td mat-cell *matCellDef="let row"> {{row.SPostalCode}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SCity">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SCity </th>
+      <td mat-cell *matCellDef="let row"> {{row.SCity}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SCountry">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SCountry </th>
+      <td mat-cell *matCellDef="let row"> {{row.SCountry}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SPhone1">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPhone1 </th>
+      <td mat-cell *matCellDef="let row"> {{row.SPhone1}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="SPhone2">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPhone2 </th>
+      <td mat-cell *matCellDef="let row"> {{row.SPhone2}} </td>
+    </ng-container> -->
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+    <!-- Row shown when there is no matching data. -->
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+    </tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+</div>
+</div>
