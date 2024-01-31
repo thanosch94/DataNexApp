@@ -3,7 +3,7 @@ import { MenuItemDto } from "../dto/menu-item.dto";
 
 export class WebAppBase {
 
-
+static data:any
   static menu:MenuItemDto[] =[
     {
       Id:Guid.parse("b76f583b-cc8d-4873-a5bd-ec213d9ad380"),

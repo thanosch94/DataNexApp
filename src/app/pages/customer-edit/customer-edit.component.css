@@ -1,0 +1,37 @@
+.form{
+  margin:5%;
+  display:flex;
+}
+
+.margin-right{
+  margin-right:5%;
+}
+
+.info-categories{
+  margin-bottom:3%
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.save-button{
+  margin-right:2%;
+
+}
+.save-button:hover{
+  cursor: pointer;
+}
+.close-button{
+  margin-right:2%;
+
+}
+.close-button:hover{
+  cursor: pointer;
+}
+.basic-info-contact{
+  width:50%;
+}
+.addresses{
+  width:50%;
+}

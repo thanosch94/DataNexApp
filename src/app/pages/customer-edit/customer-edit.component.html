@@ -1,1 +1,80 @@
-<p>customer-edit works!</p>
+<mat-toolbar>
+  <span>{{ customer_text }}</span>
+  <span class="example-spacer"></span>
+  <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
+  <mat-icon class="close-button" (click)="onCloseClicked($event)">close</mat-icon>
+</mat-toolbar>
+<br />
+
+<form class="form" (submit)="onSaveClicked($event)">
+  <div class="basic-info-contact">
+    <div>
+      <div class="info-categories">
+        <b>Contact Info</b>
+      </div>
+      <br />
+      <div>
+        <mat-form-field class="margin-right">
+          <mat-label>Name</mat-label>
+          <input matInput name="Name" [(ngModel)]="customerName" [value]="customerName" />
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Surname</mat-label>
+          <input matInput name="surname" [(ngModel)]="customerSurname"  [value]="customerSurname" />
+        </mat-form-field>
+        <br />
+        <br />
+        <mat-form-field class="margin-right">
+          <mat-label>Phone 1</mat-label>
+          <input matInput name="phone1" [(ngModel)]="customer.BPhone1" [value]="customer.BPhone1"/>
+        </mat-form-field>
+
+        <mat-form-field>
+          <mat-label>Phone 2</mat-label>
+          <input matInput name="phone2" [(ngModel)]="customer.BPhone2" [value]="customer.BPhone2"/>
+        </mat-form-field>
+        <br />
+        <br />
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput name="email" [(ngModel)]="customer.BEmail" [value]="customer.BEmail"/>
+        </mat-form-field>
+      </div>
+    </div>
+  </div>
+  <div class="addresses">
+    <div class="info-categories">
+      <b>Addresses</b>
+    </div>
+    <br />
+    <div>
+      <mat-form-field class="margin-right">
+        <mat-label>Address</mat-label>
+        <input matInput name="baddress" [(ngModel)]="customer.BAddress" [value]="customer.BAddress"/>
+      </mat-form-field>
+
+      <mat-form-field class="margin-right">
+        <mat-label>Region</mat-label>
+        <input matInput name="bregion" [(ngModel)]="customer.BRegion" [value]="customer.BRegion"/>
+      </mat-form-field>
+    <br />
+    <br />
+    <mat-form-field class="margin-right">
+      <mat-label>City</mat-label>
+      <input matInput name="bcity" [(ngModel)]="customer.BCity" [value]="customer.BCity"/>
+    </mat-form-field>
+    <mat-form-field class="margin-right">
+      <mat-label>Postal Code</mat-label>
+      <input matInput name="bpostalcode" [(ngModel)]="customer.BPostalCode" [value]="customer.BPostalCode" />
+    </mat-form-field>
+    <br />
+    <br />
+    <mat-form-field class="margin-right">
+      <mat-label>Country</mat-label>
+      <input matInput name="bcountry" [(ngModel)]="customer.BCountry" [value]="customer.BCountry" />
+    </mat-form-field>
+  </div>
+
+  </div>
+</form>
