@@ -1,6 +1,8 @@
 <mat-toolbar>
   <span>{{ customer_text }}</span>
   <span class="example-spacer"></span>
+  <mat-icon [ngClass]="(customer?.Id)?'display-delete-button':'hide-delete-button'" (click)="onDeleteClicked($event)">delete</mat-icon>
+
   <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
   <mat-icon class="close-button" (click)="onCloseClicked($event)">close</mat-icon>
 </mat-toolbar>

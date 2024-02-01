@@ -35,3 +35,21 @@
 .addresses{
   width:50%;
 }
+
+::ng-deep .green-snackbar .mdc-snackbar__surface {
+  background-color:#1b9e1b!important;
+  color: white;
+}
+
+.display-delete-button{
+display: block;
+margin-right:2%;
+
+}
+.display-delete-button:hover{
+ cursor: pointer;
+
+  }
+.hide-delete-button{
+  display: none;
+  }

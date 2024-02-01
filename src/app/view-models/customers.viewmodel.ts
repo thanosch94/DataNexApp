@@ -35,7 +35,22 @@ constructor(private http:HttpClient){
     {
       'Content-Type':'application/json'
     })
-debugger
     return this.http.post(this.service+"Customers/insertdto", customer,{headers:headers})
+  }
+
+  public UpdateDto(customer:CustomerDto){
+    let headers=new HttpHeaders(
+    {
+      'Content-Type':'application/json'
+    })
+    return this.http.put(this.service+"Customers/updatedto", customer,{headers:headers})
+  }
+
+  public DeleteById(id:Guid){
+    let headers=new HttpHeaders(
+    {
+      'Content-Type':'application/json'
+    })
+    return this.http.delete(this.service+"Customers/deletebyid/"+id,{headers:headers})
   }
 }
