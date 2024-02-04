@@ -29,7 +29,7 @@
 .close-button:hover{
   cursor: pointer;
 }
-.basic-info-contact{
+.basic-info-contact, .invoice-info{
   width:50%;
 }
 .addresses{
@@ -53,3 +53,22 @@ margin-right:2%;
 .hide-delete-button{
   display: none;
   }
+.name{
+  width:90%;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.phone1, .email, .address, .vat-number,.city, .country{
+  width:40%;
+  margin-right: 5%;
+}
+.phone2, .region, .postal-code, .tax-office{
+  width:40%;
+  margin-left: 5%;
+
+}
+
+

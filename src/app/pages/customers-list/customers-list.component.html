@@ -22,86 +22,48 @@
       <td mat-cell *matCellDef="let row"> {{row.Name}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BAddress">
+    <ng-container matColumnDef="Address">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Address </th>
-      <td mat-cell *matCellDef="let row"> {{row.BAddress}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.Address}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BRegion">
+    <ng-container matColumnDef="Region">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Region </th>
-      <td mat-cell *matCellDef="let row"> {{row.BRegion}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.Region}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BPostalCode">
+    <ng-container matColumnDef="PostalCode">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> PostalCode </th>
-      <td mat-cell *matCellDef="let row"> {{row.BPostalCode}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.PostalCode}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BCity">
+    <ng-container matColumnDef="City">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
-      <td mat-cell *matCellDef="let row"> {{row.BCity}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.City}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BCountry">
+    <ng-container matColumnDef="Country">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Country </th>
-      <td mat-cell *matCellDef="let row"> {{row.BCountry}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.Country}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BPhone1">
+    <ng-container matColumnDef="Phone1">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone1 </th>
-      <td mat-cell *matCellDef="let row"> {{row.BPhone1}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.Phone1}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="BPhone2">
+    <ng-container matColumnDef="Phone2">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone2 </th>
-      <td mat-cell *matCellDef="let row"> {{row.BPhone2}} </td>
+      <td mat-cell *matCellDef="let row"> {{row.Phone2}} </td>
     </ng-container>
 
     <ng-container matColumnDef="edit">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>  </th>
-      <td mat-cell *matCellDef="let row"> <button mat-icon-button matTooltip="Click to Edit" class="iconbutton"
+      <td mat-cell  *matCellDef="let row"> <button mat-icon-button matTooltip="Click to Edit" class="iconbutton"
         color="primary" (click)="editCustomer(row)">
         <mat-icon>edit</mat-icon>
       </button>  </td>
     </ng-container>
-
-
-<!--
-    <ng-container matColumnDef="SAddress">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SAddress </th>
-      <td mat-cell *matCellDef="let row"> {{row.SAddress}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SRegion">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SRegion </th>
-      <td mat-cell *matCellDef="let row"> {{row.SRegion}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SPostalCode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPostalCode </th>
-      <td mat-cell *matCellDef="let row"> {{row.SPostalCode}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SCity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SCity </th>
-      <td mat-cell *matCellDef="let row"> {{row.SCity}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SCountry">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SCountry </th>
-      <td mat-cell *matCellDef="let row"> {{row.SCountry}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SPhone1">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPhone1 </th>
-      <td mat-cell *matCellDef="let row"> {{row.SPhone1}} </td>
-    </ng-container>
-
-    <ng-container matColumnDef="SPhone2">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> SPhone2 </th>
-      <td mat-cell *matCellDef="let row"> {{row.SPhone2}} </td>
-    </ng-container> -->
-
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 

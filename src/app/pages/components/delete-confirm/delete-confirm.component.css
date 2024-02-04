@@ -1,0 +1,19 @@
+.buttons{
+  text-align: right;
+}
+
+.cancel-button{
+  width:40%;
+  height:30px;
+  margin-right: auto;
+  margin-left: auto;
+
+}
+.confirm-button{
+  width:40%;
+  height:30px;
+  margin-right: auto;
+
+  margin-left: auto;
+
+}

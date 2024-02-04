@@ -8,7 +8,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
 import { CustomerDto } from '../../dto/customer.dto';
 import { WebAppBase } from '../../base/web-app-base';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
@@ -66,17 +71,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           result as CustomerDto;
           this.customer = result;
-
-          this.customerName = this.customer.Name.substring(
-            0,
-            this.customer.Name.indexOf(' ')
-          );
-          this.customerSurname = this.customer.Name.substring(
-            this.customer.Name.indexOf(' ') + 1
-          );
         });
     } else {
-      debugger;
       this.customer_text = 'New Customer';
       this.customer = new CustomerDto();
     }
@@ -88,7 +84,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
   onSaveClicked(e: any) {
     if (this.customer.Id) {
-      this.customer.Name = this.customerName + ' ' + this.customerSurname;
       this.customersViewModel
         .UpdateDto(this.customer)
         .subscribe((result: any) => {
@@ -155,5 +150,14 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy() {
     WebAppBase.data = undefined;
+  }
+
+  async onVatIdValueChanged(e: any) {
+    //IF NEEDED TO CONNEC TO TO AADE TO GET AFM DATA
+    // if (e.target.selectionStart == 9) {
+    //   this.customersViewModel
+    //     .GetFromAade('', '!', e.target.value, '')
+    //     .subscribe((result: any) => {});
+    // }
   }
 }

@@ -45,7 +45,7 @@ this.customersViewModel=new CustomersViewModel(this.http)
 
           })
   }
-displayedColumns: string[] = ['Name','BAddress','BRegion','BPostalCode','BCity','BCountry','BPhone1','BPhone2', 'edit'];
+displayedColumns: string[] = ['Name','Address','Region','PostalCode','City','Country','Phone1','Phone2', 'edit'];
 dataSource: MatTableDataSource<CustomerDto>;
   applyFilter(e:any){
     const filterValue = (e.target as HTMLInputElement).value;
