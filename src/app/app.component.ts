@@ -28,11 +28,13 @@ export class AppComponent {
     this.faArrowLeft=faArrowLeft
   }
   menuItems:MenuItemDto[] =WebAppBase.menu
-
+  settingsItems:MenuItemDto[] = WebAppBase.settingsMenu
 
   onMenuItemClick(item:MenuItemDto){
-    debugger
   this.router.navigate([item.Path])
   }
 
+  onSettingsItemClick(item:MenuItemDto){
+  this.router.navigate([item.Path])
+  }
 }

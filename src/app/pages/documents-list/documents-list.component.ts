@@ -16,7 +16,7 @@ import { WebAppBase } from '../../base/web-app-base';
 import { DocumentDto } from '../../dto/document.dto';
 import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 @Component({
-  selector: 'app-orders-list',
+  selector: 'app-documents-list',
   standalone: true,
   imports: [
     MatButtonModule,
@@ -81,13 +81,13 @@ export class DocumentsListComponent {
   }
 
   addDocument() {
-    this.router.navigate(['customer-edit']);
+    this.router.navigate(['document-edit']);
   }
 
   editDocument(document: DocumentDto) {
     debugger;
     WebAppBase.data = document.Id;
-    this.router.navigate(['customer-edit']);
+    this.router.navigate(['document-edit']);
   }
   deleteDocument(element: any) {}
 }

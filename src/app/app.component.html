@@ -7,6 +7,13 @@
         {{ item.Name }}</mat-list-item
       >
     </mat-list>
+    <p class="menu-title">Settings</p>
+    <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->
+    <mat-list class="menu-list" *ngFor="let item of settingsItems">
+      <mat-list-item class="menu-items" (click)="onSettingsItemClick(item)">
+        {{ item.Name }}</mat-list-item
+      >
+    </mat-list>
   </mat-sidenav>
   <mat-sidenav-content class="main-content">
     <div><router-outlet></router-outlet></div>

@@ -12,8 +12,8 @@ static data:any
     },
     {
       Id:Guid.parse("af9d9c1e-f397-4d3c-b01a-7c10d23ace92"),
-      Name: "Orders",
-      Path: "orders-list"
+      Name: "Documents",
+      Path: "documents-list"
     },
     {
       Id:Guid.parse("6da03f89-0c52-4e95-a919-555525905849"),
@@ -25,5 +25,29 @@ static data:any
       Name: "Users",
       Path: "users-list"
     }
+  ]
+
+  static settingsMenu:MenuItemDto[] =[
+    {
+      Id:Guid.parse("7cc4cbdc-44c7-405f-9b8a-a2ee1c267a04"),
+      Name: "Document Types",
+      Path: "document-types-list"
+    },
+    {
+      Id:Guid.parse("41a596a4-df6b-4fb6-af29-188e3387b948"),
+      Name: "Product Sizes",
+      Path: "product-sizes-list"
+    },
+    {
+      Id:Guid.parse("9590bf23-d72c-40f0-9df2-18e8f4c27ec8"),
+      Name: "Statuses",
+      Path: "statuses-list"
+    },
+    {
+      Id:Guid.parse("41a596a4-df6b-4fb6-af29-188e3387b948"),
+      Name: "Brands",
+      Path: "brands-list"
+    }
+
   ]
 }

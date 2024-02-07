@@ -6,4 +6,9 @@ export class DocumentProductDto {
   ProductId:Guid;
   ProductQuantity:number;
   ProductSizeId:Guid;
+
+  Sku:string;
+  ProductName:string;
+  DocumentNumber:string
+  SizeAbbreviation:string;
 }

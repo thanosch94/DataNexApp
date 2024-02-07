@@ -131,7 +131,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteCancelClicked(e: any) {
-    debugger;
     let data = this.dialog.closeAll();
   }
 
