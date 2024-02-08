@@ -1,0 +1,59 @@
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Guid } from "guid-typescript";
+import { DocumentTypeDto } from "../dto/document-type.dto";
+
+export class DocumentTypesViewModel {
+
+  service: string;
+  constructor(private http: HttpClient) {
+    this.service = 'http://localhost:5000/api/';
+  }
+
+  public GetAll() {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'DocumentTypes/getall', {
+      headers: headers,
+    });
+  }
+
+  public GetById(id: Guid) {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'DocumentTypes/getbyid/' + id, {
+      headers: headers,
+    });
+  }
+
+  public InsertDto(documentType: DocumentTypeDto) {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.post(this.service + 'DocumentTypes/insertdto', documentType, {
+      headers: headers,
+    });
+  }
+
+  public UpdateDto(documentType: DocumentTypeDto) {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.put(this.service + 'DocumentTypes/updatedto', documentType, {
+      headers: headers,
+    });
+  }
+
+  public DeleteById(id: Guid) {
+    let headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+    });
+    return this.http.delete(this.service + 'DocumentTypes/deletebyid/' + id, {
+      headers: headers,
+    });
+  }
+
+}

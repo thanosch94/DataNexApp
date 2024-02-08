@@ -1,0 +1,11 @@
+.cancel-button, .save-button{
+  width:49%;
+}
+.width-100{
+  width:100%
+}
+
+
+.cancel-button:hover{
+  cursor: pointer;
+}
