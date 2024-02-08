@@ -30,7 +30,7 @@
           <mat-label>Doc. Type</mat-label>
           <mat-select>
             @for (docType of docTypes; track docType) {
-            <mat-option [value]="docType">{{ docType }}</mat-option>
+            <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
             }
           </mat-select>
         </mat-form-field>

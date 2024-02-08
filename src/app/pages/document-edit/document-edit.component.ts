@@ -20,6 +20,8 @@ import { MatCell, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
+import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
+import { DocumentTypeDto } from '../../dto/document-type.dto';
 
 @Component({
   selector: 'app-document-edit',
@@ -55,7 +57,7 @@ export class DocumentEditComponent implements OnInit {
   customerPhone:number;
   vatNumber:number;
   documentProduct:DocumentProductDto= new DocumentProductDto();
-  docTypes:Array<string>
+  docTypes:Array<DocumentTypeDto>
   productsDataSource:Array<DocumentProductDto>= new Array<DocumentProductDto>()
   document:DocumentDto = new DocumentDto()
   productDisplayedColumns: string[] = [
@@ -67,7 +69,10 @@ export class DocumentEditComponent implements OnInit {
     'delete',
   ];
   documentProductsViewModel: DocumentProductsViewModel;
+  documentTypesViewModel: DocumentTypesViewModel;
   constructor(private http:HttpClient){
+    this.documentTypesViewModel = new DocumentTypesViewModel(this.http)
+
     this.customersViewModel = new CustomersViewModel(this.http)
     this.documentProductsViewModel = new DocumentProductsViewModel(this.http)
 
@@ -76,9 +81,14 @@ export class DocumentEditComponent implements OnInit {
       this.productsDataSource.push(product)
 
     }
+
   }
 
   ngOnInit() {
+    this.documentTypesViewModel.GetAll().subscribe((result:any)=>{
+      this.docTypes = result
+
+    })
     if(this.documentProduct.Id){
       this.document_text =this.documentProduct.DocumentNumber
       this.documentProductsViewModel.GetAll().subscribe((result:any)=>{

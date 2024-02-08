@@ -27,7 +27,7 @@ export class DocumentTypesComponent implements AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   displayedColumns: string[] = ['Name', 'Description', 'buttons'];
   dataSource: MatTableDataSource<DocumentTypeDto>;
-  newDocumentType: any;
+  documentType: any;
   documentTypesViewModel: DocumentTypesViewModel;
 
 constructor(private http:HttpClient, public dialog: MatDialog,   private _snackBar: MatSnackBar,
@@ -47,18 +47,38 @@ getData(){
     this.dataSource.sort = this.sort;
   })
 }
-  editDocumentType(e:any){
+  editDocumentType(data:any){
+    this.documentType=data;
+    const dialogRef = this.dialog.open(NewItemComponent, {
+      width: '500px',
+      data: {
+        title: 'Edit Item',
+        name:this.documentType.Name
+      },
+    });
+    dialogRef.afterClosed().subscribe((data) => {
 
+      if (data) {
+        this.updateItem(data);
+      } else {
+      }
+    });
   }
-
+  updateItem(data:any){
+     this.documentType.Name = data
+    this.documentTypesViewModel.UpdateDto(this.documentType).subscribe((result:any)=>{
+      this.getData();
+      this._snackBar.open('Record updated', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
+      });
+    })
+  }
   addDocumentType(e:any){
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
       data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
+        title: 'New Item',
       },
     });
     dialogRef.afterClosed().subscribe((data) => {
@@ -74,6 +94,10 @@ insertItem(data:any){
   let documentType = new DocumentTypeDto()
   documentType.Name = data
   this.documentTypesViewModel.InsertDto(documentType).subscribe((result:any)=>{
+    this._snackBar.open('Record inserted', '', {
+      duration: 1000,
+      panelClass: 'green-snackbar',
+    });
     this.getData();
 
   })
@@ -114,7 +138,7 @@ insertItem(data:any){
         if (result) {
           this.getData();
 
-          this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
+          this._snackBar.open('Record deleted', '', {
             duration: 1000,
             panelClass: 'green-snackbar',
           });

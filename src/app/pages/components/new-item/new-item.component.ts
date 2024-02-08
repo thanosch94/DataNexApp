@@ -4,6 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Inject, Optional } from '@angular/core';
 
 @Component({
   selector: 'app-new-item',
@@ -13,11 +15,16 @@ import { MatInputModule } from '@angular/material/input';
   styleUrls: ['./new-item.component.css']
 })
 export class NewItemComponent implements OnInit {
+
 title:string;
 
-newItemName:string;
-  constructor() {
-    this.title = "New Item"
+itemName:string;
+  constructor(
+    public dialogRef: MatDialogRef<NewItemComponent>,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any)  {
+
+    this.title = data.title
+    this.itemName = data.name
    }
 
   ngOnInit() {
