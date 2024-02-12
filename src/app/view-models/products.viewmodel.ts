@@ -1,9 +1,9 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Guid } from "guid-typescript";
-import { DocumentDto } from "../dto/document.dto";
+import { DocumentProductDto } from "../dto/document-product.dto";
+import { ProductDto } from "../dto/product.dto";
 
-export class DocumentsViewModel {
-
+export class ProductsViewModel {
   service: string;
   constructor(private http: HttpClient) {
     this.service = 'http://localhost:5000/api/';
@@ -14,7 +14,7 @@ export class DocumentsViewModel {
       'Content-Type': 'application/json',
     };
 
-    return this.http.get(this.service + 'Documents/getall', {
+    return this.http.get(this.service + 'Products/getall', {
       headers: headers,
     });
   }
@@ -24,25 +24,25 @@ export class DocumentsViewModel {
       'Content-Type': 'application/json',
     };
 
-    return this.http.get(this.service + 'Documents/getbyid/' + id, {
+    return this.http.get(this.service + 'Products/getbyid/' + id, {
       headers: headers,
     });
   }
 
-  public InsertDto(document: DocumentDto) {
+  public InsertDto(product: ProductDto) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.post(this.service + 'Documents/insertdto', document, {
+    return this.http.post(this.service + 'Products/insertdto', product, {
       headers: headers,
     });
   }
 
-  public UpdateDto(document: DocumentDto) {
+  public UpdateDto(product: ProductDto) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.put(this.service + 'Documents/updatedto', document, {
+    return this.http.put(this.service + 'Products/updatedto', product, {
       headers: headers,
     });
 
@@ -51,7 +51,7 @@ export class DocumentsViewModel {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',
     });
-    return this.http.delete(this.service + 'Documents/deletebyid/' + id, {
+    return this.http.delete(this.service + 'Products/deletebyid/' + id, {
       headers: headers,
     });
   }

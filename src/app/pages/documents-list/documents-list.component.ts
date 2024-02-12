@@ -85,7 +85,6 @@ export class DocumentsListComponent {
   }
 
   editDocument(document: DocumentDto) {
-    debugger;
     WebAppBase.data = document.Id;
     this.router.navigate(['document-edit']);
   }

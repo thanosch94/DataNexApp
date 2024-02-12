@@ -4,7 +4,6 @@ import { DocumentProductDto } from "../dto/document-product.dto";
 
 export class DocumentProductsViewModel {
   service: string;
-  aadeService: string;
   constructor(private http: HttpClient) {
     this.service = 'http://localhost:5000/api/';
   }

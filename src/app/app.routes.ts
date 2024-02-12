@@ -8,6 +8,7 @@ import { UsersListComponent } from './pages/users-list/users-list.component';
 import { DocumentsListComponent } from './pages/documents-list/documents-list.component';
 import { DocumentEditComponent } from './pages/document-edit/document-edit.component';
 import { DocumentTypesComponent } from './pages/document-types/document-types.component';
+import { ProductEditComponent } from './pages/product-edit/product-edit.component';
 
 export const routes: Routes = [
   {
@@ -36,6 +37,10 @@ export const routes: Routes = [
   {
     path:'products-list',
     component:ProductsListComponent
+  },
+  {
+    path:'product-edit',
+    component:ProductEditComponent
   },
   {
     path:'users-list',

@@ -1,1 +1,65 @@
-<p>product-edit works!</p>
+<mat-toolbar>
+  <span>{{ product_text }}</span>
+  <span class="example-spacer"></span>
+  <mat-icon
+    [ngClass]="product?.Id ? 'display-delete-button' : 'hide-delete-button'"
+    (click)="onDeleteClicked($event)"
+    >delete</mat-icon
+  >
+
+  <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
+  <mat-icon class="close-button" (click)="onCloseClicked($event)"
+    >close</mat-icon
+  >
+</mat-toolbar>
+<form class="example-form">
+  <div class="flexbox">
+    <div class="width-50 flexbox">
+      <div class="width-35 margin-5">
+        <mat-form-field class="doc-type">
+          <mat-label>Sku</mat-label>
+          <input matInput  name="sku" [(ngModel)]="product.Sku"/>
+
+        </mat-form-field>
+      </div>
+      <div class="width-50 margin-5">
+        <mat-form-field class="example-full-width">
+          <mat-label>Name</mat-label>
+          <input
+            name="name"
+            matInput
+            type="text"
+            matInput
+            [(ngModel)]="product.Name"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="flexbox width-50">
+
+      <div class="width-95 margin-5">
+        <mat-form-field>
+          <mat-label>Image</mat-label>
+          <input matInput name ="image" [(ngModel)]="product.Image" />
+        </mat-form-field>
+
+      </div>
+
+    </div>
+  </div>
+
+  <div class="width-50 flexbox">
+    <div class="width-95 margin-5">
+      <mat-form-field class="shipping-address">
+        <mat-label>Description</mat-label>
+        <input matInput name="sescription" [(ngModel)]="product.Description" />
+      </mat-form-field>
+    </div>
+    <div class="width-45">
+      <mat-form-field class="shipping-phone">
+        <mat-label>Brand</mat-label>
+        <input matInput name="shipping-phone" [(ngModel)]="product.BrandId" />
+      </mat-form-field>
+    </div>
+  </div>
+</form>
