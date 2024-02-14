@@ -16,10 +16,9 @@
   <div class="flexbox">
     <div class="width-50 flexbox">
       <div class="width-35 margin-5">
-        <mat-form-field class="doc-type">
+        <mat-form-field>
           <mat-label>Sku</mat-label>
-          <input matInput  name="sku" [(ngModel)]="product.Sku"/>
-
+          <input matInput name="sku" [(ngModel)]="product.Sku" />
         </mat-form-field>
       </div>
       <div class="width-50 margin-5">
@@ -35,31 +34,42 @@
         </mat-form-field>
       </div>
     </div>
-    <div class="flexbox width-50">
-
-      <div class="width-95 margin-5">
-        <mat-form-field>
-          <mat-label>Image</mat-label>
-          <input matInput name ="image" [(ngModel)]="product.Image" />
-        </mat-form-field>
-
+    <div class="flexbox">
+      <div class="flexbox width-50">
+        <div class="width-35 margin-5">
+          <mat-form-field>
+            <mat-label>Image</mat-label>
+            <input matInput name="image" [(ngModel)]="product.Image" />
+          </mat-form-field>
+        </div>
       </div>
-
     </div>
   </div>
-
-  <div class="width-50 flexbox">
-    <div class="width-95 margin-5">
-      <mat-form-field class="shipping-address">
-        <mat-label>Description</mat-label>
-        <input matInput name="sescription" [(ngModel)]="product.Description" />
-      </mat-form-field>
+  <div class="flexbox">
+    <div class="width-50">
+      <div class="width-95 margin-5">
+        <mat-form-field class="shipping-address">
+          <mat-label>Brand</mat-label>
+          <input matInput name="brand" [(ngModel)]="product.BrandId" />
+        </mat-form-field>
+      </div>
     </div>
-    <div class="width-45">
-      <mat-form-field class="shipping-phone">
-        <mat-label>Brand</mat-label>
-        <input matInput name="shipping-phone" [(ngModel)]="product.BrandId" />
-      </mat-form-field>
+  </div>
+  <div class="flexbox">
+    <div class="width-50">
+      <div class="width-95 margin-5">
+        <mat-form-field class="description">
+          <mat-label>Description</mat-label>
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            name="description"
+            #autosize
+            cdkAutosizeMinRows="5"
+            [(ngModel)]="product.Description"
+          ></textarea>
+        </mat-form-field>
+      </div>
     </div>
   </div>
 </form>

@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebAppBase } from '../../base/web-app-base';
+import {CdkTextareaAutosize, TextFieldModule} from '@angular/cdk/text-field';
+import { take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-product-edit',
@@ -31,11 +33,15 @@ import { WebAppBase } from '../../base/web-app-base';
     CommonModule,
     MatSelectModule,
     MatButtonModule,
+    CdkTextareaAutosize,
+    TextFieldModule
   ],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
+
   product = new ProductDto();
   product_text: string;
   productsViewModel: ProductsViewModel;
@@ -45,7 +51,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private _snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _ngZone: NgZone
   ) {
     this.productsViewModel = new ProductsViewModel(this.http);
     this.productId = WebAppBase.data;

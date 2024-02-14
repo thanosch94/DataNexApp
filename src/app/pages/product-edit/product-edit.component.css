@@ -103,4 +103,16 @@
   ::ng-deep .white-input .mat-mdc-text-field-wrapper{
     background: white!important;
 
+
+}
+.width-100{
+      width: 100%;
+}
+.width-95{
+  width:95%
+}
+
+.description{
+  width:95%;
+  margin-right:5%;
 }

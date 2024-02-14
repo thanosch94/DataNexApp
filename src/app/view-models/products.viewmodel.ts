@@ -28,6 +28,15 @@ export class ProductsViewModel {
       headers: headers,
     });
   }
+  public GetBySku(sku: string) {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'Products/getbysku/' + sku, {
+      headers: headers,
+    });
+  }
 
   public InsertDto(product: ProductDto) {
     let headers = new HttpHeaders({

@@ -44,7 +44,7 @@
             placeholder="Select a Customer"
             aria-label="Customer"
             matInput
-            [formControl]="myControl"
+            [formControl]="nameControl"
             [matAutocomplete]="auto"
           />
           <mat-autocomplete
@@ -106,9 +106,12 @@
       Add Product
     </button>
   </article>
-  <div class="mat-elevation-z8">
+  <div>
     <table mat-table [dataSource]="productsDataSource" matSort>
-
+      <ng-container matColumnDef="SerialNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> S/N. </th>
+        <td mat-cell *matCellDef="let element; let i = index" >{{i + 1}}</td>
+      </ng-container>
       <ng-container matColumnDef="Barcode">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
         <td mat-cell *matCellDef="let row">
@@ -120,20 +123,36 @@
 
       <ng-container matColumnDef="Sku">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sku</th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row; let i=index">
 
           <mat-form-field class="white-input">
-            <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" />
+            <input
+            matInput
+            type="text"
+            aria-label="Sku"
+            matInput
+            [formControl]="skuControl"
+            [matAutocomplete]="auto"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="onProductSkuSelection($event.option.value, i)"
+          >
+            @for (sku of filteredSkus| async; track sku) {
+            <mat-option [value]="sku">{{ sku }}</mat-option>
+            }
+          </mat-autocomplete>
+            <!-- <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" /> -->
           </mat-form-field></td>
       </ng-container>
 
       <ng-container matColumnDef="ProductName">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header >
           Product Name
         </th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row;let i = index" >
           <mat-form-field class="white-input">
-            <input matInput class="white-input" [value]="row.ProductName!=undefined?row.ProductName:''" />
+            <input matInput class="white-input"[(ngModel)]="productsDataSource[i].ProductName" />
           </mat-form-field>
           </td>
       </ng-container>
@@ -149,9 +168,9 @@
 
       <ng-container matColumnDef="ProductQuantity">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
-        <td mat-cell *matCellDef="let row">
+        <td mat-cell *matCellDef="let row; let i=index">
           <mat-form-field class="white-input">
-            <input matInput class="white-input" [value]="row.ProductQuantity!=undefined?row.ProductQuantity:''" />
+            <input matInput class="white-input" [(ngModel)]="productsDataSource[i].ProductQuantity" />
           </mat-form-field>
 
       </td>
