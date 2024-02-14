@@ -9,6 +9,7 @@ import { DocumentsListComponent } from './pages/documents-list/documents-list.co
 import { DocumentEditComponent } from './pages/document-edit/document-edit.component';
 import { DocumentTypesComponent } from './pages/document-types/document-types.component';
 import { ProductEditComponent } from './pages/product-edit/product-edit.component';
+import { ProductSizesListComponent } from './pages/product-sizes-list/product-sizes-list.component';
 
 export const routes: Routes = [
   {
@@ -41,6 +42,10 @@ export const routes: Routes = [
   {
     path:'product-edit',
     component:ProductEditComponent
+  },
+  {
+    path:'product-sizes-list',
+    component:ProductSizesListComponent
   },
   {
     path:'users-list',

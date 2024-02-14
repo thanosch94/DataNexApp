@@ -1,0 +1,22 @@
+.margin{
+  margin-bottom:4%;
+  margin-right:4%;
+  margin-left:4%;
+}
+.button-add-row {
+  background: #1b9e1b;
+  color: #ffffff!important;
+}
+
+.table-header {
+  width: 90%;
+  text-align: right;
+  margin-bottom: 10px;
+}
+::ng-deep .flexbox{
+  display: flex;
+  justify-content: center;
+}
+.mat-column-buttons {
+  text-align: right;
+}
