@@ -1,3 +1,4 @@
+import { ProductSizesViewModel } from './../../view-models/product-sizes.viewmodel';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
@@ -17,6 +18,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebAppBase } from '../../base/web-app-base';
 import {CdkTextareaAutosize, TextFieldModule} from '@angular/cdk/text-field';
 import { take } from 'rxjs/operators';
+import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { ProductBarcodesViewModel } from '../../view-models/product-barcodes.viewmodel';
 
 @Component({
   selector: 'app-product-edit',
@@ -32,9 +37,15 @@ import { take } from 'rxjs/operators';
     MatIconModule,
     CommonModule,
     MatSelectModule,
-    MatButtonModule,
     CdkTextareaAutosize,
-    TextFieldModule
+    TextFieldModule,
+    MatButtonModule,
+    MatPaginator,
+    MatPaginatorModule,
+    MatSort,
+    MatSortModule,
+    MatTableModule,
+    MatSortHeader
   ],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
@@ -46,7 +57,13 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   product_text: string;
   productsViewModel: ProductsViewModel;
   productId: any;
-
+  barcodesDataSource:any;
+  productBarcodesViewModel: ProductBarcodesViewModel;
+  displayedColumns=[
+    'Barcode',
+    'ProductId',
+    'SizeId'
+  ]
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -55,6 +72,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private _ngZone: NgZone
   ) {
     this.productsViewModel = new ProductsViewModel(this.http);
+    this.productBarcodesViewModel =new ProductBarcodesViewModel(this.http)
     this.productId = WebAppBase.data;
   }
 
@@ -67,6 +85,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           result as ProductDto;
           this.product = result;
+          this.productBarcodesViewModel.GetByProductId(this.productId).subscribe((result:any)=>{
+            this.barcodesDataSource = result
+          })
         });
     } else {
       this.product_text = 'New Product';
@@ -109,4 +130,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     WebAppBase.data = undefined;
   }
 
+  addProductBarcode(e:any){
+
+  }
+  editProductBarcode(data:any){
+
+  }
+
+  deleteProductBarcode(data:any){
+
+  }
 }
