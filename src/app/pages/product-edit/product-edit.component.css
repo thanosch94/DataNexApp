@@ -121,3 +121,6 @@
   margin-right:4%;
   margin-left:4%;
 }
+.mat-column-buttons {
+  text-align: right;
+}

@@ -5,4 +5,6 @@ export class ProductBarcodeDto {
   ProductId:Guid;
   SizeId:Guid;
   Barcode:number;
+  SizeName?:string;
+  IsEditable?:boolean;
 }
