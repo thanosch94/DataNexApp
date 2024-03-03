@@ -7,4 +7,5 @@ export class ProductBarcodeDto {
   Barcode:number;
   SizeName?:string;
   IsEditable?:boolean;
+  Price?:number;
 }

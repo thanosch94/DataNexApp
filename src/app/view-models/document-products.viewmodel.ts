@@ -28,6 +28,16 @@ export class DocumentProductsViewModel {
     });
   }
 
+  public GetByBarcode(barcode: string) {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'DocumentProducts/getbybarcode/' + barcode, {
+      headers: headers,
+    });
+  }
+
   public InsertDto(documentProduct: DocumentProductDto) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',

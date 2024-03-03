@@ -38,6 +38,7 @@ export class ProductSizesViewModel {
     });
   }
 
+
   public InsertDto(product: ProductSizeDto) {
     let headers = new HttpHeaders({
       'Content-Type': 'application/json',

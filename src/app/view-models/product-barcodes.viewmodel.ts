@@ -27,6 +27,17 @@ export class ProductBarcodesViewModel {
       headers: headers,
     });
   }
+
+  public GetLookup() {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'ProductBarcodes/getlookup/', {
+      headers: headers,
+    });
+  }
+
   public GetByProductId(productid: Guid) {
     let headers = {
       'Content-Type': 'application/json',

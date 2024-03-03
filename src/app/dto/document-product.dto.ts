@@ -4,12 +4,18 @@ export class DocumentProductDto {
   Id:Guid;
   DocumentId:Guid;
   ProductId:Guid;
-  ProductQuantity:number;
+  ProductQuantity?:number;
   ProductSizeId:Guid;
   SerialNumber?:number;
+  Price?:number;
 
   Sku:string;
-  ProductName:string;
+  ProductName?:string;
   DocumentNumber:string
-  SizeAbbreviation:string;
+  SizeName:string;
+  Barcode?: string;
+  RowTotal?:number;
+  IsRowFilled:boolean =false;
+  ProductNameCopy?: string;
+  BarcodeCopy?: string;
 }

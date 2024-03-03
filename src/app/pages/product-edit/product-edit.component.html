@@ -46,13 +46,34 @@
     </div>
   </div>
   <div class="flexbox">
-    <div class="width-50">
-      <div class="width-95 margin-5">
-        <mat-form-field class="shipping-address">
-          <mat-label>Brand</mat-label>
-          <input matInput name="brand" [(ngModel)]="product.BrandId" />
+    <div class="width-50 flexbox">
+      <div class="width-35 margin-5">
+        <mat-form-field>
+          <mat-label>Price</mat-label>
+          <input matInput name="price" [(ngModel)]="product.Price" />
         </mat-form-field>
       </div>
+      <div class="width-35 margin-5">
+        <mat-form-field class="example-full-width">
+          <mat-label>Discount</mat-label>
+          <input
+            name="discount"
+            matInput
+            type="text"
+            matInput
+            [(ngModel)]="product.Name"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+  </div>
+  <div class="width-50">
+    <div class="width-95 margin-5">
+      <mat-form-field class="shipping-address">
+        <mat-label>Brand</mat-label>
+        <input matInput name="brand" [(ngModel)]="product.BrandId" />
+      </mat-form-field>
     </div>
   </div>
   <div class="flexbox">
