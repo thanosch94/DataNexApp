@@ -219,15 +219,18 @@
           >
             <input
               matInput
+              name="size"
               type="text"
               aria-label="Size"
-              matInput
               [value]="productsDataSource[i].SizeName"
-              [formControl]="sizeControl"
               [matAutocomplete]="auto"
+              [formControl]="sizeControlArray[i]"
+
             />
-            <mat-autocomplete #optionSelected #auto="matAutocomplete">
-              @for (size of filteredSizes| async; track size) {
+            <mat-autocomplete #optionSelected #auto="matAutocomplete" [displayWith]="displaySizes"
+
+            >
+              @for (size of filteredSizesArray[i]| async; track size) {
               <mat-option
                 (onSelectionChange)="onSizeSelectionChanged(size, i)"
                 [value]="size.SizeName"

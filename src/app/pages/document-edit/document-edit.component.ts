@@ -112,8 +112,9 @@ export class DocumentEditComponent implements OnInit {
   productsViewModel: ProductsViewModel;
   lineProduct = new ProductDto();
   products: ProductDto[];
-  sizeControl = new FormControl('');
+  sizeControlArray = new Array<FormControl>();
   filteredSizes: Observable<ProductBarcodeDto[]>;
+  filteredSizesArray: Observable<ProductBarcodeDto[]>[];
   productsSizes = new Array<ProductBarcodeDto>();
   productSizesViewModel: ProductSizesViewModel;
   productBarcodesViewModel: ProductBarcodesViewModel;
@@ -129,6 +130,15 @@ export class DocumentEditComponent implements OnInit {
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
       this.productsDataSource.push(product);
+      this.sizeControlArray.push(new FormControl(''));
+      this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
+        startWith(''),
+        map((value: string | null) => this.sizefilter(value || ''))
+      );
+      this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
+      this.filteredSizesArray.push(this.filteredSizes);
+
+      this.getFilteredSizes(i);
     }
   }
 
@@ -159,11 +169,10 @@ export class DocumentEditComponent implements OnInit {
       startWith(''),
       map((value) => this._namefilter(value || ''))
     );
-
-    this.filteredSizes = this.sizeControl.valueChanges.pipe(
-      startWith(''),
-      map((value: string | null) => this.sizefilter(value || ''))
-    );
+    // this.filteredSizes = this.sizeControl.valueChanges.pipe(
+    //   startWith(''),
+    //   map((value: string | null) => this.sizefilter(value || ''))
+    // );
 
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.customers = result;
@@ -172,7 +181,14 @@ export class DocumentEditComponent implements OnInit {
       });
     });
   }
-
+  getFilteredSizes(index: number) {
+    this.filteredSizesArray[index] = this.sizeControlArray[
+      index
+    ].valueChanges.pipe(
+      startWith(''),
+      map((value: string | null) => this.sizefilter(value || ''))
+    );
+  }
   private sizefilter(value: string): ProductBarcodeDto[] {
     const filterValue = value.toLowerCase();
     return this.productsSizes.filter((size: ProductBarcodeDto) =>
@@ -200,7 +216,6 @@ export class DocumentEditComponent implements OnInit {
 
   onProductSkuSelection(sku: any, index: any) {
     this.productsViewModel.GetBySku(sku).subscribe((result: any) => {
-
       if (index == 0 || this.productsDataSource[index - 1]?.SerialNumber! > 0) {
         this.productsDataSource[index].ProductId = result.Id;
         this.productsDataSource[index].ProductName = result.Name;
@@ -215,6 +230,7 @@ export class DocumentEditComponent implements OnInit {
           .GetByProductId(result.Id)
           .subscribe((result: any) => {
             this.productsSizes = result as ProductBarcodeDto[];
+            this.getFilteredSizes(index);
           });
       } else {
         this.productsDataSource[index].Sku = '';
@@ -229,47 +245,79 @@ export class DocumentEditComponent implements OnInit {
 
   onDeleteClicked(e: any) {}
 
-
-
   onBarcodeInput(e: any, index: number) {
-    if (this.barcodesLookupDatasource.includes(e.target.value)) {
-      this.documentProductsViewModel
-        .GetByBarcode(e.target.value)
-        .subscribe((result: any) => {
-          this.productsDataSource[index].SerialNumber = index + 1;
-
-          this.productsDataSource[index].ProductId = result.Id;
-          this.productsDataSource[index].Sku = result.Sku;
-          this.productsDataSource[index].ProductName = result.ProductName;
-          this.productsDataSource[index].ProductNameCopy = result.ProductName;
-          this.productsDataSource[index].SizeName = result.SizeName;
-          this.productsDataSource[index].Price = result.Price;
-          this.productsDataSource[index].RowTotal = result.Price;
-          this.productsDataSource[index].ProductQuantity = 1;
-          this.productsDataSource[index].BarcodeCopy = e.target.value;
-          this.productsDataSource[index].IsRowFilled = true;
-          let cellsArray = this.cells.toArray();
-          cellsArray[index + 1].nativeElement.focus();
-          this.ref.detectChanges();
-        });
-    } else if (
-      this.productsDataSource[index].SerialNumber! >= 0 &&
-      this.productsDataSource[index].BarcodeCopy != e.target.value
+    //If product exist in the table
+    if (
+      this.productsDataSource.some(
+        (x) =>
+          x.Barcode == this.productsDataSource[index].Barcode &&
+          x.IsRowFilled == true
+      )
     ) {
-      this.productsDataSource[index].Barcode =
-        this.productsDataSource[index].BarcodeCopy;
+      let line = this.productsDataSource.find(
+        (x) => x.Barcode == this.productsDataSource[index].Barcode
+      );
+      let productIndex = this.productsDataSource.indexOf(line!);
+      this.productsDataSource[productIndex].ProductQuantity! += 1;
+      this.productsDataSource[productIndex].RowTotal =
+        this.productsDataSource[productIndex].ProductQuantity! *
+        this.productsDataSource[productIndex].Price!;
+      e.target.value = '';
+    } else {
+      //If product doesn't exist in the table
+      if (this.barcodesLookupDatasource.includes(e.target.value)) {
+        this.documentProductsViewModel
+          .GetByBarcode(e.target.value)
+          .subscribe((result: any) => {
+            this.productsDataSource[index].SerialNumber = index + 1;
+
+            this.productsDataSource[index].ProductId = result.Id;
+            this.productsDataSource[index].Sku = result.Sku;
+            this.productsDataSource[index].ProductName = result.ProductName;
+            this.productsDataSource[index].ProductNameCopy = result.ProductName;
+            this.productsDataSource[index].SizeName = result.SizeName;
+            this.productsDataSource[index].Price = result.Price;
+            this.productsDataSource[index].RowTotal = result.Price;
+            this.productsDataSource[index].ProductQuantity = 1;
+            this.productsDataSource[index].BarcodeCopy = e.target.value;
+            this.productsDataSource[index].IsRowFilled = true;
+            let cellsArray = this.cells.toArray();
+            cellsArray[index + 1].nativeElement.focus();
+          });
+      } else if (
+        this.productsDataSource[index].SerialNumber! >= 0 &&
+        this.productsDataSource[index].BarcodeCopy != e.target.value
+      ) {
+        this.productsDataSource[index].Barcode =
+          this.productsDataSource[index].BarcodeCopy;
+      }
     }
   }
 
   removeProduct(e: any, index: number) {
-      this.productsDataSource.splice(index,index)
-      let product = new DocumentProductDto();
-      this.productsDataSource.push(product)
-      this.productstable.renderRows();
+    this.productsDataSource.splice(index, 1);
+    for (let i = index; i < this.productsDataSource.length - 1; i++) {
+        this.sizeControlArray[i] = this.sizeControlArray[i + 1];
+
+        this.productstable.renderRows();
+    }
+
+      for (let i = this.productsDataSource.length; i < 5; i++) {
+        let product = new DocumentProductDto();
+        product.SizeName=""
+        this.productsDataSource.push(product);
+        this.productstable.renderRows();
+
+      }
+
 
   }
 
+  displaySizes(value: string) {
+    return value ? value : '';
+  }
   onSizeSelectionChanged(data: any, index: number) {
+    debugger;
     this.productsDataSource[index].ProductSizeId = data.Id;
     if (this.productsDataSource[index].ProductId) {
       this.productBarcodesViewModel
@@ -281,13 +329,12 @@ export class DocumentEditComponent implements OnInit {
           this.productsDataSource[index].Barcode = barcode;
           this.productsDataSource[index].IsRowFilled = true;
           this.productsDataSource[index].SerialNumber = index + 1;
+          this.productsDataSource[index].SizeName = data.SizeName;
           let cellsArray = this.cells.toArray();
           cellsArray[index + 1].nativeElement.focus();
         });
     }
   }
-
-
 
   onQuantityChange(e: any, index: number) {
     if (this.productsDataSource[index].Price) {
@@ -324,22 +371,25 @@ export class DocumentEditComponent implements OnInit {
   }
 
   onCellFocus(e: any, index: number, column: string) {
-    debugger
     if (index - 1 >= 0) {
       if (this.productsDataSource[index - 1]) {
         if (this.productsDataSource[index - 1].SerialNumber! >= 1) {
           let cellsArray = this.cells.toArray();
           cellsArray[index].nativeElement.focus();
-          if(this.productsDataSource.length-1==index){
-            let newProductLine = new DocumentProductDto()
-            this.productsDataSource.push(newProductLine)
-            this.productstable.renderRows();
+          if (this.productsDataSource.length - 1 == index) {
+            let newProductLine = new DocumentProductDto();
+            newProductLine.Sku = '';
+            newProductLine.SizeName = '';
+            //this.sizefilter("")
+            // this._skufilter("")
+            // this.sizeControl.setValue('')
 
+            this.productsDataSource.push(newProductLine);
+            this.productstable.renderRows();
           }
         } else if (index > 0) {
           let cellsArray = this.cells.toArray();
           cellsArray[index - 1].nativeElement.focus();
-
         }
       }
     }
