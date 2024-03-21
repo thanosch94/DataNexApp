@@ -1,7 +1,6 @@
 .menu-container{
   height: 100%;
   width:100%;
-
 }
 
 .menu{
@@ -16,8 +15,8 @@
   background-color: lightgrey;
   cursor: pointer;
 }
-.menu-items{
-
+.menu-items:focus{
+  background-color: lightgrey;
 }
 
 .menu-title{
@@ -30,13 +29,12 @@ text-align: center;
 }
 
 .main-content{
-  width: 80% !important;;
-
+  width: auto !important;;
 }
 
 
 .inline{
-  display: inline-block;
+display: inline-block;
 margin-left: auto;
 margin-right: auto;
 }
@@ -44,4 +42,29 @@ margin-right: auto;
 .back{
   float:right;
 
+}
+.navbar, .menu{
+  background-color: #fafafa
+}
+
+.navbar{
+  display:flex;
+  justify-content: space-between;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  margin-bottom:3px;
+  align-items:center;
+}
+.nav-profile{
+  margin-right:2%;
+}
+.nav-menu-btn{
+  margin-left:2%;
+}
+
+.menu-text, .profile-text{
+  margin-left:3px;
+  font-size: 18px;
+}
+.menu-btn{
+  padding: 5px 7px;
 }

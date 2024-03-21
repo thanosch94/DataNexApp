@@ -1,4 +1,17 @@
-<mat-sidenav-container class="menu-container">
+<div class="navbar">
+  <div class="nav-menu-btn">
+    <button class="menu-btn" (click)="onMenuBtnClicked()">
+      <i class="fa fa-bars fa-2x"  aria-hidden="true"></i>
+    </button><b class="menu-text"> Menu</b>
+  </div>
+  <div>
+    <img src="../assets/images/datanex_logo.png" width="205" height="75" />
+  </div>
+  <div class="nav-profile">
+    <b class="profile-text">Προφίλ</b>
+  </div>
+</div>
+<mat-sidenav-container #sidenav class="menu-container">
   <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
     <p class="menu-title">Menu</p>
     <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->

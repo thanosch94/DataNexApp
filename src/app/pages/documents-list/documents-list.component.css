@@ -1,7 +1,5 @@
 .margin{
-  margin-bottom:4%;
-  margin-right:4%;
-  margin-left:4%;
+margin:4%
 }
 .button-add-row {
   background: #1b9e1b;
@@ -13,10 +11,7 @@
   text-align: right;
   margin-bottom: 10px;
 }
-::ng-deep .flexbox{
-  display: flex;
-  justify-content: center;
-}
+
 ::ng-deep .green-snackbar .mdc-snackbar__surface {
   background-color:#1b9e1b!important;
   color: white;
