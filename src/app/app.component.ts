@@ -42,7 +42,6 @@ export class AppComponent {
   }
 
   onMenuBtnClicked(){
-    debugger
     if(this.sidenavIsOpen){
       this.sidenav.close()
       this.sidenavIsOpen = false

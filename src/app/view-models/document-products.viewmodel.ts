@@ -27,6 +27,15 @@ export class DocumentProductsViewModel {
       headers: headers,
     });
   }
+  public GetByDocumentId(id: Guid) {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'DocumentProducts/getbydocumentid/' + id, {
+      headers: headers,
+    });
+  }
 
   public GetByBarcode(barcode: string) {
     let headers = {
