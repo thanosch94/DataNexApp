@@ -48,6 +48,7 @@ import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
 import { WebAppBase } from '../../base/web-app-base';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @Component({
   selector: 'app-document-edit',
@@ -69,6 +70,7 @@ import { Guid } from 'guid-typescript';
     MatTableModule,
     MatButtonModule,
     AsyncPipe,
+    MatTabsModule
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './document-edit.component.html',
@@ -287,6 +289,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     if (selectedDocType) {
       this.selectedDocType = selectedDocType;
     }
+  }
+
+  onDocStatusSelection(e:any){
+
   }
 
   onSaveClicked(e: any) {

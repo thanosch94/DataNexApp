@@ -7,28 +7,79 @@
     >delete</mat-icon
   >
 
-  <mat-icon [ngClass]="!documentId?'save-button':'hide-save-button'" (click)="onSaveClicked($event)">save</mat-icon>
+  <mat-icon
+    [ngClass]="!documentId ? 'save-button' : 'hide-save-button'"
+    (click)="onSaveClicked($event)"
+    >save</mat-icon
+  >
   <mat-icon class="close-button" (click)="onCloseClicked($event)"
     >close</mat-icon
   >
 </mat-toolbar>
 <form class="example-form">
-  <div class="flexbox">
-    <div class="width-50">
-      <b>Document Info</b>
-    </div>
-    <div class="width-50">
-      <b>Shipping Info</b>
-    </div>
-    <br />
-    <br />
-  </div>
-  <div class="flexbox">
-    <div class="width-50 flexbox">
-      <div class="width-35 margin-5">
-        <mat-form-field class="doc-type">
-          <mat-label>Doc. Type</mat-label>
-          <mat-select [(value)]="document.DocumentTypeName" (selectionChange)="onDocTypeSelection($event) "
+  <mat-tab-group>
+    <mat-tab label="Basic Info">
+      <div class="tab-1">
+        <div class="grid">
+          <mat-form-field class="grid-a-doctype">
+            <mat-label>Doc. Type</mat-label>
+            <mat-select
+              [(value)]="document.DocumentTypeName"
+              (selectionChange)="onDocTypeSelection($event)"
+            >
+              @for (docType of docTypes; track docType) {
+              <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="grid-b-docdate">
+            <mat-label>Date</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              name="DocumentDateTime"
+              [(ngModel)]="document.DocumentDateTime"
+            />
+            <mat-datepicker-toggle
+              class="position"
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+
+          <mat-form-field class="grid-c-customer">
+            <mat-label>Customer</mat-label>
+            <input
+              class="width-100"
+              matInput
+              type="text"
+              placeholder="Select a Customer"
+              aria-label="Customer"
+              matInput
+              name="name"
+              [formControl]="nameControl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onNameSelection($event.option.value)"
+            >
+              @for (name of filteredNames| async; track name) {
+              <mat-option [value]="name">{{ name }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        <mat-form-field class="grid-g-customerphone">
+          <mat-label>Phone</mat-label>
+          <input matInput name="phone" [(ngModel)]="document.CustomerPhone1" />
+        </mat-form-field>
+
+        <mat-form-field class="grid-e-docstatus">
+          <mat-label>Status</mat-label>
+          <mat-select
+            [(value)]="document.DocumentStatusId"
+            (selectionChange)="onDocStatusSelection($event)"
           >
             @for (docType of docTypes; track docType) {
             <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
@@ -36,78 +87,42 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <div class="width-50 margin-5">
-        <mat-form-field class="example-full-width">
-          <mat-label>Customer</mat-label>
-          <input
-            matInput
-            type="text"
-            placeholder="Select a Customer"
-            aria-label="Customer"
-            matInput
-            name="name"
-            [formControl]="nameControl"
-            [matAutocomplete]="auto"
-          />
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            (optionSelected)="onNameSelection($event.option.value)"
-          >
-            @for (name of filteredNames| async; track name) {
-            <mat-option [value]="name">{{ name }}</mat-option>
-            }
-          </mat-autocomplete>
-        </mat-form-field>
-      </div>
-    </div>
-    <div class="flexbox width-50">
-      <div class="width-45 margin-5">
-        <mat-form-field class="shipping-address">
-          <mat-label>Shipping Address</mat-label>
-          <input
-            matInput
-            name="shipping-address"
-            [(ngModel)]="document.ShippingAddress"
-          />
-        </mat-form-field>
-      </div>
-      <div class="width-45">
-        <mat-form-field class="shipping-phone">
-          <mat-label>Shipping Phone</mat-label>
-          <input
-            matInput
-            name="shipping-phone"
-            [(ngModel)]="document.ShippingPhone1"
-          />
-        </mat-form-field>
-      </div>
-    </div>
-  </div>
 
-  <div class="width-50 flexbox">
-    <div class="width-35 margin-5">
-      <mat-form-field>
-        <mat-label>Date</mat-label>
-        <input
-          matInput
-          [matDatepicker]="picker"
-          name="DocumentDateTime"
-          [(ngModel)]="document.DocumentDateTime"
-        />
-        <mat-datepicker-toggle
-          class="position"
-          [for]="picker"
-        ></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-    </div>
-    <div class="width-45 margin-5">
-      <mat-form-field class="phone">
-        <mat-label>Phone</mat-label>
-        <input matInput name="phone" [(ngModel)]="document.CustomerPhone1" />
-      </mat-form-field>
-    </div>
-  </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Shipping Info">
+      <div class="tab-2">
+        <div class="flexbox width-50">
+          <div class="width-45 margin-5">
+            <mat-form-field class="shipping-address">
+              <mat-label>Shipping Address</mat-label>
+              <input
+                matInput
+                name="shipping-address"
+                [(ngModel)]="document.ShippingAddress"
+              />
+            </mat-form-field>
+          </div>
+          <div class="width-45">
+            <mat-form-field class="shipping-phone">
+              <mat-label>Shipping Phone</mat-label>
+              <input
+                matInput
+                name="shipping-phone"
+                [(ngModel)]="document.ShippingPhone1"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Notes">
+      <div class="tab-3"></div>
+    </mat-tab>
+    <mat-tab label="Custom Inputs">
+      <div class="tab-4"></div>
+    </mat-tab>
+  </mat-tab-group>
 </form>
 
 <div class="margin">
@@ -116,8 +131,7 @@
     <input matInput (keyup)="filterProducts($event)" placeholder="Ex. Maria" #input>
   </mat-form-field> -->
 
-
-  <div  *ngIf="!documentId">
+  <div *ngIf="!documentId">
     <table
       #productstable
       mat-table
@@ -227,10 +241,11 @@
               [value]="productsDataSource[i].SizeName"
               [matAutocomplete]="auto"
               [formControl]="sizeControlArray[i]"
-
             />
-            <mat-autocomplete #optionSelected #auto="matAutocomplete" [displayWith]="displaySizes"
-
+            <mat-autocomplete
+              #optionSelected
+              #auto="matAutocomplete"
+              [displayWith]="displaySizes"
             >
               @for (size of filteredSizesArray[i]| async; track size) {
               <mat-option
@@ -315,80 +330,76 @@
   </div>
   <div *ngIf="documentId">
     <table
-    #productstable
-    mat-table
-    [dataSource]="productsDataSource"
-    class="mat-elevation-z8 products-table"
-  >
-    <ng-container matColumnDef="SerialNumber">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>S/N.</th>
-      <td mat-cell *matCellDef="let element; let i = index">
-        {{  i + 1 }}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="Barcode">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
-      <td mat-cell *matCellDef="let row; let i = index">
-        {{productsDataSource[i].Barcode}}
-      </td>
-    </ng-container>
+      #productstable
+      mat-table
+      [dataSource]="productsDataSource"
+      class="mat-elevation-z8 products-table"
+    >
+      <ng-container matColumnDef="SerialNumber">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>S/N.</th>
+        <td mat-cell *matCellDef="let element; let i = index">
+          {{ i + 1 }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="Barcode">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].Barcode }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Sku">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Sku</th>
-      <td           style="width: 150px"
-      mat-cell *matCellDef="let row; let i = index">
-        {{productsDataSource[i].Sku}}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="Sku">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Sku</th>
+        <td style="width: 150px" mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].Sku }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="ProductName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Name</th>
-      <td mat-cell *matCellDef="let row; let i = index">
-       {{productsDataSource[i].ProductName}}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="ProductName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Product Name</th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].ProductName }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="Price">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
-      <td           style="width: 100px"
-      mat-cell *matCellDef="let row; let i = index">
-       {{productsDataSource[i].Price}}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="Price">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+        <td style="width: 100px" mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].Price }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="SizeName">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
-      <td style="width: 150px" mat-cell *matCellDef="let row; let i = index">
-        {{productsDataSource[i].SizeName}}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="SizeName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+        <td style="width: 150px" mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].SizeName }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="ProductQuantity">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
-      <td style="width: 60px" mat-cell *matCellDef="let row; let i = index">
-        {{productsDataSource[i].ProductQuantity}}
-      </td>
-    </ng-container>
+      <ng-container matColumnDef="ProductQuantity">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Quantity</th>
+        <td style="width: 60px" mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].ProductQuantity }}
+        </td>
+      </ng-container>
 
-    <ng-container matColumnDef="RowTotal">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
-      <td style="width: 100px" mat-cell *matCellDef="let row; let i = index">
-        {{productsDataSource[i].RowTotal}}
-      </td>
-    </ng-container>
-    <ng-container matColumnDef="delete">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-      <td mat-cell *matCellDef="let row; let i = index">
+      <ng-container matColumnDef="RowTotal">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Total</th>
+        <td style="width: 100px" mat-cell *matCellDef="let row; let i = index">
+          {{ productsDataSource[i].RowTotal }}
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let row; let i = index"></td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="productDisplayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: productDisplayedColumns"></tr>
 
-      </td>
-    </ng-container>
-    <tr mat-header-row *matHeaderRowDef="productDisplayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: productDisplayedColumns"></tr>
-
-    <!-- Row shown when there is no matching data. -->
-    <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" colspan="4">No data matching the filter</td>
-    </tr>
-  </table>
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter</td>
+      </tr>
+    </table>
   </div>
 </div>
