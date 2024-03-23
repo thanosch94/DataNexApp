@@ -46,13 +46,18 @@ margin-right: auto;
 .navbar, .menu{
   background-color: #fafafa
 }
-
+.screen{
+  height: 100%;
+}
 .navbar{
   display:flex;
   justify-content: space-between;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   margin-bottom:3px;
   align-items:center;
+}
+.sidenav{
+  height: 90%;
 }
 .nav-profile{
   margin-right:2%;
