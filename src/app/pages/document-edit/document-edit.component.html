@@ -2,12 +2,12 @@
   <span>{{ document_text }}</span>
   <span class="example-spacer"></span>
   <mat-icon
-    [ngClass]="customer?.Id ? 'display-delete-button' : 'hide-delete-button'"
+    [ngClass]="documentId ? 'display-delete-button' : 'hide-delete-button'"
     (click)="onDeleteClicked($event)"
     >delete</mat-icon
   >
 
-  <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
+  <mat-icon [ngClass]="!documentId?'save-button':'hide-save-button'" (click)="onSaveClicked($event)">save</mat-icon>
   <mat-icon class="close-button" (click)="onCloseClicked($event)"
     >close</mat-icon
   >
@@ -28,7 +28,7 @@
       <div class="width-35 margin-5">
         <mat-form-field class="doc-type">
           <mat-label>Doc. Type</mat-label>
-          <mat-select (selectionChange)="onDocTypeSelection($event)"
+          <mat-select [(value)]="document.DocumentTypeName" (selectionChange)="onDocTypeSelection($event) "
           >
             @for (docType of docTypes; track docType) {
             <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
@@ -45,6 +45,7 @@
             placeholder="Select a Customer"
             aria-label="Customer"
             matInput
+            name="name"
             [formControl]="nameControl"
             [matAutocomplete]="auto"
           />
@@ -103,7 +104,7 @@
     <div class="width-45 margin-5">
       <mat-form-field class="phone">
         <mat-label>Phone</mat-label>
-        <input matInput name="phone" [(ngModel)]="customer.Phone1" />
+        <input matInput name="phone" [(ngModel)]="document.CustomerPhone1" />
       </mat-form-field>
     </div>
   </div>

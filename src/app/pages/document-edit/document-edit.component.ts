@@ -2,7 +2,7 @@ import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { BrandDto } from './../../dto/brand.dto';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
 import { ProductsViewModel } from './../../view-models/products.viewmodel';
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
@@ -47,6 +47,7 @@ import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
 import { WebAppBase } from '../../base/web-app-base';
 import { Router } from '@angular/router';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'app-document-edit',
@@ -73,7 +74,7 @@ import { Router } from '@angular/router';
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
-export class DocumentEditComponent implements OnInit,OnDestroy {
+export class DocumentEditComponent implements OnInit, OnDestroy {
   @ViewChildren('td') cells: QueryList<ElementRef>;
   @ViewChild('productstable') productstable: MatTable<ProductBarcodeDto>;
   selectedDocType: DocumentTypeDto = new DocumentTypeDto();
@@ -90,7 +91,7 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
   customersViewModel: CustomersViewModel;
   customers: any;
   customerNames: string[] = new Array();
-  nameControl = new FormControl('');
+  nameControl = new FormControl();
   skuControl = new FormControl('');
   customer: CustomerDto = new CustomerDto();
   document_text: string;
@@ -126,8 +127,13 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
   productSizesViewModel: ProductSizesViewModel;
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
+  datepipe: DatePipe = new DatePipe('en-US');
 
-  constructor(private http: HttpClient, private ref: ChangeDetectorRef, private router:Router) {
+  constructor(
+    private http: HttpClient,
+    private ref: ChangeDetectorRef,
+    private router: Router
+  ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
     this.productSizesViewModel = new ProductSizesViewModel(this.http);
     this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
@@ -135,30 +141,14 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
     this.documentProductsViewModel = new DocumentProductsViewModel(this.http);
     this.productsViewModel = new ProductsViewModel(this.http);
     this.documentsViewModel = new DocumentsViewModel(this.http);
-    this.documentId =WebAppBase.data
-    if(this.documentId){
-      this.documentsViewModel.GetById(this.documentId).subscribe((result:any)=>{
-        this.document= result
-        this.documentProductsViewModel.GetByDocumentId(this.documentId).subscribe((result:any)=>{
-            this.productsDataSource = result
-        })
-      })
-    }else{
-      for (let i = 0; i < 5; i++) {
-        let product = new DocumentProductDto();
-        this.productsDataSource.push(product);
-        this.sizeControlArray.push(new FormControl(''));
-        this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
-          startWith(''),
-          map((value: string | null) => this.sizefilter(value || ''))
-        );
-        this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
-        this.filteredSizesArray.push(this.filteredSizes);
 
-        this.getFilteredSizes(i);
-      }
+    this.documentId = WebAppBase.data;
+
+    if (this.documentId) {
+      this.getDocumentData(this.documentId);
+    } else {
+      this.initNewDocument();
     }
-
   }
 
   ngOnInit() {
@@ -175,13 +165,7 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
         map((value: string | null) => this._skufilter(value || ''))
       );
     });
-    if (this.documentProduct.Id) {
-      this.document_text = this.documentProduct.DocumentNumber;
 
-    } else {
-      this.document_text = 'New Document';
-      this.document.DocumentDateTime = new Date();
-    }
     this.filteredNames = this.nameControl.valueChanges.pipe(
       startWith(''),
       map((value) => this._namefilter(value || ''))
@@ -198,6 +182,42 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
       });
     });
   }
+
+  initNewDocument() {
+    this.document_text = 'New Document';
+    this.document.DocumentDateTime = new Date();
+    for (let i = 0; i < 5; i++) {
+      let product = new DocumentProductDto();
+      this.productsDataSource.push(product);
+      this.sizeControlArray.push(new FormControl(''));
+      this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
+        startWith(''),
+        map((value: string | null) => this.sizefilter(value || ''))
+      );
+      this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
+      this.filteredSizesArray.push(this.filteredSizes);
+
+      this.getFilteredSizes(i);
+    }
+  }
+  getDocumentData(documentId: Guid) {
+    this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
+      this.document = result;
+      this.nameControl.setValue(result.CustomerName);
+      this.document_text =
+        this.document.DocumentTypeName +
+        '-' +
+        this.document.DocumentNumber.toString().padStart(6, '0');
+      this.ref.detectChanges();
+
+      this.documentProductsViewModel
+        .GetByDocumentId(documentId)
+        .subscribe((result: any) => {
+          this.productsDataSource = result;
+        });
+    });
+  }
+
   getFilteredSizes(index: number) {
     this.filteredSizesArray[index] = this.sizeControlArray[
       index
@@ -206,18 +226,21 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
       map((value: string | null) => this.sizefilter(value || ''))
     );
   }
+
   private sizefilter(value: string): ProductBarcodeDto[] {
     const filterValue = value.toLowerCase();
     return this.productsSizes.filter((size: ProductBarcodeDto) =>
       size.SizeName!.toLowerCase().includes(filterValue)
     );
   }
+
   private _namefilter(value: string): string[] {
     const filterValue = value.toLowerCase();
     return this.customerNames.filter((name) =>
       name.toLowerCase().includes(filterValue)
     );
   }
+
   private _skufilter(value: string): ProductDto[] {
     const filterValue = value.toLowerCase();
     return this.products.filter((product: ProductDto) =>
@@ -229,6 +252,7 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
     this.customer = this.customers.find(
       (customer: CustomerDto) => customer.Name == name
     );
+    this.document.CustomerPhone1 = this.customer.Phone1!;
   }
 
   onProductSkuSelection(sku: any, index: any) {
@@ -267,36 +291,64 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
 
   onSaveClicked(e: any) {
     //If the first row is filled in then it passes the validation
+    //this.document.DocumentDateTime =this.datepipe.transform(this.document.DocumentDateTime, 'dd/MM/YYYY')
+
+    debugger;
     if (this.productsDataSource[0].IsRowFilled) {
       if (this.selectedDocType!.Id) {
-        if(this.customer.Id){
-          this.document.DocumentTypeId = this.selectedDocType.Id
-          this.document.CustomerId = this.customer.Id
-          this.documentsViewModel.InsertDto(this.document).subscribe((result:any)=>{
-            this.productsDataSource.forEach(productRow => {
-              if(productRow.IsRowFilled){
-                productRow.DocumentId = result.Id
+        if (this.customer.Id) {
+          this.document.DocumentTypeId = this.selectedDocType.Id;
+          this.document.CustomerId = this.customer.Id;
+          debugger;
+          this.documentsViewModel
+            .InsertDto(this.document)
+            .subscribe((result: any) => {
+              this.document=result;
+              //Fill in documentId to display the right data (delete button, table)
+              this.documentId=this.document.Id;
+              //Render table again to remove empty lines
+              this.productsDataSource=this.productsDataSource.filter(x=>x.IsRowFilled==true)
+              this.productstable.renderRows();
+              let productsResults = new Array<DocumentProductDto>();
+              this.productsDataSource.forEach((productRow) => {
+                if (productRow.IsRowFilled) {
+                  productRow.DocumentId = result.Id;
 
-                this.documentProductsViewModel.InsertDto(productRow).subscribe((result:any)=>{
-                  alert('Insert Successful');
-
-                })
-              }
+                  this.documentProductsViewModel
+                    .InsertDto(productRow)
+                    .subscribe((result: any) => {
+                      productsResults.push(result);
+                      if (
+                        productsResults.length ==
+                        this.productsDataSource.filter(
+                          (x) => x.IsRowFilled == true
+                        ).length
+                      ) {
+                        this.document_text =
+                          this.document.DocumentTypeName +
+                          '-' +
+                          this.document.DocumentNumber.toString().padStart(
+                            6,
+                            '0'
+                          );
+                        this.ref.detectChanges();
+                        alert('Insert Successful');
+                      }
+                    });
+                }
+              });
             });
-          })
-        }else{
+        } else {
           alert('Select Customer');
         }
       } else {
         alert('Select DocType');
       }
-
     }
   }
 
   onCloseClicked(e: any) {
     this.router.navigate(['documents-list']);
-
   }
 
   onDeleteClicked(e: any) {}
@@ -325,16 +377,17 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
         this.documentProductsViewModel
           .GetByBarcode(e.target.value)
           .subscribe((result: any) => {
-            this.productsDataSource[index].SerialNumber = index + 1;
             this.productsDataSource[index].ProductId = result.ProductId;
             this.productsDataSource[index].Sku = result.Sku;
             this.productsDataSource[index].ProductName = result.ProductName;
-            this.productsDataSource[index].ProductNameCopy = result.ProductName;
             this.productsDataSource[index].ProductSizeId = result.ProductSizeId;
             this.productsDataSource[index].SizeName = result.SizeName;
             this.productsDataSource[index].Price = result.Price;
+
+            this.productsDataSource[index].SerialNumber = index + 1;
             this.productsDataSource[index].RowTotal = result.Price;
             this.productsDataSource[index].ProductQuantity = 1;
+            this.productsDataSource[index].ProductNameCopy = result.ProductName;
             this.productsDataSource[index].BarcodeCopy = e.target.value;
             this.productsDataSource[index].IsRowFilled = true;
             let cellsArray = this.cells.toArray();
@@ -432,10 +485,6 @@ export class DocumentEditComponent implements OnInit,OnDestroy {
             let newProductLine = new DocumentProductDto();
             newProductLine.Sku = '';
             newProductLine.SizeName = '';
-            //this.sizefilter("")
-            // this._skufilter("")
-            // this.sizeControl.setValue('')
-
             this.productsDataSource.push(newProductLine);
             this.productstable.renderRows();
           }

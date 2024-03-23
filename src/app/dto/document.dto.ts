@@ -2,11 +2,14 @@ import { Guid } from "guid-typescript";
 
 export class DocumentDto {
   Id:Guid;
-  DocumentDateTime:Date;
+  DocumentDateTime:Date|string|null;
   DocumentTypeId:Guid;
+  DocumentTypeName:string;
   DocumentNumber:string;
   DocumentStatusId:Guid;
   CustomerId:Guid;
+  CustomerName:string;
+  CustomerPhone1:number;
   Documentotal?:number;
   ShippingAddress?:string
   ShippingRegion?:string

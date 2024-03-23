@@ -56,6 +56,10 @@
       margin-right:2%;
 
     }
+
+    .hide-save-button{
+      display: none;
+    }
     .save-button:hover{
       cursor: pointer;
     }
