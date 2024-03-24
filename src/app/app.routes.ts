@@ -10,6 +10,7 @@ import { DocumentEditComponent } from './pages/document-edit/document-edit.compo
 import { DocumentTypesComponent } from './pages/document-types/document-types.component';
 import { ProductEditComponent } from './pages/product-edit/product-edit.component';
 import { ProductSizesListComponent } from './pages/product-sizes-list/product-sizes-list.component';
+import { StatusesListComponent } from './pages/statuses-list/statuses-list.component';
 
 export const routes: Routes = [
   {
@@ -58,5 +59,10 @@ export const routes: Routes = [
   {
     path:'home',
     component:HomeComponent
+  },
+  {
+    path:'statuses-list',
+    component:StatusesListComponent
   }
+
 ];

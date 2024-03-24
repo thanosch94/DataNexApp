@@ -85,8 +85,8 @@
               [(value)]="document.DocumentStatusId"
               (selectionChange)="onDocStatusSelection($event)"
             >
-              @for (docType of docTypes; track docType) {
-              <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
+              @for (status of statusesList; track status) {
+              <mat-option [value]="status.Name">{{ status.Name }}</mat-option>
               }
             </mat-select>
           </mat-form-field>

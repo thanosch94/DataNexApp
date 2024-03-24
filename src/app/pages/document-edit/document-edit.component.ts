@@ -49,6 +49,7 @@ import { WebAppBase } from '../../base/web-app-base';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import {MatTabsModule} from '@angular/material/tabs';
+import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 
 @Component({
   selector: 'app-document-edit',
@@ -82,6 +83,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   selectedDocType: DocumentTypeDto = new DocumentTypeDto();
   documentsViewModel: DocumentsViewModel;
   documentId: any;
+  selectedStatus: DocumentTypeDto;
+  statusesList: any;
+  statusesViewModel: StatusesViewModel;
 
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
@@ -143,7 +147,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentProductsViewModel = new DocumentProductsViewModel(this.http);
     this.productsViewModel = new ProductsViewModel(this.http);
     this.documentsViewModel = new DocumentsViewModel(this.http);
-
+    this.statusesViewModel = new StatusesViewModel(this.http)
     this.documentId = WebAppBase.data;
 
     if (this.documentId) {
@@ -160,6 +164,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentTypesViewModel.GetAll().subscribe((result: any) => {
       this.docTypes = result;
     });
+    this.statusesViewModel.GetAll().subscribe((result: any) => {
+      this.statusesList = result;
+    });
+
     this.productsViewModel.GetAll().subscribe((result: any) => {
       this.products = result;
       this.filteredProducts = this.skuControl.valueChanges.pipe(
@@ -172,10 +180,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       startWith(''),
       map((value) => this._namefilter(value || ''))
     );
-    // this.filteredSizes = this.sizeControl.valueChanges.pipe(
-    //   startWith(''),
-    //   map((value: string | null) => this.sizefilter(value || ''))
-    // );
 
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.customers = result;
@@ -292,7 +296,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onDocStatusSelection(e:any){
+    let selectedStatus = this.docTypes.find(
+      (docType: DocumentTypeDto) => docType.Name == e.value
+    );
 
+    if (selectedStatus) {
+      this.selectedStatus = selectedStatus;
+    }
   }
 
   onSaveClicked(e: any) {
@@ -304,6 +314,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       if (this.selectedDocType!.Id) {
         if (this.customer.Id) {
           this.document.DocumentTypeId = this.selectedDocType.Id;
+          this.document.DocumentStatusId = this.selectedStatus.Id;
           this.document.CustomerId = this.customer.Id;
           debugger;
           this.documentsViewModel

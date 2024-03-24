@@ -154,9 +154,9 @@ border-right: 0px!important; }
 
 }
 
-/* mat-form-field{
-height:90%
-} */
+mat-form-field{
+  height:95%;
+}
 
 ::ng-deep .products-table mat-form-field{
   height:60px!important;
