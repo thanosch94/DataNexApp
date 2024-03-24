@@ -20,7 +20,7 @@
   <mat-tab-group>
     <mat-tab label="Basic Info">
       <div class="tab-1">
-        <div class="grid">
+        <div class="tab1-grid">
           <mat-form-field class="grid-a-doctype">
             <mat-label>Doc. Type</mat-label>
             <mat-select
@@ -70,57 +70,214 @@
               }
             </mat-autocomplete>
           </mat-form-field>
-        <mat-form-field class="grid-g-customerphone">
-          <mat-label>Phone</mat-label>
-          <input matInput name="phone" [(ngModel)]="document.CustomerPhone1" />
-        </mat-form-field>
+          <mat-form-field class="grid-g-customerphone">
+            <mat-label>Phone</mat-label>
+            <input
+              matInput
+              name="phone"
+              [(ngModel)]="document.CustomerPhone1"
+            />
+          </mat-form-field>
 
-        <mat-form-field class="grid-e-docstatus">
-          <mat-label>Status</mat-label>
-          <mat-select
-            [(value)]="document.DocumentStatusId"
-            (selectionChange)="onDocStatusSelection($event)"
-          >
-            @for (docType of docTypes; track docType) {
-            <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
-            }
-          </mat-select>
-        </mat-form-field>
-      </div>
-
+          <mat-form-field class="grid-e-docstatus">
+            <mat-label>Status</mat-label>
+            <mat-select
+              [(value)]="document.DocumentStatusId"
+              (selectionChange)="onDocStatusSelection($event)"
+            >
+              @for (docType of docTypes; track docType) {
+              <mat-option [value]="docType.Name">{{ docType.Name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
     </mat-tab>
     <mat-tab label="Shipping Info">
       <div class="tab-2">
-        <div class="flexbox width-50">
-          <div class="width-45 margin-5">
-            <mat-form-field class="shipping-address">
-              <mat-label>Shipping Address</mat-label>
-              <input
-                matInput
-                name="shipping-address"
-                [(ngModel)]="document.ShippingAddress"
-              />
-            </mat-form-field>
-          </div>
-          <div class="width-45">
-            <mat-form-field class="shipping-phone">
-              <mat-label>Shipping Phone</mat-label>
-              <input
-                matInput
-                name="shipping-phone"
-                [(ngModel)]="document.ShippingPhone1"
-              />
-            </mat-form-field>
-          </div>
+        <div class="tab2-grid">
+          <mat-form-field class="tab2-grid-a-shipping-address">
+            <mat-label>Address</mat-label>
+            <input
+              matInput
+              name="shipping-address"
+              [(ngModel)]="document.ShippingAddress"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab2-grid-b-shipping-region">
+            <mat-label>Region</mat-label>
+            <input
+              matInput
+              name="shipping-region"
+              [(ngModel)]="document.ShippingRegion"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab2-grid-c-shipping-phone1">
+            <mat-label>Phone 1</mat-label>
+            <input
+              matInput
+              name="shipping-phone1"
+              [(ngModel)]="document.ShippingPhone1"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab2-grid-d-shipping-phone2">
+            <mat-label>Phone 2</mat-label>
+            <input
+              matInput
+              name="shipping-phone2"
+              [(ngModel)]="document.ShippingPhone2"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab2-grid-e-shipping-city">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              name="shipping-city"
+              [(ngModel)]="document.ShippingCity"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab2-grid-f-postal-code">
+            <mat-label>City</mat-label>
+            <input
+              matInput
+              name="shipping-city"
+              [(ngModel)]="document.ShippingPostalCode"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab2-grid-g-shipping-email">
+            <mat-label>Email</mat-label>
+            <input
+              matInput
+              name="shipping-email"
+              [(ngModel)]="document.ShippingEmail"
+            />
+          </mat-form-field>
         </div>
       </div>
     </mat-tab>
     <mat-tab label="Notes">
-      <div class="tab-3"></div>
+      <div class="tab-3">
+        <mat-form-field class="notes">
+          <mat-label>Notes</mat-label>
+
+          <textarea
+            matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="7"
+            cdkAutosizeMaxRows="15"
+            name="notes"
+          ></textarea>
+        </mat-form-field>
+      </div>
     </mat-tab>
-    <mat-tab label="Custom Inputs">
-      <div class="tab-4"></div>
+    <mat-tab label="User Inputs">
+      <div class="tab-4">
+        <div class="tab4-grid">
+          <mat-form-field class="tab4-grid-a-user-text1">
+            <mat-label>User Text 1</mat-label>
+            <input
+              matInput
+              name="user-text-1"
+              [(ngModel)]="document.UserText1"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-b-user-text2">
+            <mat-label>User Text 2</mat-label>
+            <input
+              matInput
+              name="user-text-2"
+              [(ngModel)]="document.UserText2"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-c-user-text3">
+            <mat-label>User Text 3</mat-label>
+            <input
+              matInput
+              name="user-text-3"
+              [(ngModel)]="document.UserText3"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-d-user-text4">
+            <mat-label>User Text 4</mat-label>
+            <input
+              matInput
+              name="user-text-4"
+              [(ngModel)]="document.UserText4"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab4-grid-e-user-number1">
+            <mat-label>User Number 1</mat-label>
+            <input
+              matInput
+              name="user-number-1"
+              [(ngModel)]="document.UserNumber1"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-f-user-number2">
+            <mat-label>User Number 2</mat-label>
+            <input
+              matInput
+              name="user-number-2"
+              [(ngModel)]="document.UserNumber2"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-g-user-number3">
+            <mat-label>User Number 3</mat-label>
+            <input
+              matInput
+              name="user-number-3"
+              [(ngModel)]="document.UserNumber3"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-h-user-number4">
+            <mat-label>User Number 4</mat-label>
+            <input
+              matInput
+              name="user-number-4"
+              [(ngModel)]="document.UserNumber4"
+            />
+          </mat-form-field>
+
+          <mat-form-field class="tab4-grid-i-user-date1">
+            <mat-label>User Date 1</mat-label>
+            <input
+              matInput
+              name="user-date-1"
+              [(ngModel)]="document.UserDate1"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-j-user-date2">
+            <mat-label>User Date 2</mat-label>
+            <input
+              matInput
+              name="user-date-2"
+              [(ngModel)]="document.UserDate2"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-k-user-date3">
+            <mat-label>User Date 3</mat-label>
+            <input
+              matInput
+              name="user-date-3"
+              [(ngModel)]="document.UserDate3"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab4-grid-l-user-date4">
+            <mat-label>User Date 4</mat-label>
+            <input
+              matInput
+              name="user-date-4"
+              [(ngModel)]="document.UserDate4"
+            />
+          </mat-form-field>
+        </div>
+      </div>
     </mat-tab>
   </mat-tab-group>
 </form>

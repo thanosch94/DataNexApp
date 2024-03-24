@@ -165,10 +165,9 @@ height:90%
 
 .tab-1, .tab-2, .tab-3,.tab-4{
   margin-top: 3%;
-  height:40%
 }
 
-.grid{
+.tab1-grid{
   display: grid;
   grid-template-areas:
   "a b c c d"
@@ -176,7 +175,6 @@ height:90%
   "j k l m n";
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap:2 rem;
-
 }
 .grid-a-doctype{
   grid-area: a;
@@ -190,7 +188,6 @@ height:90%
 
 }
 
-
 .grid-g-customerphone{
   grid-area: g;
   width:90%;
@@ -201,7 +198,7 @@ height:90%
 .grid-c-customer{
   grid-area: c;
   gap:2rem;
-  width:90%;
+  width:95%;
 }
 .grid-e-docstatus{
   grid-area: e;
@@ -209,3 +206,130 @@ height:90%
   width:90%;
 }
 
+.notes{
+width: 97%;
+}
+
+.tab2-grid{
+  display: grid;
+  grid-template-areas:
+  "a b c d"
+  "e f g g"
+  "i j k l";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}
+.tab2-grid-a-shipping-address{
+  grid-area: a;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-b-shipping-region{
+  grid-area: b;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-c-shipping-phone1{
+  grid-area: c;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-d-shipping-phone2{
+  grid-area: d;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-e-shipping-city{
+  grid-area: e;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-f-postal-code{
+  grid-area: f;
+  gap:2rem;
+  width:90%;
+
+}
+.tab2-grid-g-shipping-email{
+  grid-area: g;
+  gap:2rem;
+  width:95%;
+}
+
+.tab4-grid{
+  display: grid;
+  grid-template-areas:
+  "a b c d"
+  "e f g h"
+  "i j k l";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}
+
+.tab4-grid-a-user-text1{
+  grid-area: a;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-b-user-text2{
+  grid-area: b;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-c-user-text3{
+  grid-area: c;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-d-user-text4{
+  grid-area: d;
+  gap:2rem;
+  width:95%;
+}
+
+.tab4-grid-e-user-number1{
+  grid-area: e;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-f-user-number2{
+  grid-area: f;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-g-user-number3{
+  grid-area: g;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-h-user-number4{
+  grid-area: h;
+  gap:2rem;
+  width:95%;
+}
+
+.tab4-grid-i-user-date1{
+  grid-area: i;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-j-user-date2{
+  grid-area: j;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-k-user-date3{
+  grid-area: k;
+  gap:2rem;
+  width:95%;
+}
+.tab4-grid-l-user-date4{
+  grid-area: l;
+  gap:2rem;
+  width:95%;
+}

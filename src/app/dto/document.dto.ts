@@ -18,6 +18,17 @@ export class DocumentDto {
   ShippingCountry?:string
   ShippingPhone1?:number;
   ShippingPhone2?:number;
-  ShippingEmail?:string
-
+  ShippingEmail?:string;
+  UserText1?:string;
+  UserText2?:string;
+  UserText3?:string;
+  UserText4?:string;
+  UserNumber1?:number;
+  UserNumber2?:number;
+  UserNumber3?:number;
+  UserNumber4?:number;
+  UserDate1?:Date;
+  UserDate2?:Date;
+  UserDate3?:Date;
+  UserDate4?:Date;
 }
