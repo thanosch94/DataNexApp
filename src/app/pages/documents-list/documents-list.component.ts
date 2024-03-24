@@ -53,9 +53,9 @@ export class DocumentsListComponent {
     });
   }
   displayedColumns: string[] = [
-    'DocumentTypeId',
+    'DocumentTypeName',
     'DocumentNumber',
-    'CustomerId',
+    'CustomerName',
     'DocumentTotal',
     'edit',
   ];
