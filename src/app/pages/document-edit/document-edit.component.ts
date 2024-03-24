@@ -50,6 +50,9 @@ import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import {MatTabsModule} from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-document-edit',
@@ -138,7 +141,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   constructor(
     private http: HttpClient,
     private ref: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
     this.productSizesViewModel = new ProductSizesViewModel(this.http);
@@ -308,8 +313,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   onSaveClicked(e: any) {
     //If the first row is filled in then it passes the validation
     //this.document.DocumentDateTime =this.datepipe.transform(this.document.DocumentDateTime, 'dd/MM/YYYY')
-
-    debugger;
     if (this.productsDataSource[0].IsRowFilled) {
       if (this.selectedDocType!.Id) {
         if (this.customer.Id) {
@@ -373,7 +376,40 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['documents-list']);
   }
 
-  onDeleteClicked(e: any) {}
+  onDeleteClicked(e: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '250px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        let productsResults = new Array<DocumentProductDto>();
+
+        this.productsDataSource.forEach(productRow => {
+          //TODO change with soft delete
+          this.documentProductsViewModel.DeleteById(productRow.Id).subscribe((result:any)=>{
+            productsResults.push(result)
+            if(productsResults.length==this.productsDataSource.length){
+              this.documentsViewModel.DeleteById(this.documentId).subscribe((result:any)=>{
+                this._snackBar.open('Record deleted', '', {
+                  duration: 1000,
+                  panelClass: 'green-snackbar',
+                });
+                this.router.navigate(['documents-list'])
+              })
+            }
+          })
+        });
+
+      } else {
+      }
+    });
+  }
 
   onBarcodeInput(e: any, index: number) {
     //If product exist in the table
