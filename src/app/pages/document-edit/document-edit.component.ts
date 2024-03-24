@@ -296,8 +296,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onDocStatusSelection(e:any){
-    let selectedStatus = this.docTypes.find(
-      (docType: DocumentTypeDto) => docType.Name == e.value
+    let selectedStatus = this.statusesList.find(
+      (status: DocumentTypeDto) => status.Name == e.value
     );
 
     if (selectedStatus) {
@@ -327,7 +327,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               this.productsDataSource=this.productsDataSource.filter(x=>x.IsRowFilled==true)
               this.productstable.renderRows();
               let productsResults = new Array<DocumentProductDto>();
+              let total= 0;
               this.productsDataSource.forEach((productRow) => {
+                total+=productRow.RowTotal!;
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
 
@@ -354,6 +356,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                     });
                 }
               });
+              //Update document with total when all products have been inserted
+              this.document.DocumentTotal= total
+              this.documentsViewModel.UpdateDto(this.document).subscribe((result:any)=>{})
             });
         } else {
           alert('Select Customer');

@@ -10,7 +10,7 @@ export class DocumentDto {
   CustomerId:Guid;
   CustomerName:string;
   CustomerPhone1:number;
-  Documentotal?:number;
+  DocumentTotal?:number;
   ShippingAddress?:string
   ShippingRegion?:string
   ShippingPostalCode?:number;
@@ -31,4 +31,5 @@ export class DocumentDto {
   UserDate2?:Date;
   UserDate3?:Date;
   UserDate4?:Date;
+DocumentStatusName: any;
 }

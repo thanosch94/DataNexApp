@@ -82,7 +82,7 @@
           <mat-form-field class="grid-e-docstatus">
             <mat-label>Status</mat-label>
             <mat-select
-              [(value)]="document.DocumentStatusId"
+              [(value)]="document.DocumentStatusName"
               (selectionChange)="onDocStatusSelection($event)"
             >
               @for (status of statusesList; track status) {
