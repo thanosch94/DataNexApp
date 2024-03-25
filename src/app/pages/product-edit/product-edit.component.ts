@@ -42,6 +42,7 @@ import { ProductBarcodesViewModel } from '../../view-models/product-barcodes.vie
 import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
 import { Observable } from 'rxjs';
 import { ProductSizeDto } from '../../dto/product-size.dto';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-product-edit',
@@ -67,6 +68,7 @@ import { ProductSizeDto } from '../../dto/product-size.dto';
     MatTableModule,
     MatSortHeader,
     DnPopupComponent,
+    MatTabsModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',

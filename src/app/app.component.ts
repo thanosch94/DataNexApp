@@ -32,6 +32,7 @@ export class AppComponent {
   }
   menuItems:MenuItemDto[] =WebAppBase.menu
   settingsItems:MenuItemDto[] = WebAppBase.settingsMenu
+  extraItems:MenuItemDto[] = WebAppBase.extraMenu
 
   onMenuItemClick(item:MenuItemDto){
   this.router.navigate([item.Path])
@@ -39,6 +40,10 @@ export class AppComponent {
 
   onSettingsItemClick(item:MenuItemDto){
   this.router.navigate([item.Path])
+  }
+
+  onExtraItemClick(item:MenuItemDto){
+    this.router.navigate([item.Path])
   }
 
   onMenuBtnClicked(){

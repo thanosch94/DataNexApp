@@ -31,6 +31,7 @@
 
   width: 95%;
   margin:5%;
+  margin-bottom: 2%
 }
 
 .example-full-width {
@@ -123,4 +124,74 @@
 }
 .mat-column-buttons {
   text-align: right;
+}
+.tab-1, .tab-2, .tab-3,.tab-4{
+  margin-top: 3%;
+}
+.tab1-grid{
+  display: grid;
+  grid-template-areas:
+  "a a c d"
+  "e f g d"
+  "i j h d"
+  "m m o p"
+  "m m q r";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}
+.tab1-grid-a-name{
+  grid-area: a;
+  gap:2rem;
+  width:95%;
+}
+
+.tab1-grid-e-sku{
+  grid-area: e;
+  gap:2rem;
+  width:90%;
+}
+
+.tab1-grid-f-brand{
+  grid-area: f;
+  gap:2rem;
+  width:90%;
+}
+
+.tab1-grid-i-price{
+  grid-area: i;
+  gap:2rem;
+  width:90%;
+}
+
+.tab1-grid-j-discount{
+  grid-area: j;
+  gap:2rem;
+  width:90%;
+}
+
+.tab1-grid-m-description{
+  grid-area: m;
+  gap:2rem;
+  width:95%;
+}
+
+.tab1-grid-c-image-path{
+  grid-area: c;
+  gap:2rem;
+  width:90%;
+}
+.tab1-grid-d-image{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: d;
+  gap:2rem;
+  width:90%;
+  border: 2px solid darkgrey;
+}
+
+.image{
+  position: relative;
+  width: inherit;
+  height: inherit;
 }
