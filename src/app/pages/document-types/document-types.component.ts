@@ -13,6 +13,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NewItemComponent } from '../components/new-item/new-item.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
   selector: 'app-document-types',
@@ -133,17 +134,24 @@ insertItem(data:any){
 
   deleteItem(data: any) {
     this.documentTypesViewModel
-      .DeleteById(data.Id)
-      .subscribe((result: any) => {
-        if (result) {
-          this.getData();
+    .DeleteById(data.Id)
+    .subscribe({
+    next: (result) => {
+      this.getData();
 
-          this._snackBar.open('Record deleted', '', {
-            duration: 1000,
-            panelClass: 'green-snackbar',
-          });
-
-        }
+      this._snackBar.open('Record deleted', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
       });
+    },
+    error: (err) => {
+      const dialog = this.dialog.open(DnAlertComponent, {
+        data: {
+          Title: 'Message',
+          Message: err.error.innerExceptionMessage,
+        },
+      });
+    },
+  });
   }
 }

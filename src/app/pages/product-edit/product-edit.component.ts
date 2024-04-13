@@ -43,6 +43,8 @@ import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
 import { Observable } from 'rxjs';
 import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatTabsModule } from '@angular/material/tabs';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 
 @Component({
   selector: 'app-product-edit',
@@ -68,7 +70,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatTableModule,
     MatSortHeader,
     DnPopupComponent,
-    MatTabsModule
+    MatTabsModule,
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
@@ -93,6 +95,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   newBarcodeLine: any;
   selected: any;
   isEditable: boolean;
+  isAlertVisible: boolean;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -150,13 +153,40 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onDeleteClicked(e: any) {
-    this.productsViewModel.DeleteById(this.product.Id).subscribe((result)=>{
-      this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-      this.router.navigate(['products-list']);
-    })
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '250px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.deleteItem(this.product);
+      } else {
+      }
+    });
+  }
+  deleteItem(data: any) {
+    this.productsViewModel.DeleteById(data.Id).subscribe({
+      next: (result) => {
+        this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+        this.router.navigate(['products-list']);
+      },
+      error: (err) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error.innerExceptionMessage,
+          },
+        });
+      },
+    });
   }
 
   onSaveClicked(e: any) {
@@ -233,5 +263,4 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   onBarcodeChanged(data: any) {
     this.newBarcodeLine.Barcode = data.target.value;
   }
-
 }

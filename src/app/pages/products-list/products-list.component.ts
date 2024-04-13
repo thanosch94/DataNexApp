@@ -10,6 +10,10 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProductsViewModel } from '../../view-models/products.viewmodel';
 import { WebAppBase } from '../../base/web-app-base';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
   selector: 'app-products-list',
@@ -43,11 +47,15 @@ export class ProductsListComponent implements AfterViewInit{
   ];
   productsViewModel: ProductsViewModel;
 
-  constructor(private http:HttpClient, private router:Router){
+  constructor(private http:HttpClient, private router:Router, public dialog: MatDialog, private _snackBar: MatSnackBar){
     this.productsViewModel= new ProductsViewModel(this.http)
   }
 
   ngAfterViewInit() {
+    this.getData();
+  }
+
+  getData(){
     this.productsViewModel.GetAll().subscribe((result:any)=>{
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
@@ -71,7 +79,44 @@ export class ProductsListComponent implements AfterViewInit{
     this.router.navigate(['product-edit']);
   }
 
-  deleteProduct(e:any){
+  deleteProduct(data: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '250px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.deleteItem(data);
+      } else {
+      }
+    });
+  }
 
+  deleteItem(data:any){
+    this.productsViewModel
+    .DeleteById(data.Id)
+    .subscribe({
+    next: (result) => {
+      this.getData();
+
+      this._snackBar.open('Record deleted', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
+      });
+    },
+    error: (err) => {
+      const dialog = this.dialog.open(DnAlertComponent, {
+        data: {
+          Title: 'Message',
+          Message: err.error.innerExceptionMessage,
+        },
+      });
+    },
+  });
   }
 }

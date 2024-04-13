@@ -26,6 +26,7 @@ import {
   MatDialogContent,
   MatDialogModule,
 } from '@angular/material/dialog';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
   selector: 'app-customer-edit',
@@ -49,8 +50,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   customersViewModel: CustomersViewModel;
   customer: CustomerDto;
   customerId: any;
-  customerName: string;
-  customerSurname: string;
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -88,6 +87,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .UpdateDto(this.customer)
         .subscribe((result: any) => {
           if (result) {
+            this.customer_text = this.customer.Name;
             this._snackBar.open('Η εγγραφή ενημερώθηκε', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
@@ -95,16 +95,11 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-      this.customer.Name = this.customerName
-        ? this.customerName
-        : ' ' + ' ' + this.customerSurname
-        ? this.customerSurname
-        : ' ';
-
-      this.customersViewModel
+        this.customersViewModel
         .InsertDto(this.customer)
         .subscribe((result: any) => {
           this.customer = result;
+          this.customer_text = this.customer.Name;
           this._snackBar.open('Η εγγραφή καταχωρήθηκε', '', {
             duration: 1000,
             panelClass: 'green-snackbar',
@@ -136,17 +131,27 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
   deleteItem(e: any) {
     this.customersViewModel
-      .DeleteById(this.customer.Id)
-      .subscribe((result: any) => {
-        if (result) {
-          this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
-            duration: 1000,
-            panelClass: 'green-snackbar',
-          });
-          this.router.navigate(['customers-list']);
-        }
+    .DeleteById(this.customer.Id)
+    .subscribe({
+    next: (result) => {
+      this._snackBar.open('Record deleted', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
       });
+      this.router.navigate(['customers-list']);
+
+    },
+    error: (err) => {
+      const dialog = this.dialog.open(DnAlertComponent, {
+        data: {
+          Title: 'Message',
+          Message: err.error.innerExceptionMessage,
+        },
+      });
+    },
+  });
   }
+
   ngOnDestroy() {
     WebAppBase.data = undefined;
   }

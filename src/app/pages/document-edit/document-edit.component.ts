@@ -356,7 +356,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                             '0'
                           );
                         this.ref.detectChanges();
-                        alert('Insert Successful');
+                        this._snackBar.open('Record inserted', '', {
+                          duration: 1000,
+                          panelClass: 'green-snackbar',
+                        });
                       }
                     });
                 }

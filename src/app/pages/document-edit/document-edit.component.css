@@ -333,3 +333,8 @@ width: 97%;
   gap:2rem;
   width:90%;
 }
+
+::ng-deep .green-snackbar .mdc-snackbar__surface {
+  background-color:#1b9e1b!important;
+  color: white;
+}

@@ -13,6 +13,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { NewItemComponent } from '../components/new-item/new-item.component';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 
 @Component({
   selector: 'app-product-sizes-list',
@@ -70,8 +72,45 @@ export class ProductSizesListComponent {
   }
 
 
-  deleteProductSize(data:any){
+  deleteProductSize(data: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '250px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.deleteItem(data);
+      } else {
+      }
+    });
+  }
 
+  deleteItem(data:any){
+    this.productSizesViewModel
+    .DeleteById(data.Id)
+    .subscribe({
+    next: (result) => {
+      this.getData();
+
+      this._snackBar.open('Record deleted', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
+      });
+    },
+    error: (err) => {
+      const dialog = this.dialog.open(DnAlertComponent, {
+        data: {
+          Title: 'Message',
+          Message: err.error.innerExceptionMessage,
+        },
+      });
+    },
+  });
   }
 
   editProductSize(data:any){
