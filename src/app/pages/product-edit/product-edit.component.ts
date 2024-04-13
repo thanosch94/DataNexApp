@@ -149,7 +149,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['products-list']);
   }
 
-  onDeleteClicked(e: any) {}
+  onDeleteClicked(e: any) {
+    this.productsViewModel.DeleteById(this.product.Id).subscribe((result)=>{
+      this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
+      });
+      this.router.navigate(['products-list']);
+    })
+  }
 
   onSaveClicked(e: any) {
     if (this.product.Id) {

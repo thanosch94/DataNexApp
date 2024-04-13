@@ -16,171 +16,174 @@
   <mat-tab-group>
     <mat-tab label="Basic Info">
       <div class="tab-1">
-      <div class="tab1-grid">
-
-        <mat-form-field class="tab1-grid-a-name">
-          <mat-label>Name</mat-label>
-          <input
-            name="name"
-            matInput
-            type="text"
-            matInput
-            [(ngModel)]="product.Name"
-          />
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-e-sku">
-          <mat-label>Sku</mat-label>
-          <input matInput name="sku" [(ngModel)]="product.Sku" />
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-f-brand">
-          <mat-label>Brand</mat-label>
-          <input matInput name="brand" [(ngModel)]="product.BrandId" />
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-i-price">
-          <mat-label>Price</mat-label>
-          <input matInput name="price" [(ngModel)]="product.Price" />
-
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-j-discount">
-          <mat-label>Discount</mat-label>
-          <input
-            name="discount"
-            matInput
-            type="text"
-            matInput
-            [(ngModel)]="product.Name"
-          />
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-m-description">
-          <mat-label>Description</mat-label>
-          <textarea
-            matInput
-            cdkTextareaAutosize
-            name="description"
-            #autosize
-            cdkAutosizeMinRows="5"
-            [(ngModel)]="product.Description"
-          ></textarea>
-        </mat-form-field>
-        <mat-form-field class="tab1-grid-c-image-path">
-          <mat-label>Image Path</mat-label>
-          <input matInput name="image" [(ngModel)]="product.Image" />
-        </mat-form-field>
-<div class="tab1-grid-d-image">
-  <img class="image" [src]="product.Image" name="image" width="370" height="370" [(ngModel)]="product.Image" />
-
-</div>
+        <div class="tab1-grid">
+          <mat-form-field class="tab1-grid-a-name">
+            <mat-label>Name</mat-label>
+            <input
+              name="name"
+              matInput
+              type="text"
+              matInput
+              [(ngModel)]="product.Name"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-e-sku">
+            <mat-label>Sku</mat-label>
+            <input matInput name="sku" [(ngModel)]="product.Sku" />
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-f-brand">
+            <mat-label>Brand</mat-label>
+            <input matInput name="brand" [(ngModel)]="product.BrandId" />
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-i-price">
+            <mat-label>Price</mat-label>
+            <input matInput name="price" [(ngModel)]="product.Price" />
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-j-discount">
+            <mat-label>Discount</mat-label>
+            <input
+              name="discount"
+              matInput
+              type="text"
+              matInput
+              [(ngModel)]="product.Name"
+            />
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-m-description">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              name="description"
+              #autosize
+              cdkAutosizeMinRows="5"
+              [(ngModel)]="product.Description"
+            ></textarea>
+          </mat-form-field>
+          <mat-form-field class="tab1-grid-c-image-path">
+            <mat-label>Image Path</mat-label>
+            <input matInput name="image" [(ngModel)]="product.ImagePath" />
+          </mat-form-field>
+          <div class="tab1-grid-d-image">
+            <img
+              class="image"
+              [src]="product.ImagePath"
+              name="images"
+              width="370"
+              height="370"
+            />
+          </div>
+        </div>
       </div>
-      </div>
-
-
     </mat-tab>
     <mat-tab label="Attributes & Categories"></mat-tab>
     <mat-tab label="Sizes">
+      <div *ngIf="productId">
+        <article class="table-header example-form">
+          <button
+            mat-button
+            class="button-add-row"
+            (click)="addProductBarcode($event)"
+          >
+            Add Size
+          </button>
+        </article>
+        <div class="mat-elevation-z8 margin">
+          <table #matTable mat-table [dataSource]="barcodesDataSource" matSort>
+            <ng-container matColumnDef="Barcode">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
+              <td mat-cell *matCellDef="let row; let index">
+                <mat-form-field
+                  *ngIf="row.IsEditable"
+                  style="width: 100%"
+                  class="white-input"
+                >
+                  <input
+                    matInput
+                    type="text"
+                    [value]="row.Barcode"
+                    matInput
+                    (input)="onBarcodeChanged($event)"
+                /></mat-form-field>
+                {{ row.IsEditable ? "" : row.Barcode }}
+              </td>
+            </ng-container>
 
-      <article class="table-header example-form">
-        <button mat-button class="button-add-row" (click)="addProductBarcode($event)">
-          Add Size
-        </button>
-      </article>
-      <div class="mat-elevation-z8 margin">
-        <table #matTable mat-table [dataSource]="barcodesDataSource" matSort>
-          <ng-container matColumnDef="Barcode">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
-            <td mat-cell *matCellDef="let row; let index;">
-              <mat-form-field
-                *ngIf="row.IsEditable"
-                style="width: 100%"
-                class="white-input"
-              >
-                <input
-                  matInput
-                  type="text"
-                  [value]="row.Barcode"
-                  matInput
-                  (input)="onBarcodeChanged($event)"
-              /></mat-form-field>
-              {{ row.IsEditable ? "" : row.Barcode }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="SizeId">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+              <td mat-cell *matCellDef="let row">
+                <mat-form-field
+                  *ngIf="!row.SizeName && row.IsEditable && isEditable"
+                  class="white-input"
+                >
+                  <input
+                    matInput
+                    type="text"
+                    aria-label="Size"
+                    matInput
+                    [formControl]="sizeControl"
+                    [matAutocomplete]="auto"
+                  />
+                  <mat-autocomplete #optionSelected #auto="matAutocomplete">
+                    @for (size of filteredSizes| async; track size) {
+                    <mat-option
+                      (onSelectionChange)="onSizeSelectionChanged(size)"
+                      [value]="size.Name"
+                      >{{ size.Name }}</mat-option
+                    >
+                    }
+                  </mat-autocomplete>
+                  <!-- <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" /> -->
+                </mat-form-field>
+                {{ row.SizeName }}
+              </td>
+            </ng-container>
 
-          <ng-container matColumnDef="SizeId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
-            <td mat-cell *matCellDef="let row">
-              <mat-form-field *ngIf="(!row.SizeName && row.IsEditable && isEditable)" class="white-input">
-                <input
-                  matInput
-                  type="text"
-                  aria-label="Size"
-                  matInput
-                  [formControl]="sizeControl"
-                  [matAutocomplete]="auto"
-                />
-                <mat-autocomplete  #optionSelected #auto="matAutocomplete">
-                  @for (size of filteredSizes| async; track size) {
-                  <mat-option
-                    (onSelectionChange)="onSizeSelectionChanged(size)"
-                    [value]="size.Name"
-                    >{{ size.Name }}</mat-option
-                  >
-                  }
-                </mat-autocomplete>
-                <!-- <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" /> -->
-              </mat-form-field>
-              {{  row.SizeName }}
-            </td>
-          </ng-container>
+            <ng-container matColumnDef="buttons">
+              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+              <td mat-cell *matCellDef="let row; let i = index">
+                <button
+                  mat-icon-button
+                  class="iconbutton"
+                  color="primary"
+                  (click)="
+                    row.IsEditable
+                      ? saveProductBarcode(row, i)
+                      : editProductBarcode(row, i)
+                  "
+                >
+                  <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
+                  <mat-icon *ngIf="row.IsEditable">save</mat-icon>
+                </button>
+                <button
+                  mat-icon-button
+                  class="iconbutton"
+                  color="primary"
+                  (click)="deleteProductBarcode(row, i)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </ng-container>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-          <ng-container matColumnDef="buttons">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-            <td mat-cell *matCellDef="let row; let i = index">
-              <button
-                mat-icon-button
-                class="iconbutton"
-                color="primary"
-                (click)="
-                  row.IsEditable
-                    ? saveProductBarcode(row, i)
-                    : editProductBarcode(row, i)
-                "
-              >
-                <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
-                <mat-icon *ngIf="row.IsEditable">save</mat-icon>
-              </button>
-              <button
-                mat-icon-button
-                class="iconbutton"
-                color="primary"
-                (click)="deleteProductBarcode(row, i)"
-              >
-                <mat-icon>delete</mat-icon>
-              </button>
-            </td>
-          </ng-container>
-          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            <!-- Row shown when there is no matching data. -->
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell" colspan="4">No data matching the filter</td>
+            </tr>
+          </table>
 
-          <!-- Row shown when there is no matching data. -->
-          <tr class="mat-row" *matNoDataRow>
-            <td class="mat-cell" colspan="4">No data matching the filter</td>
-          </tr>
-        </table>
-
-        <mat-paginator
-          #paginator
-          [length]="100"
-          [pageSize]="5"
-          [pageSizeOptions]="[5, 10, 25, 100]"
-          aria-label="Select page"
-        >
-        </mat-paginator>
+          <mat-paginator
+            #paginator
+            [length]="100"
+            [pageSize]="5"
+            [pageSizeOptions]="[5, 10, 25, 100]"
+            aria-label="Select page"
+          >
+          </mat-paginator>
+        </div>
       </div>
-
     </mat-tab>
   </mat-tab-group>
-
-
-
-
-
 </form>

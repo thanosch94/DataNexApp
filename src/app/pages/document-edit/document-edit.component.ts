@@ -48,7 +48,7 @@ import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
 import { WebAppBase } from '../../base/web-app-base';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
-import {MatTabsModule} from '@angular/material/tabs';
+import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -74,7 +74,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatTableModule,
     MatButtonModule,
     AsyncPipe,
-    MatTabsModule
+    MatTabsModule,
   ],
   providers: [provideNativeDateAdapter()],
   templateUrl: './document-edit.component.html',
@@ -152,7 +152,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentProductsViewModel = new DocumentProductsViewModel(this.http);
     this.productsViewModel = new ProductsViewModel(this.http);
     this.documentsViewModel = new DocumentsViewModel(this.http);
-    this.statusesViewModel = new StatusesViewModel(this.http)
+    this.statusesViewModel = new StatusesViewModel(this.http);
     this.documentId = WebAppBase.data;
 
     if (this.documentId) {
@@ -300,7 +300,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDocStatusSelection(e:any){
+  onDocStatusSelection(e: any) {
     let selectedStatus = this.statusesList.find(
       (status: DocumentTypeDto) => status.Name == e.value
     );
@@ -323,16 +323,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           this.documentsViewModel
             .InsertDto(this.document)
             .subscribe((result: any) => {
-              this.document=result;
+              this.document = result;
               //Fill in documentId to display the right data (delete button, table)
-              this.documentId=this.document.Id;
+              this.documentId = this.document.Id;
               //Render table again to remove empty lines
-              this.productsDataSource=this.productsDataSource.filter(x=>x.IsRowFilled==true)
+              this.productsDataSource = this.productsDataSource.filter(
+                (x) => x.IsRowFilled == true
+              );
               this.productstable.renderRows();
               let productsResults = new Array<DocumentProductDto>();
-              let total= 0;
+              let total = 0;
               this.productsDataSource.forEach((productRow) => {
-                total+=productRow.RowTotal!;
+                total += productRow.RowTotal!;
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
 
@@ -360,8 +362,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                 }
               });
               //Update document with total when all products have been inserted
-              this.document.DocumentTotal= total
-              this.documentsViewModel.UpdateDto(this.document).subscribe((result:any)=>{})
+              this.document.DocumentTotal = total;
+              this.documentsViewModel
+                .UpdateDto(this.document)
+                .subscribe((result: any) => {});
             });
         } else {
           alert('Select Customer');
@@ -388,29 +392,34 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
-        let productsResults = new Array<DocumentProductDto>();
+          let productsDeleted = 0;
+          this.productsDataSource.forEach((productRow) => {
+            //TODO change with soft delete
+            this.documentProductsViewModel
+              .DeleteById(productRow.Id)
+              .subscribe((result: any) => {
+                productsDeleted+=1
+               if (productsDeleted == this.productsDataSource.length) {
+                  this.deleteDocument();
+                }
+              });
+          });
 
-        this.productsDataSource.forEach(productRow => {
-          //TODO change with soft delete
-          this.documentProductsViewModel.DeleteById(productRow.Id).subscribe((result:any)=>{
-            productsResults.push(result)
-            if(productsResults.length==this.productsDataSource.length){
-              this.documentsViewModel.DeleteById(this.documentId).subscribe((result:any)=>{
-                this._snackBar.open('Record deleted', '', {
-                  duration: 1000,
-                  panelClass: 'green-snackbar',
-                });
-                this.router.navigate(['documents-list'])
-              })
-            }
-          })
-        });
-
-      } else {
       }
     });
   }
 
+  deleteDocument() {
+    this.documentsViewModel
+      .DeleteById(this.documentId)
+      .subscribe((result: any) => {
+        this._snackBar.open('Record deleted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+        this.router.navigate(['documents-list']);
+      });
+  }
   onBarcodeInput(e: any, index: number) {
     //If product exist in the table
     if (

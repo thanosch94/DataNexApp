@@ -5,7 +5,7 @@ export class ProductDto {
   Sku?: string;
   Name: string;
   Description?: string;
-  Image?: string;
+  ImagePath?: string;
   Price?: number;
   BrandId: Guid;
 }
