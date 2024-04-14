@@ -120,7 +120,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     'ProductName',
     'SizeName',
     'Price',
-    'ProductQuantity',
+    'Quantity',
     'RowTotal',
     'delete',
   ];
@@ -153,6 +153,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel = new ProductsViewModel(this.http);
     this.documentsViewModel = new DocumentsViewModel(this.http);
     this.statusesViewModel = new StatusesViewModel(this.http);
+    debugger
     this.documentId = WebAppBase.data;
 
     if (this.documentId) {
@@ -272,8 +273,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.productsDataSource[index].ProductId = result.Id;
         this.productsDataSource[index].ProductName = result.Name;
         this.productsDataSource[index].Price = result.Price;
-        this.productsDataSource[index].RowTotal = result.Price;
-        this.productsDataSource[index].ProductQuantity = 1;
+        this.productsDataSource[index].TotalPrice = result.Price;
+        this.productsDataSource[index].Quantity = 1;
         this.productsDataSource[index].Barcode = undefined;
         this.productsDataSource[index].SizeName = '';
         this.productsDataSource[index].IsRowFilled = false;
@@ -334,7 +335,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               let productsResults = new Array<DocumentProductDto>();
               let total = 0;
               this.productsDataSource.forEach((productRow) => {
-                total += productRow.RowTotal!;
+                total += productRow.TotalPrice!;
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
 
@@ -436,9 +437,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         (x) => x.Barcode == this.productsDataSource[index].Barcode
       );
       let productIndex = this.productsDataSource.indexOf(line!);
-      this.productsDataSource[productIndex].ProductQuantity! += 1;
-      this.productsDataSource[productIndex].RowTotal =
-        this.productsDataSource[productIndex].ProductQuantity! *
+      this.productsDataSource[productIndex].Quantity! += 1;
+      this.productsDataSource[productIndex].TotalPrice =
+        this.productsDataSource[productIndex].Quantity! *
         this.productsDataSource[productIndex].Price!;
       e.target.value = '';
     } else {
@@ -455,8 +456,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             this.productsDataSource[index].Price = result.Price;
 
             this.productsDataSource[index].SerialNumber = index + 1;
-            this.productsDataSource[index].RowTotal = result.Price;
-            this.productsDataSource[index].ProductQuantity = 1;
+            this.productsDataSource[index].TotalPrice = result.Price;
+            this.productsDataSource[index].Quantity = 1;
             this.productsDataSource[index].ProductNameCopy = result.ProductName;
             this.productsDataSource[index].BarcodeCopy = e.target.value;
             this.productsDataSource[index].IsRowFilled = true;
@@ -513,26 +514,26 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
   onQuantityChange(e: any, index: number) {
     if (this.productsDataSource[index].Price) {
-      this.productsDataSource[index].RowTotal =
+      this.productsDataSource[index].TotalPrice =
         this.productsDataSource[index].Price! * e.target.value;
     } else {
-      this.productsDataSource[index].ProductQuantity = undefined;
+      this.productsDataSource[index].Quantity = undefined;
     }
   }
 
   onRowTotalChange(e: any, index: number) {
     if (this.productsDataSource[index].Sku) {
-      this.productsDataSource[index].RowTotal =
+      this.productsDataSource[index].TotalPrice =
         this.productsDataSource[index].Price! * e.target.value;
     } else {
-      this.productsDataSource[index].RowTotal = undefined;
+      this.productsDataSource[index].TotalPrice = undefined;
     }
   }
 
   onPriceChange(e: any, index: number) {
-    if (this.productsDataSource[index].ProductQuantity) {
-      this.productsDataSource[index].RowTotal =
-        this.productsDataSource[index].ProductQuantity! * e.target.value;
+    if (this.productsDataSource[index].Quantity) {
+      this.productsDataSource[index].TotalPrice =
+        this.productsDataSource[index].Quantity! * e.target.value;
     } else {
       this.productsDataSource[index].Price = undefined;
     }
