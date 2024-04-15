@@ -89,7 +89,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   selectedStatus: DocumentTypeDto;
   statusesList: any;
   statusesViewModel: StatusesViewModel;
-
+  currency: string;
+  total: number = 0;
+  addCharges: number = 0;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -122,7 +124,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     'Price',
     'Quantity',
     'RowTotal',
-    'delete',
+    'buttons',
   ];
   documentProductsViewModel: DocumentProductsViewModel;
   documentTypesViewModel: DocumentTypesViewModel;
@@ -153,8 +155,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel = new ProductsViewModel(this.http);
     this.documentsViewModel = new DocumentsViewModel(this.http);
     this.statusesViewModel = new StatusesViewModel(this.http);
-    debugger
+    debugger;
     this.documentId = WebAppBase.data;
+    this.currency = WebAppBase.currency;
 
     if (this.documentId) {
       this.getDocumentData(this.documentId);
@@ -226,6 +229,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         .GetByDocumentId(documentId)
         .subscribe((result: any) => {
           this.productsDataSource = result;
+          this.calculateDocumentTotal();
         });
     });
   }
@@ -333,9 +337,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               );
               this.productstable.renderRows();
               let productsResults = new Array<DocumentProductDto>();
-              let total = 0;
+
               this.productsDataSource.forEach((productRow) => {
-                total += productRow.TotalPrice!;
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
 
@@ -366,7 +369,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                 }
               });
               //Update document with total when all products have been inserted
-              this.document.DocumentTotal = total;
+              this.document.DocumentTotal = this.total;
               this.documentsViewModel
                 .UpdateDto(this.document)
                 .subscribe((result: any) => {});
@@ -384,6 +387,16 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['documents-list']);
   }
 
+  onProductInfoClicked(e: any, index: number) {}
+
+  calculateDocumentTotal() {
+    this.total = 0;
+    for (let i = 0; i < this.productsDataSource.length; i++) {
+      if (this.productsDataSource[i]?.TotalPrice) {
+        this.total += this.productsDataSource[i].TotalPrice!;
+      }
+    }
+  }
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '250px',
@@ -396,19 +409,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
-          let productsDeleted = 0;
-          this.productsDataSource.forEach((productRow) => {
-            //TODO change with soft delete
-            this.documentProductsViewModel
-              .DeleteById(productRow.Id)
-              .subscribe((result: any) => {
-                productsDeleted+=1
-               if (productsDeleted == this.productsDataSource.length) {
-                  this.deleteDocument();
-                }
-              });
-          });
-
+        let productsDeleted = 0;
+        this.productsDataSource.forEach((productRow) => {
+          //TODO change with soft delete
+          this.documentProductsViewModel
+            .DeleteById(productRow.Id)
+            .subscribe((result: any) => {
+              productsDeleted += 1;
+              if (productsDeleted == this.productsDataSource.length) {
+                this.deleteDocument();
+              }
+            });
+        });
       }
     });
   }
@@ -442,6 +454,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.productsDataSource[productIndex].Quantity! *
         this.productsDataSource[productIndex].Price!;
       e.target.value = '';
+      this.calculateDocumentTotal();
     } else {
       //If product doesn't exist in the table
       if (this.barcodesLookupDatasource.includes(e.target.value)) {
@@ -461,8 +474,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             this.productsDataSource[index].ProductNameCopy = result.ProductName;
             this.productsDataSource[index].BarcodeCopy = e.target.value;
             this.productsDataSource[index].IsRowFilled = true;
+
             let cellsArray = this.cells.toArray();
             cellsArray[index + 1].nativeElement.focus();
+            this.calculateDocumentTotal();
           });
       } else if (
         this.productsDataSource[index].SerialNumber! >= 0 &&
@@ -488,6 +503,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       this.productsDataSource.push(product);
       this.productstable.renderRows();
     }
+    this.calculateDocumentTotal();
   }
 
   displaySizes(value: string) {
@@ -510,12 +526,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           cellsArray[index + 1].nativeElement.focus();
         });
     }
+    this.calculateDocumentTotal();
   }
 
   onQuantityChange(e: any, index: number) {
     if (this.productsDataSource[index].Price) {
       this.productsDataSource[index].TotalPrice =
         this.productsDataSource[index].Price! * e.target.value;
+      this.calculateDocumentTotal();
     } else {
       this.productsDataSource[index].Quantity = undefined;
     }
@@ -528,6 +546,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       this.productsDataSource[index].TotalPrice = undefined;
     }
+    this.calculateDocumentTotal();
   }
 
   onPriceChange(e: any, index: number) {
@@ -537,6 +556,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       this.productsDataSource[index].Price = undefined;
     }
+    this.calculateDocumentTotal();
   }
   onProductNameChanged(e: any, index: number) {
     if (this.productsDataSource[index].Sku) {

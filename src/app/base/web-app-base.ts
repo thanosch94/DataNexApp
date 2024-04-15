@@ -59,4 +59,6 @@ static data:any
   }
   ]
 
+  static currency ='€'
+
 }

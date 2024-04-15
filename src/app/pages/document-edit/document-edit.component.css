@@ -132,14 +132,18 @@ color:white;
 ::ng-deep .cdk-column-delete{
 border-left: 0px!important; }
 
+::ng-deep .cdk-column-info{
+border-right: 0px!important;
+}
+
 /* last row */
 ::ng-deep .cdk-column-RowTotal{
 border-right: 0px!important; }
 
-.hide-delete-button{
+.hide-delete-button, .hide-info-button{
   display: none;
 }
-.display-delete-button{
+.display-delete-button, .display-info-button {
   display: block;
 }
 
@@ -337,4 +341,18 @@ width: 97%;
 ::ng-deep .green-snackbar .mdc-snackbar__surface {
   background-color:#1b9e1b!important;
   color: white;
+}
+
+.edit-document-charges-field{
+  text-align: right;
+}
+.addcharges{
+  margin-right: 5%;
+}
+::ng-deep .mdc-notched-outline{
+  height: 50px !important;;
+}
+.addcharges-title, .total-title{
+  margin-right: 2%;
+
 }
