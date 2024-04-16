@@ -115,7 +115,7 @@ insertItem(data:any){
 
   deleteStatus(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '250px',
+      width: '320px',
       data: {
         title: 'Title',
         message: 'message',

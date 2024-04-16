@@ -53,6 +53,7 @@ import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProductOptionsComponent } from '../product-options/product-options.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -387,7 +388,22 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.router.navigate(['documents-list']);
   }
 
-  onProductInfoClicked(e: any, index: number) {}
+  onProductInfoClicked(e: any, index: number) {
+    const dialogRef = this.dialog.open(ProductOptionsComponent, {
+      width: '750px',
+      height:'280px',
+      panelClass: 'product-options-dialog',
+      data: {
+        title: 'Title',
+        message: 'message',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+
+      }
+    });
+  }
 
   calculateDocumentTotal() {
     this.total = 0;
@@ -399,7 +415,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '250px',
+      width: '320px',
       data: {
         title: 'Title',
         message: 'message',

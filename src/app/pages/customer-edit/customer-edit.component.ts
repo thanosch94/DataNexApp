@@ -109,7 +109,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '250px',
+      width: '320px',
       data: {
         title: 'Title',
         message: 'message',
