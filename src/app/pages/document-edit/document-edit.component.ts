@@ -391,16 +391,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   onProductInfoClicked(e: any, index: number) {
     const dialogRef = this.dialog.open(ProductOptionsComponent, {
       width: '750px',
-      height:'280px',
+      height: '280px',
       panelClass: 'product-options-dialog',
       data: {
-        title: 'Title',
-        message: 'message',
+        productId: this.productsDataSource[index].ProductId,
       },
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
-
       }
     });
   }

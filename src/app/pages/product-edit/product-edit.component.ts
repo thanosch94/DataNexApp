@@ -6,10 +6,12 @@ import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectorRef,
   Component,
+  Inject,
   NgModule,
   NgZone,
   OnDestroy,
   OnInit,
+  Optional,
   ViewChild,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -26,7 +28,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductsViewModel } from '../../view-models/products.viewmodel';
 import { Router } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebAppBase } from '../../base/web-app-base';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
@@ -47,7 +49,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 
 @Component({
-  selector: 'app-product-edit',
+  selector: 'product-edit',
   standalone: true,
   imports: [
     FormsModule,
@@ -71,6 +73,9 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
     MatSortHeader,
     DnPopupComponent,
     MatTabsModule,
+    MatDialogActions,
+    MatButtonModule,
+    MatDialogModule
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
@@ -96,17 +101,27 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   selected: any;
   isEditable: boolean;
   isAlertVisible: boolean;
+  isDialog: boolean;
   constructor(
     private http: HttpClient,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private _ngZone: NgZone,
-    private ref: ChangeDetectorRef
+    private ref: ChangeDetectorRef,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.productsViewModel = new ProductsViewModel(this.http);
     this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
-    this.productId = WebAppBase.data;
+    //If opens from dialog
+    if(data){
+      this.productId = data.productId;
+      this.isDialog=true
+    }else{
+      this.productId = WebAppBase.data;
+      this.isDialog=false
+
+    }
     this.productSizesViewModel = new ProductSizesViewModel(this.http);
   }
 
