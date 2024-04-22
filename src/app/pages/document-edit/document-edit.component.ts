@@ -370,6 +370,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                 }
               });
               //Update document with total when all products have been inserted
+
               this.document.DocumentTotal = this.total;
               this.documentsViewModel
                 .UpdateDto(this.document)
@@ -394,7 +395,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       height: '280px',
       panelClass: 'product-options-dialog',
       data: {
-        productId: this.productsDataSource[index].ProductId,
+        product: this.productsDataSource[index],
       },
     });
     dialogRef.afterClosed().subscribe((confirm) => {

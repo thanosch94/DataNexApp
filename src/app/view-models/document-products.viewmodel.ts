@@ -36,6 +36,15 @@ export class DocumentProductsViewModel {
       headers: headers,
     });
   }
+  public GetPendingOrdersForProductId(productId: Guid) {
+    let headers = {
+      'Content-Type': 'application/json',
+    };
+
+    return this.http.get(this.service + 'DocumentProducts/getpendingordersforproductid/' + productId, {
+      headers: headers,
+    });
+  }
 
   public GetByBarcode(barcode: string) {
     let headers = {

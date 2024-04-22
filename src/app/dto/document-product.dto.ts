@@ -10,8 +10,11 @@ export class DocumentProductDto {
   Price?:number;
 
   Sku:string;
+  DocumentDateString:string;
+  DocumentDate:Date|string;
   ProductName?:string;
-  DocumentNumber:string
+  DocumentNumber:string;
+  DocumentCode:string;
   SizeName:string;
   Barcode?: string;
   TotalPrice?:number;

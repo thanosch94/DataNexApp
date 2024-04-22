@@ -47,6 +47,7 @@ export class DocumentsListComponent {
 
   ngAfterViewInit() {
     this.documentsViewModel.GetAll().subscribe((result: any) => {
+      debugger
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;

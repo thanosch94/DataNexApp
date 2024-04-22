@@ -1,0 +1,26 @@
+.margin{
+  margin:4%;
+  margin-top:2%;
+  }
+  .button-add-row {
+    background: #1b9e1b;
+    color: #ffffff!important;
+  }
+
+  .table-header {
+    width: 90%;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+  ::ng-deep .green-snackbar .mdc-snackbar__surface {
+    background-color:#1b9e1b!important;
+    color: white;
+  }
+  .close-button{
+    margin-right:2%;
+
+  }
+  .example-spacer {
+    flex: 1 1 auto;
+  }

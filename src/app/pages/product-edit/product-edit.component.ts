@@ -115,7 +115,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
     //If opens from dialog
     if(data){
-      this.productId = data.productId;
+      this.productId = data.product.ProductId;
       this.isDialog=true
     }else{
       this.productId = WebAppBase.data;

@@ -7,6 +7,8 @@ import { faRectangleList } from '@fortawesome/free-solid-svg-icons';
 import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
+import { ListWithFiltersComponent } from '../list-with-filters/list-with-filters.component';
+import { SalesViews } from '../../enums/sales-views.enum';
 
 @Component({
   selector: 'product-options',
@@ -23,7 +25,7 @@ export class ProductOptionsComponent {
   faRectangleList: any;
   constructor(
     private dialog: MatDialog,
-    @Optional() @Inject(MAT_DIALOG_DATA) public productData: any
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.faInfo = faInfo;
     this.faGear = faGear;
@@ -36,7 +38,18 @@ export class ProductOptionsComponent {
       width:'100%',
       height:'90%',
       data: {
-        productId: this.productData.productId,
+        product: this.data.product,
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {});
+  }
+  onPendingOrdersClicked(e: any) {
+    const dialogRef = this.dialog.open(ListWithFiltersComponent, {
+      width:'100%',
+      height:'90%',
+      data: {
+        product: this.data.product,
+        view: SalesViews.PendingSalesOrders
       },
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
