@@ -17,3 +17,41 @@ margin-top:2%;
   background-color:#1b9e1b!important;
   color: white;
 }
+/*Menu on Right Click*/
+
+
+
+
+.right-click-menu {
+  display: inline-flex;
+  flex-direction: column;
+  min-width: 180px;
+  max-width: 280px;
+  background-color: rgb(255, 255, 255);
+  padding: 6px 0;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.right-click-menu-item {
+  background-color: transparent;
+  cursor: pointer;
+  border: none !important;
+
+  user-select: none;
+  min-width: 64px;
+  line-height: 36px;
+  padding: 0 16px;
+
+}
+
+.right-click-menu-item:focus-visible{
+  outline: none !important;
+
+}
+.right-click-menu-item:hover {
+  background-color: rgb(208, 208, 208);
+}
+
+.right-click-menu-item:active {
+  background-color: rgb(170, 170, 170);
+}

@@ -13,26 +13,27 @@
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
 
-    <ng-container matColumnDef="DocumentTypeName">
+    <ng-container matColumnDef="DocumentTypeName" >
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
         Document Type
       </th>
-      <td mat-cell *matCellDef="let row"> {{row.DocumentTypeName}} </td>
+      <td [cdkContextMenuTriggerFor]="rightClickMenu" mat-cell *matCellDef="let row" (contextmenu)="getRowData(row)"> {{row.DocumentTypeName}}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="DocumentNumber">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Document Number </th>
-      <td mat-cell *matCellDef="let row"> {{row.DocumentNumber}} </td>
+      <td [cdkContextMenuTriggerFor]="rightClickMenu"  mat-cell *matCellDef="let row"  (contextmenu)="getRowData(row)"> {{row.DocumentNumber}} </td>
     </ng-container>
 
     <ng-container matColumnDef="CustomerName">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Customer </th>
-      <td mat-cell *matCellDef="let row"> {{row.CustomerName}} </td>
+      <td [cdkContextMenuTriggerFor]="rightClickMenu" mat-cell *matCellDef="let row"  (contextmenu)="getRowData(row)"> {{row.CustomerName}} </td>
     </ng-container>
 
     <ng-container matColumnDef="DocumentTotal">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Total </th>
-      <td mat-cell *matCellDef="let row"> {{row.DocumentTotal}} {{row.DocumentTotal?"€":""}}</td>
+      <td [cdkContextMenuTriggerFor]="rightClickMenu"  mat-cell *matCellDef="let row"  (contextmenu)="getRowData(row)"> {{row.DocumentTotal}} {{row.DocumentTotal?"€":""}}</td>
     </ng-container>
 
 
@@ -61,3 +62,11 @@
 
 </mat-paginator></div>
 </div>
+
+
+<ng-template #rightClickMenu >
+  <div class="right-click-menu" cdkMenu>
+    <button class="right-click-menu-item" (click)="onTransformDocumentClicked($event, rowData)" cdkMenuItem>Transform Order</button>
+    <button class="right-click-menu-item" (click)="onCancelDocumentClicked($event, rowData)" cdkMenuItem>Cancel Order</button>
+  </div>
+</ng-template>

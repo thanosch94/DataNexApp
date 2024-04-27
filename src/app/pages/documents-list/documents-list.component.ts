@@ -5,7 +5,7 @@ import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { NgClass } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { CustomerDto } from '../../dto/customer.dto';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Guid } from 'guid-typescript';
@@ -15,6 +15,8 @@ import { Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
 import { DocumentDto } from '../../dto/document.dto';
 import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
+import {CdkMenu, CdkMenuItem, CdkContextMenuTrigger} from '@angular/cdk/menu';
+
 @Component({
   selector: 'app-documents-list',
   standalone: true,
@@ -30,6 +32,10 @@ import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
+    CdkContextMenuTrigger,
+    CdkMenu,
+    CdkMenuItem,
+    CommonModule
   ],
   templateUrl: './documents-list.component.html',
   styleUrl: './documents-list.component.css',
@@ -37,7 +43,7 @@ import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 export class DocumentsListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
+  rowData:any;
   customersViewModel: DocumentsViewModel;
   documentsViewModel: DocumentsViewModel;
   constructor(private http: HttpClient, private router: Router) {
@@ -69,7 +75,9 @@ export class DocumentsListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-
+getRowData(rowData:any){
+  this.rowData=rowData
+}
   createNewDocument(id: number): DocumentDto {
     let document = new DocumentDto();
     // const name =
@@ -90,4 +98,11 @@ export class DocumentsListComponent {
     this.router.navigate(['document-edit']);
   }
   deleteDocument(element: any) {}
+
+  onTransformDocumentClicked(e:any, row:any){
+
+  }
+  onCancelDocumentClicked(e:any, row:any){
+
+  }
 }
