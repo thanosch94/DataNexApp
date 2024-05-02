@@ -1,3 +1,4 @@
+import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { BrandDto } from './../../dto/brand.dto';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
@@ -45,8 +46,7 @@ import { ProductDto } from '../../dto/product.dto';
 import { ProductSizeDto } from '../../dto/product-size.dto';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
-import { WebAppBase } from '../../base/web-app-base';
-import { Router } from '@angular/router';
+import { Router, RoutesRecognized, ActivatedRoute } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
@@ -54,6 +54,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductOptionsComponent } from '../product-options/product-options.component';
+import { AppTabDto } from '../../dto/app-tab.dto';
 
 @Component({
   selector: 'app-document-edit',
@@ -93,6 +94,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   currency: string;
   total: number = 0;
   addCharges: number = 0;
+  activeTab: AppTabDto | undefined;
+  route: any;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -140,14 +143,21 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
   datepipe: DatePipe = new DatePipe('en-US');
-
+  webAppBase = WebAppBase
   constructor(
     private http: HttpClient,
     private ref: ChangeDetectorRef,
     private router: Router,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private activatedRoute: ActivatedRoute
   ) {
+
+    activatedRoute.firstChild?.url.subscribe((result:any)=>{
+      this.route = result[0].path    })
+
+
+
     this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
     this.productSizesViewModel = new ProductSizesViewModel(this.http);
     this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
@@ -224,6 +234,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.document.DocumentTypeName +
         '-' +
         this.document.DocumentNumber.toString().padStart(6, '0');
+        debugger
+      this.webAppBase.setTabName(this.route, this.document_text)
       this.ref.detectChanges();
 
       this.documentProductsViewModel
@@ -361,6 +373,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                             '0'
                           );
                         this.ref.detectChanges();
+
                         this._snackBar.open('Record inserted', '', {
                           duration: 1000,
                           panelClass: 'green-snackbar',
@@ -601,6 +614,20 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       }
     }
   }
+
+  // setTabName(route:string){
+  //   debugger
+  //   this.activeTab = this.webAppBase.tabs.find((x:AppTabDto)=>x.Route.path ==route)
+
+  //   if(this.activeTab!.Name==""){
+  //     debugger
+  //     debugger
+  //     this.activeTab!.Name =  this.document_text
+  //     this.ref.detectChanges()
+  //   }
+
+
+  // }
   ngOnDestroy() {
     WebAppBase.data = undefined;
   }

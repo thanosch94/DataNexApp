@@ -39,7 +39,29 @@
         </mat-list>
       </mat-sidenav>
       <mat-sidenav-content class="main-content">
-        <div><router-outlet></router-outlet></div>
+        <mat-tab-group class="tab-group"
+        [color]="'primary'"
+          [selectedIndex]="selectedTab.value"
+          (selectedIndexChange)="selectedTab.setValue($event)"
+          (selectedTabChange)="onTabChanged($event)"
+        >
+          <mat-tab [ngClass]="tab.Active ? 'active-tab' : ''" class="app-tab" *ngFor="let tab of tabs">
+            <div  class="tab-header">
+            <ng-template  mat-tab-label>
+              <div    class="col " style="margin-left: 30px">{{ tab.Name }}</div>
+              <button
+                [ngClass]="tab.Active ? 'tab-close-button' : ''"
+                *ngIf="tab.Active"
+                mat-icon-button
+                (click)="onTabCloseClicked($event, tab)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            </ng-template>
+</div>
+            <ng-container *ngComponentOutlet="tab.Component"></ng-container>
+          </mat-tab>
+        </mat-tab-group>
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>
