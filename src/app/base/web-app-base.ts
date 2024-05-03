@@ -58,19 +58,6 @@ export class WebAppBase {
     },
   ];
 
-  static tabs = new Array<AppTabDto>();
   static currency = '€';
 
-  static setTabName(route: string, tabName: string) {
-    let activeTab = this.tabs.find(
-      (x: AppTabDto) => x.Route.path == route && x.Name == ''
-    );
-
-    if (activeTab!.Name == '') {
-      activeTab!.Name = tabName;
-    }
-  }
-  static getTabs() {
-    return this.tabs;
-  }
 }

@@ -18,6 +18,7 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
+import { TabsService } from './services/tabs.service';
 
 @Component({
   selector: 'app-root',
@@ -41,10 +42,11 @@ export class AppComponent{
   title = 'DataNexApp';
   faArrowLeft: any;
   sidenavIsOpen: boolean = true;
-  tabs = WebAppBase.tabs;
+  tabs:any[];
   isMenuItem?: boolean;
-  constructor(private router: Router, private ref: ChangeDetectorRef) {
+  constructor(private router: Router, private ref: ChangeDetectorRef, private tabsService:TabsService) {
     this.faArrowLeft = faArrowLeft;
+    this.tabs = tabsService.getTabs()
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
         this.checkAndAddTab(result);
@@ -61,7 +63,7 @@ export class AppComponent{
     this.isMenuItem = true;
     this.router.navigate([item.Path]);
 
-    this.ref.detectChanges();
+    //this.ref.detectChanges();
   }
 
   onSettingsItemClick(item: MenuItemDto) {
@@ -82,7 +84,7 @@ export class AppComponent{
     }
   }
   onTabChanged(tab: any) {
-    this.deactivateTabs();
+    this.tabsService.deactivateTabs();
     if(tab.index>=0){
     this.tabs[tab.index].Active = true;
     //this.router.navigate([this.tabs[tab.index].Route.path]);
@@ -98,7 +100,7 @@ export class AppComponent{
     let tabItem = [...webAppBase.menu, ... webAppBase.extraMenu, ...webAppBase.settingsMenu].find(x=>x.Path ==data.state.root.firstChild?.routeConfig?.path);
     let tabItemName = tabItem?tabItem.Name:"";
     if (this.isMenuItem) {
-      this.deactivateTabs();
+      this.tabsService.deactivateTabs();
       if (this.tabs.find((tab) => tab.Name == tabItemName) == null) {
         let tab = new AppTabDto();
         tab.Id = Guid.create();
@@ -129,21 +131,12 @@ export class AppComponent{
       tab!.Route = data.state.root.firstChild?.routeConfig;
     } else {
     }
-    this.ref.markForCheck();
-  }
-
-  deactivateTabs() {
-    this.tabs.forEach((tab) => {
-      tab.Active = false;
-    });
+    //this.ref.markForCheck();
   }
 
   onTabCloseClicked(e: any, tab: AppTabDto) {
-    let tabIndex = this.tabs.indexOf(tab);
-
-      this.tabs.splice(tabIndex, 1);
-      this.selectedTab.setValue(this.tabs.length - 1);
-
-    this.ref.detectChanges();
+    this.tabsService.closeTab(tab)
+    this.selectedTab.setValue(this.tabs.length - 1);
+   // this.ref.detectChanges();
   }
 }

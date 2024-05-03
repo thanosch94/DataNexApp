@@ -55,6 +55,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductOptionsComponent } from '../product-options/product-options.component';
 import { AppTabDto } from '../../dto/app-tab.dto';
+import { TabsService } from '../../services/tabs.service';
 
 @Component({
   selector: 'app-document-edit',
@@ -78,7 +79,7 @@ import { AppTabDto } from '../../dto/app-tab.dto';
     AsyncPipe,
     MatTabsModule,
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [provideNativeDateAdapter(),TabsService],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
@@ -143,14 +144,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
   datepipe: DatePipe = new DatePipe('en-US');
-  webAppBase = WebAppBase
   constructor(
     private http: HttpClient,
     private ref: ChangeDetectorRef,
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private tabsService:TabsService
   ) {
 
     activatedRoute.firstChild?.url.subscribe((result:any)=>{
@@ -234,8 +235,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.document.DocumentTypeName +
         '-' +
         this.document.DocumentNumber.toString().padStart(6, '0');
-        debugger
-      this.webAppBase.setTabName(this.route, this.document_text)
+      this.tabsService.setTabName(this.route, this.document_text)
       this.ref.detectChanges();
 
       this.documentProductsViewModel
@@ -337,7 +337,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           this.document.DocumentTypeId = this.selectedDocType.Id;
           this.document.DocumentStatusId = this.selectedStatus.Id;
           this.document.CustomerId = this.customer.Id;
-          debugger;
           this.documentsViewModel
             .InsertDto(this.document)
             .subscribe((result: any) => {
