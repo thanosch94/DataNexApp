@@ -1,1 +1,25 @@
-<p>dn-toolbar works!</p>
+<mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
+  <span>{{ title }}</span>
+  <span class="example-spacer"></span>
+  <mat-icon
+    *ngIf="canDelete && !isDialog"
+    [ngClass]="entityId ? 'display-delete-button' : 'hide-delete-button'"
+    (click)="onDeleteClicked($event)"
+    >delete</mat-icon
+  >
+
+  <mat-icon *ngIf="canSave" class="save-button" (click)="onSaveClicked($event)"
+    >save</mat-icon
+  >
+  <mat-dialog-actions>
+    <mat-icon *ngIf="isDialog" class="close-button" [mat-dialog-close]="true"
+      >close</mat-icon
+    >
+    <mat-icon
+      *ngIf="!isDialog && canExit"
+      class="close-button"
+      (click)="onCloseClicked($event)"
+      >exit_to_app</mat-icon
+    >
+  </mat-dialog-actions>
+</mat-toolbar>

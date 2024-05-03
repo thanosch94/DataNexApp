@@ -28,10 +28,12 @@ setTabName(tabName: string) {
   let activeTab = TabsService.tabs.find(
     (x: AppTabDto) => x.Route.path == this.route && x.Name == ''
   );
-
+if(activeTab){
   if (activeTab!.Name == '') {
     activeTab!.Name = tabName.substring(0,15);
   }
+}
+
 }
 
 deactivateTabs() {

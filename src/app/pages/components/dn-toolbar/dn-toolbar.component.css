@@ -1,0 +1,44 @@
+::ng-deep .toolbar{
+  background: #0B6AA5!important;
+  color:white!important;
+  height:auto!important
+}
+
+.dialog-toolbar{
+  background: #0B6AA5!important;
+  color:white!important;
+  height:100%!important
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+.display-delete-button{
+  display: block;
+  margin-right:2%;
+  color:white;
+
+  }
+  .display-delete-button:hover{
+   cursor: pointer;
+
+    }
+  .hide-delete-button{
+    display: none;
+    }
+    .save-button{
+      margin-right:2%;
+      color: white;
+
+    }
+    .save-button:hover{
+      cursor: pointer;
+    }
+    .close-button{
+      margin-right:2%;
+      color: white;
+
+    }
+    .close-button:hover{
+      cursor: pointer;
+    }

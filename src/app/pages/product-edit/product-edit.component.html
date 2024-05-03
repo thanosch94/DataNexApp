@@ -1,22 +1,14 @@
-<mat-toolbar>
-  <span>{{ product_text }}</span>
-  <span class="example-spacer"></span>
-  <mat-icon
-    [ngClass]="product.Id ? 'display-delete-button' : 'hide-delete-button'"
-    (click)="onDeleteClicked($event)"
-    >delete</mat-icon
-  >
-
-  <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
-  <mat-dialog-actions >
-  <mat-icon *ngIf=isDialog class="close-button" [mat-dialog-close]="true"
-    >close</mat-icon
-  >
-  <mat-icon *ngIf=!isDialog class="close-button" (click)="onCloseClicked($event)"
-    >exit_to_app</mat-icon
-  >
-</mat-dialog-actions>
-</mat-toolbar>
+<dn-toolbar
+[canDelete]="true"
+[canExit]="true"
+[canSave]="true"
+[isDialog]="isDialog"
+[title]="product_text"
+[entityId]="product.Id"
+(onCloseBtnClicked)="onCloseClicked($event)"
+(onDeleteBtnClicked)="onDeleteClicked($event)"
+(onSaveBtnClicked)="onSaveClicked($event)"
+></dn-toolbar>
 <form class="example-form">
   <mat-tab-group>
     <mat-tab label="Basic Info">

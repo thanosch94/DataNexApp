@@ -48,6 +48,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { TabsService } from '../../services/tabs.service';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'product-edit',
@@ -76,7 +77,8 @@ import { TabsService } from '../../services/tabs.service';
     MatTabsModule,
     MatDialogActions,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    DnToolbarComponent
   ],
   providers: [TabsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -128,13 +130,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.productId) {
-      this.product_text = 'Product Edit';
 
       this.productsViewModel
         .GetById(this.productId)
         .subscribe((result: any) => {
           result as ProductDto;
           this.product = result;
+          this.product_text = this.product.Sku + " - "+ this.product.Name;
+
           this.tabsService.setTabName(this.product.Sku + " - "+ this.product.Name)
 
           this.getProductBarcodesData();
@@ -145,6 +148,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     } else {
       this.product_text = 'New Product';
       this.product = new ProductDto();
+      this.tabsService.setTabName(this.product_text)
+
     }
 
     this.filteredSizes = this.sizeControl.valueChanges.pipe(

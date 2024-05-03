@@ -1,21 +1,15 @@
-<mat-toolbar>
-  <span>{{ document_text }}</span>
-  <span class="example-spacer"></span>
-  <mat-icon
-    [ngClass]="documentId ? 'display-delete-button' : 'hide-delete-button'"
-    (click)="onDeleteClicked($event)"
-    >delete</mat-icon
-  >
 
-  <mat-icon
-    [ngClass]="!documentId ? 'save-button' : 'hide-save-button'"
-    (click)="onSaveClicked($event)"
-    >save</mat-icon
-  >
-  <mat-icon class="close-button" (click)="onCloseClicked($event)"
-    >exit_to_app</mat-icon
-  >
-</mat-toolbar>
+<dn-toolbar
+[canDelete]="true"
+[canExit]="true"
+[canSave]="true"
+[isDialog]="false"
+[title]="document_text"
+[entityId]="document.Id"
+(onCloseBtnClicked)="onCloseClicked($event)"
+(onDeleteBtnClicked)="onDeleteClicked($event)"
+(onSaveBtnClicked)="onSaveClicked($event)"
+></dn-toolbar>
 <form class="example-form">
   <mat-tab-group>
     <mat-tab label="Basic Info">

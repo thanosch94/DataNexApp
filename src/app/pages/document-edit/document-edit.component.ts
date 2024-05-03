@@ -56,6 +56,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductOptionsComponent } from '../product-options/product-options.component';
 import { AppTabDto } from '../../dto/app-tab.dto';
 import { TabsService } from '../../services/tabs.service';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -78,6 +79,7 @@ import { TabsService } from '../../services/tabs.service';
     MatButtonModule,
     AsyncPipe,
     MatTabsModule,
+    DnToolbarComponent
   ],
   providers: [provideNativeDateAdapter(),TabsService],
   templateUrl: './document-edit.component.html',
@@ -170,6 +172,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       this.initNewDocument();
     }
+
   }
 
   ngOnInit() {
@@ -206,6 +209,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
   initNewDocument() {
     this.document_text = 'New Document';
+    this.tabsService.setTabName(this.document_text)
+
     this.document.DocumentDateTime = new Date();
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();

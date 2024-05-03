@@ -38,7 +38,7 @@ export class ProductOptionsComponent {
       width:'100%',
       height:'90%',
       data: {
-        product: this.data.product,
+        product: this.data.product
       },
     });
     dialogRef.afterClosed().subscribe((confirm) => {});

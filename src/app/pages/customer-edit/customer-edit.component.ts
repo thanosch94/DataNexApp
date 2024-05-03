@@ -15,6 +15,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-customer-edit',
@@ -29,6 +30,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
     MatSnackBarModule,
     CommonModule,
     MatDialogModule,
+    DnToolbarComponent
   ],
   providers: [TabsService],
   templateUrl: './customer-edit.component.html',
@@ -53,13 +55,12 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     if (this.customerId) {
-      this.customer_text = 'Customer Edit';
-
       this.customersViewModel
         .GetById(this.customerId)
         .subscribe((result: any) => {
           result as CustomerDto;
           this.customer = result;
+          this.customer_text = this.customer.Name
           this.tabsService.setTabName(this.customer.Name);
         });
     } else {

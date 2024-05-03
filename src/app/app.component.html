@@ -54,7 +54,7 @@
             <div class="tab-header">
               <ng-template mat-tab-label>
                   <div>{{ tab.Name }}</div>
-                    <button [ngStyle]="{'margin-left':tab.Name.length<7?'85%':tab.Name.length<13?'40%':'20%'}"
+                    <button [ngStyle]="{'margin-left':tab.Name.length<7?'85%':tab.Name.length<12?'40%':'20%'}"
                       [ngClass]="tab.Active ? 'tab-close-button' : ''"
                       *ngIf="tab.Active"
                       mat-icon-button

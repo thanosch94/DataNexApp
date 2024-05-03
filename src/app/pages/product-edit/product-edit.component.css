@@ -41,32 +41,7 @@
 .example-spacer {
   flex: 1 1 auto;
 }
-.display-delete-button{
-  display: block;
-  margin-right:2%;
 
-  }
-  .display-delete-button:hover{
-   cursor: pointer;
-
-    }
-  .hide-delete-button{
-    display: none;
-    }
-    .save-button{
-      margin-right:2%;
-
-    }
-    .save-button:hover{
-      cursor: pointer;
-    }
-    .close-button{
-      margin-right:2%;
-
-    }
-    .close-button:hover{
-      cursor: pointer;
-    }
 
 
 
@@ -199,3 +174,4 @@
   background-color:#1b9e1b!important;
   color: white;
 }
+

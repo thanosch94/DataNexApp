@@ -1,18 +1,15 @@
-<mat-toolbar>
-  <span>{{ customer_text }}</span>
-  <span class="example-spacer"></span>
-  <mat-icon
-    [ngClass]="customer?.Id ? 'display-delete-button' : 'hide-delete-button'"
-    (click)="onDeleteClicked($event)"
-    >delete</mat-icon
-  >
-
-  <mat-icon class="save-button" (click)="onSaveClicked($event)">save</mat-icon>
-  <mat-icon class="close-button" (click)="onCloseClicked($event)"
-    >exit_to_app</mat-icon
-  >
-</mat-toolbar>
-
+<dn-toolbar
+[canDelete]="true"
+[canExit]="true"
+[canSave]="true"
+[isDialog]="false"
+[title]="customer_text"
+[entityId]="customer.Id"
+(onCloseBtnClicked)="onCloseClicked($event)"
+(onDeleteBtnClicked)="onDeleteClicked($event)"
+(onSaveBtnClicked)="onSaveClicked($event)"
+></dn-toolbar>
+<!-- TODO add isDialog variable  -->
 <div class="form" (submit)="onSaveClicked($event)">
   <div class="basic-info-contact">
     <div>
