@@ -1,3 +1,4 @@
+import { TabsService } from './../../services/tabs.service';
 import { DeleteConfirmComponent } from './../components/delete-confirm/delete-confirm.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
@@ -8,24 +9,11 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
 import { CustomerDto } from '../../dto/customer.dto';
 import { WebAppBase } from '../../base/web-app-base';
-import {
-  FormControl,
-  FormGroup,
-  FormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import {
-  MatDialog,
-  MatDialogRef,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogTitle,
-  MatDialogContent,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
@@ -42,6 +30,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
     CommonModule,
     MatDialogModule,
   ],
+  providers: [TabsService],
   templateUrl: './customer-edit.component.html',
   styleUrl: './customer-edit.component.css',
 })
@@ -54,7 +43,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private router: Router,
     private _snackBar: MatSnackBar,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private tabsService: TabsService
   ) {
     this.customersViewModel = new CustomersViewModel(this.http);
     this.customer = new CustomerDto();
@@ -70,6 +60,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           result as CustomerDto;
           this.customer = result;
+          this.tabsService.setTabName(this.customer.Name);
         });
     } else {
       this.customer_text = 'New Customer';
@@ -95,7 +86,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
           }
         });
     } else {
-        this.customersViewModel
+      this.customersViewModel
         .InsertDto(this.customer)
         .subscribe((result: any) => {
           this.customer = result;
@@ -130,26 +121,23 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
 
   deleteItem(e: any) {
-    this.customersViewModel
-    .DeleteById(this.customer.Id)
-    .subscribe({
-    next: (result) => {
-      this._snackBar.open('Record deleted', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-      this.router.navigate(['customers-list']);
-
-    },
-    error: (err) => {
-      const dialog = this.dialog.open(DnAlertComponent, {
-        data: {
-          Title: 'Message',
-          Message: err.error.innerExceptionMessage,
-        },
-      });
-    },
-  });
+    this.customersViewModel.DeleteById(this.customer.Id).subscribe({
+      next: (result) => {
+        this._snackBar.open('Record deleted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+        this.router.navigate(['customers-list']);
+      },
+      error: (err) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error.innerExceptionMessage,
+          },
+        });
+      },
+    });
   }
 
   ngOnDestroy() {

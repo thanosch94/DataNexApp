@@ -1,26 +1,36 @@
 import { Injectable } from '@angular/core';
 import { AppTabDto } from '../dto/app-tab.dto';
+import { ActivatedRoute } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TabsService {
+route: any;
 
-constructor() { }
+constructor(private activatedRoute: ActivatedRoute) {
+  activatedRoute.firstChild?.url.subscribe((result:any)=>{
+    this.route = result[0].path})
+}
 static tabs = new Array<AppTabDto>();
+
+getTabs() {
+  return TabsService.tabs;
+}
 
 closeTab(tab:AppTabDto){
   let tabIndex = TabsService.tabs.indexOf(tab);
 
   TabsService.tabs.splice(tabIndex, 1);
 }
-setTabName(route: string, tabName: string) {
+
+setTabName(tabName: string) {
   let activeTab = TabsService.tabs.find(
-    (x: AppTabDto) => x.Route.path == route && x.Name == ''
+    (x: AppTabDto) => x.Route.path == this.route && x.Name == ''
   );
 
   if (activeTab!.Name == '') {
-    activeTab!.Name = tabName;
+    activeTab!.Name = tabName.substring(0,15);
   }
 }
 
@@ -30,7 +40,4 @@ deactivateTabs() {
   });
 }
 
-getTabs() {
-  return TabsService.tabs;
-}
 }

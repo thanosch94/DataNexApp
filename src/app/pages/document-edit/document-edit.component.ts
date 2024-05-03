@@ -150,14 +150,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private activatedRoute: ActivatedRoute,
     private tabsService:TabsService
   ) {
-
-    activatedRoute.firstChild?.url.subscribe((result:any)=>{
-      this.route = result[0].path    })
-
-
 
     this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
     this.productSizesViewModel = new ProductSizesViewModel(this.http);
@@ -235,7 +229,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.document.DocumentTypeName +
         '-' +
         this.document.DocumentNumber.toString().padStart(6, '0');
-      this.tabsService.setTabName(this.route, this.document_text)
+      this.tabsService.setTabName(this.document_text)
       this.ref.detectChanges();
 
       this.documentProductsViewModel

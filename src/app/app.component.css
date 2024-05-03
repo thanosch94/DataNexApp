@@ -82,8 +82,8 @@ margin-right: auto;
   padding-bottom: 5px!important;
 }
 .tab-close-button{
- margin: 11%;
- padding:0%;
+
+ padding:0;
  background-color: lightcoral;
  color:white;
  border-radius: 15% ;
@@ -95,6 +95,8 @@ margin-right: auto;
 
 ::ng-deep .mat-mdc-tab-group.mat-mdc-tab-group-stretch-tabs>.mat-mdc-tab-header .mat-mdc-tab {
   flex-grow: 0!important;
+  width: 14%!important;
+
 }
 
 

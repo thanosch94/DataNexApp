@@ -62,15 +62,15 @@ export class AppComponent{
   onMenuItemClick(item: MenuItemDto) {
     this.isMenuItem = true;
     this.router.navigate([item.Path]);
-
-    //this.ref.detectChanges();
   }
 
   onSettingsItemClick(item: MenuItemDto) {
+    this.isMenuItem = true;
     this.router.navigate([item.Path]);
   }
 
   onExtraItemClick(item: MenuItemDto) {
+    this.isMenuItem = true;
     this.router.navigate([item.Path]);
   }
 

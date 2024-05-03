@@ -47,6 +47,7 @@ import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { TabsService } from '../../services/tabs.service';
 
 @Component({
   selector: 'product-edit',
@@ -77,6 +78,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
     MatButtonModule,
     MatDialogModule
   ],
+  providers: [TabsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
@@ -107,8 +109,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private _ngZone: NgZone,
-    private ref: ChangeDetectorRef,
+    private tabsService:TabsService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.productsViewModel = new ProductsViewModel(this.http);
@@ -134,6 +135,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           result as ProductDto;
           this.product = result;
+          this.tabsService.setTabName(this.product.Sku + " - "+ this.product.Name)
+
           this.getProductBarcodesData();
         });
       this.productSizesViewModel.GetAll().subscribe((result: any) => {
