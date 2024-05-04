@@ -27,11 +27,10 @@
 .width-45{
   width:45%
 }
-.example-form {
+.form {
 
   width: 95%;
-  margin:5%;
-  margin-top:2%
+  margin:2%;
 }
 
 
@@ -82,9 +81,9 @@
     }
 
     .margin{
-      margin-bottom:4%;
-      margin-right:4%;
-      margin-left:4%;
+      margin-bottom:2%;
+      margin-right:2%;
+      margin-left:2%;
     }
     .button-add-row {
       background: #1b9e1b;
@@ -202,7 +201,7 @@ mat-form-field{
 .grid-c-customer{
   grid-area: c;
   gap:2rem;
-  width:95%;
+  width:100%;
 }
 .grid-e-docstatus{
   grid-area: e;
@@ -211,7 +210,7 @@ mat-form-field{
 }
 
 .notes{
-width: 97%;
+width: 100%;
 }
 
 .tab2-grid{
@@ -244,7 +243,7 @@ width: 97%;
 .tab2-grid-d-shipping-phone2{
   grid-area: d;
   gap:2rem;
-  width:90%;
+  width:100%;
 
 }
 .tab2-grid-e-shipping-city{
@@ -262,7 +261,7 @@ width: 97%;
 .tab2-grid-g-shipping-email{
   grid-area: g;
   gap:2rem;
-  width:95%;
+  width:100%;
 }
 
 .tab4-grid{
@@ -293,7 +292,7 @@ width: 97%;
 .tab4-grid-d-user-text4{
   grid-area: d;
   gap:2rem;
-  width:90%;
+  width:100%;
 }
 
 .tab4-grid-e-user-number1{
@@ -314,7 +313,7 @@ width: 97%;
 .tab4-grid-h-user-number4{
   grid-area: h;
   gap:2rem;
-  width:90%;
+  width:100%;
 }
 
 .tab4-grid-i-user-date1{
@@ -335,7 +334,7 @@ width: 97%;
 .tab4-grid-l-user-date4{
   grid-area: l;
   gap:2rem;
-  width:90%;
+  width:100%;
 }
 
 ::ng-deep .green-snackbar .mdc-snackbar__surface {

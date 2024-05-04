@@ -1,3 +1,10 @@
+
+<dn-toolbar
+[canInsert]="true"
+[isDialog]="false"
+[title]="document_types_list_text"
+(onInsertBtnClicked)="onInsertClicked($event)"
+></dn-toolbar>
 <div class="margin">
   <mat-form-field>
     <mat-label>Search</mat-label>
@@ -9,11 +16,11 @@
     />
   </mat-form-field>
 
-  <article class="table-header">
+  <!-- <article class="table-header">
     <button mat-button class="button-add-row" (click)="addDocumentType($event)">
       Add Document Type
     </button>
-  </article>
+  </article> -->
   <div class="mat-elevation-z8">
     <table mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="Name">

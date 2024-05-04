@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-customers-list',
@@ -27,6 +28,7 @@ import { WebAppBase } from '../../base/web-app-base';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
+    DnToolbarComponent
   ],
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.css',
@@ -47,8 +49,10 @@ export class CustomersListComponent implements AfterViewInit {
   ];
   dataSource: MatTableDataSource<CustomerDto>;
   customersViewModel: CustomersViewModel;
+  customer_list_text: string;
   constructor(private http: HttpClient, private router: Router) {
     this.customersViewModel = new CustomersViewModel(this.http);
+    this.customer_list_text  = "Customer List"
   }
 
   ngAfterViewInit() {
@@ -77,4 +81,8 @@ export class CustomersListComponent implements AfterViewInit {
     this.router.navigate(['customer-edit']);
   }
   deleteCustomer(element: any) {}
+
+  onInsertClicked(e:any){
+    this.router.navigate(['customer-edit']);
+  }
 }

@@ -10,7 +10,7 @@
 (onDeleteBtnClicked)="onDeleteClicked($event)"
 (onSaveBtnClicked)="onSaveClicked($event)"
 ></dn-toolbar>
-<form class="example-form">
+<form class="form">
   <mat-tab-group>
     <mat-tab label="Basic Info">
       <div class="tab-1">
@@ -516,7 +516,6 @@
           <button
             mat-icon-button
             matTooltip="Click for Info"
-            class="iconbutton"
             color="primary"
             (click)="onProductInfoClicked(row, i)"
           >
@@ -532,8 +531,7 @@
           <button
             mat-icon-button
             matTooltip="Click to Remove"
-            class="iconbutton"
-            color="primary"
+            color="accent"
             (click)="removeProduct(row, i)"
           >
             <mat-icon

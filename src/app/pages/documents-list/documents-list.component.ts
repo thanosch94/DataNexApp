@@ -16,6 +16,7 @@ import { WebAppBase } from '../../base/web-app-base';
 import { DocumentDto } from '../../dto/document.dto';
 import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 import {CdkMenu, CdkMenuItem, CdkContextMenuTrigger} from '@angular/cdk/menu';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-documents-list',
@@ -35,7 +36,8 @@ import {CdkMenu, CdkMenuItem, CdkContextMenuTrigger} from '@angular/cdk/menu';
     CdkContextMenuTrigger,
     CdkMenu,
     CdkMenuItem,
-    CommonModule
+    CommonModule,
+    DnToolbarComponent
   ],
   templateUrl: './documents-list.component.html',
   styleUrl: './documents-list.component.css',
@@ -46,8 +48,10 @@ export class DocumentsListComponent {
   rowData:any;
   customersViewModel: DocumentsViewModel;
   documentsViewModel: DocumentsViewModel;
+  documentlist_text: string;
   constructor(private http: HttpClient, private router: Router) {
     this.documentsViewModel = new DocumentsViewModel(this.http);
+    this.documentlist_text = "Document List"
     // Assign the data to the data source for the table to render
   }
 
@@ -104,5 +108,8 @@ getRowData(rowData:any){
   }
   onCancelDocumentClicked(e:any, row:any){
 
+  }
+  onInsertClicked(e:any){
+    this.router.navigate(['document-edit'])
   }
 }

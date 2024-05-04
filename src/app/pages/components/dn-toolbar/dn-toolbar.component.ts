@@ -19,6 +19,7 @@ export class DnToolbarComponent {
 @Input() canExit:boolean;
 @Input() canSave:boolean;
 @Input() canDelete:boolean;
+@Input() canInsert:boolean;
 @Input() title:string;
 @Input() entityId:Guid;
 @Input() isDialog:boolean;
@@ -26,6 +27,7 @@ export class DnToolbarComponent {
 @Output()onDeleteBtnClicked = new EventEmitter()
 @Output()onSaveBtnClicked = new EventEmitter()
 @Output()onCloseBtnClicked = new EventEmitter()
+@Output()onInsertBtnClicked = new EventEmitter()
 
 onDeleteClicked(e:any){
   this.onDeleteBtnClicked.emit(e)
@@ -36,5 +38,9 @@ onSaveClicked(e:any){
 }
 onCloseClicked(e:any){
   this.onCloseBtnClicked.emit(e)
+}
+
+onInsertClicked(e:any){
+  this.onInsertBtnClicked.emit(e)
 }
 }

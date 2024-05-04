@@ -15,11 +15,13 @@ import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel
 import { NewItemComponent } from '../components/new-item/new-item.component';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-product-sizes-list',
   standalone: true,
-  imports: [MatButtonModule,
+  imports: [
+    MatButtonModule,
     MatIconModule,
     MatPaginator,
     MatPaginatorModule,
@@ -29,32 +31,34 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
     MatFormFieldModule,
     MatTableModule,
     HttpClientModule,
-    MatSortHeader],
+    MatSortHeader,
+    DnToolbarComponent,
+  ],
   templateUrl: './product-sizes-list.component.html',
-  styleUrl: './product-sizes-list.component.css'
+  styleUrl: './product-sizes-list.component.css',
 })
 export class ProductSizesListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = [
-    'Name',
-    'Abbreviation',
-    'buttons',
-  ];
+  displayedColumns: string[] = ['Name', 'Abbreviation', 'buttons'];
   dataSource: MatTableDataSource<ProductSizeDto>;
   productSizesViewModel: ProductSizesViewModel;
   productSize: ProductSizeDto = new ProductSizeDto();
+  product_sizes_list_text: string;
 
-  constructor(private http:HttpClient, public dialog: MatDialog,   private _snackBar: MatSnackBar,
-
-    ){
-    this.productSizesViewModel = new ProductSizesViewModel(this.http)
+  constructor(
+    private http: HttpClient,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {
+    this.productSizesViewModel = new ProductSizesViewModel(this.http);
+    this.product_sizes_list_text = 'Product Sizes List';
   }
   ngAfterViewInit() {
-  this.getData()
+    this.getData();
   }
 
-  getData(){
+  getData() {
     this.productSizesViewModel.GetAll().subscribe((result: any) => {
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
@@ -70,7 +74,6 @@ export class ProductSizesListComponent {
       this.dataSource.paginator.firstPage();
     }
   }
-
 
   deleteProductSize(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
@@ -90,57 +93,71 @@ export class ProductSizesListComponent {
     });
   }
 
-  deleteItem(data:any){
-    this.productSizesViewModel
-    .DeleteById(data.Id)
-    .subscribe({
-    next: (result) => {
-      this.getData();
+  deleteItem(data: any) {
+    this.productSizesViewModel.DeleteById(data.Id).subscribe({
+      next: (result) => {
+        this.getData();
 
-      this._snackBar.open('Record deleted', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-    },
-    error: (err) => {
-      const dialog = this.dialog.open(DnAlertComponent, {
-        data: {
-          Title: 'Message',
-          Message: err.error.innerExceptionMessage,
-        },
-      });
-    },
-  });
+        this._snackBar.open('Record deleted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+      },
+      error: (err) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error.innerExceptionMessage,
+          },
+        });
+      },
+    });
   }
 
-  editProductSize(data:any){
-    this.productSize=data;
+  editProductSize(data: any) {
+    this.productSize = data;
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
       data: {
         title: 'Edit Item',
-        name:this.productSize.Name
+        name: this.productSize.Name,
       },
     });
     dialogRef.afterClosed().subscribe((data) => {
-
       if (data) {
         this.updateItem(data);
       } else {
       }
     });
   }
-  updateItem(data:any){
-     this.productSize.Name = data
-    this.productSizesViewModel.UpdateDto(this.productSize).subscribe((result:any)=>{
-      this.getData();
-      this._snackBar.open('Record updated', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
+  updateItem(data: any) {
+    this.productSize.Name = data;
+    this.productSizesViewModel
+      .UpdateDto(this.productSize)
+      .subscribe((result: any) => {
+        this.getData();
+        this._snackBar.open('Record updated', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
       });
-    })
   }
-  addProductSize(e:any){
+  // addProductSize(e:any){
+  //   const dialogRef = this.dialog.open(NewItemComponent, {
+  //     width: '500px',
+  //     data: {
+  //       title: 'New Item',
+  //     },
+  //   });
+  //   dialogRef.afterClosed().subscribe((data) => {
+
+  //     if (data) {
+  //       this.insertItem(data);
+  //     } else {
+  //     }
+  //   });
+  // }
+  onInsertClicked(e: any) {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
       data: {
@@ -148,24 +165,23 @@ export class ProductSizesListComponent {
       },
     });
     dialogRef.afterClosed().subscribe((data) => {
-
       if (data) {
         this.insertItem(data);
       } else {
       }
     });
   }
-
-insertItem(data:any){
-  let productSize = new ProductSizeDto()
-  productSize.Name = data
-  this.productSizesViewModel.InsertDto(productSize).subscribe((result:any)=>{
-    this._snackBar.open('Record inserted', '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-    this.getData();
-
-  })
-}
+  insertItem(data: any) {
+    let productSize = new ProductSizeDto();
+    productSize.Name = data;
+    this.productSizesViewModel
+      .InsertDto(productSize)
+      .subscribe((result: any) => {
+        this._snackBar.open('Record inserted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+        this.getData();
+      });
+  }
 }

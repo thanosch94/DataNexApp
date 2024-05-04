@@ -14,6 +14,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-products-list',
@@ -30,6 +31,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
+    DnToolbarComponent
   ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css'
@@ -46,9 +48,11 @@ export class ProductsListComponent implements AfterViewInit{
     'buttons'
   ];
   productsViewModel: ProductsViewModel;
+  products_list_text: string;
 
   constructor(private http:HttpClient, private router:Router, public dialog: MatDialog, private _snackBar: MatSnackBar){
-    this.productsViewModel= new ProductsViewModel(this.http)
+    this.productsViewModel= new ProductsViewModel(this.http);
+    this.products_list_text = "Products List"
   }
 
   ngAfterViewInit() {
@@ -73,7 +77,9 @@ export class ProductsListComponent implements AfterViewInit{
   addProduct(e:any){
     this.router.navigate(['product-edit'])
   }
-
+  onInsertClicked(e:any){
+    this.router.navigate(['product-edit'])
+  }
   editProduct(product:any){
     WebAppBase.data = product.Id;
     this.router.navigate(['product-edit']);

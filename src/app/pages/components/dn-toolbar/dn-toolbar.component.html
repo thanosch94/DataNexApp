@@ -7,6 +7,11 @@
     (click)="onDeleteClicked($event)"
     >delete</mat-icon
   >
+  <mat-icon
+    *ngIf="canInsert"
+    (click)="onInsertClicked($event)"
+    >add</mat-icon
+  >
 
   <mat-icon *ngIf="canSave" class="save-button" (click)="onSaveClicked($event)"
     >save</mat-icon

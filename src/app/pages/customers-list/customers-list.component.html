@@ -1,13 +1,20 @@
+
+<dn-toolbar
+[canInsert]="true"
+[isDialog]="false"
+[title]="customer_list_text"
+(onInsertBtnClicked)="onInsertClicked($event)"
+></dn-toolbar>
 <div class="margin">
 
 <mat-form-field>
   <mat-label>Search</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Maria" #input>
 </mat-form-field>
-
+<!--
 <article class="table-header">
   <button mat-button class="button-add-row" (click)="addCustomer()">Add Customer</button>
-</article>
+</article> -->
 <div class="mat-elevation-z8">
   <table mat-table [dataSource]="dataSource" matSort>
 
