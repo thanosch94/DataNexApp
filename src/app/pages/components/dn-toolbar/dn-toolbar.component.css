@@ -13,32 +13,22 @@
 .example-spacer {
   flex: 1 1 auto;
 }
-.display-delete-button{
-  display: block;
-  margin-right:2%;
+
+
+.button{
+  color: white;
+  padding:22px;
+}
+/* .button:hover{
+  cursor: pointer!important;
+} */
+
+span{
   color:white;
-
-  }
-  .display-delete-button:hover{
-   cursor: pointer;
-
-    }
-  .hide-delete-button{
-    display: none;
-    }
-    .save-button{
-      margin-right:2%;
-      color: white;
-
-    }
-    .save-button:hover{
-      cursor: pointer;
-    }
-    .close-button{
-      margin-right:2%;
-      color: white;
-
-    }
-    .close-button:hover{
-      cursor: pointer;
-    }
+}
+.icons{
+  color:white;
+}
+::ng-deep .button:hover{
+cursor: pointer!important;;
+}

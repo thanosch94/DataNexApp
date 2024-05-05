@@ -1,1 +1,92 @@
-<p>user-edit works!</p>
+<dn-toolbar
+[canDelete]="true"
+[canExit]="true"
+[canSave]="true"
+[isDialog]="false"
+[title]="user_text"
+[entityId]="user.Id"
+(onCloseBtnClicked)="onCloseClicked($event)"
+(onDeleteBtnClicked)="onDeleteClicked($event)"
+(onSaveBtnClicked)="onSaveClicked($event)"
+></dn-toolbar>
+<!-- TODO add isDialog variable  -->
+<div class="form">
+  <div class="basic-info-contact">
+    <div>
+      <div class="info-categories">
+        <b>User Info</b>
+      </div>
+      <br />
+      <div>
+        <div>
+          <mat-form-field class="name">
+            <mat-label>Name</mat-label>
+            <input matInput name="Name" [(ngModel)]="user.Name" />
+          </mat-form-field>
+        </div>
+
+        <!-- <br />
+        <br />
+        <div>
+          <mat-form-field class="phone1">
+            <mat-label>Phone 1</mat-label>
+            <input matInput name="phone1" [(ngModel)]="customer.Phone1" />
+          </mat-form-field>
+          <mat-form-field class="phone2">
+            <mat-label>Phone 2</mat-label>
+            <input matInput name="phone2" [(ngModel)]="customer.Phone2" />
+          </mat-form-field>
+        </div> -->
+        <br />
+        <br />
+        <div>
+          <mat-form-field class="email">
+            <mat-label>Email</mat-label>
+            <input matInput name="email" [(ngModel)]="user.Email" />
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="addresses">
+    <div class="info-categories">
+      <b>Login Info</b>
+    </div>
+    <br />
+    <div>
+      <mat-form-field class="address">
+        <mat-label>Username</mat-label>
+        <input matInput name="address" [(ngModel)]="user.Username" />
+      </mat-form-field>
+
+      <mat-form-field class="region">
+        <mat-label>User Role</mat-label>
+        <input matInput name="region" [(ngModel)]="user.UserRole"/>
+      </mat-form-field>
+
+    </div>
+  </div>
+  <br /><br /><br /><br />
+</div>
+<div class="form">
+  <div class="invoice-info">
+    <div class="info-categories">
+      <b>Change Password</b>
+    </div>
+    <br />
+    <div>
+      <mat-form-field class="vat-number">
+        <mat-label>New Password</mat-label>
+        <input matInput name="vatid" [(ngModel)]="user.Password"  type="password"/>
+      </mat-form-field>
+
+    </div>
+    <div>
+      <mat-form-field class="vat-number">
+        <mat-label>Confirm Password</mat-label>
+        <input matInput name="vatid" [(ngModel)]="confirmPassword"  type="password"/>
+      </mat-form-field>
+
+    </div>
+  </div>
+</div>

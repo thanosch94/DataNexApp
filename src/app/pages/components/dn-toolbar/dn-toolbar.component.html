@@ -1,30 +1,47 @@
 <mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
   <span>{{ title }}</span>
   <span class="example-spacer"></span>
-  <mat-icon
-    *ngIf="canDelete && !isDialog"
-    [ngClass]="entityId ? 'display-delete-button' : 'hide-delete-button'"
-    (click)="onDeleteClicked($event)"
-    >delete</mat-icon
-  >
-  <mat-icon
-    *ngIf="canInsert"
-    (click)="onInsertClicked($event)"
-    >add</mat-icon
-  >
 
-  <mat-icon *ngIf="canSave" class="save-button" (click)="onSaveClicked($event)"
-    >save</mat-icon
+  <button
+  class="button"
+    *ngIf="canDelete && !isDialog && entityId"
+    mat-button
+    (click)="onDeleteClicked($event)"
   >
-  <mat-dialog-actions>
-    <mat-icon *ngIf="isDialog" class="close-button" [mat-dialog-close]="true"
-      >close</mat-icon
-    >
-    <mat-icon
-      *ngIf="!isDialog && canExit"
-      class="close-button"
-      (click)="onCloseClicked($event)"
-      >exit_to_app</mat-icon
-    >
+    <mat-icon class="icons">delete</mat-icon>
+    <span>Delete</span>
+  </button>
+  <button
+    class="button"
+    *ngIf="canInsert"
+    mat-button
+    (click)="onInsertClicked($event)"
+  >
+    <mat-icon class="icons">add</mat-icon>
+    <span>Add</span>
+  </button>
+  <button
+    class="button"
+    *ngIf="canSave"
+    mat-button
+    (click)="onSaveClicked($event)"
+  >
+    <mat-icon class="icons">save</mat-icon>
+    <span>Save</span>
+  </button>
+  <mat-dialog-actions *ngIf="isDialog">
+    <button class="button" *ngIf="canExit" mat-button [mat-dialog-close]="true">
+      <mat-icon class="icons">close</mat-icon>
+      <span>Close</span>
+    </button>
   </mat-dialog-actions>
+  <button
+    class="button"
+    *ngIf="!isDialog && canExit"
+    mat-button
+    (click)="onCloseClicked($event)"
+  >
+    <mat-icon class="icons">exit_to_app</mat-icon>
+    <span>Close</span>
+  </button>
 </mat-toolbar>

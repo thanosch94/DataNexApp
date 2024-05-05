@@ -1,0 +1,74 @@
+.form{
+  margin:2%;
+  display:flex;
+}
+
+.margin-right{
+  margin-right:5%;
+}
+
+.info-categories{
+  margin-bottom:3%
+}
+
+.example-spacer {
+  flex: 1 1 auto;
+}
+
+.save-button{
+  margin-right:2%;
+
+}
+.save-button:hover{
+  cursor: pointer;
+}
+.close-button{
+  margin-right:2%;
+
+}
+.close-button:hover{
+  cursor: pointer;
+}
+.basic-info-contact, .invoice-info{
+  width:50%;
+}
+.addresses{
+  width:50%;
+}
+
+::ng-deep .green-snackbar .mdc-snackbar__surface {
+  background-color:#1b9e1b!important;
+  color: white;
+}
+
+.display-delete-button{
+display: block;
+margin-right:2%;
+
+}
+.display-delete-button:hover{
+ cursor: pointer;
+
+  }
+.hide-delete-button{
+  display: none;
+  }
+.name{
+  width:90%;
+
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+.phone1, .email, .address, .vat-number,.city, .country{
+  width:40%;
+  margin-right: 5%;
+}
+.phone2, .region, .postal-code, .tax-office{
+  width:40%;
+  margin-left: 5%;
+
+}
+
+

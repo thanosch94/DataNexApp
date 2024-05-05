@@ -95,7 +95,9 @@
       text-align: right;
       margin-bottom: 10px;
     }
-
+    .mat-header-row{
+      height: 100%;
+    }
     :host ::ng-deep .mat-form-field-label {
       background: white;
   }
@@ -105,7 +107,9 @@
     background: white!important;
 
 }
-
+::ng-deep .products-table .mat-mdc-header-row{
+  height: 50px!important;
+}
 .input-position{
   position:relative;
   top:7px;
