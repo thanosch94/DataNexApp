@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { CustomersViewModel } from '../../view-models/customers.viewmodel';
 import { AfterViewInit, Component, NgModule, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -49,8 +50,8 @@ export class DocumentsListComponent {
   customersViewModel: DocumentsViewModel;
   documentsViewModel: DocumentsViewModel;
   documentlist_text: string;
-  constructor(private http: HttpClient, private router: Router) {
-    this.documentsViewModel = new DocumentsViewModel(this.http);
+  constructor(private http: HttpClient, private auth:AuthService,private router: Router) {
+    this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.documentlist_text = "Document List"
     // Assign the data to the data source for the table to render
   }

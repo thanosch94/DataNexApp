@@ -15,6 +15,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-document-types',
@@ -47,10 +48,11 @@ export class DocumentTypesComponent implements AfterViewInit {
 
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
+    this.documentTypesViewModel = new DocumentTypesViewModel(this.http, this.auth);
     this.document_types_list_text ="Document Types List"
   }
 

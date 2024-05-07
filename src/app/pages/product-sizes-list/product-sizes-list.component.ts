@@ -16,6 +16,7 @@ import { NewItemComponent } from '../components/new-item/new-item.component';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-product-sizes-list',
@@ -48,10 +49,11 @@ export class ProductSizesListComponent {
 
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.productSizesViewModel = new ProductSizesViewModel(this.http);
+    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
     this.product_sizes_list_text = 'Product Sizes List';
   }
   ngAfterViewInit() {

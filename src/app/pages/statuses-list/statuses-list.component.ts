@@ -15,6 +15,7 @@ import { NewItemComponent } from '../components/new-item/new-item.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-statuses-list',
@@ -47,10 +48,11 @@ export class StatusesListComponent implements AfterViewInit {
 
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.statusesViewModel = new StatusesViewModel(this.http);
+    this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     this.statuses_list_text = "Statuses List"
   }
 

@@ -23,4 +23,9 @@ export class AuthService {
   login(loginData:LoginDto):Observable<Object>{
     return this.loginViewModel.Login(loginData)
   }
+
+  getApiService(){
+    let serviceUrl = 'http://20.107.178.104/DataNexApi/api/'
+    return serviceUrl
+  }
 }

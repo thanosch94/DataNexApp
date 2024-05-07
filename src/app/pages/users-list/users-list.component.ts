@@ -17,6 +17,7 @@ import { UsersViewModel } from '../../view-models/users.viewmodel';
 import { Router } from '@angular/router';
 import { UserDto } from '../../dto/user.dto';
 import { WebAppBase } from '../../base/web-app-base';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-users-list',
@@ -47,11 +48,12 @@ export class UsersListComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
+    private auth: AuthService,
     public dialog: MatDialog,
     private router: Router,
     private _snackBar:MatSnackBar
   ) {
-    this.usersViewModel = new UsersViewModel(this.http);
+    this.usersViewModel = new UsersViewModel(this.http, this.auth);
     this.users_list_text = "Users List"
   }
 

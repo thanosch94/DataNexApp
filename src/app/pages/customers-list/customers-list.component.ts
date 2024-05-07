@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-customers-list',
@@ -50,8 +51,8 @@ export class CustomersListComponent implements AfterViewInit {
   dataSource: MatTableDataSource<CustomerDto>;
   customersViewModel: CustomersViewModel;
   customer_list_text: string;
-  constructor(private http: HttpClient, private router: Router) {
-    this.customersViewModel = new CustomersViewModel(this.http);
+  constructor(private http: HttpClient, private auth:AuthService, private router: Router) {
+    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer_list_text  = "Customer List"
   }
 

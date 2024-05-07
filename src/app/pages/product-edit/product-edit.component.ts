@@ -49,6 +49,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'product-edit',
@@ -108,14 +109,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   isDialog: boolean;
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private tabsService:TabsService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.productsViewModel = new ProductsViewModel(this.http);
-    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
+    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http, this.auth);
     //If opens from dialog
     if(data){
       this.productId = data.product.ProductId;
@@ -125,7 +127,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.isDialog=false
 
     }
-    this.productSizesViewModel = new ProductSizesViewModel(this.http);
+    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
   }
 
   ngOnInit() {

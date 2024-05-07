@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-customer-edit',
@@ -43,12 +44,13 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   customerId: any;
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private tabsService: TabsService
   ) {
-    this.customersViewModel = new CustomersViewModel(this.http);
+    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer = new CustomerDto();
     this.customerId = WebAppBase.data;
   }

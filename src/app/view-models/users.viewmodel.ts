@@ -2,11 +2,12 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Guid } from "guid-typescript";
 import { StatusDto } from "../dto/status.dto";
 import { UserDto } from "../dto/user.dto";
+import { AuthService } from "../services/auth.service";
 
 export class UsersViewModel {
   service: string;
-  constructor(private http: HttpClient) {
-    this.service = 'http://localhost:5000/api/';
+  constructor(private http: HttpClient, private auth:AuthService) {
+    this.service = this.auth.getApiService();
   }
 
   public GetAll() {

@@ -16,6 +16,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { UserDto } from '../../dto/user.dto';
 import { UsersViewModel } from '../../view-models/users.viewmodel';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user-edit',
@@ -45,12 +46,13 @@ export class UserEditComponent {
   confirmPassword: string;
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private tabsService: TabsService
   ) {
-    this.usersViewModel = new UsersViewModel(this.http);
+    this.usersViewModel = new UsersViewModel(this.http, this.auth);
     this.user = new UserDto();
     this.userId = WebAppBase.data;
   }

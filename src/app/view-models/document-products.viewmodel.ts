@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Guid } from "guid-typescript";
 import { DocumentProductDto } from "../dto/document-product.dto";
+import { AuthService } from "../services/auth.service";
 
 export class DocumentProductsViewModel {
   service: string;
-  constructor(private http: HttpClient) {
-    this.service = 'http://localhost:5000/api/';
-  }
+  constructor(private http: HttpClient, private auth:AuthService) {
+    this.service = this.auth.getApiService();
+    }
 
   public GetAll() {
     let headers = {

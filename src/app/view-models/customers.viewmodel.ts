@@ -1,13 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Guid } from 'guid-typescript';
 import { CustomerDto } from '../dto/customer.dto';
+import { AuthService } from '../services/auth.service';
 
 export class CustomersViewModel {
   service: string;
   aadeService: string;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private auth:AuthService) {
 
-    this.service = 'http://localhost:5000/api/';
+    this.service = this.auth.getApiService();
   }
 
   public GetAll() {

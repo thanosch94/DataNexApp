@@ -15,6 +15,7 @@ import { CommonModule } from '@angular/common';
 import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
 import { SalesViews } from '../../enums/sales-views.enum';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'list-with-filters',
@@ -59,9 +60,10 @@ export class ListWithFiltersComponent {
   view: any;
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.documentProductsViewModel = new DocumentProductsViewModel(this.http);
+    this.documentProductsViewModel = new DocumentProductsViewModel(this.http, this.auth);
     this.entity_title_text =data.product.Sku+' - '+ data.product.ProductName;
     if(data){
       this.productId = data.product.ProductId;

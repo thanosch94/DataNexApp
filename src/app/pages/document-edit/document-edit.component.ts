@@ -57,6 +57,7 @@ import { ProductOptionsComponent } from '../product-options/product-options.comp
 import { AppTabDto } from '../../dto/app-tab.dto';
 import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-document-edit',
@@ -148,6 +149,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   datepipe: DatePipe = new DatePipe('en-US');
   constructor(
     private http: HttpClient,
+    private auth:AuthService,
     private ref: ChangeDetectorRef,
     private router: Router,
     public dialog: MatDialog,
@@ -155,14 +157,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private tabsService:TabsService
   ) {
 
-    this.documentTypesViewModel = new DocumentTypesViewModel(this.http);
-    this.productSizesViewModel = new ProductSizesViewModel(this.http);
-    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http);
-    this.customersViewModel = new CustomersViewModel(this.http);
-    this.documentProductsViewModel = new DocumentProductsViewModel(this.http);
-    this.productsViewModel = new ProductsViewModel(this.http);
-    this.documentsViewModel = new DocumentsViewModel(this.http);
-    this.statusesViewModel = new StatusesViewModel(this.http);
+    this.documentTypesViewModel = new DocumentTypesViewModel(this.http, this.auth);
+    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
+    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http, this.auth);
+    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
+    this.documentProductsViewModel = new DocumentProductsViewModel(this.http, this.auth);
+    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
+    this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     debugger;
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;

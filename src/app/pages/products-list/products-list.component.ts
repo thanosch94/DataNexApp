@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -50,8 +51,8 @@ export class ProductsListComponent implements AfterViewInit{
   productsViewModel: ProductsViewModel;
   products_list_text: string;
 
-  constructor(private http:HttpClient, private router:Router, public dialog: MatDialog, private _snackBar: MatSnackBar){
-    this.productsViewModel= new ProductsViewModel(this.http);
+  constructor(private http:HttpClient, private auth:AuthService, private router:Router, public dialog: MatDialog, private _snackBar: MatSnackBar){
+    this.productsViewModel= new ProductsViewModel(this.http, this.auth);
     this.products_list_text = "Products List"
   }
 
