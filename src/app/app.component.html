@@ -1,4 +1,7 @@
-<div class="screen">
+<div *ngIf="isAuthenticated==false">
+<router-outlet></router-outlet>
+</div>
+<div  *ngIf="isAuthenticated==true" class="screen">
   <div class="navbar">
     <div class="nav-menu-btn">
       <button class="menu-btn" (click)="onMenuBtnClicked()">

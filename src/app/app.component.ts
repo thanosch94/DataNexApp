@@ -19,6 +19,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
 import { TabsService } from './services/tabs.service';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -32,8 +34,9 @@ import { TabsService } from './services/tabs.service';
     FontAwesomeModule,
     FontAwesomeModule,
     MatTabsModule,
+    HttpClientModule
   ],
-
+  providers:[AuthService, HttpClient],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -44,13 +47,18 @@ export class AppComponent{
   sidenavIsOpen: boolean = true;
   tabs:any[];
   isMenuItem?: boolean;
-  constructor(private router: Router, private ref: ChangeDetectorRef, private tabsService:TabsService) {
+  isAuthenticated: any;
+  constructor(private auth:AuthService, private router: Router, private ref: ChangeDetectorRef, private tabsService:TabsService) {
     this.faArrowLeft = faArrowLeft;
     this.tabs = tabsService.getTabs()
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
         this.checkAndAddTab(result);
+
       }
+      this.isAuthenticated = this.auth.isAuthenticated
+      //this.ref.detectChanges()
+
     });
   }
   menuItems: MenuItemDto[] = WebAppBase.menu;

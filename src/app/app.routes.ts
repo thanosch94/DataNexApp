@@ -11,58 +11,87 @@ import { DocumentTypesComponent } from './pages/document-types/document-types.co
 import { ProductEditComponent } from './pages/product-edit/product-edit.component';
 import { ProductSizesListComponent } from './pages/product-sizes-list/product-sizes-list.component';
 import { StatusesListComponent } from './pages/statuses-list/statuses-list.component';
+import { UserEditComponent } from './pages/user-edit/user-edit.component';
+import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
     path:"",
     component:HomeComponent,
+    canActivate:[authGuard],
     children:[
 
     ]
   },
   {
+    path:'login',
+    component:LoginComponent,
+  },
+  {
     path:'customer-edit',
-    component:CustomerEditComponent
+    component:CustomerEditComponent,
+    canActivate:[authGuard]
   },
   {
     path:'customers-list',
-    component:CustomersListComponent
+    component:CustomersListComponent,
+    canActivate:[authGuard]
   },
   {
     path:'documents-list',
-    component:DocumentsListComponent
+    component:DocumentsListComponent,
+    canActivate:[authGuard]
+
   },
   {
     path:'document-edit',
-    component:DocumentEditComponent
+    component:DocumentEditComponent,
+    canActivate:[authGuard]
+
   },
   {
     path:'products-list',
-    component:ProductsListComponent
+    component:ProductsListComponent,
+    canActivate:[authGuard]
+
   },
   {
     path:'product-edit',
-    component:ProductEditComponent
+    component:ProductEditComponent,
+    canActivate:[authGuard]
+
   },
   {
     path:'product-sizes-list',
-    component:ProductSizesListComponent
+    component:ProductSizesListComponent,
+    canActivate:[authGuard]
+
   },
   {
     path:'users-list',
-    component:UsersListComponent
+    component:UsersListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'user-edit',
+    component:UserEditComponent,
+    canActivate:[authGuard]
   },
   {
     path:'document-types-list',
-    component:DocumentTypesComponent
+    component:DocumentTypesComponent,
+    canActivate:[authGuard]
   },
   {
     path:'home',
-    component:HomeComponent
+    component:HomeComponent,
+    canActivate:[authGuard]
   },
   {
     path:'statuses-list',
-    component:StatusesListComponent
+    component:StatusesListComponent,
+    canActivate:[authGuard]
   }
 
 ];

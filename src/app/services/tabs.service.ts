@@ -10,6 +10,7 @@ route: any;
 
 constructor(private activatedRoute: ActivatedRoute) {
   activatedRoute.firstChild?.url.subscribe((result:any)=>{
+    debugger
     this.route = result[0].path})
 }
 static tabs = new Array<AppTabDto>();
@@ -25,6 +26,7 @@ closeTab(tab:AppTabDto){
 }
 
 setTabName(tabName: string) {
+  debugger
   let activeTab = TabsService.tabs.find(
     (x: AppTabDto) => x.Route.path == this.route && x.Name == ''
   );
