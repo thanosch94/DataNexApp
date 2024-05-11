@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { MatDialog } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
+import { ApiResponseDto } from '../../dto/api-response.dto';
+import { UserDto } from '../../dto/user.dto';
 
 @Component({
   selector: 'app-login',
@@ -36,9 +38,12 @@ export class LoginComponent {
   onSubmitClicked(e: any) {
     this.auth.login(this.loginData).subscribe({
       next: (result: any) => {
-        if (result == true) {
+        result as ApiResponseDto
+        if (result?.Success == true) {
+          let user = result.Result as UserDto
           this.auth.isAuthenticated = true;
           WebAppBase.isLoggedIn =true;
+          this.auth.user=user;
           this.ref.detectChanges();
           this.router.navigate(['/']);
         } else {
