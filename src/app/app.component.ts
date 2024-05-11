@@ -15,7 +15,7 @@ import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {  faDoorOpen, faFile, faGear, faHome } from '@fortawesome/free-solid-svg-icons';
+import {  faCaretDown, faCaretUp, faDoorOpen, faFile, faGear, faHome } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
@@ -53,17 +53,30 @@ export class AppComponent{
   faGear: any;
   faFile: any;
   faDoorOpen: any;
+  isNavBarItem: boolean | undefined;
+
+  isMenuOpen: boolean= true;
+  isSettingsMenuOpen: boolean = false;
+  isExtraMenuOpen: boolean = false;
+  faMenuCaret: any;
+  faSettingsMenuCaret: any;
+  faExtraMenuCaret: any;
   constructor(private auth:AuthService, private router: Router, private dialog:MatDialog, private ref: ChangeDetectorRef, private tabsService:TabsService) {
 
     this.faHome = faHome;
     this.faGear = faGear;
     this.faFile = faFile;
     this.faDoorOpen = faDoorOpen;
-
+    this.faMenuCaret = faCaretUp;
+    this.faExtraMenuCaret = faCaretDown;
+    this.faSettingsMenuCaret = faCaretDown
     this.tabs = tabsService.getTabs()
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
-        this.checkAndAddTab(result);
+        debugger
+        if(result.url!="/"){
+          this.checkAndAddTab(result);
+        }
 
       }
       this.isAuthenticated = this.auth.isAuthenticated
@@ -117,7 +130,7 @@ export class AppComponent{
     let webAppBase=WebAppBase;
     let tabItem = [...webAppBase.menu, ... webAppBase.extraMenu, ...webAppBase.settingsMenu].find(x=>x.Path ==data.state.root.firstChild?.routeConfig?.path);
     let tabItemName = tabItem?tabItem.Name:"";
-    if (this.isMenuItem) {
+    if (this.isMenuItem || this.isNavBarItem) {
       this.tabsService.deactivateTabs();
       if (this.tabs.find((tab) => tab.Name == tabItemName) == null) {
         let tab = new AppTabDto();
@@ -141,6 +154,8 @@ export class AppComponent{
         }
       }
       this.isMenuItem = false;
+      this.isNavBarItem =false
+
     } else if (this.isMenuItem == false) {
       let tab = this.tabs.find((tab) => tab.Active == true);
       tab!.Name = tabItemName;
@@ -155,8 +170,8 @@ export class AppComponent{
   onTabCloseClicked(e: any, tab: AppTabDto) {
     this.tabsService.closeTab(tab)
     this.selectedTab.setValue(this.tabs.length - 1);
-   // this.ref.detectChanges();
-  }
+      this.router.navigate(["/"])
+    }
 
   onLogOutBtnClicked(e:any){
     const dialogRef = this.dialog.open(ConfirmComponent, {
@@ -176,7 +191,40 @@ export class AppComponent{
       }
     });
 
+  }
 
+  onUserBtnClicked(e:any){
+    debugger
+    this.isNavBarItem = true;
+    WebAppBase.data = this.auth.user.Id;
+    this.router.navigate(['user-edit']);
+  }
 
+  onSettingsCaretArrowClicked(e:any){
+    if(this.faSettingsMenuCaret==faCaretDown){
+      this.faSettingsMenuCaret = faCaretUp
+
+    }else{
+      this.faSettingsMenuCaret = faCaretDown
+    }
+    this.isSettingsMenuOpen = !this.isSettingsMenuOpen
+  }
+
+  onMenuCaretArrowClicked(e:any){
+    if(this.faMenuCaret==faCaretDown){
+      this.faMenuCaret = faCaretUp
+    }else{
+      this.faMenuCaret = faCaretDown
+    }
+    this.isMenuOpen = !this.isMenuOpen
+  }
+
+  onExtraMenuCaretArrowClicked(e:any){
+    if(this.faExtraMenuCaret==faCaretDown){
+      this.faExtraMenuCaret = faCaretUp
+    }else{
+      this.faExtraMenuCaret = faCaretDown
+    }
+    this.isExtraMenuOpen = !this.isExtraMenuOpen
   }
 }

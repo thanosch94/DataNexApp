@@ -37,6 +37,7 @@ import { AuthService } from '../../services/auth.service';
     MatDialogActions,
     MatDialogModule
   ],
+  providers: [AuthService],
   templateUrl: './list-with-filters.component.html',
   styleUrl: './list-with-filters.component.css',
 })

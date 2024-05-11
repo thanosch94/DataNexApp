@@ -11,7 +11,10 @@
     <div>
       <img src="../assets/images/datanex_logo.png" width="205" height="75" />
     </div>
-    <div class="nav-profile">
+    <div class="nav-btns">
+      <button class="user-btn" mat-button (click)="onUserBtnClicked($event)">
+        <i class="fa fa-user fa-2x"></i>
+      </button>
       <button class="exit-btn" mat-button (click)="onLogOutBtnClicked($event)">
         <i class="fa fa-power-off fa-2x"></i>
       </button>
@@ -20,28 +23,43 @@
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <p class="menu-title"><fa-icon [icon]="faHome"></fa-icon> Menu</p>
+        <p class="menu-title" (click)="onMenuCaretArrowClicked($event)">
+          <fa-icon [icon]="faHome"></fa-icon> Menu
+          <fa-icon [icon]="faMenuCaret"></fa-icon>
+        </p>
+        <div *ngIf="isMenuOpen">
+          <mat-list *ngFor="let item of menuItems">
+            <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
+              {{ item.Name }}</mat-list-item
+            >
+          </mat-list>
+        </div>
 
-        <mat-list *ngFor="let item of menuItems">
-          <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
-            {{ item.Name }}</mat-list-item
-          >
-        </mat-list>
-        <p class="menu-title"><fa-icon [icon]="faGear"></fa-icon> Settings</p>
-
-        <mat-list *ngFor="let item of settingsItems">
-          <mat-list-item class="menu-items" (click)="onSettingsItemClick(item)">
-            {{ item.Name }}</mat-list-item
-          >
-        </mat-list>
-
-        <p class="menu-title"><fa-icon [icon]="faFile"></fa-icon> Extra</p>
-
-        <mat-list *ngFor="let item of extraItems">
-          <mat-list-item class="menu-items" (click)="onExtraItemClick(item)">
-            {{ item.Name }}</mat-list-item
-          >
-        </mat-list>
+        <p class="menu-title" (click)="onSettingsCaretArrowClicked($event)">
+          <fa-icon [icon]="faGear"></fa-icon> Settings
+          <fa-icon [icon]="faSettingsMenuCaret"></fa-icon>
+        </p>
+        <div *ngIf="isSettingsMenuOpen">
+          <mat-list *ngFor="let item of settingsItems">
+            <mat-list-item
+               class="menu-items"
+              (click)="onSettingsItemClick(item)"
+            >
+              {{ item.Name }}</mat-list-item
+            >
+          </mat-list>
+        </div>
+        <p class="menu-title" (click)="onExtraMenuCaretArrowClicked($event)">
+          <fa-icon [icon]="faFile"></fa-icon> Extra
+          <fa-icon [icon]="faExtraMenuCaret"></fa-icon>
+        </p>
+        <div *ngIf="isExtraMenuOpen">
+          <mat-list *ngFor="let item of extraItems">
+            <mat-list-item class="menu-items" (click)="onExtraItemClick(item)">
+              {{ item.Name }}</mat-list-item
+            >
+          </mat-list>
+        </div>
       </mat-sidenav>
       <mat-sidenav-content class="main-content">
         <mat-tab-group
@@ -70,10 +88,9 @@
                   }"
                   [ngClass]="tab.Active ? 'tab-close-button' : ''"
                   *ngIf="tab.Active"
-                  mat-icon-button
                   (click)="onTabCloseClicked($event, tab)"
                 >
-                  <mat-icon>close</mat-icon>
+                  <i class="fa fa-close"></i>
                 </button>
               </ng-template>
             </div>

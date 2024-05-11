@@ -1,13 +1,16 @@
 ::ng-deep .toolbar{
   background: #0B6AA5!important;
   color:white!important;
-  height:auto!important
+  height:auto!important;
+  border-radius: 10px;
+
 }
 
 .dialog-toolbar{
   background: #0B6AA5!important;
   color:white!important;
-  height:100%!important
+  height:100%!important;
+  border-radius: 15px;
 }
 
 .example-spacer {

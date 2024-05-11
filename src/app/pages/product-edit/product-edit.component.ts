@@ -81,7 +81,7 @@ import { AuthService } from '../../services/auth.service';
     MatDialogModule,
     DnToolbarComponent
   ],
-  providers: [TabsService],
+  providers: [TabsService,AuthService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
