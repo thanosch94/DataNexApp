@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content>
+{{content}}
+</mat-dialog-content>
+<mat-dialog-actions class="buttons">
+  <button mat-raised-button class="cancel-button" mat-button [mat-dialog-close]="false" >Cancel</button>
+  <button mat-raised-button class="confirm-button" mat-button [mat-dialog-close]="true"  cdkFocusInitial>Confirm</button>
+</mat-dialog-actions>
