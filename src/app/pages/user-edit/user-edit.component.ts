@@ -69,6 +69,8 @@ export class UserEditComponent {
         });
     } else {
       this.user_text = 'New user';
+      this.tabsService.setTabName(this.user_text);
+
       this.user = new UserDto();
     }
   }

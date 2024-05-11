@@ -1,7 +1,7 @@
-<div *ngIf="isAuthenticated==false">
-<router-outlet></router-outlet>
+<div *ngIf="isAuthenticated == false">
+  <router-outlet></router-outlet>
 </div>
-<div  *ngIf="isAuthenticated==true" class="screen">
+<div *ngIf="isAuthenticated == true" class="screen">
   <div class="navbar">
     <div class="nav-menu-btn">
       <button class="menu-btn" (click)="onMenuBtnClicked()">
@@ -12,30 +12,32 @@
       <img src="../assets/images/datanex_logo.png" width="205" height="75" />
     </div>
     <div class="nav-profile">
-      <b class="profile-text">Profile</b>
+      <button class="exit-btn" mat-button (click)="onLogOutBtnClicked($event)">
+        <i class="fa fa-power-off fa-2x"></i>
+      </button>
     </div>
   </div>
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <p class="menu-title">Menu</p>
-        <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->
-        <mat-list class="menu-list" *ngFor="let item of menuItems">
+        <p class="menu-title"><fa-icon [icon]="faHome"></fa-icon> Menu</p>
+
+        <mat-list *ngFor="let item of menuItems">
           <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
             {{ item.Name }}</mat-list-item
           >
         </mat-list>
-        <p class="menu-title">Settings</p>
-        <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->
-        <mat-list class="menu-list" *ngFor="let item of settingsItems">
+        <p class="menu-title"><fa-icon [icon]="faGear"></fa-icon> Settings</p>
+
+        <mat-list *ngFor="let item of settingsItems">
           <mat-list-item class="menu-items" (click)="onSettingsItemClick(item)">
             {{ item.Name }}</mat-list-item
           >
         </mat-list>
 
-        <p class="menu-title">Extra</p>
-        <!-- <fa-icon [icon]="faArrowLeft"></fa-icon> -->
-        <mat-list class="menu-list" *ngFor="let item of extraItems">
+        <p class="menu-title"><fa-icon [icon]="faFile"></fa-icon> Extra</p>
+
+        <mat-list *ngFor="let item of extraItems">
           <mat-list-item class="menu-items" (click)="onExtraItemClick(item)">
             {{ item.Name }}</mat-list-item
           >
@@ -56,15 +58,23 @@
           >
             <div class="tab-header">
               <ng-template mat-tab-label>
-                  <div>{{ tab.Name }}</div>
-                    <button [ngStyle]="{'margin-left':tab.Name.length<7?'85%':tab.Name.length<12?'40%':'20%'}"
-                      [ngClass]="tab.Active ? 'tab-close-button' : ''"
-                      *ngIf="tab.Active"
-                      mat-icon-button
-                      (click)="onTabCloseClicked($event, tab)"
-                    >
-                      <mat-icon>close</mat-icon>
-                    </button>
+                <div>{{ tab.Name }}</div>
+                <button
+                  [ngStyle]="{
+                    'margin-left':
+                      tab.Name.length < 7
+                        ? '85%'
+                        : tab.Name.length < 12
+                        ? '40%'
+                        : '20%'
+                  }"
+                  [ngClass]="tab.Active ? 'tab-close-button' : ''"
+                  *ngIf="tab.Active"
+                  mat-icon-button
+                  (click)="onTabCloseClicked($event, tab)"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
               </ng-template>
             </div>
             <ng-container *ngComponentOutlet="tab.Component"></ng-container>

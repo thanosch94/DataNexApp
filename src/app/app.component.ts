@@ -1,3 +1,4 @@
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {
@@ -14,13 +15,14 @@ import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import {  faDoorOpen, faFile, faGear, faHome } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
 import { TabsService } from './services/tabs.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
+import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 
 @Component({
   selector: 'app-root',
@@ -43,13 +45,21 @@ import { AuthService } from './services/auth.service';
 export class AppComponent{
   @ViewChild('sidenav') sidenav: MatSidenav;
   title = 'DataNexApp';
-  faArrowLeft: any;
   sidenavIsOpen: boolean = true;
   tabs:any[];
   isMenuItem?: boolean;
   isAuthenticated: any;
-  constructor(private auth:AuthService, private router: Router, private ref: ChangeDetectorRef, private tabsService:TabsService) {
-    this.faArrowLeft = faArrowLeft;
+  faHome: any;
+  faGear: any;
+  faFile: any;
+  faDoorOpen: any;
+  constructor(private auth:AuthService, private router: Router, private dialog:MatDialog, private ref: ChangeDetectorRef, private tabsService:TabsService) {
+
+    this.faHome = faHome;
+    this.faGear = faGear;
+    this.faFile = faFile;
+    this.faDoorOpen = faDoorOpen;
+
     this.tabs = tabsService.getTabs()
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
@@ -146,5 +156,27 @@ export class AppComponent{
     this.tabsService.closeTab(tab)
     this.selectedTab.setValue(this.tabs.length - 1);
    // this.ref.detectChanges();
+  }
+
+  onLogOutBtnClicked(e:any){
+    const dialogRef = this.dialog.open(ConfirmComponent, {
+      width: '320px',
+      data: {
+        Title: 'Message',
+        Content: 'Are you sure you want to log out'
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.auth.isAuthenticated = false;
+        WebAppBase.isLoggedIn =false;
+        this.ref.detectChanges();
+        this.router.navigate(['login']);
+      } else {
+      }
+    });
+
+
+
   }
 }

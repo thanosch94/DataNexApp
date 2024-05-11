@@ -67,6 +67,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         });
     } else {
       this.customer_text = 'New Customer';
+      this.tabsService.setTabName(this.customer_text);
+
       this.customer = new CustomerDto();
     }
   }

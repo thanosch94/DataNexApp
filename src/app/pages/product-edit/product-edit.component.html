@@ -62,13 +62,20 @@
             <input matInput name="image" [(ngModel)]="product.ImagePath" />
           </mat-form-field>
           <div class="tab1-grid-d-image">
-            <img
+            <img *ngIf="product.ImagePath"
               class="image"
               [src]="product.ImagePath"
+              name="images"
+
+            />
+            <img *ngIf="!product.ImagePath"
+              class="image"
+              src="../assets/images/no_img.jpg" width="240" height="240"
               name="images"
               width="370"
               height="370"
             />
+
           </div>
         </div>
       </div>
