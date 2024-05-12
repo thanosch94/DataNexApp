@@ -124,6 +124,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.isDialog=true
     }else{
       this.productId = WebAppBase.data;
+      WebAppBase.data =undefined
       this.isDialog=false
 
     }
@@ -197,7 +198,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   deleteItem(data: any) {
     this.productsViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
-        this._snackBar.open('Η εγγραφή έχει διαγραφεί', '', {
+        this._snackBar.open('Record deleted', '', {
           duration: 1000,
           panelClass: 'green-snackbar',
         });
@@ -220,7 +221,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .UpdateDto(this.product)
         .subscribe((result: any) => {
           if (result) {
-            this._snackBar.open('Η εγγραφή ενημερώθηκε', '', {
+            this._snackBar.open('Record updated', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
             });
@@ -231,7 +232,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .InsertDto(this.product)
         .subscribe((result: any) => {
           this.product = result;
-          this._snackBar.open('Η εγγραφή καταχωρήθηκε', '', {
+          this._snackBar.open('Record inserted', '', {
             duration: 1000,
             panelClass: 'green-snackbar',
           });

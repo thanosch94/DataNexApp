@@ -55,6 +55,8 @@ export class UserEditComponent {
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
     this.user = new UserDto();
     this.userId = WebAppBase.data;
+    WebAppBase.data =undefined
+
   }
 
   ngOnInit() {
@@ -89,7 +91,7 @@ export class UserEditComponent {
             .subscribe((result: any) => {
               if (result) {
                 this.user_text = this.user.Name;
-                this._snackBar.open('Η εγγραφή ενημερώθηκε', '', {
+                this._snackBar.open('Record updated', '', {
                   duration: 1000,
                   panelClass: 'green-snackbar',
                 });
@@ -101,7 +103,7 @@ export class UserEditComponent {
             .subscribe((result: any) => {
               this.user = result;
               this.user_text = this.user.Name;
-              this._snackBar.open('Η εγγραφή καταχωρήθηκε', '', {
+              this._snackBar.open('Record inserted', '', {
                 duration: 1000,
                 panelClass: 'green-snackbar',
               });

@@ -168,7 +168,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     debugger;
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
-
+    WebAppBase.data =undefined
     if (this.documentId) {
       this.getDocumentData(this.documentId);
     } else {

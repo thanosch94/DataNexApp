@@ -23,7 +23,7 @@
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <p class="menu-title" (click)="onMenuCaretArrowClicked($event)">
+        <p [ngClass]="!isMenuOpen?'menu-title':'open-menu-title'"  (click)="onMenuCaretArrowClicked($event)">
           <fa-icon [icon]="faHome"></fa-icon> Menu
           <fa-icon [icon]="faMenuCaret"></fa-icon>
         </p>
@@ -35,7 +35,7 @@
           </mat-list>
         </div>
 
-        <p class="menu-title" (click)="onSettingsCaretArrowClicked($event)">
+        <p  [ngClass]="!isSettingsMenuOpen?'menu-title':'open-menu-title'" (click)="onSettingsCaretArrowClicked($event)">
           <fa-icon [icon]="faGear"></fa-icon> Settings
           <fa-icon [icon]="faSettingsMenuCaret"></fa-icon>
         </p>
@@ -49,7 +49,7 @@
             >
           </mat-list>
         </div>
-        <p class="menu-title" (click)="onExtraMenuCaretArrowClicked($event)">
+        <p [ngClass]="!isExtraMenuOpen?'menu-title':'open-menu-title'" (click)="onExtraMenuCaretArrowClicked($event)">
           <fa-icon [icon]="faFile"></fa-icon> Extra
           <fa-icon [icon]="faExtraMenuCaret"></fa-icon>
         </p>

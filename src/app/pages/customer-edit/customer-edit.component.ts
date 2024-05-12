@@ -53,6 +53,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer = new CustomerDto();
     this.customerId = WebAppBase.data;
+    WebAppBase.data =undefined
+
   }
 
   ngOnInit() {
@@ -84,7 +86,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           if (result) {
             this.customer_text = this.customer.Name;
-            this._snackBar.open('Η εγγραφή ενημερώθηκε', '', {
+            this._snackBar.open('Record updated', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
             });
@@ -96,7 +98,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           this.customer = result;
           this.customer_text = this.customer.Name;
-          this._snackBar.open('Η εγγραφή καταχωρήθηκε', '', {
+          this._snackBar.open('Record inserted', '', {
             duration: 1000,
             panelClass: 'green-snackbar',
           });
