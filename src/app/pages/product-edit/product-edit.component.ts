@@ -13,6 +13,7 @@ import {
   OnInit,
   Optional,
   ViewChild,
+  isDevMode,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -107,6 +108,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   isEditable: boolean;
   isAlertVisible: boolean;
   isDialog: boolean;
+  noImgPath: string;
   constructor(
     private http: HttpClient,
     private auth:AuthService,
@@ -129,6 +131,12 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
     }
     this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
+    //if(isDevMode()){
+    //  this.noImgPath = "../assets/images/no-img.jpg"
+    //}else{
+      this.noImgPath = "./assets/images/no-img.jpg"
+
+   // }
   }
 
   ngOnInit() {

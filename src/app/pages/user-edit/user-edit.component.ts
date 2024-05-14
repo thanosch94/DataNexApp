@@ -84,7 +84,6 @@ export class UserEditComponent {
   onSaveClicked(e: any) {
     if(this.user.Password){
       if(this.user.Password==this.confirmPassword){
-        debugger
         if (this.user.Id) {
           this.usersViewModel
             .UpdateDto(this.user)

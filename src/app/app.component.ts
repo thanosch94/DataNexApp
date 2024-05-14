@@ -1,6 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
+import { isDevMode } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -9,7 +10,7 @@ import {
 } from '@angular/core';
 import { Route, Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
-import { CommonModule } from '@angular/common';
+import { CommonModule, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { Guid } from 'guid-typescript';
 import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
@@ -61,8 +62,14 @@ export class AppComponent{
   faMenuCaret: any;
   faSettingsMenuCaret: any;
   faExtraMenuCaret: any;
+  logoPath: string;
   constructor(private auth:AuthService, private router: Router, private dialog:MatDialog, private ref: ChangeDetectorRef, private tabsService:TabsService) {
+    //if(isDevMode()){
+   //   this.logoPath = "../assets/images/datanex_logo.png"
+   // }else{
+      this.logoPath = "./assets/images/datanex_logo.png"
 
+   // }
     this.faHome = faHome;
     this.faGear = faGear;
     this.faFile = faFile;
@@ -73,8 +80,7 @@ export class AppComponent{
     this.tabs = tabsService.getTabs()
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
-        debugger
-        if(result.url!="/"){
+        if(result.url!="/" && result.url!="/login" ){
           this.checkAndAddTab(result);
         }
 
@@ -186,7 +192,10 @@ export class AppComponent{
         this.auth.isAuthenticated = false;
         WebAppBase.isLoggedIn =false;
         this.ref.detectChanges();
+        window.location.reload()
+
         this.router.navigate(['login']);
+
       } else {
       }
     });
@@ -194,7 +203,6 @@ export class AppComponent{
   }
 
   onUserBtnClicked(e:any){
-    debugger
     this.isNavBarItem = true;
     WebAppBase.data = this.auth.user.Id;
     this.router.navigate(['user-edit']);

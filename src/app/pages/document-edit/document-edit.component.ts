@@ -165,7 +165,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
-    debugger;
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
     WebAppBase.data =undefined

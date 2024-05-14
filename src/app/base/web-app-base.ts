@@ -3,8 +3,9 @@ import { MenuItemDto } from '../dto/menu-item.dto';
 import { AppTabDto } from '../dto/app-tab.dto';
 
 export class WebAppBase {
+  static version = 1.0;
   static data: any;
-  static isLoggedIn:boolean;
+  static isLoggedIn: boolean;
   static menu: MenuItemDto[] = [
     {
       Id: Guid.parse('b76f583b-cc8d-4873-a5bd-ec213d9ad380'),
@@ -60,5 +61,4 @@ export class WebAppBase {
   ];
 
   static currency = '€';
-
 }

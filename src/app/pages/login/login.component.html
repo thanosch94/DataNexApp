@@ -1,6 +1,6 @@
 <div class="login">
   <div class="img">
-    <img src="../assets/images/datanex_logo.png" width="205" height="75" />
+    <img [src]="logoPath" width="205" height="75" />
   </div>    <form method="post">
     	<input type="text" name="u" placeholder="Username" [(ngModel)]="loginData.Username" required="required" />
         <input type="password" name="p" placeholder="Password" [(ngModel)]="loginData.Password"  required="required" />

@@ -68,9 +68,9 @@
               name="images"
 
             />
-            <img *ngIf="!product.ImagePath"
+            <img *ngIf="!product.ImagePath && product.ImagePath!=''"
               class="image"
-              src="../assets/images/no_img.jpg" width="240" height="240"
+              src={{noImgPath}} width="240" height="240"
               name="images"
               width="370"
               height="370"

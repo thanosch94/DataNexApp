@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, isDevMode } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -27,13 +27,21 @@ import { UserDto } from '../../dto/user.dto';
 })
 export class LoginComponent {
   loginData: LoginDto = new LoginDto();
+  logoPath: string;
 
   constructor(
     private auth: AuthService,
     private router: Router,
     private ref: ChangeDetectorRef,
     public dialog: MatDialog
-  ) {}
+  ) {
+    //if(isDevMode()){
+   //   this.logoPath = "../assets/images/datanex_logo.png"
+   // }else{
+      this.logoPath = "./assets/images/datanex_logo.png"
+
+   // }
+  }
 
   onSubmitClicked(e: any) {
     this.auth.login(this.loginData).subscribe({
@@ -46,13 +54,13 @@ export class LoginComponent {
           this.auth.user=user;
           this.ref.detectChanges();
           this.router.navigate(['/']);
+
         } else {
           WebAppBase.isLoggedIn =false;
 
         }
       },
       error: (err) => {
-        debugger;
         const dialog = this.dialog.open(DnAlertComponent, {
           data: {
             Title: 'Message',
