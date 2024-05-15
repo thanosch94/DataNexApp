@@ -14,6 +14,7 @@ import { StatusesListComponent } from './pages/statuses-list/statuses-list.compo
 import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
+import { BrandsListComponent } from './pages/brands-list/brands-list.component';
 
 export const routes: Routes = [
   {
@@ -90,6 +91,11 @@ export const routes: Routes = [
   {
     path:'statuses-list',
     component:StatusesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'brands-list',
+    component:BrandsListComponent,
     canActivate:[authGuard]
   }
 
