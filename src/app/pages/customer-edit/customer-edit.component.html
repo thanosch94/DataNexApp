@@ -1,5 +1,6 @@
 <dn-toolbar
 [canDelete]="true"
+[canRefresh]="customerId?true:false"
 [canExit]="true"
 [canSave]="true"
 [isDialog]="false"
@@ -8,6 +9,8 @@
 (onCloseBtnClicked)="onCloseClicked($event)"
 (onDeleteBtnClicked)="onDeleteClicked($event)"
 (onSaveBtnClicked)="onSaveClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
+
 ></dn-toolbar>
 <!-- TODO add isDialog variable  -->
 <div class="form" (submit)="onSaveClicked($event)">

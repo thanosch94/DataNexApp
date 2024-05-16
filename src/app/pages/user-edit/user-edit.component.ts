@@ -60,6 +60,10 @@ export class UserEditComponent {
   }
 
   ngOnInit() {
+    this.getData()
+  }
+
+  getData(){
     if (this.userId) {
       this.usersViewModel
         .GetById(this.userId)
@@ -76,7 +80,6 @@ export class UserEditComponent {
       this.user = new UserDto();
     }
   }
-
   onCloseClicked(e: any) {
     this.router.navigate(['users-list']);
   }
@@ -136,6 +139,9 @@ export class UserEditComponent {
       } else {
       }
     });
+  }
+  onRefreshClicked(e:any){
+    this.getData();
   }
 
   onDeleteCancelClicked(e: any) {

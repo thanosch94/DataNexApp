@@ -55,13 +55,9 @@
       right:0%
     }
 
-    .margin{
-      margin-bottom:4%;
-      margin-right:4%;
-      margin-left:4%;
-    }
+
     .button-add-row {
-      background: #1b9e1b;
+      background: #0B6AA5!important;
       color: #ffffff!important;
     }
 
@@ -93,9 +89,7 @@
   margin-right:5%;
 }
 .margin{
-  margin-bottom:4%;
-  margin-right:4%;
-  margin-left:4%;
+margin:1%
 }
 .mat-column-buttons {
   text-align: right;

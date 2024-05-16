@@ -1,12 +1,12 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { StatusDto } from '../../dto/status.dto';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { MatDialog } from '@angular/material/dialog';
@@ -37,9 +37,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',
 })
-export class StatusesListComponent implements AfterViewInit {
+export class StatusesListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('statusTable') statusTable: MatTable<StatusDto>;
+
   displayedColumns: string[] = ['Name', 'buttons'];
   dataSource: MatTableDataSource<StatusDto>;
   status: any;
@@ -56,7 +58,7 @@ export class StatusesListComponent implements AfterViewInit {
     this.statuses_list_text = "Statuses List"
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.getData();
   }
 
@@ -93,20 +95,7 @@ export class StatusesListComponent implements AfterViewInit {
       });
     });
   }
-  // addStatus(e: any) {
-  //   const dialogRef = this.dialog.open(NewItemComponent, {
-  //     width: '500px',
-  //     data: {
-  //       title: 'New Item',
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe((data) => {
-  //     if (data) {
-  //       this.insertItem(data);
-  //     } else {
-  //     }
-  //   });
-  // }
+
   onInsertClicked(e:any){
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
@@ -179,5 +168,10 @@ export class StatusesListComponent implements AfterViewInit {
         });
       },
     });
+  }
+
+  onRefreshBtnClicked(e:any){
+    this.getData()
+    this.statusTable.renderRows()
   }
 }

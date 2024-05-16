@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,6 +41,8 @@ import { AuthService } from '../../services/auth.service';
 export class UsersListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('usersTable') usersTable: MatTable<UserDto>;
+
   displayedColumns: string[] = ['Name', 'Email', 'Username', 'UserRole', 'buttons'];
   dataSource: MatTableDataSource<UserDto>;
   users_list_text: string;
@@ -125,5 +127,10 @@ export class UsersListComponent implements OnInit {
         });
       },
     });
+  }
+
+  onRefreshClicked(e:any){
+    this.getData()
+    this.usersTable.renderRows()
   }
 }

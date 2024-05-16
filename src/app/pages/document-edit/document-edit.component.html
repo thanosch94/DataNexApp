@@ -1,6 +1,7 @@
 
 <dn-toolbar
 [canDelete]="true"
+[canRefresh]="documentId?true:false"
 [canExit]="true"
 [canSave]="true"
 [isDialog]="false"
@@ -9,6 +10,7 @@
 (onCloseBtnClicked)="onCloseClicked($event)"
 (onDeleteBtnClicked)="onDeleteClicked($event)"
 (onSaveBtnClicked)="onSaveClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <form class="form">
   <mat-tab-group>

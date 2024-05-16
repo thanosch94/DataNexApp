@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProductsViewModel } from '../../view-models/products.viewmodel';
 import { WebAppBase } from '../../base/web-app-base';
@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { ProductDto } from '../../dto/product.dto';
 
 @Component({
   selector: 'app-products-list',
@@ -41,6 +42,8 @@ export class ProductsListComponent implements AfterViewInit{
   dataSource:any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('productsTable') productsTable: MatTable<ProductDto>;
+
   displayedColumns: string[] = [
     'Sku',
     'Name',
@@ -125,5 +128,10 @@ export class ProductsListComponent implements AfterViewInit{
       });
     },
   });
+  }
+
+  onRefreshClicked(e:any){
+    this.getData()
+    this.productsTable.renderRows()
   }
 }

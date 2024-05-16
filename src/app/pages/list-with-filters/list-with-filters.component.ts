@@ -16,6 +16,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule } from '@angular/mat
 import { WebAppBase } from '../../base/web-app-base';
 import { SalesViews } from '../../enums/sales-views.enum';
 import { AuthService } from '../../services/auth.service';
+import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'list-with-filters',
@@ -35,7 +36,8 @@ import { AuthService } from '../../services/auth.service';
     MatToolbarModule,
     CommonModule,
     MatDialogActions,
-    MatDialogModule
+    MatDialogModule,
+    DnToolbarComponent
   ],
   providers: [AuthService],
   templateUrl: './list-with-filters.component.html',

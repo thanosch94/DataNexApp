@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { MatDialog } from '@angular/material/dialog';
@@ -40,6 +40,8 @@ import { AuthService } from '../../services/auth.service';
 export class DocumentTypesComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('documentTypesTable') documentTypesTable: MatTable<DocumentTypeDto>;
+
   displayedColumns: string[] = ['Name', 'Description', 'buttons'];
   dataSource: MatTableDataSource<DocumentTypeDto>;
   documentType: any;
@@ -95,20 +97,7 @@ export class DocumentTypesComponent implements AfterViewInit {
         });
       });
   }
-  // addDocumentType(e: any) {
-  //   const dialogRef = this.dialog.open(NewItemComponent, {
-  //     width: '500px',
-  //     data: {
-  //       title: 'New Item',
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe((data) => {
-  //     if (data) {
-  //       this.insertItem(data);
-  //     } else {
-  //     }
-  //   });
-  // }
+
   onInsertClicked(e:any){
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
@@ -182,5 +171,10 @@ export class DocumentTypesComponent implements AfterViewInit {
         });
       },
     });
+  }
+
+  onRefreshClicked(e:any){
+    this.getData();
+    this.documentTypesTable.renderRows()
   }
 }

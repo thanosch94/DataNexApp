@@ -168,15 +168,12 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
     WebAppBase.data =undefined
-    if (this.documentId) {
-      this.getDocumentData(this.documentId);
-    } else {
-      this.initNewDocument();
-    }
+
 
   }
 
   ngOnInit() {
+    this.getData();
     this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
       this.barcodesLookupDatasource = result;
     });
@@ -208,6 +205,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  getData(){
+    if (this.documentId) {
+      this.getDocumentData(this.documentId);
+    } else {
+      this.initNewDocument();
+    }
+  }
   initNewDocument() {
     this.document_text = 'New Document';
     this.tabsService.setTabName(this.document_text)
@@ -614,19 +618,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // setTabName(route:string){
-  //   debugger
-  //   this.activeTab = this.webAppBase.tabs.find((x:AppTabDto)=>x.Route.path ==route)
+  onRefreshClicked(e:any){
+    this.getData();
+    this.productstable.renderRows()
+  }
 
-  //   if(this.activeTab!.Name==""){
-  //     debugger
-  //     debugger
-  //     this.activeTab!.Name =  this.document_text
-  //     this.ref.detectChanges()
-  //   }
-
-
-  // }
   ngOnDestroy() {
     WebAppBase.data = undefined;
   }

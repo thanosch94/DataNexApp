@@ -1,9 +1,12 @@
 
 <dn-toolbar
 [canInsert]="true"
+[canRefresh]="true"
 [isDialog]="false"
 [title]="products_list_text"
 (onInsertBtnClicked)="onInsertClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
+
 ></dn-toolbar>
 <div class="margin">
   <mat-form-field>
@@ -16,13 +19,8 @@
     />
   </mat-form-field>
 
-  <!-- <article class="table-header">
-    <button mat-button class="button-add-row" (click)="addProduct($event)">
-      Add Product
-    </button>
-  </article> -->
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table #productsTable mat-table [dataSource]="dataSource" matSort>
       <ng-container matColumnDef="Sku">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Sku</th>
         <td mat-cell *matCellDef="let row">{{ row.Sku }}</td>

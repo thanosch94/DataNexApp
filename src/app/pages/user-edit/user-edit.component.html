@@ -2,12 +2,14 @@
 [canDelete]="true"
 [canExit]="true"
 [canSave]="true"
+[canRefresh]="userId?true:false"
 [isDialog]="false"
 [title]="user_text"
 [entityId]="user.Id"
 (onCloseBtnClicked)="onCloseClicked($event)"
 (onDeleteBtnClicked)="onDeleteClicked($event)"
 (onSaveBtnClicked)="onSaveClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <!-- TODO add isDialog variable  -->
 <div class="form">

@@ -2,8 +2,10 @@
 <dn-toolbar
 [canInsert]="true"
 [isDialog]="false"
+[canRefresh]="true"
 [title]="product_brands_list_text"
 (onInsertBtnClicked)="onInsertClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
 
@@ -16,7 +18,7 @@
   <button mat-button class="button-add-row" (click)="addProductSize($event)">Add Size</button>
 </article> -->
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table #brandsTable mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>
@@ -25,10 +27,6 @@
       <td mat-cell *matCellDef="let row"> {{row.Name}} </td>
     </ng-container>
 
-    <ng-container matColumnDef="Abbreviation">
-      <th mat-header-cell *matHeaderCellDef mat-sort-header> Abbreviation </th>
-      <td mat-cell *matCellDef="let row"> {{row.Abbreviation}} </td>
-    </ng-container>
 
     <ng-container matColumnDef="buttons">
       <th mat-header-cell *matHeaderCellDef mat-sort-header></th>

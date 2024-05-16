@@ -1,9 +1,11 @@
 
 <dn-toolbar
 [canInsert]="true"
+[canRefresh]="true"
 [isDialog]="false"
 [title]="product_sizes_list_text"
 (onInsertBtnClicked)="onInsertClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
 
@@ -12,11 +14,9 @@
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Maria" #input>
 </mat-form-field>
 
-<!-- <article class="table-header">
-  <button mat-button class="button-add-row" (click)="addProductSize($event)">Add Size</button>
-</article> -->
+
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table #productSizesTable mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

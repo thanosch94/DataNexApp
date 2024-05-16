@@ -58,6 +58,10 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getData();
+  }
+
+  getData(){
     if (this.customerId) {
       this.customersViewModel
         .GetById(this.customerId)
@@ -74,7 +78,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       this.customer = new CustomerDto();
     }
   }
-
   onCloseClicked(e: any) {
     this.router.navigate(['customers-list']);
   }
@@ -152,11 +155,15 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   }
 
   async onVatIdValueChanged(e: any) {
-    //IF NEEDED TO CONNEC TO TO AADE TO GET AFM DATA
+    //IF NEEDED TO CONNECT TO TO AADE TO GET AFM DATA
     // if (e.target.selectionStart == 9) {
     //   this.customersViewModel
     //     .GetFromAade('', '!', e.target.value, '')
     //     .subscribe((result: any) => {});
     // }
+  }
+
+  onRefreshClicked(e:any){
+    this.getData();
   }
 }

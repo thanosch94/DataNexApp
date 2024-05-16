@@ -1,9 +1,11 @@
 
 <dn-toolbar
 [canInsert]="true"
+[canRefresh]="true"
 [isDialog]="false"
 [title]="documentlist_text"
 (onInsertBtnClicked)="onInsertClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
 
@@ -16,7 +18,7 @@
   <button mat-button class="button-add-row" (click)="addDocument()">Add Document</button>
 </article> -->
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table #documentListTable mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="DocumentTypeName" >
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

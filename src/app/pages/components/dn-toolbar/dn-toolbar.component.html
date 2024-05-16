@@ -1,7 +1,15 @@
 <mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
   <span>{{ title }}</span>
   <span class="example-spacer"></span>
-
+  <button
+    class="button"
+    *ngIf="canRefresh"
+    mat-button
+    (click)="onRefreshClicked($event)"
+  >
+    <mat-icon class="icons">refresh</mat-icon>
+    <span>Refresh</span>
+  </button>
   <button
   class="button"
     *ngIf="canDelete && !isDialog && entityId"

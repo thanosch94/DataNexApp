@@ -1,9 +1,12 @@
 
 <dn-toolbar
 [canInsert]="true"
+[canRefresh]="true"
 [isDialog]="false"
 [title]="customer_list_text"
 (onInsertBtnClicked)="onInsertClicked($event)"
+(onRefreshBtnClicked)="onRefreshClicked($event)"
+
 ></dn-toolbar>
 <div class="margin">
 
@@ -11,12 +14,9 @@
   <mat-label>Search</mat-label>
   <input matInput (keyup)="applyFilter($event)" placeholder="Ex. Maria" #input>
 </mat-form-field>
-<!--
-<article class="table-header">
-  <button mat-button class="button-add-row" (click)="addCustomer()">Add Customer</button>
-</article> -->
+
 <div class="mat-elevation-z8">
-  <table mat-table [dataSource]="dataSource" matSort>
+  <table #customersTable mat-table [dataSource]="dataSource" matSort>
 
     <ng-container matColumnDef="Name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>

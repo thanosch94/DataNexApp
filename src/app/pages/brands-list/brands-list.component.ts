@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { BrandDto } from '../../dto/brand.dto';
 import { AuthService } from '../../services/auth.service';
@@ -40,7 +40,9 @@ import { NewItemComponent } from '../components/new-item/new-item.component';
 export class BrandsListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  displayedColumns: string[] = ['Name', 'Abbreviation', 'buttons'];
+  @ViewChild('brandsTable') brandsTable: MatTable<BrandDto>;
+
+  displayedColumns: string[] = ['Name', 'buttons'];
   dataSource: MatTableDataSource<BrandDto>;
   brandsViewModel: BrandsViewModel;
   brand: BrandDto = new BrandDto();
@@ -143,21 +145,7 @@ export class BrandsListComponent {
         });
       });
   }
-  // addProductSize(e:any){
-  //   const dialogRef = this.dialog.open(NewItemComponent, {
-  //     width: '500px',
-  //     data: {
-  //       title: 'New Item',
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe((data) => {
 
-  //     if (data) {
-  //       this.insertItem(data);
-  //     } else {
-  //     }
-  //   });
-  // }
   onInsertClicked(e: any) {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
@@ -184,5 +172,11 @@ export class BrandsListComponent {
         });
         this.getData();
       });
+  }
+
+  onRefreshClicked(e:any){
+    debugger
+    this.getData()
+    this.brandsTable.renderRows()
   }
 }

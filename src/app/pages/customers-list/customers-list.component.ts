@@ -1,8 +1,8 @@
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
-import { AfterViewInit, Component, NgModule, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, NgModule, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomerDto } from '../../dto/customer.dto';
@@ -34,9 +34,11 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.css',
 })
-export class CustomersListComponent implements AfterViewInit {
+export class CustomersListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('customersTable') customersTable: MatTable<CustomerDto>;
+
   displayedColumns: string[] = [
     'Name',
     'Address',
@@ -56,7 +58,11 @@ export class CustomersListComponent implements AfterViewInit {
     this.customer_list_text  = "Customer List"
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
+    this.getData();
+  }
+
+  getData(){
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
@@ -85,5 +91,10 @@ export class CustomersListComponent implements AfterViewInit {
 
   onInsertClicked(e:any){
     this.router.navigate(['customer-edit']);
+  }
+
+  onRefreshClicked(e:any){
+    this.getData();
+    this.customersTable.renderRows()
   }
 }

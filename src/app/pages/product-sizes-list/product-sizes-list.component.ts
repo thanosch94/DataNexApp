@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -41,6 +41,8 @@ import { AuthService } from '../../services/auth.service';
 export class ProductSizesListComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
+  @ViewChild('productSizesTable') productSizesTable: MatTable<ProductSizeDto>;
+
   displayedColumns: string[] = ['Name', 'Abbreviation', 'buttons'];
   dataSource: MatTableDataSource<ProductSizeDto>;
   productSizesViewModel: ProductSizesViewModel;
@@ -144,21 +146,7 @@ export class ProductSizesListComponent {
         });
       });
   }
-  // addProductSize(e:any){
-  //   const dialogRef = this.dialog.open(NewItemComponent, {
-  //     width: '500px',
-  //     data: {
-  //       title: 'New Item',
-  //     },
-  //   });
-  //   dialogRef.afterClosed().subscribe((data) => {
 
-  //     if (data) {
-  //       this.insertItem(data);
-  //     } else {
-  //     }
-  //   });
-  // }
   onInsertClicked(e: any) {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
@@ -185,5 +173,10 @@ export class ProductSizesListComponent {
         });
         this.getData();
       });
+  }
+
+  onRefreshClicked(e:any){
+    this.getData()
+    this.productSizesTable.renderRows()
   }
 }

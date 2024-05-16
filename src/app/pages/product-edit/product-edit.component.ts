@@ -163,6 +163,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.getData();
+  }
+
+  getData(){
     this.brandsViewModel.GetAll().subscribe((result:any)=>{
       this.brands =result as Array<BrandDto>
 
@@ -199,7 +203,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       map((value: string | null) => this.sizefilter(value || ''))
     );
   }
-
   private getProductBarcodesData() {
     this.productBarcodesViewModel
       .GetByProductId(this.productId)
@@ -442,5 +445,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   onBarcodeChanged(data: any) {
     this.newBarcodeLine.Barcode = data.target.value;
+  }
+
+  onRefreshClicked(e:any){
+    this.getData()
   }
 }
