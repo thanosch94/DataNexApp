@@ -8,4 +8,5 @@ export class ProductDto {
   ImagePath?: string;
   Price?: number;
   BrandId: Guid;
+  BrandName: string;
 }

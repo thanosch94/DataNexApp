@@ -1,6 +1,7 @@
+import { BrandsViewModel } from './../../view-models/brands.viewmodel';
 import { ProductBarcodeDto } from './../../dto/product-barcode.dto';
 import { ProductSizesViewModel } from './../../view-models/product-sizes.viewmodel';
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
@@ -57,6 +58,7 @@ import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
 import { Guid } from 'guid-typescript';
+import { BrandDto } from '../../dto/brand.dto';
 
 @Component({
   selector: 'product-edit',
@@ -87,6 +89,7 @@ import { Guid } from 'guid-typescript';
     MatButtonModule,
     MatDialogModule,
     DnToolbarComponent,
+    AsyncPipe
   ],
   providers: [TabsService, AuthService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -98,7 +101,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   @ViewChild('matTable') table: MatTable<ProductBarcodeDto>;
   @ViewChild('optionSelected') optionSelected: MatOption;
   sizeControl = new FormControl('');
-
+  brandControl = new FormControl('');
   product = new ProductDto();
   product_text: string;
   productsViewModel: ProductsViewModel;
@@ -116,6 +119,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   isDialog: boolean;
   noImgPath: string;
   sizeName: any;
+  brandsViewModel: BrandsViewModel;
+  brands: any;
+  filteredBrands: Observable<BrandDto[]>;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -128,6 +134,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   ) {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.productBarcodesViewModel = new ProductBarcodesViewModel(
+      this.http,
+      this.auth
+    );
+    this.brandsViewModel = new BrandsViewModel(
       this.http,
       this.auth
     );
@@ -153,6 +163,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.brandsViewModel.GetAll().subscribe((result:any)=>{
+      this.brands =result as Array<BrandDto>
+
+      this.filteredBrands = this.brandControl.valueChanges.pipe(
+        startWith(''),
+        map((value) => this._brandsfilter(value || ''))
+      );
+    })
     if (this.productId) {
       this.productsViewModel
         .GetById(this.productId)
@@ -194,6 +212,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     return this.productsSizes.filter((size: ProductSizeDto) =>
       size.Name.toLowerCase().includes(filterValue)
     );
+  }
+
+  private _brandsfilter(value: string): BrandDto[]{
+      const filterValue = value.toLowerCase();
+      return this.brands.filter((brand: ProductDto) =>
+        brand.Name.toLowerCase().includes(filterValue)
+      );
+
   }
   onCloseClicked(e: any) {
     this.router.navigate(['products-list']);
@@ -237,7 +263,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClicked(e: any) {
-    if (this.product.Id) {
+    debugger
+    this.product.Id=this.productId;
+    if (this.product.Id!=null && this.product.Id!=Guid.parse(Guid.EMPTY)) {
       this.productsViewModel
         .UpdateDto(this.product)
         .subscribe((result: any) => {
@@ -283,6 +311,17 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
     } else {
 
+    }
+  }
+
+  onProductBrandSelection(value:string){
+    let selectedBrand = this.brands.find(
+      (brand: BrandDto) => brand.Name == value
+    );
+
+    if (selectedBrand) {
+      this.product.BrandId = selectedBrand.Id;
+      this.product.BrandName = selectedBrand.Name;
     }
   }
   editProductBarcode(data: any, index: number) {

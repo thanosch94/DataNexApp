@@ -30,7 +30,28 @@
           </mat-form-field>
           <mat-form-field class="tab1-grid-f-brand">
             <mat-label>Brand</mat-label>
-            <input matInput name="brand" [(ngModel)]="product.BrandId" />
+
+            <input
+              matInput
+              type="text"
+              aria-label="Brand"
+              matInput
+              [value]="product.BrandName"
+              [formControl]="brandControl"
+              [matAutocomplete]="auto"
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="onProductBrandSelection($event.option.value)"
+            >
+
+
+              @for (brand of filteredBrands| async; track brand) {
+
+              <mat-option [value]="brand.Name">{{ brand.Name }}</mat-option>
+              }
+            </mat-autocomplete>
+            <!-- <input matInput name="brand" [(ngModel)]="product.BrandId" /> -->
           </mat-form-field>
           <mat-form-field class="tab1-grid-i-price">
             <mat-label>Price</mat-label>
