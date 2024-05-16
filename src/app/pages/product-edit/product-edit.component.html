@@ -105,7 +105,8 @@
                   <input
                     matInput
                     type="text"
-                    [value]="row.Barcode"
+                    name="barcode"
+                    [(ngModel)]="row.Barcode"
                     matInput
                     (input)="onBarcodeChanged($event)"
                 /></mat-form-field>
@@ -127,6 +128,7 @@
                     matInput
                     [formControl]="sizeControl"
                     [matAutocomplete]="auto"
+                    [value]="sizeName"
                   />
                   <mat-autocomplete #optionSelected #auto="matAutocomplete">
                     @for (size of filteredSizes| async; track size) {
@@ -163,9 +165,10 @@
                   mat-icon-button
                   class="iconbutton"
                   color="primary"
-                  (click)="deleteProductBarcode(row, i)"
+                  (click)="row.IsEditable?stopEditingProductBarcodes(row, i):deleteProductBarcode(row, i)"
                 >
-                  <mat-icon>delete</mat-icon>
+                <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
+                  <mat-icon *ngIf="row.IsEditable">close</mat-icon>
                 </button>
               </td>
             </ng-container>

@@ -74,6 +74,7 @@ margin-right: auto;
   height: calc(100% - 81px);
 }
 
+
 .nav-btns{
   display: inline-flex;
   margin-right: 2%;
@@ -81,6 +82,16 @@ margin-right: auto;
 
 .nav-menu-btn{
   margin-left:2%;
+}
+
+::ng-deep .mdc-tab__content{
+  width:100%;
+
+}
+::ng-deep .mdc-tab__text-label{
+  display: flex;
+  width:100%;
+  justify-content: space-between;
 }
 
 .menu-text{

@@ -29,7 +29,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductsViewModel } from '../../view-models/products.viewmodel';
 import { Router } from '@angular/router';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialog,
+  MatDialogActions,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { WebAppBase } from '../../base/web-app-base';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
@@ -51,6 +56,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { Guid } from 'guid-typescript';
 
 @Component({
   selector: 'product-edit',
@@ -80,9 +86,9 @@ import { AuthService } from '../../services/auth.service';
     MatDialogActions,
     MatButtonModule,
     MatDialogModule,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
-  providers: [TabsService,AuthService],
+  providers: [TabsService, AuthService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
@@ -109,47 +115,55 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   isAlertVisible: boolean;
   isDialog: boolean;
   noImgPath: string;
+  sizeName: any;
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
-    private tabsService:TabsService,
+    private tabsService: TabsService,
+    private ref:ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
-    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http, this.auth);
+    this.productBarcodesViewModel = new ProductBarcodesViewModel(
+      this.http,
+      this.auth
+    );
     //If opens from dialog
-    if(data){
+    if (data) {
       this.productId = data.product.ProductId;
-      this.isDialog=true
-    }else{
+      this.isDialog = true;
+    } else {
       this.productId = WebAppBase.data;
-      WebAppBase.data =undefined
-      this.isDialog=false
-
+      WebAppBase.data = undefined;
+      this.isDialog = false;
     }
-    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
+    this.productSizesViewModel = new ProductSizesViewModel(
+      this.http,
+      this.auth
+    );
     //if(isDevMode()){
     //  this.noImgPath = "../assets/images/no-img.jpg"
     //}else{
-      this.noImgPath = "./assets/images/no-img.jpg"
+    this.noImgPath = './assets/images/no-img.jpg';
 
-   // }
+    // }
   }
 
   ngOnInit() {
     if (this.productId) {
-
       this.productsViewModel
         .GetById(this.productId)
         .subscribe((result: any) => {
           result as ProductDto;
           this.product = result;
-          this.product_text = this.product.Sku + " - "+ this.product.Name;
+          this.product_text = this.product.Sku + ' - ' + this.product.Name;
 
-          this.tabsService.setTabName(this.product.Sku + " - "+ this.product.Name)
+          this.tabsService.setTabName(
+            this.product.Sku + ' - ' + this.product.Name
+          );
 
           this.getProductBarcodesData();
         });
@@ -159,8 +173,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     } else {
       this.product_text = 'New Product';
       this.product = new ProductDto();
-      this.tabsService.setTabName(this.product_text)
-
+      this.tabsService.setTabName(this.product_text);
     }
 
     this.filteredSizes = this.sizeControl.valueChanges.pipe(
@@ -261,37 +274,131 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.newBarcodeLine.Barcode = '';
     this.newBarcodeLine.IsEditable = true;
     this.newBarcodeLine.ProductId = this.productId;
-    this.barcodesDataSource.data.unshift(this.newBarcodeLine);
-    this.table.renderRows();
+    if (!this.barcodesDataSource.data.some((x) => x.IsEditable == true)) {
+      this.ref.detectChanges();
+      this.barcodesDataSource.data.unshift(this.newBarcodeLine);
+      this.sizeControl.reset()
+
+      this.table.renderRows();
+
+    } else {
+
+    }
   }
   editProductBarcode(data: any, index: number) {
     this.barcodesDataSource.data[index].IsEditable = true;
   }
+  stopEditingProductBarcodes(data:any, index: number){
+    if(data.Id){
+      this.barcodesDataSource.data[index].IsEditable = false;
+      this.table.renderRows()
+      this.getProductBarcodesData()
+
+    }else{
+      this.barcodesDataSource.data.shift();
+      this.table.renderRows()
+    }
+
+  }
   saveProductBarcode(data: any, index: number) {
-    this.barcodesDataSource.data[index].IsEditable = false;
-    this.isEditable = false;
+    if(data.Id){
+      this.productBarcodesViewModel.UpdateDto(data).subscribe({
+        next:(result)=>{
+          this.barcodesDataSource.data[index].IsEditable = false;
+          this.table.renderRows();
+        },
+        error:(err)=>{
+          const dialog = this.dialog.open(DnAlertComponent, {
+            data: {
+              Title: 'Message',
+              Message: err.error,
+            },
+          });
 
-    this.newBarcodeLine.ProductId = data.ProductId;
-    this.productBarcodesViewModel.InsertDto(data).subscribe((result: any) => {
-      if (result?.Id) {
-        this.getProductBarcodesData();
-      } else {
-        this.barcodesDataSource.data.shift();
+        }
+      })
 
-        this.table.renderRows();
-      }
-    });
+    }else{
+      this.newBarcodeLine.ProductId = data.ProductId;
+      this.productBarcodesViewModel.InsertDto(data).subscribe({
+        next: (result: any) => {
+          if (result?.Id) {
+            this.getProductBarcodesData();
+            this.barcodesDataSource.data[index].IsEditable = false;
+            this.isEditable = false;
+          } else {
+            this.barcodesDataSource.data.shift();
+
+            this.table.renderRows();
+          }
+        },
+        error: (err) => {
+          const dialog = this.dialog.open(DnAlertComponent, {
+            data: {
+              Title: 'Message',
+              Message: err.error,
+            },
+          });
+        },
+      });
+    }
+    this.sizeControl.reset()
+
   }
   deleteProductBarcode(data: any, index: number) {
-    this.productBarcodesViewModel
-      .DeleteById(data.Id)
-      .subscribe((result: any) => {
-        this.getProductBarcodesData();
-      });
+    let editRow = this.barcodesDataSource.data.find(x=>x.IsEditable==true)
+    let editRowIndex=-1; //False index
+    if(editRow!=null){
+      editRowIndex=this.barcodesDataSource.data.indexOf(editRow)
+      if(index==editRowIndex){
+        if (data.Id) {
+          this.doDelete(data.Id)
+        } else {
+          this.barcodesDataSource.data.shift();
+          this.table.renderRows();
+        }
+      }
+
+    }else{
+      if (data.Id) {
+      this.doDelete(data.Id)
+      }
+    }
+
+
+  }
+
+  doDelete(id:Guid){
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.productBarcodesViewModel
+        .DeleteById(id)
+        .subscribe((result: any) => {
+          this.getProductBarcodesData();
+        });      }
+    });
+
   }
 
   onSizeSelectionChanged(data: any) {
+    debugger;
     this.newBarcodeLine.SizeId = data.Id;
+    this.filteredSizes = this.sizeControl.valueChanges.pipe(
+      startWith(''),
+      map((value: string | null) => this.sizefilter(value || ''))
+    );
+    this.table.renderRows();
+
+    this.sizeName = data.Name;
   }
 
   onBarcodeChanged(data: any) {
