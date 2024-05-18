@@ -1,4 +1,4 @@
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { isDevMode } from '@angular/core';
@@ -37,9 +37,10 @@ import { ConfirmComponent } from './pages/components/confirm/confirm.component';
     FontAwesomeModule,
     FontAwesomeModule,
     MatTabsModule,
-    HttpClientModule
+    HttpClientModule,
+    MatDialogModule
   ],
-  providers:[AuthService, HttpClient],
+  providers:[AuthService, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

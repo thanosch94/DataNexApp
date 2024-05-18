@@ -1,4 +1,4 @@
-import { Component, Inject, Optional, ViewChild } from '@angular/core';
+import { Component, Inject, Optional, ViewChild, ViewContainerRef } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
@@ -24,7 +24,8 @@ export class ProductOptionsComponent {
   faList: any;
   faRectangleList: any;
   constructor(
-    private dialog: MatDialog,
+    private dialog: MatDialog, private viewContainerRef: ViewContainerRef
+    ,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.faInfo = faInfo;
@@ -38,8 +39,10 @@ export class ProductOptionsComponent {
       width:'100%',
       height:'90%',
       data: {
-        product: this.data.product
+        product: this.data.product,
       },
+      viewContainerRef: this.viewContainerRef
+
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
   }
@@ -51,6 +54,8 @@ export class ProductOptionsComponent {
         product: this.data.product,
         view: SalesViews.PendingSalesOrders
       },
+      viewContainerRef: this.viewContainerRef
+
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
   }

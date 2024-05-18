@@ -17,6 +17,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { UserDto } from '../../dto/user.dto';
 import { UsersViewModel } from '../../view-models/users.viewmodel';
 import { AuthService } from '../../services/auth.service';
+import { UserRolesEnum } from '../../enums/user-roles.enum';
 
 @Component({
   selector: 'app-user-edit',
@@ -85,6 +86,8 @@ export class UserEditComponent {
   }
 
   onSaveClicked(e: any) {
+    debugger
+    this.user.UserRole=UserRolesEnum.User
     if(this.user.Password){
       if(this.user.Password==this.confirmPassword){
         if (this.user.Id) {

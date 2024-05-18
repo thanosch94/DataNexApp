@@ -16,6 +16,7 @@ import {
   QueryList,
   ViewChild,
   ViewChildren,
+  ViewContainerRef,
 } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -51,7 +52,7 @@ import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductOptionsComponent } from '../product-options/product-options.component';
 import { AppTabDto } from '../../dto/app-tab.dto';
@@ -80,9 +81,10 @@ import { AuthService } from '../../services/auth.service';
     MatButtonModule,
     AsyncPipe,
     MatTabsModule,
-    DnToolbarComponent
+    DnToolbarComponent,
+    MatDialogModule
   ],
-  providers: [provideNativeDateAdapter(),TabsService],
+  providers: [provideNativeDateAdapter(),TabsService,HttpClientModule],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
@@ -154,7 +156,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private tabsService:TabsService
+    private tabsService:TabsService,
+    private viewContainerRef: ViewContainerRef
   ) {
 
     this.documentTypesViewModel = new DocumentTypesViewModel(this.http, this.auth);
@@ -413,6 +416,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       data: {
         product: this.productsDataSource[index],
       },
+      viewContainerRef: this.viewContainerRef
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {

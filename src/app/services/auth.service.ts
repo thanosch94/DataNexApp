@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHandler, HttpXhrBackend } from '@angular/common/http';
 import { AccountViewModel as AccountViewModel } from './../view-models/login.viewmodel';
 import { Component, Injectable, NgModule } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -15,19 +15,34 @@ export class AuthService {
   isAuthenticated: boolean = false;
 
   private _user : UserDto;
+
+  private token: string | undefined;
+  headers: any;
   public get user() : UserDto {
     return this._user;
   }
   public set user(v : UserDto) {
     this._user = v;
+    this.token = v.Token
   }
 
-  constructor(private http:HttpClient) {
-    this.accountViewModel = new AccountViewModel(this.http)
+  getHeaders(){
+    this.headers = {
+      Authorization: `Bearer ${this.token}`,
+      'Content-Type': 'application/json',
+    }
+    return this.headers;
+  }
+  constructor() {
 
   }
 
   login(loginData:LoginDto):Observable<Object>{
+    let http  =new HttpClient(new HttpXhrBackend({
+      build: () => new XMLHttpRequest()
+  }));
+    this.accountViewModel = new AccountViewModel(http)
+
     return this.accountViewModel.Login(loginData)
   }
 

@@ -91,7 +91,7 @@ import { BrandDto } from '../../dto/brand.dto';
     DnToolbarComponent,
     AsyncPipe
   ],
-  providers: [TabsService, AuthService],
+  providers: [TabsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',

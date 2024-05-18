@@ -6,54 +6,45 @@ import { AuthService } from "../services/auth.service";
 export class DocumentTypesViewModel {
 
   service: string;
+  headers: any;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();
+    this.headers = this.auth.getHeaders();
+
   }
 
   public GetAll() {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentTypes/getall', {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public GetById(id: Guid) {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentTypes/getbyid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public InsertDto(documentType: DocumentTypeDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.post(this.service + 'DocumentTypes/insertdto', documentType, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public UpdateDto(documentType: DocumentTypeDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.put(this.service + 'DocumentTypes/updatedto', documentType, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public DeleteById(id: Guid) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.delete(this.service + 'DocumentTypes/deletebyid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 

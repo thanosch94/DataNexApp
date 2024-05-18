@@ -1,3 +1,4 @@
+import { AuthService } from './../../services/auth.service';
 import { DocumentProductsViewModel } from './../../view-models/document-products.viewmodel';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, Inject, Optional, ViewChild } from '@angular/core';
@@ -12,10 +13,9 @@ import { Guid } from 'guid-typescript';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
 import { SalesViews } from '../../enums/sales-views.enum';
-import { AuthService } from '../../services/auth.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
@@ -39,7 +39,6 @@ import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.componen
     MatDialogModule,
     DnToolbarComponent
   ],
-  providers: [AuthService],
   templateUrl: './list-with-filters.component.html',
   styleUrl: './list-with-filters.component.css',
 })

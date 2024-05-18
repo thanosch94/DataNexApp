@@ -5,46 +5,36 @@ import { AuthService } from '../services/auth.service';
 
 export class StatusesViewModel {
   service: string;
+  headers: any;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();
+    this.headers = this.auth.getHeaders();
+
   }
 
   public GetAll() {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
-
     return this.http.get(this.service + 'Statuses/getall', {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
 
 
   public InsertDto(status: StatusDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
     return this.http.post(this.service + 'Statuses/insertdto', status, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public UpdateDto(status: StatusDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
     return this.http.put(this.service + 'Statuses/updatedto', status, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public DeleteById(id: Guid) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
     return this.http.delete(this.service + 'Statuses/deletebyid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 }

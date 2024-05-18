@@ -5,82 +5,64 @@ import { AuthService } from "../services/auth.service";
 
 export class DocumentProductsViewModel {
   service: string;
+  headers: any;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();
+    this.headers = this.auth.getHeaders();
+
     }
 
   public GetAll() {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentProducts/getall', {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public GetById(id: Guid) {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentProducts/getbyid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
   public GetByDocumentId(id: Guid) {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentProducts/getbydocumentid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
   public GetPendingOrdersForProductId(productId: Guid) {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentProducts/getpendingordersforproductid/' + productId, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public GetByBarcode(barcode: string) {
-    let headers = {
-      'Content-Type': 'application/json',
-    };
 
     return this.http.get(this.service + 'DocumentProducts/getbybarcode/' + barcode, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public InsertDto(documentProduct: DocumentProductDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.post(this.service + 'DocumentProducts/insertdto', documentProduct, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 
   public UpdateDto(documentProduct: DocumentProductDto) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.put(this.service + 'DocumentProducts/updatedto', documentProduct, {
-      headers: headers,
+      headers: this.headers,
     });
 
   }
   public DeleteById(id: Guid) {
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-    });
+
     return this.http.delete(this.service + 'DocumentProducts/deletebyid/' + id, {
-      headers: headers,
+      headers: this.headers,
     });
   }
 }
