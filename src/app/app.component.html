@@ -4,7 +4,7 @@
 <div *ngIf="isAuthenticated == true" class="screen">
   <div class="navbar">
     <div class="nav-menu-btn">
-      <button class="menu-btn" (click)="onMenuBtnClicked()">
+      <button class="menu-btn" mat-button matTooltip="Toggle Menu" (click)="onMenuBtnClicked()">
         <i class="fa fa-bars fa-2x" aria-hidden="true"></i></button
       ><b class="menu-text"> Menu</b>
     </div>
@@ -13,10 +13,11 @@
         <img [src]="logoPath" width="205" height="75" />
     </div>
     <div class="nav-btns">
-      <button class="user-btn" mat-button (click)="onUserBtnClicked($event)">
+      <button class="user-btn" mat-button matTooltip="User Info"
+      (click)="onUserBtnClicked($event)" >
         <i class="fa fa-user fa-2x"></i>
       </button>
-      <button class="exit-btn" mat-button (click)="onLogOutBtnClicked($event)">
+      <button class="exit-btn" mat-button matTooltip="Log Out" (click)="onLogOutBtnClicked($event)">
         <i class="fa fa-power-off fa-2x"></i>
       </button>
     </div>

@@ -24,6 +24,7 @@ import { TabsService } from './services/tabs.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { ConfirmComponent } from './pages/components/confirm/confirm.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-root',
@@ -38,7 +39,8 @@ import { ConfirmComponent } from './pages/components/confirm/confirm.component';
     FontAwesomeModule,
     MatTabsModule,
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    MatTooltipModule
   ],
   providers:[AuthService, HttpClientModule],
   templateUrl: './app.component.html',

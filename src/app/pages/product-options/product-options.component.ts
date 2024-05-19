@@ -66,4 +66,18 @@ export class ProductOptionsComponent {
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
   }
+
+  onSalesDocumentsClicked(e: any) {
+    //TODO display the correct data
+    const dialogRef = this.dialog.open(ListWithFiltersComponent, {
+      width: '100%',
+      height: '90%',
+      data: {
+        product: this.data.product,
+        view: SalesViews.PendingSalesOrders,
+      },
+      viewContainerRef: this.viewContainerRef,
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {});
+  }
 }
