@@ -1,16 +1,15 @@
-
 <dn-toolbar
-[canDelete]="true"
-[canRefresh]="documentId?true:false"
-[canExit]="true"
-[canSave]="true"
-[isDialog]="false"
-[title]="document_text"
-[entityId]="document.Id"
-(onCloseBtnClicked)="onCloseClicked($event)"
-(onDeleteBtnClicked)="onDeleteClicked($event)"
-(onSaveBtnClicked)="onSaveClicked($event)"
-(onRefreshBtnClicked)="onRefreshClicked($event)"
+  [canDelete]="true"
+  [canRefresh]="documentId ? true : false"
+  [canExit]="true"
+  [canSave]="true"
+  [isDialog]="false"
+  [title]="document_text"
+  [entityId]="document.Id"
+  (onCloseBtnClicked)="onCloseClicked($event)"
+  (onDeleteBtnClicked)="onDeleteClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <form class="form">
   <mat-tab-group>
@@ -565,7 +564,7 @@
       <tr mat-header-row *matHeaderRowDef="productDisplayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: productDisplayedColumns"></tr>
 
-      <!-- Row shown when there is no matching data. -->
+      <!-- No data row -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">No data matching the filter</td>
       </tr>
@@ -574,14 +573,17 @@
     <br />
     <div class="edit-document-charges-field">
       <b class="addcharges-title">Additional Charges</b>
-      <mat-form-field class="addcharges" appearance="outline" style="width: 120px;height:20px">
-        <input matInput [readonly]="true"  [(ngModel)]="addCharges" />
+      <mat-form-field
+        class="addcharges"
+        appearance="outline"
+        style="width: 120px; height: 20px"
+      >
+        <input matInput [readonly]="true" [(ngModel)]="addCharges" />
       </mat-form-field>
       <b class="total-title">Total</b>
-      <mat-form-field appearance="outline" style="width: 120px;height:50px">
+      <mat-form-field appearance="outline" style="width: 120px; height: 50px">
         <input matInput [readonly]="true" [(ngModel)]="total" />
       </mat-form-field>
     </div>
   </div>
 </div>
-

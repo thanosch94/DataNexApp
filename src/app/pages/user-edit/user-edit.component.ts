@@ -32,22 +32,24 @@ import { UserRolesEnum } from '../../enums/user-roles.enum';
     MatSnackBarModule,
     CommonModule,
     MatDialogModule,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   providers: [TabsService],
 
   templateUrl: './user-edit.component.html',
-  styleUrl: './user-edit.component.css'
+  styleUrl: './user-edit.component.css',
 })
+
 export class UserEditComponent {
   user_text: string;
   usersViewModel: UsersViewModel;
-  user: UserDto
+  user: UserDto;
   userId: any;
   confirmPassword: string;
+
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -56,24 +58,21 @@ export class UserEditComponent {
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
     this.user = new UserDto();
     this.userId = WebAppBase.data;
-    WebAppBase.data =undefined
-
+    WebAppBase.data = undefined;
   }
 
   ngOnInit() {
-    this.getData()
+    this.getData();
   }
 
-  getData(){
+  getData() {
     if (this.userId) {
-      this.usersViewModel
-        .GetById(this.userId)
-        .subscribe((result: any) => {
-          result as UserDto;
-          this.user = result;
-          this.user_text = this.user.Name
-          this.tabsService.setTabName(this.user.Name);
-        });
+      this.usersViewModel.GetById(this.userId).subscribe((result: any) => {
+        result as UserDto;
+        this.user = result;
+        this.user_text = this.user.Name;
+        this.tabsService.setTabName(this.user.Name);
+      });
     } else {
       this.user_text = 'New user';
       this.tabsService.setTabName(this.user_text);
@@ -86,45 +85,38 @@ export class UserEditComponent {
   }
 
   onSaveClicked(e: any) {
-    debugger
-    this.user.UserRole=UserRolesEnum.User
-    if(this.user.Password){
-      if(this.user.Password==this.confirmPassword){
+    this.user.UserRole = UserRolesEnum.User;
+    if (this.user.Password) {
+      if (this.user.Password == this.confirmPassword) {
         if (this.user.Id) {
-          this.usersViewModel
-            .UpdateDto(this.user)
-            .subscribe((result: any) => {
-              if (result) {
-                this.user_text = this.user.Name;
-                this._snackBar.open('Record updated', '', {
-                  duration: 1000,
-                  panelClass: 'green-snackbar',
-                });
-              }
-            });
-        } else {
-          this.usersViewModel
-            .InsertDto(this.user)
-            .subscribe((result: any) => {
-              this.user = result;
+          this.usersViewModel.UpdateDto(this.user).subscribe((result: any) => {
+            if (result) {
               this.user_text = this.user.Name;
-              this._snackBar.open('Record inserted', '', {
+              this._snackBar.open('Record updated', '', {
                 duration: 1000,
                 panelClass: 'green-snackbar',
               });
+            }
+          });
+        } else {
+          this.usersViewModel.InsertDto(this.user).subscribe((result: any) => {
+            this.user = result;
+            this.user_text = this.user.Name;
+            this._snackBar.open('Record inserted', '', {
+              duration: 1000,
+              panelClass: 'green-snackbar',
             });
+          });
         }
-      }else{
+      } else {
         const dialog = this.dialog.open(DnAlertComponent, {
           data: {
-            Title: "Message",
+            Title: 'Message',
             Message: "Passwords don't match",
           },
         });
       }
     }
-
-
   }
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
@@ -143,7 +135,7 @@ export class UserEditComponent {
       }
     });
   }
-  onRefreshClicked(e:any){
+  onRefreshClicked(e: any) {
     this.getData();
   }
 

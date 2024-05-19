@@ -1,12 +1,12 @@
-
 <dn-toolbar
-[canInsert]="true"
-[canRefresh]="true"
-[isDialog]="false"
-[title]="document_types_list_text"
-(onInsertBtnClicked)="onInsertClicked($event)"
-(onRefreshBtnClicked)="onRefreshClicked($event)"
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="document_types_list_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
+
 <div class="margin">
   <mat-form-field>
     <mat-label>Search</mat-label>
@@ -43,22 +43,21 @@
             <mat-icon>edit</mat-icon>
           </button>
           <button
-          mat-icon-button
-          matTooltip="Click to Delete"
-          class="iconbutton"
-          color="primary"
-          (click)="deleteDocumentType(row)"
-        >
-          <mat-icon>delete</mat-icon>
-        </button>
-
+            mat-icon-button
+            matTooltip="Click to Delete"
+            class="iconbutton"
+            color="primary"
+            (click)="deleteDocumentType(row)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 
-      <!-- Row shown when there is no matching data. -->
+      <!-- No data row -->
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">
           No data matching the filter "{{ input.value }}"

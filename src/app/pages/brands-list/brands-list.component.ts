@@ -1,12 +1,16 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { BrandDto } from '../../dto/brand.dto';
 import { AuthService } from '../../services/auth.service';
@@ -35,9 +39,9 @@ import { NewItemComponent } from '../components/new-item/new-item.component';
     DnToolbarComponent,
   ],
   templateUrl: './brands-list.component.html',
-  styleUrl: './brands-list.component.css'
+  styleUrl: './brands-list.component.css',
 })
-export class BrandsListComponent {
+export class BrandsListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('brandsTable') brandsTable: MatTable<BrandDto>;
@@ -50,14 +54,14 @@ export class BrandsListComponent {
 
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
     this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
     this.product_brands_list_text = 'Product Brands List';
   }
-  ngAfterViewInit() {
+  ngOnInit() {
     this.getData();
   }
 
@@ -92,6 +96,7 @@ export class BrandsListComponent {
       if (confirm) {
         this.deleteItem(data);
       } else {
+        //No action
       }
     });
   }
@@ -133,17 +138,16 @@ export class BrandsListComponent {
       }
     });
   }
+
   updateItem(data: any) {
     this.brand.Name = data;
-    this.brandsViewModel
-      .UpdateDto(this.brand)
-      .subscribe((result: any) => {
-        this.getData();
-        this._snackBar.open('Record updated', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+    this.brandsViewModel.UpdateDto(this.brand).subscribe((result: any) => {
+      this.getData();
+      this._snackBar.open('Record updated', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
       });
+    });
   }
 
   onInsertClicked(e: any) {
@@ -160,23 +164,21 @@ export class BrandsListComponent {
       }
     });
   }
+
   insertItem(data: any) {
     let brand = new BrandDto();
     brand.Name = data;
-    this.brandsViewModel
-      .InsertDto(brand)
-      .subscribe((result: any) => {
-        this._snackBar.open('Record inserted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-        this.getData();
+    this.brandsViewModel.InsertDto(brand).subscribe((result: any) => {
+      this._snackBar.open('Record inserted', '', {
+        duration: 1000,
+        panelClass: 'green-snackbar',
       });
+      this.getData();
+    });
   }
 
-  onRefreshClicked(e:any){
-    debugger
-    this.getData()
-    this.brandsTable.renderRows()
+  onRefreshClicked(e: any) {
+    this.getData();
+    this.brandsTable.renderRows();
   }
 }

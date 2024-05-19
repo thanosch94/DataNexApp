@@ -13,7 +13,7 @@ import { Guid } from 'guid-typescript';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { CommonModule } from '@angular/common';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
 import { SalesViews } from '../../enums/sales-views.enum';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';

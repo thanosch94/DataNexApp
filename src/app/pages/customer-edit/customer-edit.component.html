@@ -1,18 +1,17 @@
 <dn-toolbar
-[canDelete]="true"
-[canRefresh]="customerId?true:false"
-[canExit]="true"
-[canSave]="true"
-[isDialog]="false"
-[title]="customer_text"
-[entityId]="customer.Id"
-(onCloseBtnClicked)="onCloseClicked($event)"
-(onDeleteBtnClicked)="onDeleteClicked($event)"
-(onSaveBtnClicked)="onSaveClicked($event)"
-(onRefreshBtnClicked)="onRefreshClicked($event)"
-
+  [canDelete]="true"
+  [canRefresh]="customerId ? true : false"
+  [canExit]="true"
+  [canSave]="true"
+  [isDialog]="false"
+  [title]="customer_text"
+  [entityId]="customer.Id"
+  (onCloseBtnClicked)="onCloseClicked($event)"
+  (onDeleteBtnClicked)="onDeleteClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-<!-- TODO add isDialog variable  -->
+
 <div class="form" (submit)="onSaveClicked($event)">
   <div class="basic-info-contact">
     <div>
@@ -27,10 +26,6 @@
             <input matInput name="Name" [(ngModel)]="customer.Name" />
           </mat-form-field>
         </div>
-        <!-- <mat-form-field>
-          <mat-label>Surname</mat-label>
-          <input matInput name="surname" [(ngModel)]="customerSurname"   required/>
-        </mat-form-field>-->
         <br />
         <br />
         <div>
@@ -98,7 +93,12 @@
     <div>
       <mat-form-field class="vat-number">
         <mat-label>Vat Id</mat-label>
-        <input matInput name="vatid" [(ngModel)]="customer.VatNumber" (input)="onVatIdValueChanged($event)" />
+        <input
+          matInput
+          name="vatid"
+          [(ngModel)]="customer.VatNumber"
+          (input)="onVatIdValueChanged($event)"
+        />
       </mat-form-field>
       <mat-form-field class="tax-office">
         <mat-label>Vat Id</mat-label>

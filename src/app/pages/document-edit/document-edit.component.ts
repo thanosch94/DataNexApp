@@ -1,6 +1,5 @@
 import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
-import { BrandDto } from './../../dto/brand.dto';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
 import { ProductsViewModel } from './../../view-models/products.viewmodel';
 import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
@@ -35,7 +34,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {
   MatCell,
   MatTable,
-  MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -44,10 +42,9 @@ import { DocumentProductsViewModel } from '../../view-models/document-products.v
 import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { ProductDto } from '../../dto/product.dto';
-import { ProductSizeDto } from '../../dto/product-size.dto';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
-import { Router, RoutesRecognized, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
@@ -82,9 +79,9 @@ import { AuthService } from '../../services/auth.service';
     AsyncPipe,
     MatTabsModule,
     DnToolbarComponent,
-    MatDialogModule
+    MatDialogModule,
   ],
-  providers: [provideNativeDateAdapter(),TabsService,HttpClientModule],
+  providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
@@ -151,28 +148,37 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   datepipe: DatePipe = new DatePipe('en-US');
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     private ref: ChangeDetectorRef,
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private tabsService:TabsService,
+    private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef
   ) {
-
-    this.documentTypesViewModel = new DocumentTypesViewModel(this.http, this.auth);
-    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
-    this.productBarcodesViewModel = new ProductBarcodesViewModel(this.http, this.auth);
+    this.documentTypesViewModel = new DocumentTypesViewModel(
+      this.http,
+      this.auth
+    );
+    this.productSizesViewModel = new ProductSizesViewModel(
+      this.http,
+      this.auth
+    );
+    this.productBarcodesViewModel = new ProductBarcodesViewModel(
+      this.http,
+      this.auth
+    );
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
-    this.documentProductsViewModel = new DocumentProductsViewModel(this.http, this.auth);
+    this.documentProductsViewModel = new DocumentProductsViewModel(
+      this.http,
+      this.auth
+    );
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
-    WebAppBase.data =undefined
-
-
+    WebAppBase.data = undefined;
   }
 
   ngOnInit() {
@@ -208,7 +214,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  getData(){
+  getData() {
     if (this.documentId) {
       this.getDocumentData(this.documentId);
     } else {
@@ -217,7 +223,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
   initNewDocument() {
     this.document_text = 'New Document';
-    this.tabsService.setTabName(this.document_text)
+    this.tabsService.setTabName(this.document_text);
 
     this.document.DocumentDateTime = new Date();
     for (let i = 0; i < 5; i++) {
@@ -242,7 +248,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.document.DocumentTypeName +
         '-' +
         this.document.DocumentNumber.toString().padStart(6, '0');
-      this.tabsService.setTabName(this.document_text)
+      this.tabsService.setTabName(this.document_text);
       this.ref.detectChanges();
 
       this.documentProductsViewModel
@@ -416,7 +422,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       data: {
         product: this.productsDataSource[index],
       },
-      viewContainerRef: this.viewContainerRef
+      viewContainerRef: this.viewContainerRef,
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
@@ -432,6 +438,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
@@ -471,8 +478,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.router.navigate(['documents-list']);
       });
   }
+
   onBarcodeInput(e: any, index: number) {
-    //If product exist in the table
+    //If product exists in the table
     if (
       this.productsDataSource.some(
         (x) =>
@@ -528,7 +536,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsDataSource.splice(index, 1);
     for (let i = index; i < this.productsDataSource.length - 1; i++) {
       this.sizeControlArray[i] = this.sizeControlArray[i + 1];
-
       this.productstable.renderRows();
     }
 
@@ -544,6 +551,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   displaySizes(value: string) {
     return value ? value : '';
   }
+
   onSizeSelectionChanged(data: any, index: number) {
     this.productsDataSource[index].ProductSizeId = data.Id;
     if (this.productsDataSource[index].ProductId) {
@@ -593,6 +601,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
     this.calculateDocumentTotal();
   }
+
   onProductNameChanged(e: any, index: number) {
     if (this.productsDataSource[index].Sku) {
       this.productsDataSource[index].ProductName = e.target.value;
@@ -622,9 +631,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onRefreshClicked(e:any){
+  onRefreshClicked(e: any) {
     this.getData();
-    this.productstable.renderRows()
+    this.productstable.renderRows();
   }
 
   ngOnDestroy() {

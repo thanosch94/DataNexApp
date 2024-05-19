@@ -17,10 +17,7 @@ import {
   isDevMode,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {
-  MatAutocomplete,
-  MatAutocompleteModule,
-} from '@angular/material/autocomplete';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -89,7 +86,7 @@ import { BrandDto } from '../../dto/brand.dto';
     MatButtonModule,
     MatDialogModule,
     DnToolbarComponent,
-    AsyncPipe
+    AsyncPipe,
   ],
   providers: [TabsService],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -129,7 +126,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
     private tabsService: TabsService,
-    private ref:ChangeDetectorRef,
+    private ref: ChangeDetectorRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
@@ -137,10 +134,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.http,
       this.auth
     );
-    this.brandsViewModel = new BrandsViewModel(
-      this.http,
-      this.auth
-    );
+    this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
     //If opens from dialog
     if (data) {
       this.productId = data.product.ProductId;
@@ -166,15 +160,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.getData();
   }
 
-  getData(){
-    this.brandsViewModel.GetAll().subscribe((result:any)=>{
-      this.brands =result as Array<BrandDto>
+  getData() {
+    this.brandsViewModel.GetAll().subscribe((result: any) => {
+      this.brands = result as Array<BrandDto>;
 
       this.filteredBrands = this.brandControl.valueChanges.pipe(
         startWith(''),
         map((value) => this._brandsfilter(value || ''))
       );
-    })
+    });
     if (this.productId) {
       this.productsViewModel
         .GetById(this.productId)
@@ -217,12 +211,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _brandsfilter(value: string): BrandDto[]{
-      const filterValue = value.toLowerCase();
-      return this.brands.filter((brand: ProductDto) =>
-        brand.Name.toLowerCase().includes(filterValue)
-      );
-
+  private _brandsfilter(value: string): BrandDto[] {
+    const filterValue = value.toLowerCase();
+    return this.brands.filter((brand: ProductDto) =>
+      brand.Name.toLowerCase().includes(filterValue)
+    );
   }
   onCloseClicked(e: any) {
     this.router.navigate(['products-list']);
@@ -266,9 +259,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClicked(e: any) {
-    debugger
-    this.product.Id=this.productId;
-    if (this.product.Id!=null && this.product.Id!=Guid.parse(Guid.EMPTY)) {
+    this.product.Id = this.productId;
+    if (this.product.Id != null && this.product.Id != Guid.parse(Guid.EMPTY)) {
       this.productsViewModel
         .UpdateDto(this.product)
         .subscribe((result: any) => {
@@ -308,16 +300,14 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     if (!this.barcodesDataSource.data.some((x) => x.IsEditable == true)) {
       this.ref.detectChanges();
       this.barcodesDataSource.data.unshift(this.newBarcodeLine);
-      this.sizeControl.reset()
+      this.sizeControl.reset();
 
       this.table.renderRows();
-
     } else {
-
     }
   }
 
-  onProductBrandSelection(value:string){
+  onProductBrandSelection(value: string) {
     let selectedBrand = this.brands.find(
       (brand: BrandDto) => brand.Name == value
     );
@@ -330,37 +320,33 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   editProductBarcode(data: any, index: number) {
     this.barcodesDataSource.data[index].IsEditable = true;
   }
-  stopEditingProductBarcodes(data:any, index: number){
-    if(data.Id){
+  stopEditingProductBarcodes(data: any, index: number) {
+    if (data.Id) {
       this.barcodesDataSource.data[index].IsEditable = false;
-      this.table.renderRows()
-      this.getProductBarcodesData()
-
-    }else{
+      this.table.renderRows();
+      this.getProductBarcodesData();
+    } else {
       this.barcodesDataSource.data.shift();
-      this.table.renderRows()
+      this.table.renderRows();
     }
-
   }
   saveProductBarcode(data: any, index: number) {
-    if(data.Id){
+    if (data.Id) {
       this.productBarcodesViewModel.UpdateDto(data).subscribe({
-        next:(result)=>{
+        next: (result) => {
           this.barcodesDataSource.data[index].IsEditable = false;
           this.table.renderRows();
         },
-        error:(err)=>{
+        error: (err) => {
           const dialog = this.dialog.open(DnAlertComponent, {
             data: {
               Title: 'Message',
               Message: err.error,
             },
           });
-
-        }
-      })
-
-    }else{
+        },
+      });
+    } else {
       this.newBarcodeLine.ProductId = data.ProductId;
       this.productBarcodesViewModel.InsertDto(data).subscribe({
         next: (result: any) => {
@@ -384,33 +370,31 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         },
       });
     }
-    this.sizeControl.reset()
-
+    this.sizeControl.reset();
   }
   deleteProductBarcode(data: any, index: number) {
-    let editRow = this.barcodesDataSource.data.find(x=>x.IsEditable==true)
-    let editRowIndex=-1; //False index
-    if(editRow!=null){
-      editRowIndex=this.barcodesDataSource.data.indexOf(editRow)
-      if(index==editRowIndex){
+    let editRow = this.barcodesDataSource.data.find(
+      (x) => x.IsEditable == true
+    );
+    let editRowIndex = -1; //False index
+    if (editRow != null) {
+      editRowIndex = this.barcodesDataSource.data.indexOf(editRow);
+      if (index == editRowIndex) {
         if (data.Id) {
-          this.doDelete(data.Id)
+          this.doDelete(data.Id);
         } else {
           this.barcodesDataSource.data.shift();
           this.table.renderRows();
         }
       }
-
-    }else{
+    } else {
       if (data.Id) {
-      this.doDelete(data.Id)
+        this.doDelete(data.Id);
       }
     }
-
-
   }
 
-  doDelete(id:Guid){
+  doDelete(id: Guid) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
       data: {
@@ -423,16 +407,15 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.productBarcodesViewModel
-        .DeleteById(id)
-        .subscribe((result: any) => {
-          this.getProductBarcodesData();
-        });      }
+          .DeleteById(id)
+          .subscribe((result: any) => {
+            this.getProductBarcodesData();
+          });
+      }
     });
-
   }
 
   onSizeSelectionChanged(data: any) {
-    debugger;
     this.newBarcodeLine.SizeId = data.Id;
     this.filteredSizes = this.sizeControl.valueChanges.pipe(
       startWith(''),
@@ -447,7 +430,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.newBarcodeLine.Barcode = data.target.value;
   }
 
-  onRefreshClicked(e:any){
-    this.getData()
+  onRefreshClicked(e: any) {
+    this.getData();
   }
 }

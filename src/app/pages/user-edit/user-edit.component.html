@@ -11,11 +11,11 @@
 (onSaveBtnClicked)="onSaveClicked($event)"
 (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-<!-- TODO add isDialog variable  -->
+
 <div class="form">
   <div class="basic-info-contact">
     <div>
-      <div class="info-categories">
+      <div class="info-user">
         <b>User Info</b>
       </div>
       <br />
@@ -26,19 +26,6 @@
             <input matInput name="Name" [(ngModel)]="user.Name" />
           </mat-form-field>
         </div>
-
-        <!-- <br />
-        <br />
-        <div>
-          <mat-form-field class="phone1">
-            <mat-label>Phone 1</mat-label>
-            <input matInput name="phone1" [(ngModel)]="customer.Phone1" />
-          </mat-form-field>
-          <mat-form-field class="phone2">
-            <mat-label>Phone 2</mat-label>
-            <input matInput name="phone2" [(ngModel)]="customer.Phone2" />
-          </mat-form-field>
-        </div> -->
         <br />
         <br />
         <div>
@@ -51,7 +38,7 @@
     </div>
   </div>
   <div class="addresses">
-    <div class="info-categories">
+    <div class="info-user">
       <b>Login Info</b>
     </div>
     <br />
@@ -72,7 +59,7 @@
 </div>
 <div class="form">
   <div class="invoice-info">
-    <div class="info-categories">
+    <div class="info-user">
       <b>Change Password</b>
     </div>
     <br />

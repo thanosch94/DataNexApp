@@ -1,16 +1,19 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { NewItemComponent } from '../components/new-item/new-item.component';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
@@ -38,7 +41,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './product-sizes-list.component.html',
   styleUrl: './product-sizes-list.component.css',
 })
-export class ProductSizesListComponent {
+
+export class ProductSizesListComponent implements OnInit{
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('productSizesTable') productSizesTable: MatTable<ProductSizeDto>;
@@ -51,14 +55,18 @@ export class ProductSizesListComponent {
 
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.productSizesViewModel = new ProductSizesViewModel(this.http, this.auth);
+    this.productSizesViewModel = new ProductSizesViewModel(
+      this.http,
+      this.auth
+    );
     this.product_sizes_list_text = 'Product Sizes List';
   }
-  ngAfterViewInit() {
+
+  ngOnInit() {
     this.getData();
   }
 
@@ -134,6 +142,7 @@ export class ProductSizesListComponent {
       }
     });
   }
+
   updateItem(data: any) {
     this.productSize.Name = data;
     this.productSizesViewModel
@@ -161,6 +170,7 @@ export class ProductSizesListComponent {
       }
     });
   }
+
   insertItem(data: any) {
     let productSize = new ProductSizeDto();
     productSize.Name = data;
@@ -175,8 +185,8 @@ export class ProductSizesListComponent {
       });
   }
 
-  onRefreshClicked(e:any){
-    this.getData()
-    this.productSizesTable.renderRows()
+  onRefreshClicked(e: any) {
+    this.getData();
+    this.productSizesTable.renderRows();
   }
 }

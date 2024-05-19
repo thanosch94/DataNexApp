@@ -19,10 +19,10 @@
   text-align: center;
   padding: 40px 0;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-
   grid-area: a;
   gap:2rem;
 }
+
 .grid-a-icon, .grid-b-icon, .grid-c-icon{
   color:#0B6AA5
 }
@@ -31,16 +31,13 @@
   text-align: center;
   padding: 40px 0;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-
-
   grid-area: b;
   grid-gap: 20px 50px;
-
 }
+
 .grid-c{
   text-align: center;
   box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px, rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
-
   padding: 40px 0;
   grid-area: c;
   gap:2rem;
@@ -50,30 +47,23 @@
   text-align: center;
   font-weight: bold;
   padding: 5%;
-
   grid-area: d;
   gap:2rem;
 }
+
 .grid-e{
   text-align: center;
   font-weight: bold;
-
   padding: 5%;
-
   grid-area: e;
   gap:2rem;
 }
-.grid-f{
 
+.grid-f{
   padding: 5%;
   font-weight: bold;
-
   grid-area: f;
   gap:2rem;
-}
-
-.hide-product-edit{
-  display: none;
 }
 
 ::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface{

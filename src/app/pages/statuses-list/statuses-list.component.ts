@@ -1,12 +1,16 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { StatusDto } from '../../dto/status.dto';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,7 +36,7 @@ import { AuthService } from '../../services/auth.service';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',
@@ -50,12 +54,12 @@ export class StatusesListComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
-    this.statuses_list_text = "Statuses List"
+    this.statuses_list_text = 'Statuses List';
   }
 
   ngOnInit() {
@@ -69,6 +73,7 @@ export class StatusesListComponent implements OnInit {
       this.dataSource.sort = this.sort;
     });
   }
+
   editStatus(data: any) {
     this.status = data;
     const dialogRef = this.dialog.open(NewItemComponent, {
@@ -85,6 +90,7 @@ export class StatusesListComponent implements OnInit {
       }
     });
   }
+
   updateItem(data: any) {
     this.status.Name = data;
     this.statusesViewModel.UpdateDto(this.status).subscribe((result: any) => {
@@ -96,7 +102,7 @@ export class StatusesListComponent implements OnInit {
     });
   }
 
-  onInsertClicked(e:any){
+  onInsertClicked(e: any) {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
       data: {
@@ -122,6 +128,7 @@ export class StatusesListComponent implements OnInit {
       this.getData();
     });
   }
+
   applyFilter(e: any) {
     const filterValue = (e.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -170,8 +177,8 @@ export class StatusesListComponent implements OnInit {
     });
   }
 
-  onRefreshBtnClicked(e:any){
-    this.getData()
-    this.statusTable.renderRows()
+  onRefreshBtnClicked(e: any) {
+    this.getData();
+    this.statusTable.renderRows();
   }
 }

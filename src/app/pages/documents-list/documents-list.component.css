@@ -1,10 +1,6 @@
 .margin{
 margin:2%;
 }
-.button-add-row {
-  background: #1b9e1b;
-  color: #ffffff!important;
-}
 
 .table-header {
   width: 90%;
@@ -16,10 +12,6 @@ margin:2%;
   background-color:#1b9e1b!important;
   color: white;
 }
-/*Menu on Right Click*/
-
-
-
 
 .right-click-menu {
   display: inline-flex;
@@ -35,7 +27,6 @@ margin:2%;
   background-color: transparent;
   cursor: pointer;
   border: none !important;
-
   user-select: none;
   min-width: 64px;
   line-height: 36px;
@@ -45,8 +36,8 @@ margin:2%;
 
 .right-click-menu-item:focus-visible{
   outline: none !important;
-
 }
+
 .right-click-menu-item:hover {
   background-color: rgb(208, 208, 208);
 }

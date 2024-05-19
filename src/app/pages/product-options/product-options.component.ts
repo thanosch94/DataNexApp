@@ -1,4 +1,10 @@
-import { Component, Inject, Optional, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  Inject,
+  Optional,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
@@ -17,15 +23,17 @@ import { SalesViews } from '../../enums/sales-views.enum';
   templateUrl: './product-options.component.html',
   styleUrl: './product-options.component.css',
 })
+
 export class ProductOptionsComponent {
   @ViewChild('productEdit') productEditComponent: any;
   faInfo: any;
   faGear: any;
   faList: any;
   faRectangleList: any;
+
   constructor(
-    private dialog: MatDialog, private viewContainerRef: ViewContainerRef
-    ,
+    private dialog: MatDialog,
+    private viewContainerRef: ViewContainerRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.faInfo = faInfo;
@@ -36,26 +44,25 @@ export class ProductOptionsComponent {
 
   onProductDetailsClicked(e: any) {
     const dialogRef = this.dialog.open(ProductEditComponent, {
-      width:'100%',
-      height:'90%',
+      width: '100%',
+      height: '90%',
       data: {
         product: this.data.product,
       },
-      viewContainerRef: this.viewContainerRef
-
+      viewContainerRef: this.viewContainerRef,
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
   }
+
   onPendingOrdersClicked(e: any) {
     const dialogRef = this.dialog.open(ListWithFiltersComponent, {
-      width:'100%',
-      height:'90%',
+      width: '100%',
+      height: '90%',
       data: {
         product: this.data.product,
-        view: SalesViews.PendingSalesOrders
+        view: SalesViews.PendingSalesOrders,
       },
-      viewContainerRef: this.viewContainerRef
-
+      viewContainerRef: this.viewContainerRef,
     });
     dialogRef.afterClosed().subscribe((confirm) => {});
   }

@@ -1,12 +1,16 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { MatDialog } from '@angular/material/dialog';
@@ -32,15 +36,17 @@ import { AuthService } from '../../services/auth.service';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   templateUrl: './document-types.component.html',
   styleUrl: './document-types.component.css',
 })
-export class DocumentTypesComponent implements AfterViewInit {
+
+export class DocumentTypesComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('documentTypesTable') documentTypesTable: MatTable<DocumentTypeDto>;
+  @ViewChild('documentTypesTable')
+  documentTypesTable: MatTable<DocumentTypeDto>;
 
   displayedColumns: string[] = ['Name', 'Description', 'buttons'];
   dataSource: MatTableDataSource<DocumentTypeDto>;
@@ -50,15 +56,18 @@ export class DocumentTypesComponent implements AfterViewInit {
 
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar
   ) {
-    this.documentTypesViewModel = new DocumentTypesViewModel(this.http, this.auth);
-    this.document_types_list_text ="Document Types List"
+    this.documentTypesViewModel = new DocumentTypesViewModel(
+      this.http,
+      this.auth
+    );
+    this.document_types_list_text = 'Document Types List';
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.getData();
   }
 
@@ -98,7 +107,7 @@ export class DocumentTypesComponent implements AfterViewInit {
       });
   }
 
-  onInsertClicked(e:any){
+  onInsertClicked(e: any) {
     const dialogRef = this.dialog.open(NewItemComponent, {
       width: '500px',
       data: {
@@ -173,8 +182,8 @@ export class DocumentTypesComponent implements AfterViewInit {
     });
   }
 
-  onRefreshClicked(e:any){
+  onRefreshClicked(e: any) {
     this.getData();
-    this.documentTypesTable.renderRows()
+    this.documentTypesTable.renderRows();
   }
 }

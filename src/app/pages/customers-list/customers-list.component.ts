@@ -1,8 +1,16 @@
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
-import { AfterViewInit, Component, NgModule, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CustomerDto } from '../../dto/customer.dto';
@@ -13,6 +21,10 @@ import { Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { MatDialog } from '@angular/material/dialog';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
   selector: 'app-customers-list',
@@ -29,11 +41,12 @@ import { AuthService } from '../../services/auth.service';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.css',
 })
+
 export class CustomersListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -48,21 +61,28 @@ export class CustomersListComponent implements OnInit {
     'Country',
     'Phone1',
     'Phone2',
-    'edit',
+    'buttons',
   ];
   dataSource: MatTableDataSource<CustomerDto>;
   customersViewModel: CustomersViewModel;
   customer_list_text: string;
-  constructor(private http: HttpClient, private auth:AuthService, private router: Router) {
+
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+    private router: Router,
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
-    this.customer_list_text  = "Customer List"
+    this.customer_list_text = 'Customer List';
   }
 
   ngOnInit() {
     this.getData();
   }
 
-  getData(){
+  getData() {
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
@@ -87,14 +107,52 @@ export class CustomersListComponent implements OnInit {
     WebAppBase.data = customer.Id;
     this.router.navigate(['customer-edit']);
   }
-  deleteCustomer(element: any) {}
 
-  onInsertClicked(e:any){
+  deleteCustomer(data: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.deleteItem(data);
+      } else {
+      }
+    });
+  }
+
+  deleteItem(data: any) {
+    this.customersViewModel.DeleteById(data.Id).subscribe({
+      next: (result) => {
+        this.getData();
+
+        this._snackBar.open('Record deleted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+      },
+      error: (err) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error.innerExceptionMessage,
+          },
+        });
+      },
+    });
+  }
+
+  onInsertClicked(e: any) {
     this.router.navigate(['customer-edit']);
   }
 
-  onRefreshClicked(e:any){
+  onRefreshClicked(e: any) {
     this.getData();
-    this.customersTable.renderRows()
+    this.customersTable.renderRows();
   }
 }

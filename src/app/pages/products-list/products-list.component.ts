@@ -1,13 +1,17 @@
 import { AuthService } from './../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTable, MatTableDataSource, MatTableModule } from '@angular/material/table';
+import {
+  MatTable,
+  MatTableDataSource,
+  MatTableModule,
+} from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ProductsViewModel } from '../../view-models/products.viewmodel';
 import { WebAppBase } from '../../base/web-app-base';
@@ -33,42 +37,44 @@ import { ProductDto } from '../../dto/product.dto';
     MatTableModule,
     HttpClientModule,
     MatSortHeader,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   templateUrl: './products-list.component.html',
-  styleUrl: './products-list.component.css'
+  styleUrl: './products-list.component.css',
 })
-export class ProductsListComponent implements AfterViewInit{
-  dataSource:any;
+export class ProductsListComponent implements OnInit {
+  dataSource: any;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('productsTable') productsTable: MatTable<ProductDto>;
 
-  displayedColumns: string[] = [
-    'Sku',
-    'Name',
-    'Price',
-    'Brand',
-    'buttons'
-  ];
+  displayedColumns: string[] = ['Sku', 'Name', 'Price', 'Brand', 'buttons'];
   productsViewModel: ProductsViewModel;
   products_list_text: string;
 
-  constructor(private http:HttpClient, private auth:AuthService, private router:Router, public dialog: MatDialog, private _snackBar: MatSnackBar){
-    this.productsViewModel= new ProductsViewModel(this.http, this.auth);
-    this.products_list_text = "Products List"
+  constructor(
+    private http: HttpClient,
+    private auth: AuthService,
+    private router: Router,
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
+  ) {
+    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.products_list_text = 'Products List';
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.getData();
   }
 
-  getData(){
-    this.productsViewModel.GetAll().subscribe((result:any)=>{
+  getData() {
+    this.productsViewModel.GetAll().subscribe((result: any) => {
       this.dataSource = new MatTableDataSource(result);
       this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;    })
+      this.dataSource.sort = this.sort;
+    });
   }
+
   applyFilter(e: any) {
     const filterValue = (e.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -78,13 +84,15 @@ export class ProductsListComponent implements AfterViewInit{
     }
   }
 
-  addProduct(e:any){
-    this.router.navigate(['product-edit'])
+  addProduct(e: any) {
+    this.router.navigate(['product-edit']);
   }
-  onInsertClicked(e:any){
-    this.router.navigate(['product-edit'])
+
+  onInsertClicked(e: any) {
+    this.router.navigate(['product-edit']);
   }
-  editProduct(product:any){
+
+  editProduct(product: any) {
     WebAppBase.data = product.Id;
     this.router.navigate(['product-edit']);
   }
@@ -107,31 +115,29 @@ export class ProductsListComponent implements AfterViewInit{
     });
   }
 
-  deleteItem(data:any){
-    this.productsViewModel
-    .DeleteById(data.Id)
-    .subscribe({
-    next: (result) => {
-      this.getData();
+  deleteItem(data: any) {
+    this.productsViewModel.DeleteById(data.Id).subscribe({
+      next: (result) => {
+        this.getData();
 
-      this._snackBar.open('Record deleted', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-    },
-    error: (err) => {
-      const dialog = this.dialog.open(DnAlertComponent, {
-        data: {
-          Title: 'Message',
-          Message: err.error.innerExceptionMessage,
-        },
-      });
-    },
-  });
+        this._snackBar.open('Record deleted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+      },
+      error: (err) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error.innerExceptionMessage,
+          },
+        });
+      },
+    });
   }
 
-  onRefreshClicked(e:any){
-    this.getData()
-    this.productsTable.renderRows()
+  onRefreshClicked(e: any) {
+    this.getData();
+    this.productsTable.renderRows();
   }
 }

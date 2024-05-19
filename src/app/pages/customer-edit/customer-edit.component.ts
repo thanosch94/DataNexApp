@@ -31,20 +31,22 @@ import { AuthService } from '../../services/auth.service';
     MatSnackBarModule,
     CommonModule,
     MatDialogModule,
-    DnToolbarComponent
+    DnToolbarComponent,
   ],
   providers: [TabsService],
   templateUrl: './customer-edit.component.html',
   styleUrl: './customer-edit.component.css',
 })
+
 export class CustomerEditComponent implements OnInit, OnDestroy {
   customer_text: string;
   customersViewModel: CustomersViewModel;
   customer: CustomerDto;
   customerId: any;
+
   constructor(
     private http: HttpClient,
-    private auth:AuthService,
+    private auth: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
     public dialog: MatDialog,
@@ -53,22 +55,21 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer = new CustomerDto();
     this.customerId = WebAppBase.data;
-    WebAppBase.data =undefined
-
+    WebAppBase.data = undefined;
   }
 
   ngOnInit() {
     this.getData();
   }
 
-  getData(){
+  getData() {
     if (this.customerId) {
       this.customersViewModel
         .GetById(this.customerId)
         .subscribe((result: any) => {
           result as CustomerDto;
           this.customer = result;
-          this.customer_text = this.customer.Name
+          this.customer_text = this.customer.Name;
           this.tabsService.setTabName(this.customer.Name);
         });
     } else {
@@ -78,6 +79,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       this.customer = new CustomerDto();
     }
   }
+
   onCloseClicked(e: any) {
     this.router.navigate(['customers-list']);
   }
@@ -108,6 +110,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         });
     }
   }
+
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
@@ -150,10 +153,6 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy() {
-    WebAppBase.data = undefined;
-  }
-
   async onVatIdValueChanged(e: any) {
     //IF NEEDED TO CONNECT TO TO AADE TO GET AFM DATA
     // if (e.target.selectionStart == 9) {
@@ -163,7 +162,11 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     // }
   }
 
-  onRefreshClicked(e:any){
+  onRefreshClicked(e: any) {
     this.getData();
+  }
+
+  ngOnDestroy() {
+    WebAppBase.data = undefined;
   }
 }
