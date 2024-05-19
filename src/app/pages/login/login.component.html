@@ -4,6 +4,6 @@
   </div>    <form method="post">
     	<input type="text" name="u" placeholder="Username" [(ngModel)]="loginData.UserName" required="required" />
         <input type="password" name="p" placeholder="Password" [(ngModel)]="loginData.Password"  required="required" />
-        <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in</button>
+        <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
     </form>
 </div>

@@ -46,8 +46,8 @@ export class AuthService {
   }
 
   getApiService() {
-    // let serviceUrl = 'http://20.107.178.104/DataNexApi/api/'
-    let serviceUrl = 'http://localhost:5000/api/';
+    let serviceUrl = 'http://20.107.178.104/DataNexApi/api/'
+    //let serviceUrl = 'http://localhost:5000/api/';
     return serviceUrl;
   }
 }

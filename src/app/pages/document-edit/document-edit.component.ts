@@ -313,7 +313,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           .GetByProductId(result.Id)
           .subscribe((result: any) => {
             this.productsSizes = result as ProductBarcodeDto[];
-            this.getFilteredSizes(index);
+            if(this.productsSizes.length>0){
+              this.getFilteredSizes(index);
+            }else{
+
+              this.productsDataSource[index].SerialNumber = index + 1;
+              this.productsDataSource[index].IsRowFilled = true;
+
+              let cellsArray = this.cells.toArray();
+              cellsArray[index + 1].nativeElement.focus();
+              this.calculateDocumentTotal();
+
+            }
           });
       } else {
         this.productsDataSource[index].Sku = '';

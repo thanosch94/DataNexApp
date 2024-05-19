@@ -28,6 +28,7 @@ import { UserDto } from '../../dto/user.dto';
 export class LoginComponent {
   loginData: LoginDto = new LoginDto();
   logoPath: string;
+  isLoading: boolean =false;
 
   constructor(
     private auth: AuthService,
@@ -44,6 +45,7 @@ export class LoginComponent {
   }
 
   onSubmitClicked(e: any) {
+    this.isLoading =true
     this.auth.login(this.loginData).subscribe({
       next: (result: any) => {
         result as ApiResponseDto
@@ -61,6 +63,8 @@ export class LoginComponent {
         }
       },
       error: (err) => {
+        this.isLoading =false
+
         const dialog = this.dialog.open(DnAlertComponent, {
           data: {
             Title: 'Message',

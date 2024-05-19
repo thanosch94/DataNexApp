@@ -265,6 +265,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .UpdateDto(this.product)
         .subscribe((result: any) => {
           if (result) {
+            this.product = result;
+            this.product_text =this.product.Sku + ' - ' + this.product.Name
+            this.tabsService.setTabName(this.product_text)
+            this.ref.detectChanges()
+
             this._snackBar.open('Record updated', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
