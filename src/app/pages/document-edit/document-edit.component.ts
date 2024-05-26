@@ -99,6 +99,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   addCharges: number = 0;
   activeTab: AppTabDto | undefined;
   route: any;
+  previousTabName: string;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -365,6 +366,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             .InsertDto(this.document)
             .subscribe((result: any) => {
               this.document = result;
+              this.previousTabName = this.document_text.toString()
+              this.document_text =
+              this.document.DocumentTypeName +
+              '-' +
+              this.document.DocumentNumber.toString().padStart(6, '0');
+              this.tabsService.setTabNameByOldName(this.document_text, this.previousTabName)
+
               //Fill in documentId to display the right data (delete button, table)
               this.documentId = this.document.Id;
               //Render table again to remove empty lines
@@ -564,18 +572,20 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onSizeSelectionChanged(data: any, index: number) {
-    this.productsDataSource[index].ProductSizeId = data.Id;
+    debugger
     if (this.productsDataSource[index].ProductId) {
       this.productBarcodesViewModel
         .GetByProductId(this.productsDataSource[index].ProductId)
         .subscribe((result: any) => {
-          let barcode = result.find(
+          let barcodeData = result.find(
             (x: ProductBarcodeDto) => x.Id == data.Id
-          ).Barcode;
-          this.productsDataSource[index].Barcode = barcode;
+          );
+          this.productsDataSource[index].Barcode = barcodeData.Barcode;
           this.productsDataSource[index].IsRowFilled = true;
           this.productsDataSource[index].SerialNumber = index + 1;
           this.productsDataSource[index].SizeName = data.SizeName;
+          this.productsDataSource[index].ProductSizeId = barcodeData.SizeId;
+
           let cellsArray = this.cells.toArray();
           cellsArray[index + 1].nativeElement.focus();
         });

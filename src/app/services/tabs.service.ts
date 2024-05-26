@@ -36,6 +36,17 @@ export class TabsService {
     }
   }
 
+  setTabNameByOldName(tabName: string, oldName:string) {
+    //Finds the tab using the previous name
+    let activeTab = TabsService.tabs.find(
+      (x: AppTabDto) => x.Route.path == this.route && x.Name == oldName.substring(0, 15)
+    );
+    if (activeTab) {
+        activeTab!.Name = tabName.substring(0, 15);
+
+    }
+  }
+
   deactivateTabs() {
     TabsService.tabs.forEach((tab) => {
       tab.Active = false;

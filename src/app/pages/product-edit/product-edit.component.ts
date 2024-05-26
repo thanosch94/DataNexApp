@@ -119,6 +119,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   brandsViewModel: BrandsViewModel;
   brands: any;
   filteredBrands: Observable<BrandDto[]>;
+  previousTabName: string;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -265,11 +266,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .UpdateDto(this.product)
         .subscribe((result: any) => {
           if (result) {
+            this.previousTabName = this.product_text.toString()
             this.product = result;
             this.product_text =this.product.Sku + ' - ' + this.product.Name
-            this.tabsService.setTabName(this.product_text)
-            this.ref.detectChanges()
-
+            this.tabsService.setTabNameByOldName(this.product_text, this.previousTabName)
             this._snackBar.open('Record updated', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
@@ -281,6 +281,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .InsertDto(this.product)
         .subscribe((result: any) => {
           this.product = result;
+          this.previousTabName = this.product_text.toString()
+          this.product = result;
+          this.product_text =this.product.Sku + ' - ' + this.product.Name
+          this.tabsService.setTabNameByOldName(this.product_text, this.previousTabName)
           this._snackBar.open('Record inserted', '', {
             duration: 1000,
             panelClass: 'green-snackbar',

@@ -43,6 +43,7 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
   customersViewModel: CustomersViewModel;
   customer: CustomerDto;
   customerId: any;
+  previousTabName: string;
 
   constructor(
     private http: HttpClient,
@@ -90,7 +91,11 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
         .UpdateDto(this.customer)
         .subscribe((result: any) => {
           if (result) {
+            this.customer =result;
+            this.previousTabName = this.customer_text.toString()
             this.customer_text = this.customer.Name;
+            this.tabsService.setTabNameByOldName(this.customer_text, this.previousTabName)
+
             this._snackBar.open('Record updated', '', {
               duration: 1000,
               panelClass: 'green-snackbar',
@@ -101,8 +106,11 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
       this.customersViewModel
         .InsertDto(this.customer)
         .subscribe((result: any) => {
-          this.customer = result;
+          this.customer =result;
+          this.previousTabName = this.customer_text.toString()
           this.customer_text = this.customer.Name;
+          this.tabsService.setTabNameByOldName(this.customer_text, this.previousTabName)
+
           this._snackBar.open('Record inserted', '', {
             duration: 1000,
             panelClass: 'green-snackbar',
