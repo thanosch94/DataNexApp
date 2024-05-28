@@ -5,8 +5,8 @@ import { AuthService } from "../services/auth.service";
 export class AccountViewModel {
   service: string;
   constructor(private http: HttpClient) {
-    this.service = 'http://20.107.178.104/DataNexApi/api/'
-    //this.service = 'http://localhost:5000/api/'
+    //this.service = 'http://20.107.178.104/DataNexApi/api/'
+    this.service = 'http://localhost:5000/api/'
 
   }
 

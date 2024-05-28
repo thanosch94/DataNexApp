@@ -58,6 +58,11 @@ export class WebAppBase {
       Name: 'Connector',
       Path: 'connector',
     },
+    {
+      Id: Guid.parse('3019b36c-4858-41f5-84f2-c5268ae64833'),
+      Name: 'Logs',
+      Path: 'logs-list',
+    },
   ];
 
   static currency = '€';

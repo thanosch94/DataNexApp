@@ -281,6 +281,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .InsertDto(this.product)
         .subscribe((result: any) => {
           this.product = result;
+          this.productId = this.product.Id
           this.previousTabName = this.product_text.toString()
           this.product = result;
           this.product_text =this.product.Sku + ' - ' + this.product.Name

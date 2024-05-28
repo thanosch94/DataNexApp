@@ -15,14 +15,15 @@ import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { BrandsListComponent } from './pages/brands-list/brands-list.component';
+import { LogsListComponent } from './pages/logs-list/logs-list.component';
 
 export const routes: Routes = [
-  {
-    path:"",
-    redirectTo:"login",
-    pathMatch:'full'
+  // {
+  //   path:"",
+  //   redirectTo:"login",
+  //   pathMatch:'full'
 
-  },
+  // },
 
   {
     path:'login',
@@ -96,6 +97,11 @@ export const routes: Routes = [
   {
     path:'brands-list',
     component:BrandsListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'logs-list',
+    component:LogsListComponent,
     canActivate:[authGuard]
   }
 
