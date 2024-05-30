@@ -21,6 +21,7 @@ import { Router } from '@angular/router';
 import { UserDto } from '../../dto/user.dto';
 import { WebAppBase } from '../../base/web-app-base';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-users-list',
@@ -38,6 +39,7 @@ import { AuthService } from '../../services/auth.service';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css',

@@ -20,6 +20,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-product-sizes-list',
@@ -37,6 +38,7 @@ import { AuthService } from '../../services/auth.service';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './product-sizes-list.component.html',
   styleUrl: './product-sizes-list.component.css',

@@ -3,7 +3,7 @@ import { MenuItemDto } from '../dto/menu-item.dto';
 import { AppTabDto } from '../dto/app-tab.dto';
 
 export class WebAppBase {
-  static version = 1.01;
+  static version = 1.02;
   static data: any;
   static isLoggedIn: boolean;
   static menu: MenuItemDto[] = [

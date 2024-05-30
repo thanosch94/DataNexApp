@@ -21,6 +21,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { ProductDto } from '../../dto/product.dto';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-products-list',
@@ -38,6 +39,7 @@ import { ProductDto } from '../../dto/product.dto';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css',

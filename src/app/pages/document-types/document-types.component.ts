@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-document-types',
@@ -37,6 +38,7 @@ import { AuthService } from '../../services/auth.service';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './document-types.component.html',
   styleUrl: './document-types.component.css',

@@ -24,6 +24,7 @@ import { DocumentDto } from '../../dto/document.dto';
 import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-documents-list',
@@ -45,6 +46,7 @@ import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.componen
     CdkMenuItem,
     CommonModule,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './documents-list.component.html',
   styleUrl: './documents-list.component.css',

@@ -20,6 +20,7 @@ import { BrandsViewModel } from '../../view-models/brands.viewmodel';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { NewItemComponent } from '../components/new-item/new-item.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-brands-list',
@@ -37,6 +38,7 @@ import { NewItemComponent } from '../components/new-item/new-item.component';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './brands-list.component.html',
   styleUrl: './brands-list.component.css',

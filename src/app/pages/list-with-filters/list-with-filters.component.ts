@@ -17,6 +17,7 @@ import { MAT_DIALOG_DATA, MatDialogActions, MatDialogModule } from '@angular/mat
 import { WebAppBase } from '../../base/web-app-base';
 import { SalesViews } from '../../enums/sales-views.enum';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'list-with-filters',
@@ -37,7 +38,8 @@ import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.componen
     CommonModule,
     MatDialogActions,
     MatDialogModule,
-    DnToolbarComponent
+    DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './list-with-filters.component.html',
   styleUrl: './list-with-filters.component.css',

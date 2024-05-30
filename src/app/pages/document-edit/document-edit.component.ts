@@ -56,6 +56,7 @@ import { AppTabDto } from '../../dto/app-tab.dto';
 import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-document-edit',
@@ -80,6 +81,7 @@ import { AuthService } from '../../services/auth.service';
     MatTabsModule,
     DnToolbarComponent,
     MatDialogModule,
+    MatTooltipModule
   ],
   providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',

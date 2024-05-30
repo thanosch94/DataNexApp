@@ -13,6 +13,10 @@ margin:2%;
   color: white;
 }
 
+.mat-column-edit {
+  text-align: right;
+}
+
 .right-click-menu {
   display: inline-flex;
   flex-direction: column;

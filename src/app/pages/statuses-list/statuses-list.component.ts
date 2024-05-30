@@ -20,6 +20,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-statuses-list',
@@ -37,6 +38,7 @@ import { AuthService } from '../../services/auth.service';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',

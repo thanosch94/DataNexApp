@@ -25,6 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-customers-list',
@@ -42,6 +43,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
+    MatTooltipModule
   ],
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.css',
