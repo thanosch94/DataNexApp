@@ -579,6 +579,16 @@
         style="width: 120px; height: 20px"
       >
         <input matInput [readonly]="true" [(ngModel)]="addCharges" />
+        <button
+            matSuffix
+            mat-icon-button
+            matTooltip="Add charges"
+            class="add-charges-btn"
+            color="primary"
+            (click)="onDocumentAdditionalChargesClicked($event)"
+          >
+            <mat-icon>add_circle</mat-icon>
+          </button>
       </mat-form-field>
       <b class="total-title">Total</b>
       <mat-form-field appearance="outline" style="width: 120px; height: 50px">

@@ -57,6 +57,7 @@ import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DocumentAdditionalChargesComponent } from '../document-additional-charges/document-additional-charges.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -227,7 +228,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   initNewDocument() {
     this.document_text = 'New Document';
     this.tabsService.setTabName(this.document_text);
-
+    this.document.Id =Guid.create();
     this.document.DocumentDateTime = new Date();
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
@@ -439,7 +440,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(ProductOptionsComponent, {
       width: '750px',
       height: '280px',
-      panelClass: 'product-options-dialog',
       data: {
         product: this.productsDataSource[index],
       },
@@ -652,6 +652,21 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         }
       }
     }
+  }
+
+  onDocumentAdditionalChargesClicked(e:any){
+    const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
+      width: '750px',
+      height: '550px',
+      data: {
+        documentId: this.documentId,
+      },
+      viewContainerRef: this.viewContainerRef,
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+      }
+    });
   }
 
   onRefreshClicked(e: any) {

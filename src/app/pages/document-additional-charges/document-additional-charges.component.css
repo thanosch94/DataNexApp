@@ -1,0 +1,59 @@
+
+.additional-charges-table{
+  margin-top:5%;
+}
+
+:host ::ng-deep .mat-form-field-label {
+  background: white;
+}
+
+::ng-deep .white-input .mat-mdc-text-field-wrapper{
+  background: white!important;
+}
+
+::ng-deep .additional-charges-table .mat-mdc-header-row{
+  height: 50px!important;
+}
+
+::ng-deep .input-position{
+  position: relative;
+  display: flex!important;
+  align-items: center!important;
+
+}
+
+::ng-deep  .additional-charges-table .mat-mdc-form-field-focus-overlay{
+  height:fit-content!important;
+}
+
+::ng-deep .additional-charges-table .mat-mdc-cell {
+border:1px solid rgb(108, 108, 108)!important;
+}
+
+/*Hide underline on inputs*/
+::ng-deep .additional-charges-table .mdc-line-ripple {
+  display: none;
+}
+
+::ng-deep .additional-charges-table .mat-mdc-header-cell{
+background: #0B6AA5!important;
+color:white;
+}
+
+::ng-deep .additional-charges-table .cdk-column-delete{
+border-left: 0px!important; }
+
+/* last row */
+::ng-deep .additional-charges-table .cdk-column-RowTotal{
+border-right: 0px!important; }
+
+
+ .charge-name{
+  width:50%;
+}
+
+.additional-charges{
+  width: 96%;
+margin-left: auto;
+margin-right:auto;
+}
