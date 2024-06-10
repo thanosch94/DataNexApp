@@ -22,7 +22,7 @@ This repository contains the frontend application developed using Angular.
 
 ### Models and DTOs Repository
 
-This repository contains the shared models and Data Transfer Objects (DTOs) used by both the API and the App.
+This repository contains the models and the Data Transfer Objects (DTOs).
 
 <b>Repository URL:</b> /DataNex.Model
 
