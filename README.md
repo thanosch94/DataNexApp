@@ -37,12 +37,18 @@ This repository contains the ApplicationDbContext and the database migrations.
 
 <b>Technologies:</b> .NET, Entity Framework Core
 
+
 ## Usage
 The application can be accessed at http://20.107.178.104/DataNexApp.
 
 <b>Username:</b> user
 
 <b>Password:</b> P@ssw0rd
+
+## Recommended Browser Settings
+
+For the best user experience, it is recommended to use the application at 67%-75% browser zoom.
+
 
 ## Development server
 
