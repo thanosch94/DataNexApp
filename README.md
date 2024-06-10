@@ -38,6 +38,11 @@ This repository contains the ApplicationDbContext and the database migrations.
 <b>Technologies:</b> .NET, Entity Framework Core
 
 
+## Project Status
+
+This project is currently in development. Some features may not be fully implemented or may be subject to change. I am actively working on adding more functionalities and improving the existing codebase. 
+
+
 ## Usage
 The application can be accessed at http://20.107.178.104/DataNexApp.
 
