@@ -1,6 +1,39 @@
 # DataNexApp
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.1.
+This project is divided into 4 main repositories:
+
+API: Built with .NET and C#.
+App: Developed using Angular.
+Models and DTOs: Contains the data models and DTOs shared across the project.
+Data: Contains ApplicationDbContext and database migratioms
+
+## Repositories
+1. API Repository
+This repository contains the backend API built with .NET and C#.
+Repository URL: /DataNexApi
+Technologies: .NET, C#
+
+2. App Repository
+This repository contains the frontend application developed using Angular.
+Repository URL: /DataNexApp
+Technologies: Angular, TypeScript
+
+3. Models and DTOs Repository
+
+This repository contains the shared models and Data Transfer Objects (DTOs) used by both the API and the App.
+Repository URL: /DataNex.Model
+Technologies: C#, TypeScript
+
+4. Data Repository
+
+This repository contains the ApplicationDbContext and the database migrations.
+Repository URL: /DataNex.Data
+Technologies: .NET, Entity Framework Core
+
+## Usage
+The application can be accessed at http://20.107.178.104/DataNexApp.
+Username: user
+Password: P@ssw0rd
 
 ## Development server
 
