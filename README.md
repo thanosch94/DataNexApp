@@ -10,24 +10,32 @@ Data: Contains ApplicationDbContext and database migratioms
 ## Repositories
 1. API Repository
 This repository contains the backend API built with .NET and C#.
+
 Repository URL: /DataNexApi
+
 Technologies: .NET, C#
 
-2. App Repository
+3. App Repository
 This repository contains the frontend application developed using Angular.
+
 Repository URL: /DataNexApp
+
 Technologies: Angular, TypeScript
 
-3. Models and DTOs Repository
+5. Models and DTOs Repository
 
 This repository contains the shared models and Data Transfer Objects (DTOs) used by both the API and the App.
+
 Repository URL: /DataNex.Model
+
 Technologies: C#, TypeScript
 
 4. Data Repository
 
 This repository contains the ApplicationDbContext and the database migrations.
+
 Repository URL: /DataNex.Data
+
 Technologies: .NET, Entity Framework Core
 
 ## Usage
