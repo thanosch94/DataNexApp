@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user.dto';
 import { LoginDto } from '../dto/login.dto';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -31,7 +32,8 @@ export class AuthService {
     };
     return this.headers;
   }
-  constructor() {}
+  constructor() {
+  }
 
   login(loginData: LoginDto): Observable<Object> {
     let http = new HttpClient(
@@ -46,8 +48,7 @@ export class AuthService {
   }
 
   getApiService() {
-    //let serviceUrl = 'http://20.107.178.104/DataNexApi/api/'
-    let serviceUrl = 'http://localhost:5000/api/';
+    let serviceUrl = environment.apiUrl
     return serviceUrl;
   }
 }
