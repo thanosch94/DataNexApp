@@ -16,6 +16,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { BrandsListComponent } from './pages/brands-list/brands-list.component';
 import { LogsListComponent } from './pages/logs-list/logs-list.component';
+import { ConnectorHomeComponent } from './pages/connector/connector-home/connector-home.component';
+import { ConnectorParametersComponent } from './pages/connector/connector-parameters/connector-parameters.component';
 
 export const routes: Routes = [
   // {
@@ -102,6 +104,16 @@ export const routes: Routes = [
   {
     path:'logs-list',
     component:LogsListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'connector-home',
+    component:ConnectorHomeComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'connector-parameters',
+    component:ConnectorParametersComponent,
     canActivate:[authGuard]
   }
 

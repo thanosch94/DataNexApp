@@ -1,0 +1,163 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="connector_text"
+  (onCloseBtnClicked)="onCloseBtnClicked($event)"
+></dn-toolbar>
+
+<div class="connector-grid">
+  <div class="connector-grid-v">
+    <h1 class="margin">Receive/Transfer</h1>
+    <div class="margin receive-transfer-grid">
+      <mat-card class="card receive-transfer-grid-a">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faWordpress"
+              style="color: #21759b"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to Woocommerce</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-b">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faMagento"
+              style="color: #f46d25"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to Magento</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-c">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faShopify"
+              style="color: #96bf48"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to Shopify</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-d">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faOpenCart"
+              style="color: #1aace3"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to OpenCart</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-e">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faNetworkWired"
+              style="color: #0073e6"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to FTP</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-f">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faFileExcel"
+              style="color: #217346"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to Excel</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-g">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faFileCsv"
+              style="color: #5bc0de"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to CSV</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <mat-card class="card receive-transfer-grid-h">
+        <mat-card-content>
+          <div class="center icon-margin image-container">
+           <img class="img" src="./assets/images/mysql.png">
+          </div>
+          <div class="center">
+            <p>Receive and Transfer data to MySQL</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="connector-grid-w">
+    <h1 class="parameters-margin">Connector Parameters</h1>
+    <div class="margin parameters-grid">
+      <mat-card class="card parameters-grid-p">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon [icon]="faGear" style="color: #636363" size="5x"></fa-icon>
+          </div>
+          <div class="center">
+            <p>Set up connector base parameters for each entity</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+
+  <div class="connector-grid-z">
+    <h1 class="margin">Datasources Configuration</h1>
+    <div class="margin datasource-configuration-grid">
+      <mat-card class="card datasource-configuration-grid-k">
+        <mat-card-content>
+          <div class="center icon-margin">
+            <fa-icon
+              [icon]="faDatabase"
+              style="color: #636363"
+              size="5x"
+            ></fa-icon>
+          </div>
+          <div class="center">
+            <p>Set up connector datasource options for each entity</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="margin extra-grid connector-grid-za">
+
+    </div>
+  </div>
+</div>

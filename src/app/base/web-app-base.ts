@@ -56,7 +56,7 @@ export class WebAppBase {
     {
       Id: Guid.parse('95a524b4-fn6b-2cb1-af29-168b3387b445'),
       Name: 'Connector',
-      Path: 'connector',
+      Path: 'connector-home',
     },
     {
       Id: Guid.parse('3019b36c-4858-41f5-84f2-c5268ae64833'),
