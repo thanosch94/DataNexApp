@@ -1,1 +1,82 @@
-<p>connector-parameters works!</p>
+<dn-toolbar
+  [canExit]="true"
+  [canSave]="true"
+  [isDialog]="false"
+  [title]="connector_parameters_text"
+  (onCloseBtnClicked)="onCloseBtnClicked($event)"
+  (onSaveBtnClicked)="onSaveBtnClicked($event)"
+></dn-toolbar>
+
+<mat-tab-group class="margin">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Wordpress</span></div>
+    </ng-template>
+    <div class="margin">
+      <mat-form-field class="base-url">
+        <mat-label>Base Url</mat-label>
+        <input
+          matInput
+          [(ngModel)]="connectorParameters.WooBaseUrl"
+        />
+      </mat-form-field>
+    </div>
+    <div class="margin">
+      <mat-form-field class="consumer-key">
+        <mat-label>Consumer Key</mat-label>
+        <input
+          matInput
+          [type]="consumerKeyHide ? 'password' : 'text'"
+          [(ngModel)]="connectorParameters.WooConsumerKey"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="onConsumerKeyHideClick($event)"
+          [attr.aria-label]="'Hide'"
+          [attr.aria-pressed]="consumerKeyHide"
+        >
+          <mat-icon>{{
+            consumerKeyHide ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="margin">
+      <mat-form-field  class="consumer-secret">
+        <mat-label>Consumer Secret</mat-label>
+        <input
+          matInput
+          [type]="consumerSecretHide ? 'password' : 'text'"
+          [(ngModel)]="connectorParameters.WooConsumerSecret"
+        />
+        <button
+          mat-icon-button
+          matSuffix
+          (click)="onConsumerSecretHideClick($event)"
+          [attr.aria-label]="'Hide'"
+          [attr.aria-pressed]="consumerSecretHide"
+        >
+          <mat-icon>{{
+            consumerSecretHide ? "visibility_off" : "visibility"
+          }}</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faMagento"></fa-icon><span> Magento</span></div>
+    </ng-template></mat-tab
+  >
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faShopify"></fa-icon><span> Shopify</span></div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faOpenCart"></fa-icon><span> OpenCart</span></div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

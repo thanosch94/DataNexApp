@@ -15,6 +15,7 @@ import {
   faNetworkWired,
 } from '@fortawesome/free-solid-svg-icons';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connector-home',
@@ -35,7 +36,7 @@ export class ConnectorHomeComponent {
   faDatabase = faDatabase
   connector_text: string;
 
-  constructor() {
+  constructor(private router:Router) {
     this.connector_text = 'Connector';
   }
 
@@ -43,4 +44,7 @@ export class ConnectorHomeComponent {
 
   }
 
+  onParametersClick(e:any){
+    this.router.navigateByUrl("/connector-parameters")
+  }
 }
