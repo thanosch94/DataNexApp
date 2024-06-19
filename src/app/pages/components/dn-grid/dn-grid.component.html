@@ -1,0 +1,122 @@
+<div>
+  <article class="table-header example-form">
+    <button mat-button class="button-add-row" (click)="add($event)">Add</button>
+  </article>
+  <div class="mat-elevation-z8 margin">
+    <table #matTable mat-table [dataSource]="dataSource" matSort>
+      <ng-container
+        *ngFor="let column of columns"
+        matColumnDef="{{ column.Caption }}"
+      >
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column.Caption }}
+        </th>
+        <td mat-cell *matCellDef="let row; let index">
+          <!-- String Input -->
+          <mat-form-field
+            *ngIf="column.DataType == 'string' && row.IsEditable"
+            style="width: 100%"
+            class="white-input"
+          >
+            <input
+              matInput
+              type="text"
+              [name]="column.Caption"
+              [(ngModel)]="row[column.DataField]"
+              matInput
+            />
+            <p *ngIf="!row.IsEditable">
+              {{ row[column.DataField] }}
+            </p>
+          </mat-form-field>
+          <!-- Number Input -->
+          <mat-form-field
+            *ngIf="column.DataType == 'number' && row.IsEditable"
+            style="width: 100%"
+            class="white-input"
+          >
+            <input
+              matInput
+              type="number"
+              [name]="column.Caption"
+              [(ngModel)]="row[column.DataField]"
+              matInput
+          /></mat-form-field>
+          <p *ngIf="!row.IsEditable">
+            {{ row[column.DataField] }}
+          </p>
+        </td>
+      </ng-container>
+
+      <!-- <ng-container matColumnDef="SizeId">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-form-field
+            *ngIf="!row.SizeName && row.IsEditable && isEditable"
+            class="white-input"
+          >
+            <input
+              matInput
+              type="text"
+              aria-label="Size"
+              matInput
+              [formControl]="sizeControl"
+              [matAutocomplete]="auto"
+              [value]="sizeName"
+            />
+            <mat-autocomplete #optionSelected #auto="matAutocomplete">
+              @for (size of filteredSizes| async; track size) {
+              <mat-option
+                (onSelectionChange)="onSizeSelectionChanged(size)"
+                [value]="size.Name"
+                >{{ size.Name }}</mat-option
+              >
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+          {{ row.SizeName }}
+        </td>
+      </ng-container> -->
+
+      <ng-container matColumnDef="buttons">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          <button
+            mat-icon-button
+            class="iconbutton"
+            color="primary"
+            (click)="row.IsEditable ? save(row, i) : edit(row, i)"
+          >
+            <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
+            <mat-icon *ngIf="row.IsEditable">save</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="iconbutton"
+            color="primary"
+            (click)="row.IsEditable ? stopEditing(row, i) : deleteRow(row, i)"
+          >
+            <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
+            <mat-icon *ngIf="row.IsEditable">close</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: matColumns"></tr>
+
+      <!-- Row shown when there is no matching data. -->
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="4">No data matching the filter</td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      #paginator
+      [length]="100"
+      [pageSize]="5"
+      [pageSizeOptions]="[5, 10, 25, 100]"
+      aria-label="Select page"
+    >
+    </mat-paginator>
+  </div>
+</div>

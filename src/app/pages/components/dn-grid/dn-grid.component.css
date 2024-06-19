@@ -1,0 +1,26 @@
+.mat-column-buttons {
+  text-align: right;
+}
+.table-header {
+  width: 90%;
+  text-align: right;
+  margin-bottom: 10px;
+}
+.example-form {
+
+  width: 95%;
+  margin:2.5%;
+  margin-bottom: 2%
+}
+
+.button-add-row {
+  background: #0B6AA5!important;
+  color: #ffffff!important;
+}
+.margin{
+  margin:1%
+}
+
+::ng-deep .white-input .mat-mdc-text-field-wrapper{
+  background: white!important;
+}
