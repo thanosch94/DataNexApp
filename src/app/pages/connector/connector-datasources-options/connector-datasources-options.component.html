@@ -1,0 +1,40 @@
+<dn-toolbar
+  [canExit]="true"
+  [canSave]="true"
+  [isDialog]="false"
+  [title]="connector_datasource_options_text"
+  (onCloseBtnClicked)="onCloseBtnClicked($event)"
+  (onSaveBtnClicked)="onSaveBtnClicked($event)"
+></dn-toolbar>
+
+<mat-tab-group class="margin">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Wordpress</span></div>
+    </ng-template>
+    <dn-grid #wooConnectionGrid
+    [dataSource]="wooConnectionsDataSource"
+    [columns]="wooConnectionsColumns"
+    (onRowSaving)="onWooConnectionSaving($event)"
+    (onRowDelete)="onWooConnectionDelete($event)"
+    (onRowStopEditing)="onWooConnectionStopEditing($event)"
+    >
+
+    </dn-grid>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faMagento"></fa-icon><span> Magento</span></div>
+    </ng-template></mat-tab
+  >
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faShopify"></fa-icon><span> Shopify</span></div>
+    </ng-template>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faOpenCart"></fa-icon><span> OpenCart</span></div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>

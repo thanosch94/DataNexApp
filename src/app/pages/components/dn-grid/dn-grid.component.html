@@ -5,8 +5,8 @@
   <div class="mat-elevation-z8 margin">
     <table #matTable mat-table [dataSource]="dataSource" matSort>
       <ng-container
-        *ngFor="let column of columns"
-        matColumnDef="{{ column.Caption }}"
+        *ngFor="let column of columns | visbleGridColumns"
+        matColumnDef="{{ column.DataField }}"
       >
         <th mat-header-cell *matHeaderCellDef mat-sort-header>
           {{ column.Caption }}
@@ -45,7 +45,28 @@
           <p *ngIf="!row.IsEditable">
             {{ row[column.DataField] }}
           </p>
+
+          <button *ngIf="column.DataType=='buttons'"
+          mat-icon-button
+          class="iconbutton"
+          color="primary"
+          (click)="row.IsEditable ? save(row, index) : edit(row, index)"
+        >
+          <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
+          <mat-icon *ngIf="row.IsEditable">save</mat-icon>
+        </button>
+        <button  *ngIf="column.DataType=='buttons'"
+          mat-icon-button
+          class="iconbutton"
+          color="primary"
+          (click)="row.IsEditable ? stopEditing(row, index) : deleteRow(row, index)"
+        >
+          <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
+          <mat-icon *ngIf="row.IsEditable">close</mat-icon>
+        </button>
         </td>
+
+
       </ng-container>
 
       <!-- <ng-container matColumnDef="SizeId">
@@ -78,29 +99,7 @@
         </td>
       </ng-container> -->
 
-      <ng-container matColumnDef="buttons">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-        <td mat-cell *matCellDef="let row; let i = index">
-          <button
-            mat-icon-button
-            class="iconbutton"
-            color="primary"
-            (click)="row.IsEditable ? save(row, i) : edit(row, i)"
-          >
-            <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
-            <mat-icon *ngIf="row.IsEditable">save</mat-icon>
-          </button>
-          <button
-            mat-icon-button
-            class="iconbutton"
-            color="primary"
-            (click)="row.IsEditable ? stopEditing(row, i) : deleteRow(row, i)"
-          >
-            <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
-            <mat-icon *ngIf="row.IsEditable">close</mat-icon>
-          </button>
-        </td>
-      </ng-container>
+
       <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: matColumns"></tr>
 

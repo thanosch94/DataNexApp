@@ -45,6 +45,10 @@ export class ConnectorHomeComponent {
   }
 
   onParametersClick(e:any){
-    this.router.navigateByUrl("/connector-parameters")
+    this.router.navigate(["/connector-parameters"])
+  }
+
+  onDataSourcesConfigurationClick(e:any){
+    this.router.navigate(["/connector-datasources-options"])
   }
 }

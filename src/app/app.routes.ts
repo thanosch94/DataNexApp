@@ -18,6 +18,7 @@ import { BrandsListComponent } from './pages/brands-list/brands-list.component';
 import { LogsListComponent } from './pages/logs-list/logs-list.component';
 import { ConnectorHomeComponent } from './pages/connector/connector-home/connector-home.component';
 import { ConnectorParametersComponent } from './pages/connector/connector-parameters/connector-parameters.component';
+import { ConnectorDatasourcesOptionsComponent } from './pages/connector/connector-datasources-options/connector-datasources-options.component';
 
 export const routes: Routes = [
   // {
@@ -114,6 +115,11 @@ export const routes: Routes = [
   {
     path:'connector-parameters',
     component:ConnectorParametersComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'connector-datasources-options',
+    component:ConnectorDatasourcesOptionsComponent,
     canActivate:[authGuard]
   }
 
