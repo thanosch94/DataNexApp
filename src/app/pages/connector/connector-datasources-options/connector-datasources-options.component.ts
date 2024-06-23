@@ -22,6 +22,8 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { WooConnectionsDataDto } from '../../../dto/woo-connections-data.dto';
 import { Guid } from 'guid-typescript';
+import { RequestTypeEnum } from '../../../enums/request-type.enum';
+import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
 
 @Component({
   selector: 'app-connector-datasources-options',
@@ -94,6 +96,11 @@ export class ConnectorDatasourcesOptionsComponent {
         DataField: 'RequestType',
         DataType: 'number',
         Caption: 'Request Type',
+        Lookup:{
+          DataSource:RequestTypeEnumList.value,
+          ValueExpr:'Id',
+          DisplayExpr:'Name'
+        }
       },
       {
         DataField: 'Endpoint',

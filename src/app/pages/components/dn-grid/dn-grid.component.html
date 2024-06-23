@@ -8,7 +8,7 @@
       #input
     />
   </mat-form-field>
-  <article *ngIf="enableAddButton" class="table-header example-form">
+  <article *ngIf="enableAddButton" class="add-button example-form">
     <button mat-button class="button-add-row" (click)="add($event)">Add</button>
   </article>
   <div class="mat-elevation-z8 margin">
@@ -40,7 +40,7 @@
           </mat-form-field>
           <!-- Number Input -->
           <mat-form-field
-            *ngIf="column.DataType == 'number' && row.IsEditable"
+            *ngIf="column.DataType == 'number' && row.IsEditable && !column.Lookup"
             style="width: 100%"
             class="white-input"
           >
@@ -53,7 +53,7 @@
           /></mat-form-field>
 
           <mat-form-field
-            *ngIf="column.DataType == 'string' && row.IsEditable && isEditable && column.Lookup"
+            *ngIf="row.IsEditable && isEditable && column.Lookup"
             class="white-input"
           >
             <input
@@ -64,7 +64,7 @@
               [matAutocomplete]="auto"
               [ngModel]="getLookupName(column,row[column.DataField])"
             />
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onDataLookupSelectionChanged(row, $event.option.value)" [displayWith]="displayFn">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onDataLookupSelectionChanged(column, row, $event.option.value)" [displayWith]="displayFn">
               <mat-option *ngFor="let data of column.Lookup.DataSource" [value]="data">
                 {{ data.Name }}
               </mat-option>

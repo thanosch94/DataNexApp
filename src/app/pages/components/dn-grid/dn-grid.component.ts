@@ -78,7 +78,6 @@ export class DnGridComponent {
 
   private _columns: DnColumnDto[] = [];
 selectedId: any;
-selectedName: any;
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
   }
@@ -174,9 +173,8 @@ public set dataSource(v : any) {
     this.onRowDelete.emit(data);
   }
 
-  onDataLookupSelectionChanged(data:any, lookup:any){
-    data.AdditionalChargeId = lookup.Id
-    this.selectedName=lookup.Name
+  onDataLookupSelectionChanged(column: DnColumnDto, data:any, lookup:any){
+    data[column.DataField] = lookup.Id
   }
 
   displayFn(data:any): string {
@@ -186,9 +184,13 @@ public set dataSource(v : any) {
       return data
     }
   }
+
   getLookupName(column:any, data:any){
     if(data!=null){
-      return column.Lookup.DataSource.find((x:any)=>x.Id ==data)[column.Lookup.DisplayExpr]
+      let lookupObject =column.Lookup.DataSource.find((x:any)=>x.Id ==data)
+      if(lookupObject!=null){
+        return lookupObject[column.Lookup.DisplayExpr]
+      }
     }
   }
 }
