@@ -1,3 +1,4 @@
+import { DocumentAdditionalChargesViewModel } from './../../view-models/document-additional-charges.viewmodel';
 import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
@@ -58,6 +59,8 @@ import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.componen
 import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentAdditionalChargesComponent } from '../document-additional-charges/document-additional-charges.component';
+import { DocumentAdditionalChargeDto } from '../../dto/document-additional-charge.dto';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -103,6 +106,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   activeTab: AppTabDto | undefined;
   route: any;
   previousTabName: string;
+  documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
+  document_must_be_saved_in_order_to_add_charges_text: string;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -180,6 +185,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
+    this.documentAdditionalChargesViewModel = new DocumentAdditionalChargesViewModel(this.http, this.auth);
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
     WebAppBase.data = undefined;
@@ -187,6 +193,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getData();
+    this.document_must_be_saved_in_order_to_add_charges_text = "Document must be saved first in order to add extra charges"
     this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
       this.barcodesLookupDatasource = result;
     });
@@ -221,6 +228,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   getData() {
     if (this.documentId) {
       this.getDocumentData(this.documentId);
+      this.getAdditionalCharges(this.documentId);
     } else {
       this.initNewDocument();
     }
@@ -228,7 +236,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   initNewDocument() {
     this.document_text = 'New Document';
     this.tabsService.setTabName(this.document_text);
-    this.document.Id =Guid.create();
+    //this.document.Id =Guid.create();
     this.document.DocumentDateTime = new Date();
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
@@ -264,6 +272,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
+  getAdditionalCharges(documentId:Guid){
+    this.addCharges = 0
+    this.documentAdditionalChargesViewModel.GetByDocumentId(documentId).subscribe((result:any)=>{
+      result.map((charge:DocumentAdditionalChargeDto)=>{
+        this.addCharges+=charge.AdditionalChargeAmount
+      })
+    })
+  }
   getFilteredSizes(index: number) {
     this.filteredSizesArray[index] = this.sizeControlArray[
       index
@@ -365,6 +381,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           this.document.DocumentTypeId = this.selectedDocType.Id;
           this.document.DocumentStatusId = this.selectedStatus.Id;
           this.document.CustomerId = this.customer.Id;
+          debugger
           this.documentsViewModel
             .InsertDto(this.document)
             .subscribe((result: any) => {
@@ -458,6 +475,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.total += this.productsDataSource[i].TotalPrice!;
       }
     }
+    this.total+=this.addCharges
   }
 
   onDeleteClicked(e: any) {
@@ -574,7 +592,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onSizeSelectionChanged(data: any, index: number) {
-    debugger
     if (this.productsDataSource[index].ProductId) {
       this.productBarcodesViewModel
         .GetByProductId(this.productsDataSource[index].ProductId)
@@ -655,18 +672,28 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onDocumentAdditionalChargesClicked(e:any){
-    const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
-      width: '750px',
-      height: '550px',
-      data: {
-        documentId: this.documentId,
-      },
-      viewContainerRef: this.viewContainerRef,
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-      }
-    });
+    //Document must be saved in order to add charges
+    if(this.documentId){
+      const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
+        width: '750px',
+        height: '550px',
+        data: {
+          DocumentId: this.documentId,
+        },
+        viewContainerRef: this.viewContainerRef,
+      });
+      dialogRef.afterClosed().subscribe((confirm) => {
+        this.getDocumentData(this.documentId)
+        this.getAdditionalCharges(this.documentId)
+      });
+    }else{
+      const dialog = this.dialog.open(DnAlertComponent, {
+        data: {
+          Title: 'Message',
+          Message: this.document_must_be_saved_in_order_to_add_charges_text,
+        }})
+    }
+
   }
 
   onRefreshClicked(e: any) {

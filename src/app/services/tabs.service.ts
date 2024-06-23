@@ -26,7 +26,6 @@ export class TabsService {
   }
 
   setTabName(tabName: string) {
-    debugger
     let activeTab = TabsService.tabs.find(
       (x: AppTabDto) => x.Route.path == this.route && x.Name == ''
     );

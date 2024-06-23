@@ -1,0 +1,19 @@
+<dn-toolbar
+  [canExit]="true"
+  [canInsert]="true"
+  [isDialog]="false"
+  [title]="additionl_charges_text"
+  (onInsertBtnClicked)="onInsertBtnClicked($event)"
+  (onCloseBtnClicked)="onCloseBtnClicked($event)"
+  (onInsertBtnClicked)="onInsertBtnClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-grid
+  #additionalChargesGrid
+    [dataSource]="dataSource"
+    [columns]="columns"
+    (onRowSaving)="onAdditionalChargeRowSaving($event)"
+    (onRowStopEditing)="onAdditionalChargeRowStopEditing($event)"
+    (onRowDelete)="onAdditionalChargeRowDelete($event)"
+  ></dn-grid>
+</div>

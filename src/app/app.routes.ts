@@ -19,14 +19,15 @@ import { LogsListComponent } from './pages/logs-list/logs-list.component';
 import { ConnectorHomeComponent } from './pages/connector/connector-home/connector-home.component';
 import { ConnectorParametersComponent } from './pages/connector/connector-parameters/connector-parameters.component';
 import { ConnectorDatasourcesOptionsComponent } from './pages/connector/connector-datasources-options/connector-datasources-options.component';
+import { AdditionalChargesListComponent } from './pages/additional-charges-list/additional-charges-list.component';
 
 export const routes: Routes = [
-  // {
-  //   path:"",
-  //   redirectTo:"login",
-  //   pathMatch:'full'
+  {
+    path:"",
+    redirectTo:"login",
+    pathMatch:'full'
 
-  // },
+  },
 
   {
     path:'login',
@@ -100,6 +101,11 @@ export const routes: Routes = [
   {
     path:'brands-list',
     component:BrandsListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'additional-charges-list',
+    component:AdditionalChargesListComponent,
     canActivate:[authGuard]
   },
   {

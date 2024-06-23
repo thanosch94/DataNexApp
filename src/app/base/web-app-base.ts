@@ -50,6 +50,11 @@ export class WebAppBase {
       Name: 'Brands',
       Path: 'brands-list',
     },
+    {
+      Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
+      Name: 'Additional Charges',
+      Path: 'additional-charges-list',
+    },
   ];
 
   static extraMenu: MenuItemDto[] = [
