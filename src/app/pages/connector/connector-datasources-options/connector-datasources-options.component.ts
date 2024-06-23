@@ -148,8 +148,8 @@ export class ConnectorDatasourcesOptionsComponent {
     this.wooConnectionsViewModel
       .DeleteById(data.Id)
       .subscribe((result: any) => {
-        let index = this.wooConnectionGrid.dataSource.indexOf(data)
-        this.wooConnectionGrid.dataSource.splice(index,1)
+        let index = this.wooConnectionGrid.matDataSource.data.indexOf(data)
+        this.wooConnectionGrid.matDataSource.data.splice(index,1)
         this.getWooConnectionsData()
         this.wooConnectionGrid.table.renderRows()
         this.displayNotification("Record deleted");

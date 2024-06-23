@@ -8,8 +8,11 @@ import { DnColumnDto } from '../dto/dn-column.dto';
 export class VisbleGridColumnsPipe implements PipeTransform {
 
   transform(columns: DnColumnDto[]){
-    debugger
-    return columns.filter(x=>x.Visible!=false);
+    if(columns){
+      return columns.filter(x=>x.Visible!=false);
+    }else{
+      return []
+    }
   }
 
 }
