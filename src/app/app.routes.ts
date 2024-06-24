@@ -20,6 +20,8 @@ import { ConnectorHomeComponent } from './pages/connector/connector-home/connect
 import { ConnectorParametersComponent } from './pages/connector/connector-parameters/connector-parameters.component';
 import { ConnectorDatasourcesOptionsComponent } from './pages/connector/connector-datasources-options/connector-datasources-options.component';
 import { AdditionalChargesListComponent } from './pages/additional-charges-list/additional-charges-list.component';
+import { ConnectorReceiveTransferComponent } from './pages/connector/connector-receive-transfer/connector-receive-transfer.component';
+import { ConnectorReceiveTransferEditComponent } from './pages/connector/connector-receive-transfer-edit/connector-receive-transfer-edit.component';
 
 export const routes: Routes = [
   {
@@ -126,6 +128,16 @@ export const routes: Routes = [
   {
     path:'connector-datasources-options',
     component:ConnectorDatasourcesOptionsComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'connector-receive-transfer',
+    component:ConnectorReceiveTransferComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'connector-receive-transfer-edit',
+    component:ConnectorReceiveTransferEditComponent,
     canActivate:[authGuard]
   }
 

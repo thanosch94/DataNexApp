@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ConnectorTransferComponent } from './connector-transfer.component';
+import { ConnectorReceiveTransferComponent } from './connector-receive-transfer.component';
 
 describe('ConnectorTransferComponent', () => {
-  let component: ConnectorTransferComponent;
-  let fixture: ComponentFixture<ConnectorTransferComponent>;
+  let component: ConnectorReceiveTransferComponent;
+  let fixture: ComponentFixture<ConnectorReceiveTransferComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ConnectorTransferComponent]
+      imports: [ConnectorReceiveTransferComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(ConnectorTransferComponent);
+
+    fixture = TestBed.createComponent(ConnectorReceiveTransferComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -1,0 +1,41 @@
+.margin{
+  margin:2%;
+}
+
+.card{
+  width:90%;
+  margin-bottom: 3%;
+}
+
+.grid{
+  display: grid;
+  grid-template-areas:
+  "a b";
+  grid-template-columns: 1fr 1fr;
+  gap:2 rem;
+}
+
+.grid-a-receive{
+  border-right: 1px solid darkgrey;
+  grid-area: a;
+  gap:2rem;
+  width:90%;
+}
+.grid-b-transfer{
+  grid-area: b;
+  gap:2rem;
+  width:90%;
+}
+
+.icon-margin{
+  margin-right:2%;
+  text-align: center;
+}
+
+.mat-mdc-card-header{
+  padding: 2%!important;
+}
+
+::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface{
+  border-radius: 3%!important;
+}

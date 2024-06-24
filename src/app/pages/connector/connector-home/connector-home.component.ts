@@ -40,15 +40,14 @@ export class ConnectorHomeComponent {
     this.connector_text = 'Connector';
   }
 
-  onCloseBtnClicked(e:any){
-
-  }
-
   onParametersClick(e:any){
     this.router.navigate(["/connector-parameters"])
   }
 
   onDataSourcesConfigurationClick(e:any){
     this.router.navigate(["/connector-datasources-options"])
+  }
+  onWooCommerceReceiveTransferClicked(e:any){
+    this.router.navigate(["/connector-receive-transfer"])
   }
 }

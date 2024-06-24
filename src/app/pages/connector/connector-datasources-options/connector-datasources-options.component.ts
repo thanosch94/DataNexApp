@@ -24,6 +24,7 @@ import { WooConnectionsDataDto } from '../../../dto/woo-connections-data.dto';
 import { Guid } from 'guid-typescript';
 import { RequestTypeEnum } from '../../../enums/request-type.enum';
 import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connector-datasources-options',
@@ -39,6 +40,7 @@ import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
     FontAwesomeModule,
     DnGridComponent,
   ],
+  providers:[TabsService],
   templateUrl: './connector-datasources-options.component.html',
   styleUrl: './connector-datasources-options.component.css',
 })
@@ -57,7 +59,8 @@ export class ConnectorDatasourcesOptionsComponent {
     private http: HttpClient,
     private auth: AuthService,
     private tabsService: TabsService,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private router:Router
   ) {
     this.wooConnectionsViewModel = new WooConnectionsViewModel(
       this.http,
@@ -114,14 +117,10 @@ export class ConnectorDatasourcesOptionsComponent {
       },
     ];
   }
-  onCloseBtnClicked(e: any) {}
-
-  onSaveBtnClicked(e: any) {
-    // this._snackBar.open('Record inserted', '', {
-    //   duration: 1000,
-    //   panelClass: 'green-snackbar',
-    // });
+  onCloseBtnClicked(e: any) {
+    this.router.navigate(['connector-home']);
   }
+
 
   onWooConnectionSaving(data: WooConnectionsDataDto) {
     let newWooConnection = new WooConnectionsDataDto();

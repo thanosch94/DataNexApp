@@ -77,7 +77,6 @@ export class DnGridComponent {
   filteredData: Observable<any[]>;
 
   private _columns: DnColumnDto[] = [];
-selectedId: any;
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
   }

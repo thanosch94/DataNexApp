@@ -1,16 +1,15 @@
 <dn-toolbar
-  [canInsert]="true"
+  [canInsert]="false"
   [canRefresh]="true"
   [isDialog]="false"
   [title]="connector_text"
-  (onCloseBtnClicked)="onCloseBtnClicked($event)"
 ></dn-toolbar>
 
 <div class="connector-grid">
   <div class="connector-grid-v">
     <h1 class="margin">Receive/Transfer</h1>
     <div class="margin receive-transfer-grid">
-      <mat-card class="card receive-transfer-grid-a">
+      <mat-card class="card receive-transfer-grid-a" (click)="onWooCommerceReceiveTransferClicked($event)">
         <mat-card-content>
           <div class="center icon-margin">
             <fa-icon
