@@ -1,7 +1,8 @@
+import { ConnectorJobDto } from './../../../dto/connector-job.dto';
 import { RequestTypeEnum } from './../../../enums/request-type.enum';
 import { WooConnectionsDataDto } from './../../../dto/woo-connections-data.dto';
 import { WooConnectionsViewModel } from './../../../view-models/woo-connections.viewmodel';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnInit, Optional } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -10,7 +11,6 @@ import { ConnectorJobsViewModel } from '../../../view-models/connector-jobs.view
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { Guid } from 'guid-typescript';
-import { ConnectorJobDto } from '../../../dto/connector-job.dto';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSelectModule } from '@angular/material/select';
 import { WebAppBase } from '../../../base/web-app-base';
@@ -19,6 +19,7 @@ import { ConnectorJobTypeEnumList } from '../../../enumLists/connector-job-type.
 import { ConnectorJobTypeEnum } from '../../../enums/connector-job-type.enum';
 import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-connector-receive-transfer-edit',
@@ -44,15 +45,16 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
   jobTypeFormControl = new FormControl()
   JobDataSourceFormControl = new FormControl()
   wooConnectionFormControl = new FormControl()
-  constructor(private http:HttpClient, private auth:AuthService, private snackBar:MatSnackBar){
+  constructor(private http:HttpClient, private auth:AuthService, private snackBar:MatSnackBar, @Optional() @Inject(MAT_DIALOG_DATA) public dialogData:any){
     this.connector_receive_transfer_edit_text ="New Job"
     this.connectorJobsViewModel = new ConnectorJobsViewModel(this.http, this.auth)
     this.wooConnectionsViewModel = new WooConnectionsViewModel(this.http, this.auth)
-
+    if(this.dialogData){
+      this.jobId=dialogData.Job.Id
+    }
   }
 
   ngOnInit() {
-    this.getData()
     this.dataSourcesList = WebAppBase.connectorDataSourcesList
     this.connectorJobTypeList = ConnectorJobTypeEnumList.value
     this.requestTypes = RequestTypeEnumList.value;
@@ -60,12 +62,19 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
       this.wooConnectionsDataSource = result
     })
     this.wordpressDataSourceId = WebAppBase.wordpressDataSource
+    this.getData()
+
   }
 
   getData(){
+    debugger
     if(this.jobId){
       this.connectorJobsViewModel.GetById(this.jobId).subscribe((result:any)=>{
-        this.connectorJob = result
+        this.connectorJob = result as ConnectorJobDto
+        this.jobTypeFormControl.setValue(result.JobType)
+        this.JobDataSourceFormControl.setValue(result.DataSourceId)
+        this.wooConnectionFormControl.setValue(result.WooConnectionDataSourceId)
+        this.getWooConnectionRow(result.WooConnectionDataSourceId)
       })
     }else{
       this.connectorJob = new ConnectorJobDto()
@@ -77,10 +86,18 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
   }
 
   onSaveBtnClicked(e:any){
-    this.connectorJobsViewModel.InsertDto(this.connectorJob).subscribe((result:any)=>{
-      this.connectorJob = result
-      this.displayNotification("Record Inserted")
-    })
+    if(this.connectorJob.Id){
+      this.connectorJobsViewModel.UpdateDto(this.connectorJob).subscribe((result:any)=>{
+        this.connectorJob = result
+        this.displayNotification("Record Updated")
+      })
+    }else{
+      this.connectorJobsViewModel.InsertDto(this.connectorJob).subscribe((result:any)=>{
+        this.connectorJob = result
+        this.displayNotification("Record Inserted")
+      })
+    }
+
   }
 
   onJobDataSourceSelection(data:any){
@@ -93,16 +110,24 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
 
   onWooConnectionSelection(data:any){
     this.connectorJob.WooConnectionDataSourceId =data.value
-    let WooConnectionDataSource = this.wooConnectionsDataSource.find((x:any)=>x.Id==data.value)
+    this.getWooConnectionRow(data.value)
+  }
+
+  getWooConnectionRow(id:any){
+    debugger
+    let WooConnectionDataSource = this.wooConnectionsDataSource.find((x:any)=>x.Id==id)
     if(WooConnectionDataSource){
       this.wooConnectionRow =WooConnectionDataSource
-      let requestType = this.requestTypes.find(x=>x.Id==this.wooConnectionRow.RequestType)
-      if(requestType){
-        this.requestTypeName = requestType.Name
-      }
+      this.getRequestType()
     }
   }
 
+  getRequestType(){
+    let requestType = this.requestTypes.find(x=>x.Id==this.wooConnectionRow.RequestType)
+    if(requestType){
+      this.requestTypeName = requestType.Name
+    }
+  }
   displayNotification(text:string){
     this.snackBar.open(text, '', {
       duration: 1000,
