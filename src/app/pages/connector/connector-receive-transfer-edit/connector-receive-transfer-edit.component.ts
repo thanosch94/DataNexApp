@@ -50,7 +50,7 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
     this.connectorJobsViewModel = new ConnectorJobsViewModel(this.http, this.auth)
     this.wooConnectionsViewModel = new WooConnectionsViewModel(this.http, this.auth)
     if(this.dialogData){
-      this.jobId=dialogData.Job.Id
+      this.jobId=dialogData?.Job?.Id
     }
   }
 

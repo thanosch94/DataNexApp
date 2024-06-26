@@ -7,7 +7,7 @@ export class ConnectorJobDto {
   Name:string;
   Serialnumber:number;
   Description:string;
-  Icon:string;
+  Icon?:string;
   JobType:ConnectorJobTypeEnum
   DataSourceId: Guid
   WooConnectionDataSourceId:Guid
