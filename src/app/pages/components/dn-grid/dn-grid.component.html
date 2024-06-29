@@ -29,7 +29,7 @@
             style="width: 100%"
             class="white-input"
           >
-            <input
+            <input *ngIf="row.IsEditable"
               matInput
               type="text"
               [name]="column.Caption"
@@ -49,6 +49,7 @@
             class="white-input"
           >
             <input
+            *ngIf="row.IsEditable"
               matInput
               type="number"
               [name]="column.Caption"
@@ -61,10 +62,10 @@
             class="white-input"
           >
             <input
+            *ngIf="row.IsEditable"
               matInput
               type="text"
               [name]="column.Caption"
-              [formControl]="dataControl"
               [matAutocomplete]="auto"
               [ngModel]="getLookupName(column, row[column.DataField])"
             />
@@ -127,7 +128,7 @@
     </table>
     <mat-paginator
       #paginator
-      [length]="100"
+      [length]="matDataSource.data.length"
       [pageSize]="10"
       [pageSizeOptions]="[5, 10, 25, 100]"
       aria-label="Select page"

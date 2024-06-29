@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -25,6 +25,7 @@ import { Guid } from 'guid-typescript';
 import { RequestTypeEnum } from '../../../enums/request-type.enum';
 import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
 import { Router } from '@angular/router';
+import { WooEntityEnumList } from '../../../enumLists/woo-entity.enumlist';
 
 @Component({
   selector: 'app-connector-datasources-options',
@@ -60,7 +61,8 @@ export class ConnectorDatasourcesOptionsComponent {
     private auth: AuthService,
     private tabsService: TabsService,
     private _snackBar: MatSnackBar,
-    private router:Router
+    private router:Router,
+    private ref:ChangeDetectorRef
   ) {
     this.wooConnectionsViewModel = new WooConnectionsViewModel(
       this.http,
@@ -106,6 +108,16 @@ export class ConnectorDatasourcesOptionsComponent {
         }
       },
       {
+        DataField: 'WooEntity',
+        DataType: 'number',
+        Caption: 'Entity',
+        Lookup:{
+          DataSource:WooEntityEnumList.value,
+          ValueExpr:'Id',
+          DisplayExpr:'Name'
+        }
+      },
+      {
         DataField: 'Endpoint',
         DataType: 'string',
         Caption: 'Endpoint',
@@ -121,7 +133,9 @@ export class ConnectorDatasourcesOptionsComponent {
     this.router.navigate(['connector-home']);
   }
 
+  onWooConnectionAdding(e:any){
 
+  }
   onWooConnectionSaving(data: WooConnectionsDataDto) {
     let newWooConnection = new WooConnectionsDataDto();
 
@@ -131,7 +145,7 @@ export class ConnectorDatasourcesOptionsComponent {
     newWooConnection.Name = data.Name;
     newWooConnection.Endpoint = data.Endpoint;
     newWooConnection.RequestType = data.RequestType;
-
+    newWooConnection.WooEntity = data.WooEntity;
     if (!newWooConnection.Id) {
       this.wooConnectionsViewModel
         .InsertDto(newWooConnection)
@@ -149,6 +163,7 @@ export class ConnectorDatasourcesOptionsComponent {
         });
     }
   }
+
 
   onWooConnectionDelete(data: WooConnectionsDataDto) {
     this.wooConnectionsViewModel

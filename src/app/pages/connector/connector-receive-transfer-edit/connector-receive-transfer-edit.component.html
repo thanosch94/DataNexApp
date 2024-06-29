@@ -11,6 +11,7 @@
   <mat-stepper [linear]="true">
     <mat-step [stepControl]="dataSourceFormGroup">
       <ng-template matStepLabel>Set DataSource</ng-template>
+      <br />
       <form [formGroup]="dataSourceFormGroup">
         <div>
           <div class="inline icon">
@@ -140,29 +141,56 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Execute</ng-template>
+      <br />
       <div class="execute-step">
         <div>
-        <button mat-raised-button color="primary" matButton (click)="onJobExecuteButtonClicked($event)">Execute Job <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
-      </div>
-        <br>
+          <button
+            mat-raised-button
+            color="primary"
+            matButton
+            (click)="onJobExecuteButtonClicked($event)"
+          >
+            Execute Job <i *ngIf="isLoading" class="fa fa-spinner fa-spin"></i>
+          </button>
+        </div>
+        <br />
         <div>
-        <p *ngIf="wooItemsData">*Job Completed - Check Results</p>
+          <p *ngIf="wooItemsData">
+            *Job Completed Successfully - Check Results
+          </p>
+          <p *ngIf="connectorJobResponse?.Success == false">
+            *Job Completed Unsuccessfully - Check Results
+          </p>
         </div>
       </div>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Results</ng-template>
-      <div class="grid-container">
+      <br />
+      <div *ngIf="connectorJobResponse?.Success" class="grid-container">
+        <div *ngIf="wooItemsData && wooItemsData.length == 0">
+          <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
+          <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
+          <p><b>Message: </b>No data found in the website </p>
+        </div>
+        <dn-grid
+          #wooResultsGrid
+          *ngIf="wooItemsData && wooItemsData.length > 0"
+          [dataSource]="wooItemsData"
+          [columns]="wooItemsColumns"
+          [canDisplaySearch]="true"
+          [enableAddButton]="false"
+        >
+        </dn-grid>
 
-      <dn-grid #wooResultsGrid *ngIf="wooItemsData && wooItemsData.length>0"
-      [dataSource]="wooItemsData"
-      [columns]="wooItemsColumns"
-      [canDisplaySearch]="true"
-      [enableAddButton]="false"
-      >
-
-      </dn-grid>
-    </div>
+      </div>
+      <div *ngIf="!connectorJobResponse?.Success">
+        <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
+        <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
+        <p><b>Message: </b>{{ connectorJobResponse?.Message }}</p>
+        <p><b>Result: </b>{{ connectorJobResponse?.Result }}</p>
+        <p>{{ connectorJobResponse?.ExceptionMessage }}</p>
+      </div>
     </mat-step>
   </mat-stepper>
 </div>

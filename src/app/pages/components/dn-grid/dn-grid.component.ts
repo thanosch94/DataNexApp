@@ -3,6 +3,7 @@ import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -70,7 +71,7 @@ import { Guid } from 'guid-typescript';
     VisbleGridColumnsPipe,
   ],
 })
-export class DnGridComponent implements OnInit{
+export class DnGridComponent implements OnInit, AfterViewInit {
   @ViewChild('matTable') table: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -84,7 +85,6 @@ export class DnGridComponent implements OnInit{
   @Input() enableAddButton = false;
   @Input() canDisplaySearch = true;
 
-  dataControl = new FormControl();
   filteredData: Observable<any[]>;
 
   private _columns: DnColumnDto[] = [];
@@ -109,10 +109,15 @@ export class DnGridComponent implements OnInit{
   public set dataSource(v: any) {
     this._dataSource = v;
     this.matDataSource = new MatTableDataSource(this._dataSource);
+    //setTimeout(() => {
+      this.matDataSource.paginator = this.paginator;
+      this.matDataSource.sort = this.sort;
+      this.renderRows()
+     //}, 1000);
   }
 
   matDataSource: MatTableDataSource<any>;
-  isEditable: boolean;
+  isEditable: boolean = false;
 
   constructor(private ref: ChangeDetectorRef) {
     this.matDataSource = new MatTableDataSource(this.dataSource);
@@ -120,10 +125,10 @@ export class DnGridComponent implements OnInit{
 
   ngOnInit(): void {
     //1 second needed to render html else paginator and sort are undefined
-    setTimeout(()=>{
-      this.matDataSource.paginator = this.paginator;
-    this.matDataSource.sort = this.sort;
-    },1000)
+
+  }
+
+  ngAfterViewInit(): void {
 
   }
   applyFilter(e: any) {
@@ -136,29 +141,36 @@ export class DnGridComponent implements OnInit{
   }
 
   add(e: any) {
-    this.isEditable = true;
-    let newRow = new Object();
-    this.columns.forEach((column) => {
-      Object.defineProperty(newRow, column.DataField, {
-        value: null,
+
+    let isAnyRowItemInEditingMode = this.matDataSource.data.some(
+      (x) => x.IsEditable == true
+    );
+
+    if (!isAnyRowItemInEditingMode) {
+      let newRow = new Object();
+      this.columns.forEach((column) => {
+        Object.defineProperty(newRow, column.DataField, {
+          value: null,
+          writable: true,
+        });
+      });
+      Object.defineProperty(newRow, 'IsEditable', {
+        value: true,
         writable: true,
       });
-    });
-    Object.defineProperty(newRow, 'IsEditable', {
-      value: true,
-      writable: true,
-    });
-    if (this.matDataSource.data?.length == 0) {
-      this.matDataSource.data.push(newRow);
-    }
-    if (!this.matDataSource.data.some((x) => x.IsEditable == true)) {
       this.matDataSource.data.unshift(newRow);
+      this.matDataSource.paginator = this.paginator;
+      this.matDataSource.sort = this.sort;
+      this.isEditable = true;
+      this.table.renderRows();
+      this.onRowAdding.emit(newRow)
     }
-
-    this.table.renderRows();
-    this.onRowAdding.emit(e);
   }
 
+  renderRows(){
+    this.table.renderRows();
+
+  }
   save(data: any, index: number) {
     this.onRowSaving.emit(data);
     data.IsEditable = false;
