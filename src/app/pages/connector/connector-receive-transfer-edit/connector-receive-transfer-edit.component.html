@@ -7,94 +7,162 @@
   (onSaveBtnClicked)="onSaveBtnClicked($event)"
 ></dn-toolbar>
 
-<div class="margin">
-  <div>
-    <div class="inline icon">
-      <mat-form-field class="width-100" >
-        <mat-label>Icon</mat-label>
-        <input matInput name="Icon" [(ngModel)]="connectorJob.Icon" />
-      </mat-form-field>
-    </div>
-    <div class="inline name">
-      <mat-form-field class="width-100" >
-        <mat-label>Name</mat-label>
-        <input matInput name="Name" [(ngModel)]="connectorJob.Name" />
-      </mat-form-field>
-    </div>
-  </div>
-  <div>
-    <mat-form-field class="description">
-      <mat-label>Description</mat-label>
-      <textarea
-        matInput
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1"
-        cdkAutosizeMaxRows="4"
-        name="Description"
-        [(ngModel)]="connectorJob.Description"
-      ></textarea>
-    </mat-form-field>
-  </div>
-  <div>
-    <div class="inline jobtype">
-      <mat-form-field>
-        <mat-label>Job Type</mat-label>
-        <mat-select
-          [formControl]="jobTypeFormControl"
+<div class="margin" *ngIf="connectorJob">
+  <mat-stepper [linear]="true">
+    <mat-step [stepControl]="dataSourceFormGroup">
+      <ng-template matStepLabel>Set DataSource</ng-template>
+      <form [formGroup]="dataSourceFormGroup">
+        <div>
+          <div class="inline icon">
+            <mat-form-field class="width-100">
+              <mat-label>Icon</mat-label>
+              <input
+                matInput
+                name="Icon"
+                [(ngModel)]="connectorJob.Icon"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </mat-form-field>
+          </div>
+          <div class="inline name">
+            <mat-form-field class="width-100">
+              <mat-label>Name</mat-label>
+              <input
+                matInput
+                formControlName="nameCtrl"
+                [(ngModel)]="connectorJob.Name"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+        <div>
+          <mat-form-field class="description">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              #autosize="cdkTextareaAutosize"
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="4"
+              formControlName="descrCtrl"
+              [(ngModel)]="connectorJob.Description"
+              required
+            ></textarea>
+          </mat-form-field>
+        </div>
+        <div>
+          <div class="inline jobtype">
+            <mat-form-field>
+              <mat-label>Job Type</mat-label>
+              <mat-select
+                formControlName="jobTypeFormControl"
+                (selectionChange)="onJobTypeSelection($event)"
+              >
+                <mat-option
+                  *ngFor="let connectorJobType of connectorJobTypeList"
+                  [value]="connectorJobType.Id"
+                >
+                  {{ connectorJobType.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="inline datasource">
+            <mat-form-field class="width-100">
+              <mat-label>Datasource</mat-label>
+              <mat-select
+                formControlName="jobDataSourceFormControl"
+                (selectionChange)="onJobDataSourceSelection($event)"
+              >
+                <mat-option
+                  *ngFor="let dataSource of dataSourcesList"
+                  [value]="dataSource.Id"
+                >
+                  {{ dataSource.Name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
 
-          (selectionChange)="onJobTypeSelection($event)"
+        <div
+          *ngIf="connectorJob.DataSourceId == wordpressDataSourceId"
+          class="width-100"
         >
-        <mat-option *ngFor="let connectorJobType of connectorJobTypeList" [value]="connectorJobType.Id">
-          {{ connectorJobType.Name }}
-        </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div  class="inline datasource">
-      <mat-form-field class="width-100" >
-        <mat-label>Datasource</mat-label>
-        <mat-select
-        [formControl]="JobDataSourceFormControl"
+          <mat-form-field class="width-100">
+            <mat-label>wooConnectionsDataSource</mat-label>
+            <mat-select
+              formControlName="wooConnectionFormControl"
+              (selectionChange)="onWooConnectionSelection($event)"
+            >
+              <mat-option
+                *ngFor="let wooConnection of wooConnectionsDataSource"
+                [value]="wooConnection.Id"
+              >
+                {{ wooConnection.Name }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-          (selectionChange)="onJobDataSourceSelection($event)"
+        <div
+          *ngIf="
+            connectorJob.DataSourceId == wordpressDataSourceId &&
+            connectorJob.WooConnectionDataSourceId
+          "
         >
-        <mat-option *ngFor="let dataSource of dataSourcesList" [value]="dataSource.Id">
-          {{ dataSource.Name }}
-        </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
+          <div class="inline request-type">
+            <mat-form-field class="width-100">
+              <mat-label>Request Type</mat-label>
+              <input
+                [readonly]="true"
+                matInput
+                name="RequestType"
+                [(ngModel)]="requestTypeName"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </mat-form-field>
+          </div>
+          <div class="inline endpoint">
+            <mat-form-field class="width-100">
+              <mat-label>Endpoint</mat-label>
+              <input
+                [readonly]="true"
+                matInput
+                name="Endpoint"
+                [(ngModel)]="wooConnectionRow.Endpoint"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Execute</ng-template>
+      <div class="execute-step">
+        <div>
+        <button mat-raised-button color="primary" matButton (click)="onJobExecuteButtonClicked($event)">Execute Job <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
+      </div>
+        <br>
+        <div>
+        <p *ngIf="wooItemsData">*Job Completed - Check Results</p>
+        </div>
+      </div>
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Results</ng-template>
+      <div class="grid-container">
 
-  <div *ngIf="connectorJob.DataSourceId==wordpressDataSourceId" class="width-100">
-    <mat-form-field class="width-100" >
-      <mat-label>wooConnectionsDataSource</mat-label>
-      <mat-select
-      [formControl]="wooConnectionFormControl"
-
-        (selectionChange)="onWooConnectionSelection($event)"
+      <dn-grid #wooResultsGrid *ngIf="wooItemsData && wooItemsData.length>0"
+      [dataSource]="wooItemsData"
+      [columns]="wooItemsColumns"
+      [canDisplaySearch]="true"
+      [enableAddButton]="false"
       >
-      <mat-option *ngFor="let wooConnection of wooConnectionsDataSource" [value]="wooConnection.Id">
-        {{ wooConnection.Name }}
-      </mat-option>
-      </mat-select>
-    </mat-form-field>
-  </div>
 
-  <div *ngIf="connectorJob.DataSourceId==wordpressDataSourceId && connectorJob.WooConnectionDataSourceId">
-    <div class="inline request-type">
-      <mat-form-field class="width-100" >
-        <mat-label>Request Type</mat-label>
-        <input [readonly]="true" matInput name="RequestType" [(ngModel)]="requestTypeName" />
-      </mat-form-field>
+      </dn-grid>
     </div>
-    <div class="inline endpoint">
-      <mat-form-field class="width-100" >
-        <mat-label>Endpoint</mat-label>
-        <input  [readonly]="true" matInput name="Endpoint" [(ngModel)]="wooConnectionRow.Endpoint" />
-      </mat-form-field>
-    </div>
-  </div>
-
+    </mat-step>
+  </mat-stepper>
 </div>

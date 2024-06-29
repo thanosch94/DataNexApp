@@ -40,9 +40,6 @@
   padding: 2%!important;
 }
 
-::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface{
-  border-radius: 3%!important;
-}
 
 ::ng-deep .green-snackbar .mdc-snackbar__surface {
   background-color:#1b9e1b!important;

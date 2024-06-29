@@ -43,3 +43,22 @@
   background-color:#1b9e1b!important;
   color: white;
 }
+
+.execute-step{
+  text-align: center;
+  margin-top: 20%;
+}
+
+::ng-deep  td,  ::ng-deep .mat-cell{
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  width:200px!important
+}
+.grid-container{
+  width: 100%;
+  overflow-x: auto;
+}
+.grid-container ::ng-deep .table-container{
+  width:max-content;
+}

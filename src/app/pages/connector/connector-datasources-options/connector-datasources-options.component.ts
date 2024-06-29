@@ -53,7 +53,7 @@ export class ConnectorDatasourcesOptionsComponent {
   faShopify = faShopify;
   faOpenCart = faOpencart;
   wooConnectionsViewModel: WooConnectionsViewModel;
-  wooConnectionsDataSource: any;
+  wooConnectionsDataSource: WooConnectionsDataDto;
   wooConnectionsColumns: DnColumnDto[] = [];
   constructor(
     private http: HttpClient,

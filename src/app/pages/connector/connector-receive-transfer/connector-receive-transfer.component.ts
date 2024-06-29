@@ -69,8 +69,10 @@ export class ConnectorReceiveTransferComponent implements OnInit {
 
     onJobClick(data:any){
       const dialogRef = this.dialog.open(ConnectorReceiveTransferEditComponent, {
-        width: '650px',
-        height: '550px',
+        maxWidth: '100vw',
+        maxHeight: '100vh',
+        height: '100%',
+        width: '100%',
         data: {
           Job:data
         },

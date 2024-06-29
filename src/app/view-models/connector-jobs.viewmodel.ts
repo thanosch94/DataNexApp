@@ -1,8 +1,10 @@
+import { ApiResponseDto } from './../dto/api-response.dto';
 import { HttpClient } from "@angular/common/http";
 import { AuthService } from "../services/auth.service";
 import { Guid } from "guid-typescript";
 import { ConnectorJobDto } from "../dto/connector-job.dto";
 import { ConnectorJobTypeEnum } from "../enums/connector-job-type.enum";
+import { Observable } from 'rxjs';
 
 export class ConnectorJobsViewModel {
   service: string;
@@ -51,6 +53,12 @@ export class ConnectorJobsViewModel {
 
   public DeleteById(id: Guid) {
     return this.http.delete(this.service + 'ConnectorJobs/deletebyid/' + id, {
+      headers: this.headers,
+    });
+  }
+
+  public GetConnectorJobResult(connectorJob: ConnectorJobDto):Observable<ApiResponseDto> {
+    return this.http.post<ApiResponseDto>(this.service + 'ConnectorJobs/getconnectorjobresult/', connectorJob, {
       headers: this.headers,
     });
   }

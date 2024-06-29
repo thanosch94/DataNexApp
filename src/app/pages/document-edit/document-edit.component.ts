@@ -381,7 +381,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           this.document.DocumentTypeId = this.selectedDocType.Id;
           this.document.DocumentStatusId = this.selectedStatus.Id;
           this.document.CustomerId = this.customer.Id;
-          debugger
           this.documentsViewModel
             .InsertDto(this.document)
             .subscribe((result: any) => {
