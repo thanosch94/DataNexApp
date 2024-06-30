@@ -38,51 +38,24 @@
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <p
-          [ngClass]="!isMenuOpen ? 'menu-title' : 'open-menu-title'"
-          (click)="onMenuCaretArrowClicked($event)"
-        >
-          <fa-icon [icon]="faHome"></fa-icon> Menu
-          <fa-icon [icon]="faMenuCaret"></fa-icon>
-        </p>
-        <div *ngIf="isMenuOpen">
-          <mat-list *ngFor="let item of menuItems">
-            <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
-              {{ item.Name }}</mat-list-item
-            >
-          </mat-list>
-        </div>
-
-        <p
-          [ngClass]="!isSettingsMenuOpen ? 'menu-title' : 'open-menu-title'"
-          (click)="onSettingsCaretArrowClicked($event)"
-        >
-          <fa-icon [icon]="faGear"></fa-icon> Settings
-          <fa-icon [icon]="faSettingsMenuCaret"></fa-icon>
-        </p>
-        <div *ngIf="isSettingsMenuOpen">
-          <mat-list *ngFor="let item of settingsItems">
-            <mat-list-item
-              class="menu-items"
-              (click)="onSettingsItemClick(item)"
-            >
-              {{ item.Name }}</mat-list-item
-            >
-          </mat-list>
-        </div>
-        <p
-          [ngClass]="!isExtraMenuOpen ? 'menu-title' : 'open-menu-title'"
-          (click)="onExtraMenuCaretArrowClicked($event)"
-        >
-          <fa-icon [icon]="faFile"></fa-icon> Extra
-          <fa-icon [icon]="faExtraMenuCaret"></fa-icon>
-        </p>
-        <div *ngIf="isExtraMenuOpen">
-          <mat-list *ngFor="let item of extraItems">
-            <mat-list-item class="menu-items" (click)="onExtraItemClick(item)">
-              {{ item.Name }}</mat-list-item
-            >
-          </mat-list>
+        <div *ngFor="let menuItem of menuItems">
+          <p
+            [ngClass]="!menuItem.IsOpen ? 'menu-title' : 'open-menu-title'"
+            (click)="onMenuCaretArrowClicked($event, menuItem)"
+          >
+            <fa-icon [icon]="getMenuIcon(menuItem)"></fa-icon>
+            {{ menuItem.Name }}
+            <fa-icon
+              [icon]="menuItem.IsOpen ? faCaretUp : faCaretDown"
+            ></fa-icon>
+          </p>
+          <div *ngIf="menuItem.IsOpen">
+            <mat-list *ngFor="let item of menuItem.Children">
+              <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
+                {{ item.Name }}</mat-list-item
+              >
+            </mat-list>
+          </div>
         </div>
       </mat-sidenav>
       <mat-sidenav-content class="main-content">
