@@ -44,7 +44,7 @@ This project is currently in development. Some features may not be fully impleme
 
 
 ## Usage
-The application can be accessed at http://20.107.178.104/DataNexApp.
+The application can be accessed at http://2.56.212.112/DataNexApp.
 
 <b>Username:</b> user
 
