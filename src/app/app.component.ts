@@ -25,6 +25,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Navigation } from './base/navigation';
 
 @Component({
   selector: 'app-root',
@@ -93,9 +94,9 @@ export class AppComponent{
 
     });
   }
-  menuItems: MenuItemDto[] = WebAppBase.menu;
-  settingsItems: MenuItemDto[] = WebAppBase.settingsMenu;
-  extraItems: MenuItemDto[] = WebAppBase.extraMenu;
+  menuItems: MenuItemDto[] = Navigation.menu;
+  settingsItems: MenuItemDto[] = Navigation.settingsMenu;
+  extraItems: MenuItemDto[] = Navigation.extraMenu;
   selectedTab = new FormControl(0);
 
 
@@ -137,7 +138,7 @@ export class AppComponent{
   checkAndAddTab(data: RoutesRecognized) {
     let comp = data.state.root.firstChild?.component;
     let webAppBase=WebAppBase;
-    let tabItem = [...webAppBase.menu, ... webAppBase.extraMenu, ...webAppBase.settingsMenu].find(x=>x.Path ==data.state.root.firstChild?.routeConfig?.path);
+    let tabItem = [...Navigation.menu, ... Navigation.extraMenu, ...Navigation.settingsMenu].find(x=>x.Path ==data.state.root.firstChild?.routeConfig?.path);
     let tabItemName = tabItem?tabItem.Name:"";
     if (this.isMenuItem || this.isNavBarItem) {
       this.tabsService.deactivateTabs();
