@@ -31,19 +31,21 @@ export class TabsService {
     );
     if (activeTab) {
       if (activeTab!.Name == '') {
+        activeTab!.Hint = tabName;
         activeTab!.Name = tabName.substring(0, 15);
       }
     }
   }
 
-  setTabNameByOldName(tabName: string, oldName:string) {
+  setTabNameByOldName(tabName: string, oldName: string) {
     //Finds the tab using the previous name
     let activeTab = TabsService.tabs.find(
-      (x: AppTabDto) => x.Route.path == this.route && x.Name == oldName.substring(0, 15)
+      (x: AppTabDto) =>
+        x.Route.path == this.route && x.Name == oldName.substring(0, 15)
     );
     if (activeTab) {
-        activeTab!.Name = tabName.substring(0, 15);
-
+      activeTab!.Hint = tabName;
+      activeTab!.Name = tabName.substring(0, 15);
     }
   }
 

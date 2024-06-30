@@ -4,20 +4,33 @@
 <div *ngIf="isAuthenticated == true" class="screen">
   <div class="navbar">
     <div class="nav-menu-btn">
-      <button class="menu-btn" mat-button matTooltip="Toggle Menu" (click)="onMenuBtnClicked()">
+      <button
+        class="menu-btn"
+        mat-button
+        matTooltip="Toggle Menu"
+        (click)="onMenuBtnClicked()"
+      >
         <i class="fa fa-bars fa-2x" aria-hidden="true"></i></button
       ><b class="menu-text"> Menu</b>
     </div>
     <div>
-
-        <img [src]="logoPath" width="205" height="75" />
+      <img [src]="logoPath" width="205" height="75" />
     </div>
     <div class="nav-btns">
-      <button class="user-btn" mat-button matTooltip="User Info"
-      (click)="onUserBtnClicked($event)" >
+      <button
+        class="user-btn"
+        mat-button
+        matTooltip="User Info"
+        (click)="onUserBtnClicked($event)"
+      >
         <i class="fa fa-user fa-2x"></i>
       </button>
-      <button class="exit-btn" mat-button matTooltip="Log Out" (click)="onLogOutBtnClicked($event)">
+      <button
+        class="exit-btn"
+        mat-button
+        matTooltip="Log Out"
+        (click)="onLogOutBtnClicked($event)"
+      >
         <i class="fa fa-power-off fa-2x"></i>
       </button>
     </div>
@@ -25,7 +38,10 @@
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <p [ngClass]="!isMenuOpen?'menu-title':'open-menu-title'"  (click)="onMenuCaretArrowClicked($event)">
+        <p
+          [ngClass]="!isMenuOpen ? 'menu-title' : 'open-menu-title'"
+          (click)="onMenuCaretArrowClicked($event)"
+        >
           <fa-icon [icon]="faHome"></fa-icon> Menu
           <fa-icon [icon]="faMenuCaret"></fa-icon>
         </p>
@@ -37,21 +53,27 @@
           </mat-list>
         </div>
 
-        <p  [ngClass]="!isSettingsMenuOpen?'menu-title':'open-menu-title'" (click)="onSettingsCaretArrowClicked($event)">
+        <p
+          [ngClass]="!isSettingsMenuOpen ? 'menu-title' : 'open-menu-title'"
+          (click)="onSettingsCaretArrowClicked($event)"
+        >
           <fa-icon [icon]="faGear"></fa-icon> Settings
           <fa-icon [icon]="faSettingsMenuCaret"></fa-icon>
         </p>
         <div *ngIf="isSettingsMenuOpen">
           <mat-list *ngFor="let item of settingsItems">
             <mat-list-item
-               class="menu-items"
+              class="menu-items"
               (click)="onSettingsItemClick(item)"
             >
               {{ item.Name }}</mat-list-item
             >
           </mat-list>
         </div>
-        <p [ngClass]="!isExtraMenuOpen?'menu-title':'open-menu-title'" (click)="onExtraMenuCaretArrowClicked($event)">
+        <p
+          [ngClass]="!isExtraMenuOpen ? 'menu-title' : 'open-menu-title'"
+          (click)="onExtraMenuCaretArrowClicked($event)"
+        >
           <fa-icon [icon]="faFile"></fa-icon> Extra
           <fa-icon [icon]="faExtraMenuCaret"></fa-icon>
         </p>
@@ -78,9 +100,10 @@
           >
             <div class="tab-header">
               <ng-template mat-tab-label>
-                <div class="tab-label-container">{{ tab.Name }}</div>
+                <div [matTooltip]="tab.Hint" class="tab-label-container">
+                  {{ tab.Name }}
+                </div>
                 <button
-
                   [ngClass]="tab.Active ? 'tab-close-button' : ''"
                   *ngIf="tab.Active"
                   (click)="onTabCloseClicked($event, tab)"

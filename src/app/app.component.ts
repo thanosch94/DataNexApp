@@ -148,6 +148,7 @@ export class AppComponent{
         tab.Component = comp;
         tab.Key = tabItemName;
         tab.Active = true;
+        tab.Hint = tabItemName;
         tab.Route = data.state.root.firstChild?.routeConfig;
         this.tabs.push(tab);
         this.selectedTab.setValue(this.tabs.length - 1);
@@ -170,6 +171,7 @@ export class AppComponent{
       tab!.Name = tabItemName;
       tab!.Component = comp;
       tab!.Key = tabItemName;
+      tab.Hint = tabItemName
       tab!.Route = data.state.root.firstChild?.routeConfig;
     } else {
     }
