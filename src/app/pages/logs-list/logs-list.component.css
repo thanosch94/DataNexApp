@@ -4,3 +4,11 @@
 .log-name{
   width:60%;
 }
+.cdk-column-LogName{
+  width: 400px;
+}
+td , th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 600px;
+}

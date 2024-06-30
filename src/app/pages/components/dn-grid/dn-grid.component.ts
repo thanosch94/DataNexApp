@@ -112,7 +112,9 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     //setTimeout(() => {
       this.matDataSource.paginator = this.paginator;
       this.matDataSource.sort = this.sort;
-      this.renderRows()
+      if(this.table){
+        this.renderRows()
+      }
      //}, 1000);
   }
 
@@ -192,10 +194,8 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     this.isEditable = false;
     if (data.Id) {
       data.IsEditable = false;
-      this.table.renderRows();
     } else {
       this.matDataSource.data.shift();
-      this.table.renderRows();
     }
     this.onRowStopEditing.emit(data);
   }
