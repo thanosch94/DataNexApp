@@ -97,7 +97,6 @@ export class AppComponent {
     this.tabs = tabsService.getTabs();
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
-        debugger;
         if (result.url != '/' && result.url != '/login') {
           this.checkAndAddTab(result);
         }

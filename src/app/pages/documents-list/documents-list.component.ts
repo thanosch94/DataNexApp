@@ -18,13 +18,14 @@ import { CustomerDto } from '../../dto/customer.dto';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
 import { DocumentDto } from '../../dto/document.dto';
 import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 
 @Component({
   selector: 'app-documents-list',
@@ -67,13 +68,20 @@ export class DocumentsListComponent implements OnInit {
   customersViewModel: DocumentsViewModel;
   documentsViewModel: DocumentsViewModel;
   documentlist_text: string;
+  documentType: any;
+  documentGroup: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.documentlist_text = 'Document List';
+    this.route.queryParams.subscribe((params:any)=>{
+      this.documentGroup = params["Group"]
+      this.documentType = params["Type"]
+    })
   }
 
   ngOnInit() {
@@ -81,11 +89,22 @@ export class DocumentsListComponent implements OnInit {
   }
 
   getData() {
-    this.documentsViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
+    this.documentsViewModel.GetByDocumentGroup(this.documentGroup).subscribe((result:any)=>{
+      if(this.documentType=="SalesDocuments"||this.documentType=="PurchaseDocuments"){
+        this.dataSource = new MatTableDataSource(result);
+      }else if(this.documentType=="Invoices-Receipts"){
+        let invoicesReceiptDocument = result.filter((x:any)=>x.DocumentTypeId==WebAppBase.Invoice || x.Id==WebAppBase.Receipt)
+        this.dataSource = new MatTableDataSource(invoicesReceiptDocument);
+      }else if(this.documentType=="SupplierInvoices"){
+        let purchaseInvoicesDocument = result.filter((x:any)=>x.DocumentTypeId==WebAppBase.PurchaseInvoice)
+
+        this.dataSource = new MatTableDataSource(purchaseInvoicesDocument);
+      }
+
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
-    });
+    })
+
   }
 
   applyFilter(e: any) {

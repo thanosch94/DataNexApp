@@ -1,5 +1,6 @@
 import { Guid } from 'guid-typescript';
 import { MenuItemDto } from '../dto/menu-item.dto';
+import { DocumentTypeGroupEnum } from '../enums/document-type-group.enum';
 
 export class Navigation {
   static menu: MenuItemDto[] = [
@@ -14,13 +15,13 @@ export class Navigation {
           Id: Guid.parse('af9d9c1e-f397-4d3c-b01a-7c10d23ace92'),
           Name: 'Sales Documents',
           Path: 'documents-list',
-          Params: { Documents: true },
+          Params: { Group: DocumentTypeGroupEnum.Sales, Type:"SalesDocuments" },
         },
         {
           Id: Guid.parse('abfa413f-55d1-4a44-a492-aa46b979a404'),
           Name: 'Invoices',
           Path: 'documents-list',
-          Params: { Invoices: true },
+          Params: { Group: DocumentTypeGroupEnum.Sales, Type:"Invoices-Receipts"  },
         },
         {
           Id: Guid.parse('b76f583b-cc8d-4873-a5bd-ec213d9ad380'),
@@ -44,13 +45,13 @@ export class Navigation {
           Id: Guid.parse('cacf4576-eb86-44df-9974-47c4cf6778fd'),
           Name: 'Purchase Orders',
           Path: 'documents-list',
-          Params: { PurchaseOrders: true },
+          Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"PurchaseDocuments"},
         },
         {
           Id: Guid.parse('2e6665d4-0552-40e8-abe1-6211ad027574'),
           Name: "Suppliers' Invoices",
           Path: 'documents-list',
-          Params: { SupplierInvoices: true },
+          Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"SupplierInvoices"},
         },
         {
           Id: Guid.parse('eb36e8ad-1746-4446-aaa7-15d1c1ffbb1a'),

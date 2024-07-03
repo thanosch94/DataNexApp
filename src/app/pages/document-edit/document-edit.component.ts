@@ -3,7 +3,7 @@ import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
 import { ProductsViewModel } from './../../view-models/products.viewmodel';
-import { AsyncPipe, CommonModule, DatePipe } from '@angular/common';
+import { AsyncPipe, CommonModule, DatePipe, Location } from '@angular/common';
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
@@ -163,7 +163,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private tabsService: TabsService,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private location:Location
   ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(
       this.http,
@@ -449,7 +450,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onCloseClicked(e: any) {
-    this.router.navigate(['documents-list']);
+    this.location.back()
+    //this.router.navigate(['documents-list']);
   }
 
   onProductInfoClicked(e: any, index: number) {
