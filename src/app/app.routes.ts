@@ -1,7 +1,6 @@
 import { Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { CustomerEditComponent } from './pages/customer-edit/customer-edit.component';
-import { CustomersListComponent } from './pages/customers-list/customers-list.component';
 import { HomeComponent } from './pages/home/home.component';
 import { ProductsListComponent } from './pages/products-list/products-list.component';
 import { UsersListComponent } from './pages/users-list/users-list.component';
@@ -22,6 +21,8 @@ import { ConnectorDatasourcesOptionsComponent } from './pages/connector/connecto
 import { AdditionalChargesListComponent } from './pages/additional-charges-list/additional-charges-list.component';
 import { ConnectorReceiveTransferComponent } from './pages/connector/connector-receive-transfer/connector-receive-transfer.component';
 import { ConnectorReceiveTransferEditComponent } from './pages/connector/connector-receive-transfer-edit/connector-receive-transfer-edit.component';
+import { CustomersListComponent } from './pages/components/sales/customers-list/customers-list.component';
+import { WarehousesListComponent } from './pages/inventory/warehouses-list/warehouses-list.component';
 
 export const routes: Routes = [
   {
@@ -138,6 +139,11 @@ export const routes: Routes = [
   {
     path:'connector-receive-transfer-edit',
     component:ConnectorReceiveTransferEditComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'warehouses-list',
+    component:WarehousesListComponent,
     canActivate:[authGuard]
   }
 

@@ -11,6 +11,7 @@ import {
   OnInit,
   Output,
   ViewChild,
+  computed,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -34,7 +35,7 @@ import { DnToolbarComponent } from '../dn-toolbar/dn-toolbar.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { VisbleGridColumnsPipe } from '../../../pipes/visble-grid-columns.pipe';
 import { Observable } from 'rxjs/internal/Observable';
-import { Guid } from 'guid-typescript';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'dn-grid',
@@ -69,7 +70,9 @@ import { Guid } from 'guid-typescript';
     DnToolbarComponent,
     AsyncPipe,
     VisbleGridColumnsPipe,
+    MatCheckboxModule,
   ],
+
 })
 export class DnGridComponent implements OnInit, AfterViewInit {
   @ViewChild('matTable') table: MatTable<any>;
@@ -110,12 +113,12 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     this._dataSource = v;
     this.matDataSource = new MatTableDataSource(this._dataSource);
     //setTimeout(() => {
-      this.matDataSource.paginator = this.paginator;
-      this.matDataSource.sort = this.sort;
-      if(this.table){
-        this.renderRows()
-      }
-     //}, 1000);
+    this.matDataSource.paginator = this.paginator;
+    this.matDataSource.sort = this.sort;
+    if (this.table) {
+      this.renderRows();
+    }
+    //}, 1000);
   }
 
   matDataSource: MatTableDataSource<any>;
@@ -127,12 +130,9 @@ export class DnGridComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     //1 second needed to render html else paginator and sort are undefined
-
   }
 
-  ngAfterViewInit(): void {
-
-  }
+  ngAfterViewInit(): void {}
   applyFilter(e: any) {
     const filterValue = (e.target as HTMLInputElement).value;
     this.matDataSource.filter = filterValue.trim().toLowerCase();
@@ -143,7 +143,6 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   add(e: any) {
-
     let isAnyRowItemInEditingMode = this.matDataSource.data.some(
       (x) => x.IsEditable == true
     );
@@ -165,13 +164,12 @@ export class DnGridComponent implements OnInit, AfterViewInit {
       this.matDataSource.sort = this.sort;
       this.isEditable = true;
       this.table.renderRows();
-      this.onRowAdding.emit(newRow)
+      this.onRowAdding.emit(newRow);
     }
   }
 
-  renderRows(){
+  renderRows() {
     this.table.renderRows();
-
   }
   save(data: any, index: number) {
     this.onRowSaving.emit(data);
@@ -226,4 +224,11 @@ export class DnGridComponent implements OnInit, AfterViewInit {
       }
     }
   }
+  updateBooleanColumn(value: boolean, row: any, column:DnColumnDto) {
+    row[column.DataField] = value;
+  }
+
+  partiallyComplete = computed(() => {
+    return true;
+  });
 }

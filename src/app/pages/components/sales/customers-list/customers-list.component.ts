@@ -1,4 +1,3 @@
-import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import {
   Component,
   OnInit,
@@ -13,19 +12,20 @@ import {
 } from '@angular/material/table';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { CustomerDto } from '../../dto/customer.dto';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
-import { WebAppBase } from '../../base/web-app-base';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
 import { MatDialog } from '@angular/material/dialog';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { WebAppBase } from '../../../../base/web-app-base';
+import { CustomerDto } from '../../../../dto/customer.dto';
+import { AuthService } from '../../../../services/auth.service';
+import { CustomersViewModel } from '../../../../view-models/customers.viewmodel';
+import { DeleteConfirmComponent } from '../../delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../../dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-customers-list',

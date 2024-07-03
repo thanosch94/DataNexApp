@@ -57,6 +57,25 @@
               matInput
           /></mat-form-field>
 
+          <!-- Boolean Input -->
+          <div
+            *ngIf="
+              column.DataType == 'boolean' && row.IsEditable && !column.Lookup
+            "
+            style="width: 100%"
+            class="white-input center"
+          >
+          <mat-checkbox
+          *ngIf="row.IsEditable"
+          class="example-margin"
+          [name]="column.Caption"
+          [checked]="row[column.DataField]"
+          (change)="updateBooleanColumn($event.checked, row, column)"
+        >
+
+        </mat-checkbox>
+            </div>
+
           <mat-form-field
             *ngIf="row.IsEditable && isEditable && column.Lookup"
             class="white-input"
@@ -85,9 +104,17 @@
             </mat-autocomplete>
           </mat-form-field>
 
-          <p *ngIf="!row.IsEditable && !column.Lookup">
+          <p *ngIf="!row.IsEditable && !column.Lookup && (column.DataType=='string'|| column.DataType=='number')">
             {{ row[column.DataField] }}
           </p>
+          <p *ngIf="!row.IsEditable && !column.Lookup && column.DataType=='boolean'">
+            <mat-checkbox
+            class="example-margin"
+            [checked]="row[column.DataField]"
+            [disabled]="true"
+          >
+
+          </mat-checkbox>          </p>
 
           <p *ngIf="!row.IsEditable && column.Lookup">
             {{ getLookupName(column, row[column.DataField]) }}

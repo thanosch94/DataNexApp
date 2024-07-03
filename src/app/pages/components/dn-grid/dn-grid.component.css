@@ -26,6 +26,10 @@
   margin:1%
 }
 
+.center{
+  text-align: center;
+}
+
 ::ng-deep .white-input .mat-mdc-text-field-wrapper{
   background: white!important;
 }

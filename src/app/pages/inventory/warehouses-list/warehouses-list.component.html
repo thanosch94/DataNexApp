@@ -1,0 +1,19 @@
+<dn-toolbar
+  [canSave]="false"
+  [canInsert]="true"
+  [isDialog]="false"
+  [title]="warehouses_list_title_text"
+  (onInsertBtnClicked)="onInsertBtnClicked($event)"
+></dn-toolbar>
+
+    <dn-grid  class="margin" #warehousesGrid
+    [dataSource]="warehousesDataSource"
+    [columns]="warehousesColumns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onWareHouseSaving($event)"
+    (onRowDelete)="onWareHouseDelete($event)"
+    (onRowStopEditing)="onWareHouseStopEditing($event)"
+    >
+
+    </dn-grid>
