@@ -3,6 +3,8 @@ import { MenuItemDto } from '../dto/menu-item.dto';
 import { DocumentTypeGroupEnum } from '../enums/document-type-group.enum';
 
 export class Navigation {
+
+  static data:any;
   static menu: MenuItemDto[] = [
     {
       Id: Guid.parse('5131c4bc-befe-4d8c-8f44-03c2b69767d9'),
@@ -225,44 +227,4 @@ export class Navigation {
     },
   ];
 
-  // static settingsMenu: MenuItemDto[] = [
-  //   {
-  //     Id: Guid.parse('7cc4cbdc-44c7-405f-9b8a-a2ee1c267a04'),
-  //     Name: 'Document Types',
-  //     Path: 'document-types-list',
-  //   },
-  //   {
-  //     Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
-  //     Name: 'Product Sizes',
-  //     Path: 'product-sizes-list',
-  //   },
-  //   {
-  //     Id: Guid.parse('9590bf23-d72c-40f0-9df2-18e8f4c27ec8'),
-  //     Name: 'Statuses',
-  //     Path: 'statuses-list',
-  //   },
-  //   {
-  //     Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
-  //     Name: 'Brands',
-  //     Path: 'brands-list',
-  //   },
-  //   {
-  //     Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
-  //     Name: 'Additional Charges',
-  //     Path: 'additional-charges-list',
-  //   },
-  // ];
-
-  // static extraMenu: MenuItemDto[] = [
-  //   {
-  //     Id: Guid.parse('95a524b4-fn6b-2cb1-af29-168b3387b445'),
-  //     Name: 'Connector',
-  //     Path: 'connector-home',
-  //   },
-  //   {
-  //     Id: Guid.parse('3019b36c-4858-41f5-84f2-c5268ae64833'),
-  //     Name: 'Logs',
-  //     Path: 'logs-list',
-  //   },
-  // ];
 }

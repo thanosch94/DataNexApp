@@ -7,4 +7,5 @@ export class DocumentTypeDto {
   Abbreviation: string;
   DocumentTypeGroup: DocumentTypeGroupEnum;
   Description?:string;
+  IsActive:boolean;
 }

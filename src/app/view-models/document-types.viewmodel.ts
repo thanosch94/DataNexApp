@@ -1,3 +1,4 @@
+import { DocumentTypeGroupEnum } from './../enums/document-type-group.enum';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Guid } from "guid-typescript";
 import { DocumentTypeDto } from "../dto/document-type.dto";
@@ -23,6 +24,12 @@ export class DocumentTypesViewModel {
   public GetById(id: Guid) {
 
     return this.http.get(this.service + 'DocumentTypes/getbyid/' + id, {
+      headers: this.headers,
+    });
+  }
+  public GetActiveDocumentTypesLookupByDocumentTypeGroup(documentTypeGroup: DocumentTypeGroupEnum) {
+
+    return this.http.get(this.service + 'DocumentTypes/getactivedocumenttypeslookupbydocumententity/' + documentTypeGroup, {
       headers: this.headers,
     });
   }

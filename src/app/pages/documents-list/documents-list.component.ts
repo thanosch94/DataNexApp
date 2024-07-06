@@ -1,9 +1,6 @@
+import { TabsService } from './../../services/tabs.service';
 import { AuthService } from './../../services/auth.service';
-import {
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import {
@@ -25,7 +22,7 @@ import { DocumentsViewModel } from '../../view-models/documents.viewmodel';
 import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
+import { Navigation } from '../../base/navigation';
 
 @Component({
   selector: 'app-documents-list',
@@ -47,7 +44,7 @@ import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
     CdkMenuItem,
     CommonModule,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   templateUrl: './documents-list.component.html',
   styleUrl: './documents-list.component.css',
@@ -70,18 +67,25 @@ export class DocumentsListComponent implements OnInit {
   documentlist_text: string;
   documentType: any;
   documentGroup: any;
+  tabsService: TabsService;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute
   ) {
+    this.tabsService = new TabsService(route);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.documentlist_text = 'Document List';
-    this.route.queryParams.subscribe((params:any)=>{
-      this.documentGroup = params["Group"]
-      this.documentType = params["Type"]
-    })
+
+    this.route.queryParams.subscribe((params: any) => {
+      this.documentGroup = params['Group'];
+      this.documentType = params['Type'];
+      this.tabsService.setTabsData([
+        { Group: this.documentGroup },
+        { Type: this.documentType },
+      ]);
+    });
   }
 
   ngOnInit() {
@@ -89,22 +93,32 @@ export class DocumentsListComponent implements OnInit {
   }
 
   getData() {
-    this.documentsViewModel.GetByDocumentGroup(this.documentGroup).subscribe((result:any)=>{
-      if(this.documentType=="SalesDocuments"||this.documentType=="PurchaseDocuments"){
-        this.dataSource = new MatTableDataSource(result);
-      }else if(this.documentType=="Invoices-Receipts"){
-        let invoicesReceiptDocument = result.filter((x:any)=>x.DocumentTypeId==WebAppBase.Invoice || x.Id==WebAppBase.Receipt)
-        this.dataSource = new MatTableDataSource(invoicesReceiptDocument);
-      }else if(this.documentType=="SupplierInvoices"){
-        let purchaseInvoicesDocument = result.filter((x:any)=>x.DocumentTypeId==WebAppBase.PurchaseInvoice)
+    this.documentsViewModel
+      .GetByDocumentGroup(this.documentGroup)
+      .subscribe((result: any) => {
+        if (
+          this.documentType == 'SalesDocuments' ||
+          this.documentType == 'PurchaseDocuments'
+        ) {
+          this.dataSource = new MatTableDataSource(result);
+        } else if (this.documentType == 'Invoices-Receipts') {
+          let invoicesReceiptDocument = result.filter(
+            (x: any) =>
+              x.DocumentTypeId == WebAppBase.Invoice ||
+              x.Id == WebAppBase.Receipt
+          );
+          this.dataSource = new MatTableDataSource(invoicesReceiptDocument);
+        } else if (this.documentType == 'SupplierInvoices') {
+          let purchaseInvoicesDocument = result.filter(
+            (x: any) => x.DocumentTypeId == WebAppBase.PurchaseInvoice
+          );
 
-        this.dataSource = new MatTableDataSource(purchaseInvoicesDocument);
-      }
+          this.dataSource = new MatTableDataSource(purchaseInvoicesDocument);
+        }
 
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    })
-
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
+      });
   }
 
   applyFilter(e: any) {
@@ -124,24 +138,28 @@ export class DocumentsListComponent implements OnInit {
   }
 
   addDocument() {
+    Navigation.data = this.documentGroup;
     this.router.navigate(['document-edit']);
   }
 
   editDocument(document: DocumentDto) {
     WebAppBase.data = document.Id;
-    this.router.navigate(['document-edit']);
-  }
 
-  onTransformDocumentClicked(e: any, row: any) {
-
-  }
-
-  onCancelDocumentClicked(e: any, row: any) {
+    this.router.navigate(['document-edit'], {
+      queryParams: {
+        docCode: document.DocumentTypeName + document.DocumentNumber,
+      },
+    });
 
   }
+
+  onTransformDocumentClicked(e: any, row: any) {}
+
+  onCancelDocumentClicked(e: any, row: any) {}
 
   onInsertClicked(e: any) {
-    this.router.navigate(['document-edit']);
+    Navigation.data = this.documentGroup;
+    this.router.navigate(['document-edit'], { queryParams: {} });
   }
 
   onRefreshClicked(e: any) {

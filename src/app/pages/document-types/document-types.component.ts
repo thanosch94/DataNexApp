@@ -1,10 +1,5 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import {
-  ChangeDetectorRef,
-  Component,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,6 +19,8 @@ import { TabsService } from '../../services/tabs.service';
 import { Router } from '@angular/router';
 import { DnColumnDto } from '../../dto/dn-column.dto';
 import { DocumentTypeGroupEnumList } from '../../enumLists/document-type-group.enumlist';
+import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-document-types',
@@ -66,8 +63,7 @@ export class DocumentTypesComponent implements OnInit {
     private auth: AuthService,
     private tabsService: TabsService,
     private _snackBar: MatSnackBar,
-    private router: Router,
-    private ref: ChangeDetectorRef
+    private dialog: MatDialog
   ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(
       this.http,
@@ -122,6 +118,12 @@ export class DocumentTypesComponent implements OnInit {
         Visible: false,
       },
       {
+        DataField: 'IsActive',
+        DataType: 'boolean',
+        Caption: 'Is Active',
+        Visible: true,
+      },
+      {
         DataField: 'buttons',
         DataType: 'buttons',
         Caption: '',
@@ -143,6 +145,7 @@ export class DocumentTypesComponent implements OnInit {
     documentType.Abbreviation = data.Abbreviation;
     documentType.DocumentTypeGroup = data.DocumentTypeGroup;
     documentType.Description = data.Description;
+    documentType.IsActive = data.IsActive;
 
     if (!documentType.Id) {
       this.documentTypesViewModel
@@ -152,22 +155,43 @@ export class DocumentTypesComponent implements OnInit {
           this.getData();
         });
     } else {
-      this.documentTypesViewModel
-        .UpdateDto(documentType)
-        .subscribe((result: any) => {
-          this.displayNotification('Record updated');
-          this.getData();
+      if (data.Id)
+        this.documentTypesViewModel.UpdateDto(documentType).subscribe({
+          next: (result: any) => {
+            this.displayNotification('Record updated');
+            this.getData();
+          },
+          error:(err:any)=>{
+            const dialog = this.dialog.open(DnAlertComponent, {
+              data: {
+                Title: 'Message',
+                Message: err.error,
+              },
+            });
+            this.getData()
+          }
         });
+
     }
   }
 
   onDocumentTypeDelete(data: DocumentTypeDto) {
-    this.documentTypesViewModel.DeleteById(data.Id).subscribe((result: any) => {
-      let index = this.documentTypesGrid.matDataSource.data.indexOf(data);
-      this.documentTypesGrid.matDataSource.data.splice(index, 1);
-      this.getData();
-      this.documentTypesGrid.table.renderRows();
-      this.displayNotification('Record deleted');
+    this.documentTypesViewModel.DeleteById(data.Id).subscribe({
+      next: (result: any) => {
+        let index = this.documentTypesGrid.matDataSource.data.indexOf(data);
+        this.documentTypesGrid.matDataSource.data.splice(index, 1);
+        this.getData();
+        this.documentTypesGrid.table.renderRows();
+        this.displayNotification('Record deleted');
+      },
+      error: (err: any) => {
+        const dialog = this.dialog.open(DnAlertComponent, {
+          data: {
+            Title: 'Message',
+            Message: err.error,
+          },
+        });
+      },
     });
   }
 

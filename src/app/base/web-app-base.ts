@@ -21,7 +21,7 @@ export class WebAppBase {
     }
   ]
 
-
+    //Document Types
    static Offer = Guid.parse("ea9422a4-c930-44b4-bb1e-a87a019cf716");
    static SalesOrder = Guid.parse("580f43bd-0b77-4a93-b95e-b04f851463ea");
    static ProformaInvoice = Guid.parse("3a7da7f5-93e7-40a6-8e62-6a2836ecec96");

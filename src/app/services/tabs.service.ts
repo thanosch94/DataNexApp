@@ -19,6 +19,11 @@ export class TabsService {
     return TabsService.tabs;
   }
 
+  getActiveTab(){
+    let tab = TabsService.tabs.find(x=>x.Active==true)
+    return tab
+  }
+
   closeTab(tab: AppTabDto) {
     let tabIndex = TabsService.tabs.indexOf(tab);
 
@@ -27,23 +32,40 @@ export class TabsService {
 
   setTabName(tabName: string) {
     let activeTab = TabsService.tabs.find(
-      (x: AppTabDto) => x.Route.path == this.route && x.Name == ''
+      (x: AppTabDto) => x.Route.path == this.route && x.Active ==true
     );
+
     if (activeTab) {
-      if (activeTab!.Name == '') {
+        activeTab.PrevName = activeTab.Name
         activeTab!.Hint = tabName;
         activeTab!.Name = tabName.substring(0, 15);
-      }
+
+    }
+  }
+
+  setTabsData(data:Array<Object>){
+
+    let activeTab = TabsService.tabs.find(
+      (x: AppTabDto) => x.Route.path == this.route && x.Active ==true
+    );
+    if(activeTab){
+      activeTab.Data = data
     }
   }
 
   setTabNameByOldName(tabName: string, oldName: string) {
+    debugger
+
     //Finds the tab using the previous name
     let activeTab = TabsService.tabs.find(
       (x: AppTabDto) =>
         x.Route.path == this.route && x.Name == oldName.substring(0, 15)
     );
+    debugger
+
     if (activeTab) {
+      activeTab.PrevName = activeTab.Name
+
       activeTab!.Hint = tabName;
       activeTab!.Name = tabName.substring(0, 15);
     }

@@ -32,11 +32,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {
-  MatCell,
-  MatTable,
-  MatTableModule,
-} from '@angular/material/table';
+import { MatCell, MatTable, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
@@ -45,7 +41,7 @@ import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
@@ -61,6 +57,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentAdditionalChargesComponent } from '../document-additional-charges/document-additional-charges.component';
 import { DocumentAdditionalChargeDto } from '../../dto/document-additional-charge.dto';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+import { Navigation } from '../../base/navigation';
 
 @Component({
   selector: 'app-document-edit',
@@ -85,7 +82,7 @@ import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
     MatTabsModule,
     DnToolbarComponent,
     MatDialogModule,
-    MatTooltipModule
+    MatTooltipModule,
   ],
   providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',
@@ -104,10 +101,12 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   total: number = 0;
   addCharges: number = 0;
   activeTab: AppTabDto | undefined;
-  route: any;
+
   previousTabName: string;
   documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
   document_must_be_saved_in_order_to_add_charges_text: string;
+  documentGroup: any;
+  documentType: any;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -164,7 +163,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
-    private location:Location
+    private location: Location
   ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(
       this.http,
@@ -186,21 +185,35 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
-    this.documentAdditionalChargesViewModel = new DocumentAdditionalChargesViewModel(this.http, this.auth);
+    this.documentAdditionalChargesViewModel =
+      new DocumentAdditionalChargesViewModel(this.http, this.auth);
     this.documentId = WebAppBase.data;
     this.currency = WebAppBase.currency;
     WebAppBase.data = undefined;
+    let activeTab = TabsService.tabs.find((x) => x.Active == true);
+    activeTab!.Data.forEach((row: any) => {
+      if (row['Group']) {
+        this.documentGroup = row['Group'];
+      }
+
+      if (row['Type']) {
+        this.documentType = row['Type'];
+      }
+    });
   }
 
   ngOnInit() {
     this.getData();
-    this.document_must_be_saved_in_order_to_add_charges_text = "Document must be saved first in order to add extra charges"
+    this.document_must_be_saved_in_order_to_add_charges_text =
+      'Document must be saved first in order to add extra charges';
     this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
       this.barcodesLookupDatasource = result;
     });
-    this.documentTypesViewModel.GetAll().subscribe((result: any) => {
-      this.docTypes = result;
-    });
+    this.documentTypesViewModel
+      .GetActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
+      .subscribe((result: any) => {
+        this.docTypes = result;
+      });
     this.statusesViewModel.GetAll().subscribe((result: any) => {
       this.statusesList = result;
     });
@@ -273,13 +286,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  getAdditionalCharges(documentId:Guid){
-    this.addCharges = 0
-    this.documentAdditionalChargesViewModel.GetByDocumentId(documentId).subscribe((result:any)=>{
-      result.map((charge:DocumentAdditionalChargeDto)=>{
-        this.addCharges+=charge.AdditionalChargeAmount
-      })
-    })
+  getAdditionalCharges(documentId: Guid) {
+    this.addCharges = 0;
+    this.documentAdditionalChargesViewModel
+      .GetByDocumentId(documentId)
+      .subscribe((result: any) => {
+        result.map((charge: DocumentAdditionalChargeDto) => {
+          this.addCharges += charge.AdditionalChargeAmount;
+        });
+      });
   }
   getFilteredSizes(index: number) {
     this.filteredSizesArray[index] = this.sizeControlArray[
@@ -334,17 +349,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           .GetByProductId(result.Id)
           .subscribe((result: any) => {
             this.productsSizes = result as ProductBarcodeDto[];
-            if(this.productsSizes.length>0){
+            if (this.productsSizes.length > 0) {
               this.getFilteredSizes(index);
-            }else{
-
+            } else {
               this.productsDataSource[index].SerialNumber = index + 1;
               this.productsDataSource[index].IsRowFilled = true;
 
               let cellsArray = this.cells.toArray();
               cellsArray[index + 1].nativeElement.focus();
               this.calculateDocumentTotal();
-
             }
           });
       } else {
@@ -386,12 +399,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             .InsertDto(this.document)
             .subscribe((result: any) => {
               this.document = result;
-              this.previousTabName = this.document_text.toString()
+              this.previousTabName = this.document_text.toString();
               this.document_text =
-              this.document.DocumentTypeName +
-              '-' +
-              this.document.DocumentNumber.toString().padStart(6, '0');
-              this.tabsService.setTabNameByOldName(this.document_text, this.previousTabName)
+                this.document.DocumentTypeName +
+                '-' +
+                this.document.DocumentNumber.toString().padStart(6, '0');
+              this.tabsService.setTabNameByOldName(
+                this.document_text,
+                this.previousTabName
+              );
 
               //Fill in documentId to display the right data (delete button, table)
               this.documentId = this.document.Id;
@@ -450,8 +466,22 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onCloseClicked(e: any) {
-    this.location.back()
-    //this.router.navigate(['documents-list']);
+
+    let activeTab = this.tabsService.getActiveTab()
+    activeTab!.Data.forEach((row: any) => {
+      if (row['Group']) {
+        this.documentGroup = row['Group'];
+      }
+
+      if (row['Type']) {
+        this.documentType = row['Type'];
+      }
+    });
+        this.router.navigate(['documents-list'], {
+      queryParams: { Group: this.documentGroup, Type: this.documentType },
+    });
+
+    this.tabsService.setTabNameByOldName(activeTab!.PrevName, this.document_text)
   }
 
   onProductInfoClicked(e: any, index: number) {
@@ -476,7 +506,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.total += this.productsDataSource[i].TotalPrice!;
       }
     }
-    this.total+=this.addCharges
+    this.total += this.addCharges;
   }
 
   onDeleteClicked(e: any) {
@@ -672,9 +702,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onDocumentAdditionalChargesClicked(e:any){
+  onDocumentAdditionalChargesClicked(e: any) {
     //Document must be saved in order to add charges
-    if(this.documentId){
+    if (this.documentId) {
       const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
         width: '750px',
         height: '550px',
@@ -684,17 +714,17 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         viewContainerRef: this.viewContainerRef,
       });
       dialogRef.afterClosed().subscribe((confirm) => {
-        this.getDocumentData(this.documentId)
-        this.getAdditionalCharges(this.documentId)
+        this.getDocumentData(this.documentId);
+        this.getAdditionalCharges(this.documentId);
       });
-    }else{
+    } else {
       const dialog = this.dialog.open(DnAlertComponent, {
         data: {
           Title: 'Message',
           Message: this.document_must_be_saved_in_order_to_add_charges_text,
-        }})
+        },
+      });
     }
-
   }
 
   onRefreshClicked(e: any) {

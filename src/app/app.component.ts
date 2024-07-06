@@ -59,8 +59,6 @@ import { DnIconList } from './enumLists/dn-icon.list';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-
-
 export class AppComponent {
   @ViewChild('sidenav') sidenav: MatSidenav;
   title = 'DataNexApp';
@@ -112,7 +110,6 @@ export class AppComponent {
   menuItems: MenuItemDto[] = Navigation.menu;
   selectedTab = new FormControl(0);
 
-
   getMenuItemsForTabs() {
     this.menuItems.forEach((menuItem) => {
       this.menuItemsArray.push(menuItem);
@@ -159,29 +156,32 @@ export class AppComponent {
   checkAndAddTab(data: RoutesRecognized) {
     let comp = data.state.root.firstChild?.component;
     let webAppBase = WebAppBase;
-    let tabItem = this.menuItemsArray.find(
-      (x) =>
-        x.Path == data.state.root.firstChild?.routeConfig?.path &&
-        x.Id == this.selectedMenuItem
-    );
-    let tabItemName = tabItem ? tabItem.Name : '';
+debugger
+
     if (this.isMenuItem || this.isNavBarItem) {
+      let tabItem = this.menuItemsArray.find(
+        (x:any) =>x.Path == data.state.root.firstChild?.routeConfig?.path &&
+          x.Id == this.selectedMenuItem
+      );
+      let tabItemName = tabItem ? tabItem.Name : '';
+
       this.tabsService.deactivateTabs();
       if (this.tabs.find((tab) => tab.Name == tabItemName) == null) {
         let tab = new AppTabDto();
         tab.Id = Guid.create();
         tab.Name = tabItemName;
+        tab.PrevName = tabItemName;
         tab.Component = comp;
         tab.Key = tabItemName;
         tab.Active = true;
         tab.Hint = tabItemName;
+        tab.OriginId = this.selectedMenuItem
         tab.Route = data.state.root.firstChild?.routeConfig;
         this.tabs.push(tab);
         this.selectedTab.setValue(this.tabs.length - 1);
       } else {
         let tabToAcivate = this.tabs.find((tab) => tab.Name == tabItemName);
         let index = 0;
-
         if (tabToAcivate) {
           index = this.tabs.indexOf(tabToAcivate!);
           tabToAcivate.Active = true;
@@ -190,12 +190,13 @@ export class AppComponent {
       }
       this.isMenuItem = false;
       this.isNavBarItem = false;
-    } else if (this.isMenuItem == false) {
+    }
+     else if (!this.isMenuItem && !this.isNavBarItem) {
       let tab = this.tabs.find((tab) => tab.Active == true);
-      tab!.Name = tabItemName;
+     // tab!.Name = "";
       tab!.Component = comp;
-      tab!.Key = tabItemName;
-      tab.Hint = tabItemName;
+      // tab!.Key = tabItemName;
+      // tab.Hint = tabItemName;
       tab!.Route = data.state.root.firstChild?.routeConfig;
     } else {
     }
