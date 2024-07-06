@@ -1,0 +1,29 @@
+.grid{
+  display: grid;
+  grid-template-areas:
+  "a b c"
+  "d e f"
+  ;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap:2 rem;
+}
+
+
+
+
+
+.location-tag {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -1;
+}

@@ -23,6 +23,7 @@ import { ConnectorReceiveTransferComponent } from './pages/connector/connector-r
 import { ConnectorReceiveTransferEditComponent } from './pages/connector/connector-receive-transfer-edit/connector-receive-transfer-edit.component';
 import { CustomersListComponent } from './pages/components/sales/customers-list/customers-list.component';
 import { WarehousesListComponent } from './pages/inventory/warehouses-list/warehouses-list.component';
+import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
 
 export const routes: Routes = [
   {
@@ -144,6 +145,11 @@ export const routes: Routes = [
   {
     path:'warehouses-list',
     component:WarehousesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'sales-reports',
+    component:SalesReportsComponent,
     canActivate:[authGuard]
   }
 

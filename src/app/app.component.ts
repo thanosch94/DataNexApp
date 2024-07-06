@@ -59,6 +59,8 @@ import { DnIconList } from './enumLists/dn-icon.list';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
+
+
 export class AppComponent {
   @ViewChild('sidenav') sidenav: MatSidenav;
   title = 'DataNexApp';
@@ -109,6 +111,7 @@ export class AppComponent {
   }
   menuItems: MenuItemDto[] = Navigation.menu;
   selectedTab = new FormControl(0);
+
 
   getMenuItemsForTabs() {
     this.menuItems.forEach((menuItem) => {
