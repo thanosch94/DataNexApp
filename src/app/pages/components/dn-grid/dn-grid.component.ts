@@ -130,7 +130,6 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    //1 second needed to render html else paginator and sort are undefined
   }
 
   ngAfterViewInit(): void {}

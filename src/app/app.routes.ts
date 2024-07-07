@@ -20,10 +20,11 @@ import { ConnectorReceiveTransferEditComponent } from './pages/connector/connect
 import { CustomersListComponent } from './pages/sales/customers-list/customers-list.component';
 import { WarehousesListComponent } from './pages/inventory/warehouses-list/warehouses-list.component';
 import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
-import { SuppliersComponent } from './pages/purchasing/suppliers/suppliers.component';
+import { SuppliersComponent } from './pages/purchasing/suppliers-list/suppliers-list.component';
 import { AdditionalChargesListComponent } from './pages/configuration/additional-charges-list/additional-charges-list.component';
 import { DocumentTypesComponent } from './pages/configuration/document-types/document-types.component';
 import { StatusesListComponent } from './pages/configuration/statuses-list/statuses-list.component';
+import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier-edit.component';
 
 export const routes: Routes = [
   {
@@ -155,6 +156,11 @@ export const routes: Routes = [
   {
     path:'suppliers-list',
     component:SuppliersComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'supplier-edit',
+    component:SupplierEditComponent,
     canActivate:[authGuard]
   }
 

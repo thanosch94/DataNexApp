@@ -1,0 +1,39 @@
+.form{
+  margin:2%;
+  display:flex;
+}
+
+.info-categories{
+  margin-bottom:3%
+}
+
+.basic-info-contact, .invoice-info{
+  width:50%;
+}
+
+.addresses{
+  width:50%;
+}
+
+::ng-deep .green-snackbar .mdc-snackbar__surface {
+  background-color:#1b9e1b!important;
+  color: white;
+}
+
+.name{
+  width:90%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.phone1, .email, .address, .vat-number,.city, .country{
+  width:40%;
+  margin-right: 5%;
+}
+
+.phone2, .region, .postal-code, .tax-office{
+  width:40%;
+  margin-left: 5%;
+}
+
+

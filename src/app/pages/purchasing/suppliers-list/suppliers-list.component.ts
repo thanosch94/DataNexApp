@@ -1,4 +1,4 @@
-import { SuppliersViewModel } from './../../../view-models/suppliers.viewmodel';
+import { SuppliersViewModel } from '../../../view-models/suppliers.viewmodel';
 import { Component, ViewChild } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
@@ -12,13 +12,15 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { SupplierDto } from '../../../dto/supplier.dto';
+import { Router } from '@angular/router';
+import { WebAppBase } from '../../../base/web-app-base';
 
 @Component({
-  selector: 'app-suppliers',
+  selector: 'app-suppliers-list',
   standalone: true,
   imports: [DnToolbarComponent, DnGridComponent],
-  templateUrl: './suppliers.component.html',
-  styleUrl: './suppliers.component.css',
+  templateUrl: './suppliers-list.component.html',
+  styleUrl: './suppliers-list.component.css',
 })
 export class SuppliersComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -33,7 +35,8 @@ export class SuppliersComponent {
     private auth: AuthService,
     private tabsService: TabsService,
     private _snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router:Router
   ) {
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
 
@@ -108,7 +111,8 @@ export class SuppliersComponent {
   }
 
   onInsertClicked(e: any) {
-    this.suppliersGrid.add(e);
+    // this.suppliersGrid.add(e);
+    this.router.navigate(["supplier-edit"])
   }
 
   onSupplierSaving(data: SupplierDto) {
@@ -171,6 +175,10 @@ export class SuppliersComponent {
         });
       },
     });
+  }
+  onSupplierRowEditing(data:any){
+    WebAppBase.data = data.Id
+    this.router.navigate(["supplier-edit"])
   }
 
   onSupplierStopEditing(e: any) {
