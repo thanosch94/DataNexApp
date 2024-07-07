@@ -11,16 +11,16 @@ import {
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { BrandDto } from '../../dto/brand.dto';
-import { AuthService } from '../../services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
+import { BrandDto } from '../../../dto/brand.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BrandsViewModel } from '../../view-models/brands.viewmodel';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { NewItemComponent } from '../components/new-item/new-item.component';
-import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../../services/auth.service';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { NewItemComponent } from '../../components/new-item/new-item.component';
 
 @Component({
   selector: 'app-brands-list',

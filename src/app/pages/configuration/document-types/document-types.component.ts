@@ -7,20 +7,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
-import { DocumentTypeDto } from '../../dto/document-type.dto';
-import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TabsService } from '../../services/tabs.service';
-import { Router } from '@angular/router';
-import { DnColumnDto } from '../../dto/dn-column.dto';
-import { DocumentTypeGroupEnumList } from '../../enumLists/document-type-group.enumlist';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
+
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { DnColumnDto } from '../../../dto/dn-column.dto';
+import { DocumentTypeDto } from '../../../dto/document-type.dto';
+import { DocumentTypeGroupEnumList } from '../../../enumLists/document-type-group.enumlist';
+import { AuthService } from '../../../services/auth.service';
+import { TabsService } from '../../../services/tabs.service';
+import { DocumentTypesViewModel } from '../../../view-models/document-types.viewmodel';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-document-types',

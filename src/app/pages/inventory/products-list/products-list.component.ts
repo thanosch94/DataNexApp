@@ -1,4 +1,3 @@
-import { AuthService } from './../../services/auth.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,15 +12,18 @@ import {
   MatTableModule,
 } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { ProductsViewModel } from '../../view-models/products.viewmodel';
-import { WebAppBase } from '../../base/web-app-base';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { ProductDto } from '../../dto/product.dto';
+
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ProductsViewModel } from '../../../view-models/products.viewmodel';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { ProductDto } from '../../../dto/product.dto';
+import { WebAppBase } from '../../../base/web-app-base';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-products-list',

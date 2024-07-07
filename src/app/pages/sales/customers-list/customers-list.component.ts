@@ -19,13 +19,13 @@ import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { WebAppBase } from '../../../../base/web-app-base';
-import { CustomerDto } from '../../../../dto/customer.dto';
-import { AuthService } from '../../../../services/auth.service';
-import { CustomersViewModel } from '../../../../view-models/customers.viewmodel';
-import { DeleteConfirmComponent } from '../../delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../../dn-alert/dn-alert.component';
-import { DnToolbarComponent } from '../../dn-toolbar/dn-toolbar.component';
+import { WebAppBase } from '../../../base/web-app-base';
+import { CustomerDto } from '../../../dto/customer.dto';
+import { AuthService } from '../../../services/auth.service';
+import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-customers-list',

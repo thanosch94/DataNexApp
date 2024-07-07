@@ -10,11 +10,11 @@ import { faInfo } from '@fortawesome/free-solid-svg-icons';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { faList } from '@fortawesome/free-solid-svg-icons';
 import { faRectangleList } from '@fortawesome/free-solid-svg-icons';
-import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
+import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
 import { ProductEditComponent } from '../product-edit/product-edit.component';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { ListWithFiltersComponent } from '../list-with-filters/list-with-filters.component';
-import { SalesViews } from '../../enums/sales-views.enum';
+import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
+import { SalesViews } from '../../../enums/sales-views.enum';
 
 @Component({
   selector: 'product-options',

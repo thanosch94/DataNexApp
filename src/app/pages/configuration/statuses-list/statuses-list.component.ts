@@ -1,26 +1,26 @@
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
 import {
   MatTable,
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table';
-import { StatusDto } from '../../dto/status.dto';
-import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { NewItemComponent } from '../components/new-item/new-item.component';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { StatusDto } from '../../../dto/status.dto';
+import { AuthService } from '../../../services/auth.service';
+import { StatusesViewModel } from '../../../view-models/statuses.viewmodel';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { NewItemComponent } from '../../components/new-item/new-item.component';
 
 @Component({
   selector: 'app-statuses-list',

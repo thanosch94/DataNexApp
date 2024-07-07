@@ -1,6 +1,4 @@
-import { BrandsViewModel } from './../../view-models/brands.viewmodel';
-import { ProductBarcodeDto } from './../../dto/product-barcode.dto';
-import { ProductSizesViewModel } from './../../view-models/product-sizes.viewmodel';
+
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
@@ -24,8 +22,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { ProductDto } from '../../dto/product.dto';
-import { ProductsViewModel } from '../../view-models/products.viewmodel';
+
 import { Router } from '@angular/router';
 import {
   MAT_DIALOG_DATA,
@@ -34,7 +31,6 @@ import {
   MatDialogModule,
 } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { WebAppBase } from '../../base/web-app-base';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
 import { map, startWith, take } from 'rxjs/operators';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
@@ -44,18 +40,25 @@ import {
   MatTableDataSource,
   MatTableModule,
 } from '@angular/material/table';
-import { ProductBarcodesViewModel } from '../../view-models/product-barcodes.viewmodel';
-import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
-import { Observable } from 'rxjs';
-import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatTabsModule } from '@angular/material/tabs';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { TabsService } from '../../services/tabs.service';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
 import { Guid } from 'guid-typescript';
-import { BrandDto } from '../../dto/brand.dto';
+import { Observable } from 'rxjs';
+import { WebAppBase } from '../../../base/web-app-base';
+import { BrandDto } from '../../../dto/brand.dto';
+import { ProductBarcodeDto } from '../../../dto/product-barcode.dto';
+import { ProductSizeDto } from '../../../dto/product-size.dto';
+import { ProductDto } from '../../../dto/product.dto';
+import { AuthService } from '../../../services/auth.service';
+import { TabsService } from '../../../services/tabs.service';
+import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
+import { ProductBarcodesViewModel } from '../../../view-models/product-barcodes.viewmodel';
+import { ProductSizesViewModel } from '../../../view-models/product-sizes.viewmodel';
+import { ProductsViewModel } from '../../../view-models/products.viewmodel';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+
 
 @Component({
   selector: 'product-edit',

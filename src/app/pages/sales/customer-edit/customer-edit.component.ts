@@ -1,22 +1,26 @@
-import { TabsService } from './../../services/tabs.service';
-import { DeleteConfirmComponent } from './../components/delete-confirm/delete-confirm.component';
+
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { CustomersViewModel } from './../../view-models/customers.viewmodel';
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
-import { CustomerDto } from '../../dto/customer.dto';
-import { WebAppBase } from '../../base/web-app-base';
+
 import { FormsModule } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
+import { WebAppBase } from '../../../base/web-app-base';
+import { CustomerDto } from '../../../dto/customer.dto';
+import { AuthService } from '../../../services/auth.service';
+import { TabsService } from '../../../services/tabs.service';
+import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
+import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
+import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+
 
 @Component({
   selector: 'app-customer-edit',

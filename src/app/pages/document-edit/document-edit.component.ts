@@ -48,7 +48,7 @@ import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ProductOptionsComponent } from '../product-options/product-options.component';
+import { ProductOptionsComponent } from '../inventory/product-options/product-options.component';
 import { AppTabDto } from '../../dto/app-tab.dto';
 import { TabsService } from '../../services/tabs.service';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
