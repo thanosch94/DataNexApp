@@ -7,8 +7,9 @@
   (onInsertBtnClicked)="onInsertClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-
-    <dn-grid  class="margin" #suppliersGrid
+<div class="margin">
+  <dn-grid
+    #suppliersGrid
     [dataSource]="suppliersDataSource"
     [columns]="suppliersColumns"
     [canDisplaySearch]="true"
@@ -16,6 +17,6 @@
     [disableLineEditing]="true"
     (onRowDelete)="onSupplierDelete($event)"
     (onRowEditing)="onSupplierRowEditing($event)"
-    >
-
-    </dn-grid>
+  >
+  </dn-grid>
+</div>

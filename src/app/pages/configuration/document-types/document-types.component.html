@@ -6,8 +6,10 @@
   (onInsertBtnClicked)="onInsertClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-
-    <dn-grid  class="margin" #documentTypesGrid
+<div class="margin">
+  <dn-grid
+    class="margin"
+    #documentTypesGrid
     [dataSource]="documentTypesDataSource"
     [columns]="documentTypesColumns"
     [canDisplaySearch]="true"
@@ -15,6 +17,6 @@
     (onRowSaving)="onDocumentTypeSaving($event)"
     (onRowDelete)="onDocumentTypeDelete($event)"
     (onRowStopEditing)="onDocumentTypesStopEditing($event)"
-    >
-
-    </dn-grid>
+  >
+  </dn-grid>
+</div>

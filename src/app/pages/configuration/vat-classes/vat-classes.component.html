@@ -1,0 +1,21 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="vat_classes_list_title_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+    <dn-grid #vatClassesGrid
+    [dataSource]="vatClassesDataSource"
+    [columns]="vatClassesColumns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onVatClassSaving($event)"
+    (onRowDelete)="onVatClassDelete($event)"
+    (onRowStopEditing)="onVatClassStopEditing($event)"
+    >
+
+    </dn-grid>
+</div>

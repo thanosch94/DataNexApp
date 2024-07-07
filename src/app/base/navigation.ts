@@ -208,14 +208,19 @@ export class Navigation {
           Path: 'statuses-list',
         },
         {
-          Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
+          Id: Guid.parse('0a0dfaf8-9c97-4317-b961-c5954435700b'),
           Name: 'Brands',
           Path: 'brands-list',
         },
         {
-          Id: Guid.parse('41a596a4-df6b-4fb6-af29-188e3387b948'),
+          Id: Guid.parse('4b1e10e7-3f93-4257-aaed-6003bcf6cdf3'),
           Name: 'Additional Charges',
           Path: 'additional-charges-list',
+        },
+        {
+          Id: Guid.parse('a7fc9e35-0321-4742-837b-e49d262307c7'),
+          Name: 'Vat Classes',
+          Path: 'vat-classes-list',
         },
       ],
     },
