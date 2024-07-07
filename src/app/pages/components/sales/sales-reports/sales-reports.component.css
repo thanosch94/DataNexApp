@@ -1,11 +1,12 @@
 .grid{
+  margin: 2%;
   display: grid;
   grid-template-areas:
   "a b c"
   "d e f"
   ;
   grid-template-columns: 1fr 1fr 1fr;
-  gap:2 rem;
+  gap:2rem;
 }
 
 

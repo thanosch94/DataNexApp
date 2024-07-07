@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { color } from 'echarts';
 import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
+import { DnToolbarComponent } from '../../dn-toolbar/dn-toolbar.component';
 
 @Component({
   selector: 'app-sales-reports',
   standalone: true,
-  imports: [NgxEchartsModule],
+  imports: [NgxEchartsModule, DnToolbarComponent],
   providers: [
     {
       provide: NGX_ECHARTS_CONFIG,
@@ -23,6 +24,13 @@ export class SalesReportsComponent {
   avgSalePerMonth: any;
   options: any;
   option2: any;
+  sales_reports_text: any;
+
+  constructor(){
+    this.sales_reports_text = "Sales Reports"
+  }
+
+
   ngAfterViewInit() {
     this.option2 = {
       title: {
@@ -303,5 +311,8 @@ export class SalesReportsComponent {
         },
       ],
     };
+  }
+  onRefreshBtnClicked(e:any){
+
   }
 }

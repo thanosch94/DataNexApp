@@ -107,6 +107,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   document_must_be_saved_in_order_to_add_charges_text: string;
   documentGroup: any;
   documentType: any;
+  doctypeName: string;
+  statusName: any;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -200,23 +202,32 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.documentType = row['Type'];
       }
     });
+    this.documentTypesViewModel
+    .GetActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
+    .subscribe((result: any) => {
+      this.docTypes = result;
+
+
+    });
+
+    this.statusesViewModel.GetAll().subscribe((result: any) => {
+      this.statusesList = result;
+
+    });
   }
 
   ngOnInit() {
     this.getData();
+
     this.document_must_be_saved_in_order_to_add_charges_text =
       'Document must be saved first in order to add extra charges';
+
     this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
       this.barcodesLookupDatasource = result;
+
     });
-    this.documentTypesViewModel
-      .GetActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
-      .subscribe((result: any) => {
-        this.docTypes = result;
-      });
-    this.statusesViewModel.GetAll().subscribe((result: any) => {
-      this.statusesList = result;
-    });
+
+
 
     this.productsViewModel.GetAll().subscribe((result: any) => {
       this.products = result;
@@ -269,14 +280,23 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   getDocumentData(documentId: Guid) {
     this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
       this.document = result;
+
       this.nameControl.setValue(result.CustomerName);
       this.document_text =
-        this.document.DocumentTypeName +
-        '-' +
-        this.document.DocumentNumber.toString().padStart(6, '0');
+        this.document.DocumentCode
       this.tabsService.setTabName(this.document_text);
       this.ref.detectChanges();
+      let selectedDocType =  this.docTypes.find(x=>x.Id==this.document.DocumentTypeId)
+      debugger
+      if(selectedDocType){
+        this.doctypeName =selectedDocType.Abbreviation
+      }
 
+      let selectedStatus = this.statusesList.find((x:any)=>x.Id == this.document.DocumentStatusId)
+      if(selectedStatus){
+        this.statusName =selectedStatus.Name
+
+      }
       this.documentProductsViewModel
         .GetByDocumentId(documentId)
         .subscribe((result: any) => {
@@ -367,14 +387,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
   onDocTypeSelection(e: any) {
+    debugger
     let selectedDocType = this.docTypes.find(
-      (docType: DocumentTypeDto) => docType.Name == e.value
+      (docType: DocumentTypeDto) => docType.Abbreviation == e.value
     );
 
     if (selectedDocType) {
       this.selectedDocType = selectedDocType;
+      this.document.DocumentTypeId = selectedDocType.Id
     }
   }
+
+
 
   onDocStatusSelection(e: any) {
     let selectedStatus = this.statusesList.find(
@@ -383,6 +407,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
     if (selectedStatus) {
       this.selectedStatus = selectedStatus;
+      this.document.DocumentStatusId = selectedStatus.Id
     }
   }
 
@@ -395,6 +420,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           this.document.DocumentTypeId = this.selectedDocType.Id;
           this.document.DocumentStatusId = this.selectedStatus.Id;
           this.document.CustomerId = this.customer.Id;
+          this.document.DocumentTotal = this.total;
+
           this.documentsViewModel
             .InsertDto(this.document)
             .subscribe((result: any) => {
@@ -432,13 +459,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                           (x) => x.IsRowFilled == true
                         ).length
                       ) {
-                        this.document_text =
-                          this.document.DocumentTypeName +
-                          '-' +
-                          this.document.DocumentNumber.toString().padStart(
-                            6,
-                            '0'
-                          );
+                        this.document_text = this.document.DocumentCode
                         this.ref.detectChanges();
 
                         this._snackBar.open('Record inserted', '', {
@@ -451,10 +472,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               });
               //Update document with total when all products have been inserted
 
-              this.document.DocumentTotal = this.total;
-              this.documentsViewModel
-                .UpdateDto(this.document)
-                .subscribe((result: any) => {});
+
             });
         } else {
           alert('Select Customer');
@@ -521,7 +539,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
-        let productsDeleted = 0;
+        if(this.productsDataSource.length>0){
+          let productsDeleted = 0;
         this.productsDataSource.forEach((productRow) => {
           //TODO change with soft delete
           this.documentProductsViewModel
@@ -533,6 +552,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               }
             });
         });
+        }else{
+          this.deleteDocument();
+
+        }
+
       }
     });
   }
@@ -545,7 +569,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           duration: 1000,
           panelClass: 'green-snackbar',
         });
-        this.router.navigate(['documents-list']);
+        this.router.navigate(['documents-list'],{queryParams: { Group: this.documentGroup, Type: this.documentType }});
       });
   }
 

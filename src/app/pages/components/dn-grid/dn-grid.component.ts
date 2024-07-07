@@ -87,6 +87,7 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   matColumns: string[] = [];
   @Input() enableAddButton = false;
   @Input() canDisplaySearch = true;
+  @Input() disableLineEditing = false;
 
   filteredData: Observable<any[]>;
 
@@ -178,14 +179,18 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   edit(data: any, index: number) {
-    let isAnyRowItemInEditingMode = this.matDataSource.data.some(
-      (x) => x.IsEditable == true
-    );
-    if (!isAnyRowItemInEditingMode) {
-      data.IsEditable = true;
-      this.isEditable = true;
-      this.onRowEditing.emit(data);
+    //User can set disableLineEditing = true in order to disable the line editing and execute his own code (e.g. open a dialog)
+    if(!this.disableLineEditing){
+      let isAnyRowItemInEditingMode = this.matDataSource.data.some(
+        (x) => x.IsEditable == true
+      );
+      if (!isAnyRowItemInEditingMode) {
+        data.IsEditable = true;
+        this.isEditable = true;
+      }
     }
+    this.onRowEditing.emit(data);
+
   }
 
   stopEditing(data: any, index: number) {

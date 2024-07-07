@@ -32,4 +32,5 @@ export class DocumentDto {
   UserDate3?:Date;
   UserDate4?:Date;
 DocumentStatusName: any;
+  DocumentCode: string;
 }

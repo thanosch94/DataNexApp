@@ -98,7 +98,8 @@ export class DocumentsListComponent implements OnInit {
       .subscribe((result: any) => {
         if (
           this.documentType == 'SalesDocuments' ||
-          this.documentType == 'PurchaseDocuments'
+          this.documentType == 'PurchaseDocuments' ||
+          this.documentType =='InventoryAdjustments'
         ) {
           this.dataSource = new MatTableDataSource(result);
         } else if (this.documentType == 'Invoices-Receipts') {

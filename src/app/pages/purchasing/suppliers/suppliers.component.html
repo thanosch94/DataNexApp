@@ -1,0 +1,21 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [canInsert]="true"
+  [isDialog]="false"
+  [title]="suppliers_list_title_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+
+    <dn-grid  class="margin" #suppliersGrid
+    [dataSource]="suppliersDataSource"
+    [columns]="suppliersColumns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onSupplierSaving($event)"
+    (onRowDelete)="onSupplierDelete($event)"
+    (onRowStopEditing)="onSupplierStopEditing($event)"
+    >
+
+    </dn-grid>

@@ -56,6 +56,11 @@ export class Navigation {
           Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"SupplierInvoices"},
         },
         {
+          Id: Guid.parse('0aa967a4-12cb-46fd-ac6e-4d34f172ff28'),
+          Name: "Suppliers",
+          Path: 'suppliers-list',
+        },
+        {
           Id: Guid.parse('eb36e8ad-1746-4446-aaa7-15d1c1ffbb1a'),
           Name: 'Purchase Reports',
           Path: 'purchase-reports',
@@ -81,7 +86,9 @@ export class Navigation {
         {
           Id: Guid.parse('ce490dc9-2e06-40a3-9281-b29fc5c0b6f5'),
           Name: 'Inventory Adjustments',
-          Path: 'inventory-adjustments',
+          Path: 'documents-list',
+          Params: { Group: DocumentTypeGroupEnum.Inventory, Type:"InventoryAdjustments"},
+
         },
         {
           Id: Guid.parse('54c97182-cf12-48ae-8df0-f78c0a2576b2'),

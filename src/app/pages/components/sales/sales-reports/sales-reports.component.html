@@ -1,0 +1,21 @@
+
+
+<dn-toolbar
+[canRefresh]="true"
+[title]="sales_reports_text"
+(onRefreshBtnClicked)="onRefreshBtnClicked($event)"
+></dn-toolbar>
+<div class="grid">
+  <!-- <div echarts [options]="option2" style="height: 350px;"></div> -->
+  <div echarts [options]="salesByLocationOptions" style="height: 350px;"></div>
+  <div echarts [options]="orderStatusOptions" style="height: 350px;"></div>
+  <div echarts [options]="avgSalePerMonth" style="height: 350px;"></div>
+
+
+  <div echarts [options]="options" style="height: 350px;"></div>
+  <div  style="height: 350px;"></div>
+
+  <div echarts [options]="salesPerMonthOptions" style="height: 350px;"></div>
+
+
+</div>
