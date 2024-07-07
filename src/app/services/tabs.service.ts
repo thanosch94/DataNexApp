@@ -30,6 +30,43 @@ export class TabsService {
     TabsService.tabs.splice(tabIndex, 1);
   }
 
+  setActiveTabPreviousName(){
+    let activeTab = TabsService.tabs.find(
+      (x: AppTabDto) =>x.Active ==true
+    );
+    if (activeTab) {
+      let activeTabPrevName = activeTab.Name
+        activeTab.Name = activeTab.PrevName
+        activeTab!.Hint = activeTab.PrevName;
+        activeTab!.Name = activeTab.PrevName.substring(0, 15);
+        activeTab.PrevName = activeTabPrevName
+    }
+  }
+  setActiveTabName(tabName: string){
+    let activeTab = TabsService.tabs.find(
+      (x: AppTabDto) =>x.Active ==true
+    );
+
+    if (activeTab) {
+        activeTab.PrevName = activeTab.Name
+        activeTab!.Hint = tabName;
+        activeTab!.Name = tabName.substring(0, 15);
+
+    }
+  }
+
+  setActiveTabNameWithoutChangingPreviousName(tabName: string){
+    let activeTab = TabsService.tabs.find(
+      (x: AppTabDto) =>x.Active ==true
+    );
+
+    if (activeTab) {
+        activeTab!.Hint = tabName;
+        activeTab!.Name = tabName.substring(0, 15);
+
+    }
+  }
+
   setTabName(tabName: string) {
     let activeTab = TabsService.tabs.find(
       (x: AppTabDto) => x.Route.path == this.route && x.Active ==true

@@ -67,7 +67,6 @@ export class SupplierEditComponent {
           result as SupplierDto;
           this.supplier = result;
           this.supplier_text = this.supplier.Name;
-          this.tabsService.setTabName(this.supplier.Name);
         });
     } else {
       this.supplier_text = 'New Supplier';
@@ -79,6 +78,7 @@ export class SupplierEditComponent {
 
   onCloseClicked(e: any) {
     this.router.navigate(['suppliers-list']);
+    this.tabsService.setActiveTabPreviousName()
   }
 
   onSaveClicked(e: any) {
@@ -90,7 +90,7 @@ export class SupplierEditComponent {
             this.supplier =result;
             this.previousTabName = this.supplier_text.toString()
             this.supplier_text = this.supplier.Name;
-            this.tabsService.setTabNameByOldName(this.supplier_text, this.previousTabName)
+            this.tabsService.setActiveTabName(this.supplier_text)
 
             this._snackBar.open('Record updated', '', {
               duration: 1000,
@@ -105,7 +105,7 @@ export class SupplierEditComponent {
           this.supplier =result;
           this.previousTabName = this.supplier_text.toString()
           this.supplier_text = this.supplier.Name;
-          this.tabsService.setTabNameByOldName(this.supplier_text, this.previousTabName)
+          this.tabsService.setActiveTabName(this.supplier_text)
 
           this._snackBar.open('Record inserted', '', {
             duration: 1000,
@@ -144,7 +144,9 @@ export class SupplierEditComponent {
           duration: 1000,
           panelClass: 'green-snackbar',
         });
-        this.router.navigate(['suppliers-list']);
+        this.router.navigate(['suppliers-list'])
+
+        this.tabsService.setActiveTabPreviousName();
       },
       error: (err) => {
         const dialog = this.dialog.open(DnAlertComponent, {

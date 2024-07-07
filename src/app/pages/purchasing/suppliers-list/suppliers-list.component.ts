@@ -36,7 +36,7 @@ export class SuppliersComponent {
     private tabsService: TabsService,
     private _snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private router:Router
+    private router: Router
   ) {
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
 
@@ -53,6 +53,7 @@ export class SuppliersComponent {
       this.suppliersDataSource = result;
     });
   }
+
   getColumns() {
     this.suppliersColumns = [
       {
@@ -111,50 +112,8 @@ export class SuppliersComponent {
   }
 
   onInsertClicked(e: any) {
-    // this.suppliersGrid.add(e);
-    this.router.navigate(["supplier-edit"])
-  }
-
-  onSupplierSaving(data: SupplierDto) {
-    // let supplier = new SupplierDto();
-
-    // if (data.Id) {
-    //   supplier.Id = data.Id;
-    // }
-    // supplier.Name = data.Name;
-    // supplier.Address = data.Address;
-    // supplier.Region = data.Region;
-    // supplier.PostalCode = data.PostalCode;
-    // supplier.City = data.City;
-    // supplier.Country = data.Country;
-    // supplier.Phone1 = data.Phone1;
-    // supplier.Phone2 = data.Phone2;
-    // supplier.Email = data.Email;
-    // supplier.VatNumber = data.VatNumber;
-    // supplier.TaxOffice = data.TaxOffice;
-    // if (!supplier.Id) {
-    //   this.suppliersViewModel.InsertDto(supplier).subscribe((result: any) => {
-    //     this.displayNotification('Record inserted');
-    //     this.getData();
-    //   });
-    // } else {
-    //   if (data.Id)
-    //     this.suppliersViewModel.UpdateDto(supplier).subscribe({
-    //       next: (result: any) => {
-    //         this.displayNotification('Record updated');
-    //         this.getData();
-    //       },
-    //       error: (err: any) => {
-    //         const dialog = this.dialog.open(DnAlertComponent, {
-    //           data: {
-    //             Title: 'Message',
-    //             Message: err.error,
-    //           },
-    //         });
-    //         this.getData();
-    //       },
-    //     });
-    // }
+    this.router.navigate(['supplier-edit']);
+    this.tabsService.setActiveTabName('New Supplier');
   }
 
   onSupplierDelete(data: SupplierDto) {
@@ -176,13 +135,10 @@ export class SuppliersComponent {
       },
     });
   }
-  onSupplierRowEditing(data:any){
-    WebAppBase.data = data.Id
-    this.router.navigate(["supplier-edit"])
-  }
-
-  onSupplierStopEditing(e: any) {
-    this.getData();
+  onSupplierRowEditing(data: any) {
+    WebAppBase.data = data.Id;
+    this.router.navigate(['supplier-edit']);
+    this.tabsService.setActiveTabName(data.Name);
   }
 
   displayNotification(text: string) {

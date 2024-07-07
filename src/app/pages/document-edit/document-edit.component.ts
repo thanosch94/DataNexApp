@@ -427,14 +427,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             .subscribe((result: any) => {
               this.document = result;
               this.previousTabName = this.document_text.toString();
-              this.document_text =
-                this.document.DocumentTypeName +
-                '-' +
-                this.document.DocumentNumber.toString().padStart(6, '0');
-              this.tabsService.setTabNameByOldName(
-                this.document_text,
-                this.previousTabName
-              );
+              this.document_text = this.document.DocumentCode
+                this.tabsService.setActiveTabNameWithoutChangingPreviousName(this.document_text)
+
 
               //Fill in documentId to display the right data (delete button, table)
               this.documentId = this.document.Id;
@@ -499,7 +494,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       queryParams: { Group: this.documentGroup, Type: this.documentType },
     });
 
-    this.tabsService.setTabNameByOldName(activeTab!.PrevName, this.document_text)
+    this.tabsService.setActiveTabPreviousName()
   }
 
   onProductInfoClicked(e: any, index: number) {
@@ -570,6 +565,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           panelClass: 'green-snackbar',
         });
         this.router.navigate(['documents-list'],{queryParams: { Group: this.documentGroup, Type: this.documentType }});
+        this.tabsService.setActiveTabPreviousName()
+
       });
   }
 

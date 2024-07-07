@@ -87,6 +87,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
 
   onCloseClicked(e: any) {
     this.router.navigate(['customers-list']);
+    this.tabsService.setActiveTabPreviousName()
+
   }
 
   onSaveClicked(e: any) {
@@ -153,6 +155,8 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
           panelClass: 'green-snackbar',
         });
         this.router.navigate(['customers-list']);
+        this.tabsService.setActiveTabPreviousName()
+
       },
       error: (err) => {
         const dialog = this.dialog.open(DnAlertComponent, {
