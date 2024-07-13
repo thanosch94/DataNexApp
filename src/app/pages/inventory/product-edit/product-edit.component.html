@@ -1,15 +1,15 @@
 <dn-toolbar
-[canDelete]="true"
-[canExit]="true"
-[canRefresh]="productId?true:false"
-[canSave]="true"
-[isDialog]="isDialog"
-[title]="product_text"
-[entityId]="product.Id"
-(onCloseBtnClicked)="onCloseClicked($event)"
-(onDeleteBtnClicked)="onDeleteClicked($event)"
-(onSaveBtnClicked)="onSaveClicked($event)"
-(onRefreshBtnClicked)="onRefreshClicked($event)"
+  [canDelete]="true"
+  [canExit]="true"
+  [canRefresh]="productId ? true : false"
+  [canSave]="true"
+  [isDialog]="isDialog"
+  [title]="product_text"
+  [entityId]="product.Id"
+  (onCloseBtnClicked)="onCloseClicked($event)"
+  (onDeleteBtnClicked)="onDeleteClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <form class="example-form">
   <mat-tab-group>
@@ -46,8 +46,6 @@
               #auto="matAutocomplete"
               (optionSelected)="onProductBrandSelection($event.option.value)"
             >
-
-
               @for (brand of filteredBrands| async; track brand) {
 
               <mat-option [value]="brand.Name">{{ brand.Name }}</mat-option>
@@ -56,16 +54,20 @@
             <!-- <input matInput name="brand" [(ngModel)]="product.BrandId" /> -->
           </mat-form-field>
           <mat-form-field class="tab1-grid-i-price">
-            <mat-label>Price</mat-label>
-            <input matInput name="price" [(ngModel)]="product.Price" />
+            <mat-label>Retail Price</mat-label>
+            <input
+              matInput
+              name="retailPrice"
+              [(ngModel)]="product.RetailPrice"
+            />
           </mat-form-field>
           <mat-form-field class="tab1-grid-j-discount">
-            <mat-label>Discount</mat-label>
+            <mat-label>Wholesale Price</mat-label>
             <input
-              name="discount"
               matInput
+              name="wholesalePrice"
               type="text"
-              matInput
+              [(ngModel)]="product.WholesalePrice"
             />
           </mat-form-field>
           <mat-form-field class="tab1-grid-m-description">
@@ -83,21 +85,53 @@
             <mat-label>Image Path</mat-label>
             <input matInput name="image" [(ngModel)]="product.ImagePath" />
           </mat-form-field>
+
+
+
+
+          <mat-form-field class="tab1-grid-g-vat-class">
+        <mat-label>Vat Class</mat-label>
+
+          <input
+            matInput
+            type="text"
+            matInput
+            name="vatClass"
+            [matAutocomplete]="vatClass"
+            [ngModel]="vatClassName"
+          />
+          <mat-autocomplete #vatClass="matAutocomplete"
+          (optionSelected)="onVatClassSelectionChanged($event)"
+          [displayWith]="displayFn.bind(this)"
+          >
+          <mat-option
+          *ngFor="let vatClass of vatClasses"
+          [value]="vatClass"
+        >
+          {{ vatClass.Name }}
+        </mat-option>
+          </mat-autocomplete>
+
+</mat-form-field>
+
+
           <div class="tab1-grid-d-image">
-            <img *ngIf="product.ImagePath"
+            <img
+              *ngIf="product.ImagePath"
               class="image"
               [src]="product.ImagePath"
               name="images"
-
             />
-            <img *ngIf="!product.ImagePath && product.ImagePath!=''"
+            <img
+              *ngIf="!product.ImagePath && product.ImagePath != ''"
               class="image"
-              src={{noImgPath}} width="240" height="240"
+              src="{{ noImgPath }}"
+              width="240"
+              height="240"
               name="images"
               width="370"
               height="370"
             />
-
           </div>
         </div>
       </div>
@@ -187,9 +221,13 @@
                   mat-icon-button
                   class="iconbutton"
                   color="primary"
-                  (click)="row.IsEditable?stopEditingProductBarcodes(row, i):deleteProductBarcode(row, i)"
+                  (click)="
+                    row.IsEditable
+                      ? stopEditingProductBarcodes(row, i)
+                      : deleteProductBarcode(row, i)
+                  "
                 >
-                <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
+                  <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
                   <mat-icon *ngIf="row.IsEditable">close</mat-icon>
                 </button>
               </td>
@@ -216,4 +254,3 @@
     </mat-tab>
   </mat-tab-group>
 </form>
-

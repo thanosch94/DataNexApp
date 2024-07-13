@@ -149,6 +149,12 @@ margin:1%
   gap:2rem;
   width:90%;
 }
+
+.tab1-grid-g-vat-class{
+  grid-area: g;
+  gap:2rem;
+  width:90%;
+}
 .tab1-grid-d-image{
   display: flex;
   align-items: center;

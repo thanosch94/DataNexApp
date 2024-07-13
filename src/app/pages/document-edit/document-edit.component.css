@@ -138,7 +138,7 @@ mat-form-field{
   gap:2rem;
 }
 
-.grid-c-customer{
+.grid-c-customer-supplier{
   grid-area: c;
   gap:2rem;
   width:100%;

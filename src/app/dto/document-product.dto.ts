@@ -8,6 +8,8 @@ export class DocumentProductDto {
   ProductSizeId:Guid;
   SerialNumber?:number;
   Price?:number;
+  VatAmount?:number;
+  TotalVatAmount:number;
 
   Sku:string;
   DocumentDateString:string;
@@ -21,4 +23,6 @@ export class DocumentProductDto {
   IsRowFilled:boolean =false;
   ProductNameCopy?: string;
   BarcodeCopy?: string;
+  VatClassRate: any;
+  VatClassId: any;
 }

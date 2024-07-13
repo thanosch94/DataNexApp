@@ -6,7 +6,9 @@ export class ProductDto {
   Name: string;
   Description?: string;
   ImagePath?: string;
-  Price?: number;
+  RetailPrice?: number;
+  WholesalePrice?: number;
+  VatClassId: Guid;
   BrandId: Guid;
   BrandName: string;
 }

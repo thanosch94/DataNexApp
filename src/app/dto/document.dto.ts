@@ -33,4 +33,5 @@ export class DocumentDto {
   UserDate4?:Date;
 DocumentStatusName: any;
   DocumentCode: string;
+SupplierId: any;
 }

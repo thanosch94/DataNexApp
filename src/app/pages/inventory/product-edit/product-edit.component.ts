@@ -58,6 +58,7 @@ import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-c
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { VatClassesViewModel } from '../../../view-models/vat-classes.viewmodel';
 
 
 @Component({
@@ -123,6 +124,9 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   brands: any;
   filteredBrands: Observable<BrandDto[]>;
   previousTabName: string;
+  vatClassName: any;
+  vatClassesViewModel: VatClassesViewModel;
+  vatClasses: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -152,6 +156,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.http,
       this.auth
     );
+    this.vatClassesViewModel =new VatClassesViewModel(this.http, this.auth)
     //if(isDevMode()){
     //  this.noImgPath = "../assets/images/no-img.jpg"
     //}else{
@@ -164,7 +169,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.getData();
   }
 
-  getData() {
+  async getData() {
+    await this.vatClassesViewModel.GetAll().subscribe((result:any)=>{
+      this.vatClasses = result
+      debugger
+    })
     this.brandsViewModel.GetAll().subscribe((result: any) => {
       this.brands = result as Array<BrandDto>;
 
@@ -179,6 +188,8 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         .subscribe((result: any) => {
           result as ProductDto;
           this.product = result;
+          let vatClass = this.vatClasses.find((x:any)=>x.Id==this.product.VatClassId)
+          this.vatClassName = vatClass.Name
           this.product_text = this.product.Sku + ' - ' + this.product.Name;
 
           this.tabsService.setTabName(
@@ -446,4 +457,23 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   onRefreshClicked(e: any) {
     this.getData();
   }
+
+  onVatClassSelectionChanged(data: any) {
+    debugger
+    this.vatClassName = data.Name
+  }
+
+
+  displayFn(data: any): string {
+debugger
+    if (data?.Name) {
+      if(this.product){
+        this.product.VatClassId = data.Id
+      }
+      return data.Name;
+    } else {
+      return data;
+    }
+  }
+
 }

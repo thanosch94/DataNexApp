@@ -52,7 +52,7 @@ export class ProductsListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild('productsTable') productsTable: MatTable<ProductDto>;
 
-  displayedColumns: string[] = ['Sku', 'Name', 'Price', 'Brand', 'buttons'];
+  displayedColumns: string[] = ['Sku', 'Name', 'RetailPrice', 'Brand', 'buttons'];
   productsViewModel: ProductsViewModel;
   products_list_text: string;
 
