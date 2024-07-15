@@ -33,9 +33,15 @@ export class ProductBarcodesViewModel {
     });
   }
 
+  public GetByBarcode(barcode: string) {
+
+    return this.http.get<ProductBarcodeDto>(this.service + 'ProductBarcodes/getbybarcode/' + barcode, {
+      headers: this.headers,
+    });
+  }
   public GetByProductId(productid: Guid) {
 
-    return this.http.get(this.service + 'ProductBarcodes/getbyproductid/' + productid, {
+    return this.http.get<ProductBarcodeDto[]>(this.service + 'ProductBarcodes/getbyproductid/' + productid, {
       headers: this.headers,
     });
   }

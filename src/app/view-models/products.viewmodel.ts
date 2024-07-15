@@ -25,7 +25,7 @@ export class ProductsViewModel {
     });
   }
   public GetBySku(sku: string) {
-    return this.http.get(this.service + 'Products/getbysku/' + sku, {
+    return this.http.get<ProductDto>(this.service + 'Products/getbysku/' + sku, {
       headers: this.headers,
     });
   }

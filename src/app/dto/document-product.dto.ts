@@ -5,19 +5,19 @@ export class DocumentProductDto {
   DocumentId:Guid;
   ProductId:Guid;
   Quantity?:number;
-  ProductSizeId:Guid;
+  SizeId:Guid;
   SerialNumber?:number;
-  Price?:number;
+  ProductRetailPrice?:number;
   VatAmount?:number;
   TotalVatAmount:number;
 
-  Sku:string;
+  Sku?:string;
   DocumentDateString:string;
   DocumentDate:Date|string;
   ProductName?:string;
   DocumentNumber:string;
   DocumentCode:string;
-  SizeName:string;
+  SizeName?:string;
   Barcode?: string;
   TotalPrice?:number;
   IsRowFilled:boolean =false;

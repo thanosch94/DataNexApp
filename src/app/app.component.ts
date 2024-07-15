@@ -193,12 +193,10 @@ debugger
     }
      else if (!this.isMenuItem && !this.isNavBarItem) {
       let tab = this.tabs.find((tab) => tab.Active == true);
-     // tab!.Name = "";
-      tab!.Component = comp;
-      // tab!.Key = tabItemName;
-      // tab.Hint = tabItemName;
-      tab!.Route = data.state.root.firstChild?.routeConfig;
-    } else {
+      if(tab){
+        tab!.Component = comp;
+        tab!.Route = data.state.root.firstChild?.routeConfig;
+      }
     }
   }
 

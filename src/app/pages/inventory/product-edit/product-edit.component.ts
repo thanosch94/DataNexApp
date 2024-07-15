@@ -59,6 +59,7 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { VatClassesViewModel } from '../../../view-models/vat-classes.viewmodel';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 
 @Component({
@@ -135,6 +136,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private tabsService: TabsService,
     private ref: ChangeDetectorRef,
+    private sanitizer:DomSanitizer,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
@@ -219,6 +221,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
         this.barcodesDataSource = new MatTableDataSource(result);
       });
   }
+
+  sanitizeUrl(url: string): SafeUrl {
+    return this.sanitizer.bypassSecurityTrustUrl(url);
+  }
+
   private sizefilter(value: string): ProductSizeDto[] {
     const filterValue = value.toLowerCase();
     return this.productsSizes.filter((size: ProductSizeDto) =>

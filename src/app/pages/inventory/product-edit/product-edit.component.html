@@ -119,7 +119,7 @@
             <img
               *ngIf="product.ImagePath"
               class="image"
-              [src]="product.ImagePath"
+              [src]="sanitizeUrl(product.ImagePath)"
               name="images"
             />
             <img

@@ -4,8 +4,12 @@ export class ProductBarcodeDto {
   Id:Guid;
   ProductId:Guid;
   SizeId:Guid;
-  Barcode:number;
+  Barcode:string;
   SizeName?:string;
+  ProductName?:string;
   IsEditable?:boolean;
-  Price?:number;
+  ProductRetailPrice?:number;
+  Sku?:string;
+  VatClassId?: Guid;
 }
+

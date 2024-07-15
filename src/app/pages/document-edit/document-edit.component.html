@@ -438,7 +438,7 @@
               matInput
               class="white-input"
               (change)="onPriceChange($event, i)"
-              [(ngModel)]="productsDataSource[i].Price"
+              [(ngModel)]="productsDataSource[i].ProductRetailPrice"
             />
           </mat-form-field>
         </td>
@@ -447,7 +447,7 @@
       <ng-container *ngIf="documentId" matColumnDef="Price">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
         <td style="width: 100px" mat-cell *matCellDef="let row; let i = index">
-          {{ productsDataSource[i].Price + " " + currency }}
+          {{ productsDataSource[i].ProductRetailPrice + " " + currency }}
         </td>
       </ng-container>
 

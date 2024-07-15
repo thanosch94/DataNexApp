@@ -2,6 +2,8 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Guid } from "guid-typescript";
 import { DocumentProductDto } from "../dto/document-product.dto";
 import { AuthService } from "../services/auth.service";
+import { ProductDto } from "../dto/product.dto";
+import { ProductBarcodeDto } from "../dto/product-barcode.dto";
 
 export class DocumentProductsViewModel {
   service: string;
@@ -38,12 +40,7 @@ export class DocumentProductsViewModel {
     });
   }
 
-  public GetByBarcode(barcode: string) {
 
-    return this.http.get(this.service + 'DocumentProducts/getbybarcode/' + barcode, {
-      headers: this.headers,
-    });
-  }
 
   public InsertDto(documentProduct: DocumentProductDto) {
 
