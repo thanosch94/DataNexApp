@@ -35,3 +35,39 @@
   background: white!important;
 }
 
+.mdc-data-table__cell, .mdc-data-table__header-cell{
+  padding: 0!important;
+}
+
+td{
+  height: 10%!important;
+}
+
+.mat-mdc-form-field{
+}
+::ng-deep .mat-mdc-form-field-infix{
+  width: 100%!important;
+}
+::ng-deep .mat-mdc-table{
+  white-space:pre!important;
+}
+
+.display-border{
+  border:1px solid rgb(69, 69, 69);
+}
+::ng-deep .mat-mdc-table {
+  border-collapse: collapse;
+}
+
+.mat-mdc-cell{
+  text-align: center;
+}
+
+ .table::ng-deep .ng-star-inserted{
+    margin: 0!important;
+
+}
+
+.table ::ng-deep .mdc-line-ripple {
+  display: none
+}

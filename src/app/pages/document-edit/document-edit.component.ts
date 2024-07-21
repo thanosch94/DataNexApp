@@ -62,6 +62,8 @@ import { Navigation } from '../../base/navigation';
 import { VatClassDto } from '../../dto/vat-class.dto';
 import { SupplierDto } from '../../dto/supplier.dto';
 import { SuppliersViewModel } from '../../view-models/suppliers.viewmodel';
+import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
+import { DnColumnDto } from '../../dto/dn-column.dto';
 
 @Component({
   selector: 'app-document-edit',
@@ -87,6 +89,7 @@ import { SuppliersViewModel } from '../../view-models/suppliers.viewmodel';
     DnToolbarComponent,
     MatDialogModule,
     MatTooltipModule,
+    DnGridComponent,
   ],
   providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',
@@ -117,6 +120,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   supplier: string = '';
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
+  columns: DnColumnDto[] = [];
+  productSizesDataSource: any[];
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -158,6 +163,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   lineProduct = new ProductDto();
   products: ProductDto[];
   sizeControlArray = new Array<FormControl>();
+  skuControlArray = new Array<FormControl>();
   filteredSizes: Observable<ProductBarcodeDto[]>;
   filteredSizesArray: Observable<ProductBarcodeDto[]>[];
   productsSizes = new Array<ProductBarcodeDto>();
@@ -216,17 +222,20 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.getData();
 
     this.document_must_be_saved_in_order_to_add_charges_text =
       'Document must be saved first in order to add extra charges';
 
     this.productsViewModel.GetAll().subscribe((result: any) => {
       this.products = result;
-      this.filteredProducts = this.skuControl.valueChanges.pipe(
-        startWith(''),
-        map((value: string | null) => this._skufilter(value || ''))
-      );
+      this.getData();
+
+      this.getColumns();
+
+      // this.filteredProducts = this.skuControl.valueChanges.pipe(
+      //   startWith(''),
+      //   map((value: string | null) => this._skufilter(value || ''))
+      // );
     });
 
     this.filteredNames = this.nameControl.valueChanges.pipe(
@@ -259,6 +268,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       this.statusesList = result;
     });
   }
+
   getData() {
     if (this.documentId) {
       this.getDocumentData(this.documentId);
@@ -274,16 +284,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.document.DocumentDateTime = new Date();
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
+      product.IsEditable = true
       this.productsDataSource.push(product);
-      this.sizeControlArray.push(new FormControl(''));
-      this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
-        startWith(''),
-        map((value: string | null) => this.sizefilter(value || ''))
-      );
-      this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
-      this.filteredSizesArray.push(this.filteredSizes);
+      //this.sizeControlArray.push(new FormControl(''));
+      // this.skuControlArray.push(new FormControl(''));
+      // this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
+      //   startWith(''),
+      //   map((value: string | null) => this.sizefilter(value || ''))
+      // );
+      // this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
+      // this.filteredSizesArray.push(this.filteredSizes);
 
-      this.getFilteredSizes(i);
+      //this.getFilteredSizes(i);
     }
   }
 
@@ -411,37 +423,35 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  GetProductVatAmount(id: Guid, index: number) {
-    if (!this.productsDataSource[index].VatClassRate) {
+  GetProductVatAmount(id: Guid, data: DocumentProductDto) {
+    if (!data.VatClassRate) {
       this.vatClassesViewModel.GetById(id).subscribe((result: any) => {
         let vatClass = result as VatClassDto;
-        this.productsDataSource[index].VatAmount =
+        data.VatAmount =
           Math.round(
-            ((this.productsDataSource[index].ProductRetailPrice as number) -
-              (this.productsDataSource[index].ProductRetailPrice as number) /
-                (vatClass.Rate / 100 + 1)) *
+            ((data.ProductRetailPrice as number) -
+              (data.ProductRetailPrice as number) / (vatClass.Rate / 100 + 1)) *
               100
           ) / 100;
 
-        this.productsDataSource[index].VatClassRate = result.Rate;
-        this.productsDataSource[index].VatClassId = result.Id;
-        this.GetTotalVatAmount(index);
+        data.VatClassRate = result.Rate;
+        data.VatClassId = result.Id;
+        this.GetTotalVatAmount(data);
       });
     } else {
-      this.productsDataSource[index].VatAmount =
+      data.VatAmount =
         Math.round(
-          ((this.productsDataSource[index].ProductRetailPrice as number) -
-            (this.productsDataSource[index].ProductRetailPrice as number) /
-              (this.productsDataSource[index].VatClassRate / 100 + 1)) *
+          ((data.ProductRetailPrice as number) -
+            (data.ProductRetailPrice as number) /
+              (data.VatClassRate / 100 + 1)) *
             100
         ) / 100;
     }
   }
 
-  GetTotalVatAmount(index: number) {
-    this.productsDataSource[index].TotalVatAmount =
-      (this.productsDataSource[index].VatAmount as number) *
-      (this.productsDataSource[index].Quantity as number);
+  GetTotalVatAmount(data: DocumentProductDto) {
+    data.TotalVatAmount =
+      (data.VatAmount as number) * (data.Quantity as number);
   }
 
   onDocTypeSelection(e: any) {
@@ -618,70 +628,126 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  onBarcodeInput(e: any, index: number) {
+  // onBarcodeInput(e: any, index: number) {
+  //   //If product exists in the table
+  //   let exists = this.checkIfProductExistsInTheTable(
+  //     index,
+  //     this.productsDataSource[index].Barcode!
+  //   );
+  //   if (exists) {
+  //     this.addQuantityToExistingLine(index);
+  //   } else {
+  //     //If product doesn't exist in the table
+  //     if (this.barcodesLookupDatasource.includes(e.target.value)) {
+  //       this.productBarcodesViewModel
+  //         .GetByBarcode(e.target.value)
+  //         .subscribe((result: ProductBarcodeDto) => {
+  //           Object.assign(this.productsDataSource[index], result);
+
+  //           //this.GetProductVatAmount(result.VatClassId!, index);
+  //           this.productsDataSource[index].SerialNumber = index + 1;
+  //           this.productsDataSource[index].TotalPrice =
+  //             result.ProductRetailPrice;
+  //           this.productsDataSource[index].Quantity = 1;
+  //           this.productsDataSource[index].ProductNameCopy = result.ProductName;
+  //           this.productsDataSource[index].BarcodeCopy = e.target.value;
+  //           this.productsDataSource[index].IsRowFilled = true;
+
+  //           let cellsArray = this.cells.toArray();
+  //           cellsArray[index + 1].nativeElement.focus();
+  //           this.calculateDocumentTotal();
+  //         });
+  //     } else if (
+  //       this.productsDataSource[index].SerialNumber! >= 0 &&
+  //       this.productsDataSource[index].BarcodeCopy != e.target.value
+  //     ) {
+  //       this.productsDataSource[index].Barcode =
+  //         this.productsDataSource[index].BarcodeCopy;
+  //     }
+  //   }
+  // }
+
+  onBarcodeInput(data: DocumentProductDto, productsDataSource: DocumentProductDto[]) {
     //If product exists in the table
     let exists = this.checkIfProductExistsInTheTable(
-      index,
-      this.productsDataSource[index].Barcode!
+      productsDataSource,
+      data.Barcode!
     );
     if (exists) {
-      this.addQuantityToExistingLine(index);
+      this.addQuantityToExistingLine(data, productsDataSource);
     } else {
       //If product doesn't exist in the table
-      if (this.barcodesLookupDatasource.includes(e.target.value)) {
+      if (this.barcodesLookupDatasource.includes(data.Barcode)) {
         this.productBarcodesViewModel
-          .GetByBarcode(e.target.value)
+          .GetByBarcode(data.Barcode!)
           .subscribe((result: ProductBarcodeDto) => {
-            Object.assign(this.productsDataSource[index], result);
+            Object.assign(data, result);
 
-            this.GetProductVatAmount(result.VatClassId!, index);
-            this.productsDataSource[index].SerialNumber = index + 1;
-            this.productsDataSource[index].TotalPrice =
-              result.ProductRetailPrice;
-            this.productsDataSource[index].Quantity = 1;
-            this.productsDataSource[index].ProductNameCopy = result.ProductName;
-            this.productsDataSource[index].BarcodeCopy = e.target.value;
-            this.productsDataSource[index].IsRowFilled = true;
+            this.GetProductVatAmount(result.VatClassId!, data);
 
-            let cellsArray = this.cells.toArray();
-            cellsArray[index + 1].nativeElement.focus();
+            data.TotalPrice = result.ProductRetailPrice;
+            data.Quantity = 1;
+            data.ProductNameCopy = result.ProductName;
+            data.IsEditable = true;
+            data.BarcodeCopy = data.Barcode;
+            data.IsRowFilled = true;
+            let row = productsDataSource.find(
+              (x: DocumentProductDto) => x.Barcode == data.Barcode
+            );
+            if (row) {
+              data.SerialNumber = productsDataSource.indexOf(row) + 1;
+            }
+            // let cellsArray = this.cells.toArray();
+            // cellsArray[index + 1].nativeElement.focus();
             this.calculateDocumentTotal();
           });
-      } else if (
-        this.productsDataSource[index].SerialNumber! >= 0 &&
-        this.productsDataSource[index].BarcodeCopy != e.target.value
-      ) {
-        this.productsDataSource[index].Barcode =
-          this.productsDataSource[index].BarcodeCopy;
+      } else if (data.SerialNumber! >= 0 && data.BarcodeCopy != data.Barcode) {
+        data.Barcode = data.BarcodeCopy;
       }
     }
   }
 
-  checkIfProductExistsInTheTable(index: number, barcode: string) {
-    let exists = this.productsDataSource.some(
-      (x) => x.Barcode == barcode && x.IsRowFilled == true
+  // checkIfProductExistsInTheTable(index: number, barcode: string) {
+  //   let exists = this.productsDataSource.some(
+  //     (x) => x.Barcode == barcode && x.IsRowFilled == true
+  //   );
+  //   return exists;
+  // }
+
+  checkIfProductExistsInTheTable(
+    productsDataSource: DocumentProductDto[],
+    barcode: string
+  ) {
+    let exists = productsDataSource.some(
+      (x: any) => x.Barcode == barcode && x.IsRowFilled == true
     );
     return exists;
   }
 
-  addQuantityToExistingLine(index: number) {
-    let line = this.productsDataSource.find(
-      (x) => x.Barcode == this.productsDataSource[index].Barcode
+  addQuantityToExistingLine(data:DocumentProductDto, productsDataSource:DocumentProductDto[]) {
+    let line = productsDataSource.find(
+      (x) => x.Barcode == data.Barcode
     );
-
+debugger
     //Set cell value to empty string so the user can input another barcode
-    this.productsDataSource[index] = new DocumentProductDto();
-    this.productsDataSource[index].SizeName = '';
-    this.productsDataSource[index].Sku = '';
-    let productIndex = this.productsDataSource.indexOf(line!);
-    this.productsDataSource[productIndex].Quantity! += 1;
-    this.productsDataSource[productIndex].TotalPrice =
-      this.productsDataSource[productIndex].Quantity! *
-      this.productsDataSource[productIndex].ProductRetailPrice!;
+    if(line){
+
+
+    let indexOfBarcode = productsDataSource.indexOf(line!);
+    productsDataSource[indexOfBarcode].Quantity! += 1;
+    productsDataSource[indexOfBarcode].TotalPrice =
+      productsDataSource[indexOfBarcode].Quantity! *
+      productsDataSource[indexOfBarcode].ProductRetailPrice!;
+
+      let activeIndex =productsDataSource.indexOf(data)
+      productsDataSource[activeIndex] = new DocumentProductDto()
+      productsDataSource[activeIndex].IsEditable = true //Keeps the line editable
 
     //Total Vat Amount doesn't affect the row total.
-    this.GetTotalVatAmount(productIndex);
+    //this.GetTotalVatAmount(productIndex);
     this.calculateDocumentTotal();
+
+  }
   }
 
   removeProduct(e: any, index: number) {
@@ -694,6 +760,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     for (let i = this.productsDataSource.length; i < 5; i++) {
       let product = new DocumentProductDto();
       product.SizeName = '';
+      product.Sku = '';
       this.productsDataSource.push(product);
       this.productstable.renderRows();
     }
@@ -704,37 +771,35 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     return value ? value : '';
   }
 
-  onSizeSelectionChanged(data: any, index: number) {
-    if (this.productsDataSource[index].ProductId) {
+  onSizeSelectionChanged(data: DocumentProductDto, productsDataSource:DocumentProductDto[]) {
+    if (data.ProductId) {
       this.productBarcodesViewModel
-        .GetByProductId(this.productsDataSource[index].ProductId)
+        .GetByProductId(data.ProductId)
         .subscribe((result: ProductBarcodeDto[]) => {
           let barcodeData = result.find(
             (x: ProductBarcodeDto) => x.Id == data.Id
           );
 
           let exists = this.checkIfProductExistsInTheTable(
-            index,
-            barcodeData!=null?barcodeData.Barcode:""
+            productsDataSource,
+            barcodeData != null ? barcodeData.Barcode : ''
           );
+          //data.Barcode = barcodeData!.Barcode;
 
           if (exists) {
-            this.addQuantityToExistingLine(index);
-            this.sizeControlArray[index].setValue(null);
-          }
-            else {
-
-              if (barcodeData) {
-                this.productsDataSource[index].Barcode = barcodeData.Barcode;
-                this.productsDataSource[index].IsRowFilled = true;
-                this.productsDataSource[index].SerialNumber = index + 1;
-                this.productsDataSource[index].SizeName = data.SizeName;
-                this.productsDataSource[index].SizeId = barcodeData.SizeId;
-              }
-              let cellsArray = this.cells.toArray();
-              cellsArray[index + 1].nativeElement.focus();
+           // this.addQuantityToExistingLine(index);
+          } else {
+            let rowIndex = productsDataSource.indexOf(data)
+            if (barcodeData) {
+              data.Barcode = barcodeData.Barcode;
+              data.IsRowFilled = true;
+              data.SerialNumber = rowIndex + 1;
+              data.SizeName = data.SizeName;
+              data.SizeId = barcodeData.SizeId;
             }
-
+           // let cellsArray = this.cells.toArray();
+           // cellsArray[index + 1].nativeElement.focus();
+          }
         });
     }
     this.calculateDocumentTotal();
@@ -748,7 +813,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       this.productsDataSource[index].Quantity = undefined;
     }
-    this.GetTotalVatAmount(index);
+    // this.GetTotalVatAmount(index);
   }
 
   onRowTotalChange(e: any, index: number) {
@@ -764,15 +829,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     if (this.productsDataSource[index].Quantity) {
       this.productsDataSource[index].TotalPrice =
         this.productsDataSource[index].Quantity! * e.target.value;
-      this.GetProductVatAmount(
-        this.productsDataSource[index].VatClassId,
-        index
-      );
+      // this.GetProductVatAmount(
+      //   this.productsDataSource[index].VatClassId,
+      //   index
+      // );
     } else {
       this.productsDataSource[index].ProductRetailPrice = undefined;
     }
     this.calculateDocumentTotal();
-    this.GetTotalVatAmount(index);
+    //this.GetTotalVatAmount(index);
   }
 
   onProductNameChanged(e: any, index: number) {
@@ -847,5 +912,119 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     WebAppBase.data = undefined;
+  }
+
+  onSkuSelection(data: DocumentProductDto, columns:DnColumnDto[]) {
+    this.productsViewModel
+      .GetBySku(data.Sku!)
+      .subscribe(async (result: ProductDto) => {
+        data.ProductId = result.Id;
+        data.ProductName = result.Name;
+        data.ProductRetailPrice = result.RetailPrice;
+        data.TotalPrice = result.RetailPrice;
+        data.Quantity = 1;
+        data.Barcode = undefined;
+        data.IsRowFilled = false;
+        this.GetProductVatAmount(result.VatClassId, data);
+        this.getProductSizes(data.ProductId,columns)
+      });
+  }
+
+ getProductSizes(productId:Guid, columns:DnColumnDto[]){
+      this.productBarcodesViewModel.GetByProductId(productId).subscribe((result:any)=>{
+      this.productSizesDataSource = result
+      debugger
+   columns=this.getColumns()
+this.ref.detectChanges()
+    })
+
+  }
+
+  getColumns() {
+    this.columns = [
+      {
+        DataField: 'SerialNumber',
+        DataType: 'number',
+        Caption: 'Serial Number',
+        ReadOnly: true,
+      },
+      {
+        DataField: 'Barcode',
+        DataType: 'string',
+        Caption: 'Barcode',
+        OnValueChange: (data: any, dataSource: any) => {
+          this.onBarcodeInput(data, dataSource);
+        },
+      },
+      {
+        DataField: 'Sku',
+        DataType: 'string',
+        Caption: 'Sku',
+        Lookup: {
+          DataSource: this.products,
+          ValueExpr: 'Sku',
+          DisplayExpr: 'Sku',
+        },
+        OnSelectionChange: (data: any, columns:DnColumnDto[]) => {
+           this.onSkuSelection(data,columns);
+
+        },
+      },
+      {
+        DataField: 'ProductName',
+        DataType: 'string',
+        Caption: 'Product Name',
+      },
+      {
+        DataField: 'SizeId',
+        DataType: 'string',
+        Caption: 'Size',
+        Dependent: true,
+        Lookup:{
+          DataSource:this.productSizesDataSource,
+          ValueExpr:'SizeId',
+          DisplayExpr:'SizeName'
+        },
+        OnClick:()=>{
+        },
+        OnSelectionChange:(data:DocumentProductDto, dataSource:DocumentProductDto[])=>{
+          this.onSizeSelectionChanged(data, dataSource)
+        }
+      },
+      {
+        DataField: 'ProductRetailPrice',
+        DataType: 'number',
+        Caption: 'Price',
+      },
+      {
+        DataField: 'VatAmount',
+        DataType: 'number',
+        Caption: 'Vat Amount',
+      },
+      {
+        DataField: 'Quantity',
+        DataType: 'number',
+        Caption: 'Quantity',
+      },
+      {
+        DataField: 'TotalVatAmount',
+        DataType: 'number',
+        Caption: 'Total Vat',
+      },
+      {
+        DataField: 'TotalPrice',
+        DataType: 'number',
+        Caption: 'Total Price',
+      },
+    ];
+    let buttons = {
+      DataField: 'buttons',
+      DataType: 'buttons',
+      Caption: '',
+    };
+    if (this.document.Id) {
+      this.columns.push(buttons);
+    }
+    return this.columns
   }
 }

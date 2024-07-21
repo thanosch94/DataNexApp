@@ -4,12 +4,16 @@ import { CommonModule, AsyncPipe } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {
   AfterViewInit,
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
+  NgZone,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
   computed,
 } from '@angular/core';
@@ -74,7 +78,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   ],
 
 })
-export class DnGridComponent implements OnInit, AfterViewInit {
+export class DnGridComponent implements OnInit {
+
   @ViewChild('matTable') table: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -84,26 +89,40 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   @Output() onRowAdding = new EventEmitter();
   @Output() onRowSaving = new EventEmitter();
   @Output() onRowEditing = new EventEmitter();
+  @Output() columnsChange = new EventEmitter();
   matColumns: string[] = [];
   @Input() enableAddButton = false;
   @Input() canDisplaySearch = true;
   @Input() disableLineEditing = false;
-
-  filteredData: Observable<any[]>;
+  @Input() displayPaginator = true;
+  @Input() displayTableBorder = false;
+  @Input() tableHeaderBackgroundColor:string;
+  @Input() tableHeaderFontColor:string;
 
   private _columns: DnColumnDto[] = [];
+  changes: boolean = false;
+  init: boolean = true;
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
   }
   public set columns(v: DnColumnDto[]) {
+    this.ngZone.runOutsideAngular(()=>{
+
     this._columns = v;
     if (this._columns) {
-      this._columns.forEach((column) => {
-        if (column.Visible != false) {
-          this.matColumns.push(column.DataField);
-        }
-      });
+      this.matColumns=[]
+
+        this._columns.forEach((column) => {
+          if (column.Visible != false ) {
+            this.matColumns.push(column.DataField);
+          }
+        });
+
+
+
     }
+  })
+
   }
 
   private _dataSource: any;
@@ -112,27 +131,38 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
   public set dataSource(v: any) {
     this._dataSource = v;
+    if(this._dataSource.length>0){
+      for(let i=0; i<this._dataSource.length; i++){
+       this.dataSource[i].DataSource = []
+
+      }
+    }
     this.matDataSource = new MatTableDataSource(this._dataSource);
-    //setTimeout(() => {
     this.matDataSource.paginator = this.paginator;
     this.matDataSource.sort = this.sort;
+
     if (this.table) {
       this.renderRows();
     }
-    //}, 1000);
   }
 
   matDataSource: MatTableDataSource<any>;
   isEditable: boolean = false;
 
-  constructor(private ref: ChangeDetectorRef) {
+  constructor(private ref: ChangeDetectorRef, private ngZone:NgZone) {
     this.matDataSource = new MatTableDataSource(this.dataSource);
   }
+  // ngOnChanges(changes: SimpleChanges): void {
+  //   if (changes['columns']) {
+  //     debugger
+
+  //   }
+  // }
 
   ngOnInit(): void {
   }
 
-  ngAfterViewInit(): void {}
+
   applyFilter(e: any) {
     const filterValue = (e.target as HTMLInputElement).value;
     this.matDataSource.filter = filterValue.trim().toLowerCase();
@@ -206,28 +236,38 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     this.onRowDelete.emit(data);
   }
 
-  onDataLookupSelectionChanged(column: DnColumnDto, data: any, lookup: any) {
-    data[column.DataField] = lookup.Id;
+   onDataLookupSelectionChanged(column: DnColumnDto, data: any, lookup: any) {
+    this.ngZone.run(()=>{
+      data[column.DataField] = lookup[column.Lookup!.ValueExpr];
+     column.OnSelectionChange(data, this.columns)
+
+    })
+
+    this.renderRows()
+this.ref.detectChanges()
+
   }
 
-  displayFn(data: any): string {
-    if (data?.Name) {
-      return data.Name;
-    } else {
-      return data;
-    }
-  }
-
-  getLookupName(column: any, data: any) {
-    if (data != null) {
-      let lookupObject = column.Lookup.DataSource.find(
-        (x: any) => x.Id == data
+  getLookupName(row:any, column: DnColumnDto, data: any) {
+    if (data != null && column.Lookup!.DataSource && !column.Dependent) {
+      let lookupObject = column.Lookup!.DataSource.find(
+        (x: any) => x[column.Lookup!.ValueExpr] == data
       );
       if (lookupObject != null) {
-        return lookupObject[column.Lookup.DisplayExpr];
+        return lookupObject[column.Lookup!.DisplayExpr];
+      }
+    }else if (data != null && column.Dependent) {
+      debugger
+      let lookupObject = row.DataSource[column.DataField].find(
+        (x: any) => x[column.Lookup!.ValueExpr] == data
+      );
+      if (lookupObject != null) {
+        return lookupObject[column.Lookup!.DisplayExpr];
       }
     }
+
   }
+
   updateBooleanColumn(value: boolean, row: any, column:DnColumnDto) {
     row[column.DataField] = value;
   }
@@ -235,4 +275,57 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   partiallyComplete = computed(() => {
     return true;
   });
+
+  onStringInputChange(data:any, column:DnColumnDto){
+    if(column.OnValueChange!=null){
+          column.OnValueChange(data,this.dataSource)
+          this.table.renderRows()
+
+    }
+  }
+
+  onClick(row:any, column:DnColumnDto) {
+      debugger
+      //column.Lookup!.DataSource = col.Lookup!.DataSource
+
+      if(column.Dependent){
+      let col = this.columns.find(x=>x.DataField ==column.DataField)!;
+
+      let newDataSourceObject = new Object()
+      Object.defineProperty(newDataSourceObject, column.DataField, {
+        value: col.Lookup!.DataSource,
+        writable: true,
+      });
+      debugger
+      if(!row.DataSource){
+        row.DataSource = []
+        row.DataSource[column.DataField]=col.Lookup!.DataSource
+
+      }
+      this.ref.detectChanges()
+      this.renderRows()
+
+    }
+
+
+  }
+
+  getLookupOptions(column: DnColumnDto, row:any, index:number){
+    this.ngZone.run(()=>{
+      let col = this.columns.find(x=>x.DataField ==column.DataField)!;
+      column.Lookup!.DataSource = col.Lookup!.DataSource
+      row.DataSource = col.Lookup!.DataSource
+    })
+    return row.DataSource
+  }
+
+  lookupFieldTrackBy(index:number, item:any){
+    debugger
+    return item.Id
+  }
+
+  columnsTrackBy(index:number, item:any){
+    debugger
+    return item.DataField
+  }
 }

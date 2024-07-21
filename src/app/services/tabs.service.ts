@@ -91,14 +91,12 @@ export class TabsService {
   }
 
   setTabNameByOldName(tabName: string, oldName: string) {
-    debugger
-
     //Finds the tab using the previous name
     let activeTab = TabsService.tabs.find(
       (x: AppTabDto) =>
         x.Route.path == this.route && x.Name == oldName.substring(0, 15)
     );
-    debugger
+
 
     if (activeTab) {
       activeTab.PrevName = activeTab.Name

@@ -12,15 +12,31 @@
     <button mat-button class="button-add-row" (click)="add($event)">Add</button>
   </article>
   <div class="mat-elevation-z8 table-container margin">
-    <table #matTable mat-table [dataSource]="matDataSource" matSort>
+    <table
+      class="table"
+      #matTable
+      mat-table
+      [dataSource]="matDataSource"
+      matSort
+    >
       <ng-container
-        *ngFor="let column of columns | visbleGridColumns"
+        *ngFor="let column of columns | visbleGridColumns; trackBy:columnsTrackBy"
         matColumnDef="{{ column.DataField }}"
       >
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+        <th
+          [style.background-color]="tableHeaderBackgroundColor"
+          [style.color]="tableHeaderFontColor"
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+        >
           {{ column.Caption }}
         </th>
-        <td mat-cell *matCellDef="let row; let index">
+        <td
+          [ngClass]="displayTableBorder ? 'display-border' : ''"
+          mat-cell
+          *matCellDef="let row; let index"
+        >
           <!-- String Input -->
           <mat-form-field
             *ngIf="
@@ -28,34 +44,41 @@
             "
             style="width: 100%"
             class="white-input"
+            (click)="onClick(row, column)"
+
           >
-            <input *ngIf="row.IsEditable"
+            <input
+              *ngIf="row.IsEditable"
               matInput
+              [readonly]="column.ReadOnly"
               type="text"
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
               matInput
+              (ngModelChange)="onStringInputChange(row, column)"
             />
-            <p *ngIf="!row.IsEditable">
-              {{ row[column.DataField] }}
-            </p>
           </mat-form-field>
           <!-- Number Input -->
           <mat-form-field
             *ngIf="
-              column.DataType == 'number' && row.IsEditable && !column.Lookup
+              column.DataType == 'number' &&
+              row.IsEditable && !column.ReadOnly &&
+              !column.Lookup
             "
-            style="width: 100%"
             class="white-input"
+            (click)="onClick(row, column)"
+
           >
             <input
-            *ngIf="row.IsEditable"
+              *ngIf="row.IsEditable"
               matInput
+              [readonly]="column.ReadOnly"
               type="number"
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
               matInput
-          /></mat-form-field>
+            />
+          </mat-form-field>
 
           <!-- Boolean Input -->
           <div
@@ -65,59 +88,70 @@
             style="width: 100%"
             class="white-input center"
           >
-          <mat-checkbox
-          *ngIf="row.IsEditable"
-          class="example-margin"
-          [name]="column.Caption"
-          [checked]="row[column.DataField]"
-          (change)="updateBooleanColumn($event.checked, row, column)"
-        >
-
-        </mat-checkbox>
-            </div>
+            <mat-checkbox
+              *ngIf="row.IsEditable"
+              class="example-margin"
+              [name]="column.Caption"
+              [checked]="row[column.DataField]"
+              (change)="updateBooleanColumn($event.checked, row, column)"
+            >
+            </mat-checkbox>
+          </div>
 
           <mat-form-field
-            *ngIf="row.IsEditable && isEditable && column.Lookup"
-            class="white-input"
-          >
-            <input
-            *ngIf="row.IsEditable"
-              matInput
-              type="text"
-              [name]="column.Caption"
-              [matAutocomplete]="auto"
-              [ngModel]="getLookupName(column, row[column.DataField])"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              (optionSelected)="
-                onDataLookupSelectionChanged(column, row, $event.option.value)
-              "
-              [displayWith]="displayFn"
-            >
-              <mat-option
-                *ngFor="let data of column.Lookup.DataSource"
-                [value]="data"
-              >
-                {{ data.Name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+          *ngIf="row.IsEditable && column.Lookup"
+          class="white-input no-underline"
+          (click)="onClick(row, column)"
 
-          <p *ngIf="!row.IsEditable && !column.Lookup && (column.DataType=='string'|| column.DataType=='number')">
+        >
+          <input
+            *ngIf="row.IsEditable"
+            matInput
+            type="text"
+            [name]="column.Caption"
+            [matAutocomplete]="auto"
+            [ngModel]="getLookupName(row, column, row[column.DataField])"
+          />
+          <mat-autocomplete
+            #auto="matAutocomplete"
+            (optionSelected)="
+              onDataLookupSelectionChanged(column, row, $event.option.value)
+            "
+          >
+            <mat-option
+              *ngFor="let data of column.Dependent && row.DataSource?row.DataSource[column.DataField]:column.Lookup.DataSource; trackBy:lookupFieldTrackBy"
+              [value]="data"
+            >
+              <span>{{ data[column.Lookup.DisplayExpr] }}</span>
+
+            </mat-option>
+
+          </mat-autocomplete>
+        </mat-form-field>
+          <p
+            *ngIf="
+              (!row.IsEditable || column.ReadOnly) &&
+              !column.Lookup &&
+              (column.DataType == 'string' || column.DataType == 'number')
+            "
+          >
             {{ row[column.DataField] }}
           </p>
-          <p *ngIf="!row.IsEditable && !column.Lookup && column.DataType=='boolean'">
-            <mat-checkbox
-            class="example-margin"
-            [checked]="row[column.DataField]"
-            [disabled]="true"
+          <p
+            *ngIf="
+              !row.IsEditable && !column.Lookup && column.DataType == 'boolean'
+            "
           >
-
-          </mat-checkbox>          </p>
+            <mat-checkbox
+              class="example-margin"
+              [checked]="row[column.DataField]"
+              [disabled]="true"
+            >
+            </mat-checkbox>
+          </p>
 
           <p *ngIf="!row.IsEditable && column.Lookup">
-            {{ getLookupName(column, row[column.DataField]) }}
+            {{ getLookupName(row, column, row[column.DataField]) }}
           </p>
 
           <button
@@ -154,6 +188,7 @@
       </tr>
     </table>
     <mat-paginator
+      *ngIf="displayPaginator"
       #paginator
       [length]="matDataSource.data.length"
       [pageSize]="10"

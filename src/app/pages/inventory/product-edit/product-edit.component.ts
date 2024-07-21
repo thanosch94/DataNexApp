@@ -174,7 +174,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   async getData() {
     await this.vatClassesViewModel.GetAll().subscribe((result:any)=>{
       this.vatClasses = result
-      debugger
     })
     this.brandsViewModel.GetAll().subscribe((result: any) => {
       this.brands = result as Array<BrandDto>;
@@ -466,13 +465,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onVatClassSelectionChanged(data: any) {
-    debugger
     this.vatClassName = data.Name
   }
 
 
   displayFn(data: any): string {
-debugger
     if (data?.Name) {
       if(this.product){
         this.product.VatClassId = data.Id

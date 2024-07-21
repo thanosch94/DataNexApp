@@ -25,4 +25,5 @@ export class DocumentProductDto {
   BarcodeCopy?: string;
   VatClassRate: any;
   VatClassId: any;
+  IsEditable: boolean;
 }

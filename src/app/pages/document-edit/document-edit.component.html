@@ -91,7 +91,6 @@
               #supplier="matAutocomplete"
               (optionSelected)="onSupplierSelection($event.option.value)"
               [displayWith]="displaySupplier.bind(this)"
-
             >
               <mat-option *ngFor="let supplier of suppliers" [value]="supplier">
                 {{ supplier.Name }}
@@ -322,7 +321,7 @@
 
 <div class="margin">
   <div>
-    <table
+    <!-- <table
       #productstable
       mat-table
       [dataSource]="productsDataSource"
@@ -381,7 +380,7 @@
               aria-label="Sku"
               matInput
               [value]="productsDataSource[i].Sku"
-              [formControl]="skuControl"
+              [formControl]="skuControlArray[i]"
               [matAutocomplete]="auto"
             />
             <mat-autocomplete
@@ -392,7 +391,7 @@
               <mat-option [value]="product.Sku">{{ product.Sku }}</mat-option>
               }
             </mat-autocomplete>
-            <!-- <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" /> -->
+            ////// <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" />
           </mat-form-field>
         </td>
       </ng-container>
@@ -499,14 +498,14 @@
             >
               @for (size of filteredSizesArray[i]| async; track size) {
               <mat-option
-                (onSelectionChange)="onSizeSelectionChanged(size, i)"
+                (onSelectionChange)="onSizeSelectionChanged($event, size, i)"
                 [value]="size.SizeName"
                 >{{ size.SizeName }}</mat-option
               >
               }
             </mat-autocomplete>
 
-            <!-- <input matInput class="white-input" [value]="row.SizeAbbreviation!=undefined?row.SizeAbbreviation:''" /> -->
+            ////<input matInput class="white-input" [value]="row.SizeAbbreviation!=undefined?row.SizeAbbreviation:''" />
           </mat-form-field>
         </td>
       </ng-container>
@@ -647,11 +646,22 @@
       <tr mat-header-row *matHeaderRowDef="productDisplayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: productDisplayedColumns"></tr>
 
-      <!-- No data row -->
+      //. No data row
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell" colspan="4">No data matching the filter</td>
       </tr>
-    </table>
+    </table> -->
+
+    <dn-grid
+      tableHeaderBackgroundColor="#0B6AA5"
+      tableHeaderFontColor="white"
+      [canDisplaySearch]="false"
+      [displayPaginator]="false"
+      [displayTableBorder]="true"
+      [dataSource]="productsDataSource"
+      [columns]="columns"
+    >
+    </dn-grid>
     <br />
     <br />
     <div class="edit-document-charges-field">
