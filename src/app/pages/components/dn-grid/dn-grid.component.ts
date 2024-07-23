@@ -40,43 +40,44 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { VisbleGridColumnsPipe } from '../../../pipes/visble-grid-columns.pipe';
 import { Observable } from 'rxjs/internal/Observable';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { LookupNamePipe } from "../../../pipes/lookup-name.pipe";
 
 @Component({
-  selector: 'dn-grid',
-  standalone: true,
-  templateUrl: './dn-grid.component.html',
-  styleUrl: './dn-grid.component.css',
-  imports: [
-    FormsModule,
-    MatFormFieldModule,
-    HttpClientModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule,
-    MatToolbarModule,
-    MatIconModule,
-    CommonModule,
-    MatSelectModule,
-    CdkTextareaAutosize,
-    TextFieldModule,
-    MatButtonModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatTableModule,
-    MatSortHeader,
-    DnPopupComponent,
-    MatTabsModule,
-    MatDialogActions,
-    MatButtonModule,
-    MatDialogModule,
-    DnToolbarComponent,
-    AsyncPipe,
-    VisbleGridColumnsPipe,
-    MatCheckboxModule,
-  ],
-
+    selector: 'dn-grid',
+    standalone: true,
+    templateUrl: './dn-grid.component.html',
+    styleUrl: './dn-grid.component.css',
+    imports: [
+        FormsModule,
+        MatFormFieldModule,
+        HttpClientModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule,
+        MatToolbarModule,
+        MatIconModule,
+        CommonModule,
+        MatSelectModule,
+        CdkTextareaAutosize,
+        TextFieldModule,
+        MatButtonModule,
+        MatPaginator,
+        MatPaginatorModule,
+        MatSort,
+        MatSortModule,
+        MatTableModule,
+        MatSortHeader,
+        DnPopupComponent,
+        MatTabsModule,
+        MatDialogActions,
+        MatButtonModule,
+        MatDialogModule,
+        DnToolbarComponent,
+        AsyncPipe,
+        VisbleGridColumnsPipe,
+        MatCheckboxModule,
+        LookupNamePipe
+    ]
 })
 export class DnGridComponent implements OnInit {
 
@@ -93,15 +94,20 @@ export class DnGridComponent implements OnInit {
   matColumns: string[] = [];
   @Input() enableAddButton = false;
   @Input() canDisplaySearch = true;
+  @Input() canEdit = true;
+  @Input() hideEditButtonOnEditing = false;
+  @Input() displayDeleteButtonOnEditing = false;
+  @Input() canDelete = true;
   @Input() disableLineEditing = false;
   @Input() displayPaginator = true;
   @Input() displayTableBorder = false;
   @Input() tableHeaderBackgroundColor:string;
   @Input() tableHeaderFontColor:string;
 
+
   private _columns: DnColumnDto[] = [];
-  changes: boolean = false;
-  init: boolean = true;
+  zeroMin: number;
+
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
   }
@@ -136,6 +142,7 @@ export class DnGridComponent implements OnInit {
        this.dataSource[i].DataSource = []
 
       }
+      debugger
     }
     this.matDataSource = new MatTableDataSource(this._dataSource);
     this.matDataSource.paginator = this.paginator;
@@ -151,6 +158,7 @@ export class DnGridComponent implements OnInit {
 
   constructor(private ref: ChangeDetectorRef, private ngZone:NgZone) {
     this.matDataSource = new MatTableDataSource(this.dataSource);
+    this.zeroMin= 0
   }
   // ngOnChanges(changes: SimpleChanges): void {
   //   if (changes['columns']) {
@@ -242,29 +250,8 @@ export class DnGridComponent implements OnInit {
      column.OnSelectionChange(data, this.columns)
 
     })
-
     this.renderRows()
-this.ref.detectChanges()
 
-  }
-
-  getLookupName(row:any, column: DnColumnDto, data: any) {
-    if (data != null && column.Lookup!.DataSource && !column.Dependent) {
-      let lookupObject = column.Lookup!.DataSource.find(
-        (x: any) => x[column.Lookup!.ValueExpr] == data
-      );
-      if (lookupObject != null) {
-        return lookupObject[column.Lookup!.DisplayExpr];
-      }
-    }else if (data != null && column.Dependent) {
-      debugger
-      let lookupObject = row.DataSource[column.DataField].find(
-        (x: any) => x[column.Lookup!.ValueExpr] == data
-      );
-      if (lookupObject != null) {
-        return lookupObject[column.Lookup!.DisplayExpr];
-      }
-    }
 
   }
 
@@ -276,7 +263,7 @@ this.ref.detectChanges()
     return true;
   });
 
-  onStringInputChange(data:any, column:DnColumnDto){
+  onValueChange(data:any, column:DnColumnDto){
     if(column.OnValueChange!=null){
           column.OnValueChange(data,this.dataSource)
           this.table.renderRows()
@@ -285,7 +272,6 @@ this.ref.detectChanges()
   }
 
   onClick(row:any, column:DnColumnDto) {
-      debugger
       //column.Lookup!.DataSource = col.Lookup!.DataSource
 
       if(column.Dependent){
@@ -296,11 +282,13 @@ this.ref.detectChanges()
         value: col.Lookup!.DataSource,
         writable: true,
       });
-      debugger
       if(!row.DataSource){
         row.DataSource = []
         row.DataSource[column.DataField]=col.Lookup!.DataSource
 
+      }else if(!row.DataSource.some((x:any)=>newDataSourceObject.hasOwnProperty(x[column.DataField]))){
+        row.DataSource[column.DataField]=col.Lookup!.DataSource
+        debugger
       }
       this.ref.detectChanges()
       this.renderRows()
@@ -320,12 +308,10 @@ this.ref.detectChanges()
   }
 
   lookupFieldTrackBy(index:number, item:any){
-    debugger
     return item.Id
   }
 
   columnsTrackBy(index:number, item:any){
-    debugger
     return item.DataField
   }
 }

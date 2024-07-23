@@ -652,10 +652,12 @@
       </tr>
     </table> -->
 
-    <dn-grid
+    <dn-grid #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
       [canDisplaySearch]="false"
+      [hideEditButtonOnEditing]="true"
+      [displayDeleteButtonOnEditing]="true"
       [displayPaginator]="false"
       [displayTableBorder]="true"
       [dataSource]="productsDataSource"

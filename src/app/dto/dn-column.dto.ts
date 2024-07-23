@@ -11,4 +11,8 @@ export class DnColumnDto {
   OnClick?: any;
   ReadOnly?: boolean = false;
   Dependent?: boolean = false;
+
+  //Number Inputs
+  Min?:number
+  Max?:number
 }

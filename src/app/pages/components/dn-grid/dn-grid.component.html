@@ -55,14 +55,14 @@
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
               matInput
-              (ngModelChange)="onStringInputChange(row, column)"
+              (ngModelChange)="onValueChange(row, column)"
             />
           </mat-form-field>
           <!-- Number Input -->
           <mat-form-field
             *ngIf="
               column.DataType == 'number' &&
-              row.IsEditable && !column.ReadOnly &&
+              row.IsEditable &&
               !column.Lookup
             "
             class="white-input"
@@ -74,8 +74,11 @@
               matInput
               [readonly]="column.ReadOnly"
               type="number"
+              [min]="column.Min !== undefined && column.Min !== null ?column.Min:null"
+              [max]="column.Max?column.Max:null"
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
+              (ngModelChange)="onValueChange(row, column)"
               matInput
             />
           </mat-form-field>
@@ -110,7 +113,7 @@
             type="text"
             [name]="column.Caption"
             [matAutocomplete]="auto"
-            [ngModel]="getLookupName(row, column, row[column.DataField])"
+            [ngModel]="row[column.Lookup.DisplayExpr]?row[column.Lookup.DisplayExpr]: row[column.DataField] | lookupName:row:column"
           />
           <mat-autocomplete
             #auto="matAutocomplete"
@@ -130,7 +133,7 @@
         </mat-form-field>
           <p
             *ngIf="
-              (!row.IsEditable || column.ReadOnly) &&
+              !row.IsEditable &&
               !column.Lookup &&
               (column.DataType == 'string' || column.DataType == 'number')
             "
@@ -151,11 +154,11 @@
           </p>
 
           <p *ngIf="!row.IsEditable && column.Lookup">
-            {{ getLookupName(row, column, row[column.DataField]) }}
+            {{ row[column.DataField] | lookupName:row:column }}
           </p>
 
           <button
-            *ngIf="column.DataType == 'buttons'"
+            *ngIf="column.DataType == 'buttons' && canEdit && !hideEditButtonOnEditing"
             mat-icon-button
             class="iconbutton"
             color="primary"
@@ -165,16 +168,16 @@
             <mat-icon *ngIf="row.IsEditable">save</mat-icon>
           </button>
           <button
-            *ngIf="column.DataType == 'buttons'"
+            *ngIf="column.DataType == 'buttons' && canDelete"
             mat-icon-button
             class="iconbutton"
             color="primary"
             (click)="
-              row.IsEditable ? stopEditing(row, index) : deleteRow(row, index)
+              row.IsEditable && !displayDeleteButtonOnEditing ? stopEditing(row, index) : deleteRow(row, index)
             "
           >
-            <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
-            <mat-icon *ngIf="row.IsEditable">close</mat-icon>
+            <mat-icon *ngIf="row.IsEditable  && !displayDeleteButtonOnEditing">close</mat-icon>
+            <mat-icon *ngIf="!row.IsEditable || displayDeleteButtonOnEditing">delete</mat-icon>
           </button>
         </td>
       </ng-container>

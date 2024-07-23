@@ -59,9 +59,7 @@ td{
   border-collapse: collapse;
 }
 
-.mat-mdc-cell{
-  text-align: center;
-}
+
 
  .table::ng-deep .ng-star-inserted{
     margin: 0!important;
@@ -71,3 +69,4 @@ td{
 .table ::ng-deep .mdc-line-ripple {
   display: none
 }
+

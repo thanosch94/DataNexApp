@@ -97,7 +97,7 @@ import { DnColumnDto } from '../../dto/dn-column.dto';
 })
 export class DocumentEditComponent implements OnInit, OnDestroy {
   @ViewChildren('td') cells: QueryList<ElementRef>;
-  @ViewChild('productstable') productstable: MatTable<ProductBarcodeDto>;
+  @ViewChild('productstable') productstable: DnGridComponent;
   selectedDocType: DocumentTypeDto = new DocumentTypeDto();
   documentsViewModel: DocumentsViewModel;
   documentId: any;
@@ -436,6 +436,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
         data.VatClassRate = result.Rate;
         data.VatClassId = result.Id;
+        debugger
         this.GetTotalVatAmount(data);
       });
     } else {
@@ -446,12 +447,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               (data.VatClassRate / 100 + 1)) *
             100
         ) / 100;
+
+        this.GetTotalVatAmount(data);
+
     }
   }
 
   GetTotalVatAmount(data: DocumentProductDto) {
     data.TotalVatAmount =
-      (data.VatAmount as number) * (data.Quantity as number);
+      data.VatAmount!  * data.Quantity!;
   }
 
   onDocTypeSelection(e: any) {
@@ -691,6 +695,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             data.IsEditable = true;
             data.BarcodeCopy = data.Barcode;
             data.IsRowFilled = true;
+            data.SizeId = result.SizeId
+            data.SizeName = result.SizeName
             let row = productsDataSource.find(
               (x: DocumentProductDto) => x.Barcode == data.Barcode
             );
@@ -700,6 +706,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             // let cellsArray = this.cells.toArray();
             // cellsArray[index + 1].nativeElement.focus();
             this.calculateDocumentTotal();
+            this.getProductSizes(data.ProductId,this.columns)
+
           });
       } else if (data.SerialNumber! >= 0 && data.BarcodeCopy != data.Barcode) {
         data.Barcode = data.BarcodeCopy;
@@ -742,6 +750,7 @@ debugger
       let activeIndex =productsDataSource.indexOf(data)
       productsDataSource[activeIndex] = new DocumentProductDto()
       productsDataSource[activeIndex].IsEditable = true //Keeps the line editable
+      this.GetProductVatAmount(productsDataSource[indexOfBarcode].VatClassId, productsDataSource[indexOfBarcode])
 
     //Total Vat Amount doesn't affect the row total.
     //this.GetTotalVatAmount(productIndex);
@@ -805,15 +814,17 @@ debugger
     this.calculateDocumentTotal();
   }
 
-  onQuantityChange(e: any, index: number) {
-    if (this.productsDataSource[index].ProductRetailPrice) {
-      this.productsDataSource[index].TotalPrice =
-        this.productsDataSource[index].ProductRetailPrice! * e.target.value;
+  onQuantityChange(data: DocumentProductDto) {
+    if (data.ProductRetailPrice) {
+      data.TotalPrice =
+      data.ProductRetailPrice! * data.Quantity!;
+      debugger
+      this.GetProductVatAmount(data.VatClassId, data)
+
       this.calculateDocumentTotal();
     } else {
-      this.productsDataSource[index].Quantity = undefined;
+      data.Quantity = undefined;
     }
-    // this.GetTotalVatAmount(index);
   }
 
   onRowTotalChange(e: any, index: number) {
@@ -825,16 +836,16 @@ debugger
     this.calculateDocumentTotal();
   }
 
-  onPriceChange(e: any, index: number) {
-    if (this.productsDataSource[index].Quantity) {
-      this.productsDataSource[index].TotalPrice =
-        this.productsDataSource[index].Quantity! * e.target.value;
-      // this.GetProductVatAmount(
-      //   this.productsDataSource[index].VatClassId,
-      //   index
-      // );
+  onPriceChange(data:DocumentProductDto) {
+    if (data.Quantity) {
+      data.TotalPrice =
+      data.Quantity! * data.ProductRetailPrice!;
+       this.GetProductVatAmount(
+         data.VatClassId,
+         data
+       );
     } else {
-      this.productsDataSource[index].ProductRetailPrice = undefined;
+      data.ProductRetailPrice = undefined;
     }
     this.calculateDocumentTotal();
     //this.GetTotalVatAmount(index);
@@ -931,7 +942,7 @@ debugger
   }
 
  getProductSizes(productId:Guid, columns:DnColumnDto[]){
-      this.productBarcodesViewModel.GetByProductId(productId).subscribe((result:any)=>{
+      this.productBarcodesViewModel.GetByProductId(productId).subscribe(async(result:any)=>{
       this.productSizesDataSource = result
       debugger
    columns=this.getColumns()
@@ -995,36 +1006,47 @@ this.ref.detectChanges()
         DataField: 'ProductRetailPrice',
         DataType: 'number',
         Caption: 'Price',
+        Min:0.00,
+        OnValueChange: (data: any, dataSource: any) => {
+          this.onPriceChange(data);
+        },
       },
       {
         DataField: 'VatAmount',
         DataType: 'number',
         Caption: 'Vat Amount',
+        ReadOnly:true
       },
       {
         DataField: 'Quantity',
         DataType: 'number',
         Caption: 'Quantity',
+        Min:1,
+        OnValueChange: (data: any, dataSource: any) => {
+          this.onQuantityChange(data);
+        },
       },
       {
         DataField: 'TotalVatAmount',
         DataType: 'number',
         Caption: 'Total Vat',
+        ReadOnly:true
       },
       {
         DataField: 'TotalPrice',
+
         DataType: 'number',
         Caption: 'Total Price',
+        Min:0.00,
+
       },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      }
     ];
-    let buttons = {
-      DataField: 'buttons',
-      DataType: 'buttons',
-      Caption: '',
-    };
-    if (this.document.Id) {
-      this.columns.push(buttons);
-    }
+
     return this.columns
   }
 }
