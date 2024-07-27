@@ -46,57 +46,32 @@
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
 
-          <mat-form-field
+          <dn-selectbox
             *ngIf="this.documentGroup == 1"
             class="grid-c-customer-supplier"
-          >
-            <mat-label>Customer</mat-label>
-            <input
-              class="width-100"
-              matInput
-              type="text"
-              placeholder="Select a Customer"
-              aria-label="Customer"
-              matInput
-              name="name"
-              [formControl]="nameControl"
-              [matAutocomplete]="auto"
-            />
-            <mat-autocomplete
-              #auto="matAutocomplete"
-              (optionSelected)="onNameSelection($event.option.value)"
-            >
-              @for (name of filteredNames| async; track name) {
-              <mat-option [value]="name">{{ name }}</mat-option>
-              }
-            </mat-autocomplete>
-          </mat-form-field>
-          <mat-form-field
-            *ngIf="this.documentGroup == 2"
-            class="grid-c-customer-supplier"
-          >
-            <mat-label>Supplier</mat-label>
-            <input
-              class="width-100"
-              matInput
-              type="text"
-              placeholder="Select a Supplier"
-              aria-label="Supplier"
-              matInput
-              name="supplier"
-              [ngModel]="supplier"
-              [matAutocomplete]="supplier"
-            />
-            <mat-autocomplete
-              #supplier="matAutocomplete"
-              (optionSelected)="onSupplierSelection($event.option.value)"
-              [displayWith]="displaySupplier.bind(this)"
-            >
-              <mat-option *ngFor="let supplier of suppliers" [value]="supplier">
-                {{ supplier.Name }}
-              </mat-option>
-            </mat-autocomplete>
-          </mat-form-field>
+            [width]="100"
+            label="Customer"
+            name="Customer"
+            placeholder="Select a Customer"
+            [(value)]="document.CustomerId"
+            [dataSource]="customers"
+            valueExpr="Id"
+            displayExpr="Name"
+          ></dn-selectbox>
+
+          <dn-selectbox
+          *ngIf="this.documentGroup == 2"
+          class="grid-c-customer-supplier"
+            [width]="100"
+            label="Supplier"
+            name="Supplier"
+            placeholder="Select a Supplier"
+            [(value)]="document.SupplierId"
+            [dataSource]="suppliers"
+            valueExpr="Id"
+            displayExpr="Name"
+          ></dn-selectbox>
+
           <mat-form-field class="grid-g-customerphone">
             <mat-label>Phone</mat-label>
             <input
@@ -652,16 +627,20 @@
       </tr>
     </table> -->
 
-    <dn-grid #productstable
+    <dn-grid
+      #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
       [canDisplaySearch]="false"
-      [hideEditButtonOnEditing]="true"
-      [displayDeleteButtonOnEditing]="true"
+      [hideEditButtonOnEditing]="document.Id ? false : true"
+      [displayDeleteButtonOnEditing]="document.Id ? false : true"
       [displayPaginator]="false"
       [displayTableBorder]="true"
       [dataSource]="productsDataSource"
       [columns]="columns"
+      [canEdit]="true"
+      (onRowDelete)="onProductRowDelete($event)"
+      (onRowSaving)="onProductRowSaving($event)"
     >
     </dn-grid>
     <br />

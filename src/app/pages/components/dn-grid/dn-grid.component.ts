@@ -241,6 +241,7 @@ export class DnGridComponent implements OnInit {
   }
 
   deleteRow(data: any, index: number) {
+    data.rowIndex = index
     this.onRowDelete.emit(data);
   }
 
@@ -288,7 +289,6 @@ export class DnGridComponent implements OnInit {
 
       }else if(!row.DataSource.some((x:any)=>newDataSourceObject.hasOwnProperty(x[column.DataField]))){
         row.DataSource[column.DataField]=col.Lookup!.DataSource
-        debugger
       }
       this.ref.detectChanges()
       this.renderRows()

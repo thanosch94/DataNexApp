@@ -168,7 +168,7 @@
             <mat-icon *ngIf="row.IsEditable">save</mat-icon>
           </button>
           <button
-            *ngIf="column.DataType == 'buttons' && canDelete"
+            *ngIf="column.DataType == 'buttons' && canDelete "
             mat-icon-button
             class="iconbutton"
             color="primary"
@@ -177,7 +177,15 @@
             "
           >
             <mat-icon *ngIf="row.IsEditable  && !displayDeleteButtonOnEditing">close</mat-icon>
-            <mat-icon *ngIf="!row.IsEditable || displayDeleteButtonOnEditing">delete</mat-icon>
+            <mat-icon *ngIf="row.IsEditable && displayDeleteButtonOnEditing && row.IsRowFilled">delete</mat-icon>
+            <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
+
+            <!-- displayDeleteButtonOnEditing is used to determine if the state of the row is in edit or not
+             If in edit there is no reason to display delete button, so a stop editing button will take its place -->
+
+            <!-- row.IsRowFilled is used when you have more than one empty rows to be filled.
+             When the row is filled, the button will be visible -->
+
           </button>
         </td>
       </ng-container>

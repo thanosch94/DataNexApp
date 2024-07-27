@@ -1,6 +1,13 @@
 .mat-column-buttons {
   text-align: right;
+  border-left:none!important;
 }
+
+::ng-deep .mat-mdc-cell:nth-last-child(2){
+  border-right:none!important;
+
+}
+
 .add-button {
   width: 90%;
   text-align: right;
@@ -59,10 +66,20 @@ td{
   border-collapse: collapse;
 }
 
-
-
+  /* For editing mode */
  .table::ng-deep .ng-star-inserted{
-    margin: 0!important;
+  margin: 0!important;
+
+}
+
+/* When not in editing mode */
+ .table::ng-deep .mat-mdc-cell p{
+  margin-left: 5%!important;
+
+}
+
+ .table::ng-deep .mat-sort-header-container{
+    margin-left: 5%!important;
 
 }
 

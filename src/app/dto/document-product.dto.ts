@@ -5,7 +5,7 @@ export class DocumentProductDto {
   DocumentId:Guid;
   ProductId:Guid;
   Quantity?:number;
-  SizeId:Guid;
+  ProductSizeId:Guid;
   SerialNumber?:number;
   ProductRetailPrice?:number;
   VatAmount?:number;

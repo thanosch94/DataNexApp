@@ -64,6 +64,7 @@ import { SupplierDto } from '../../dto/supplier.dto';
 import { SuppliersViewModel } from '../../view-models/suppliers.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../dto/dn-column.dto';
+import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -90,6 +91,7 @@ import { DnColumnDto } from '../../dto/dn-column.dto';
     MatDialogModule,
     MatTooltipModule,
     DnGridComponent,
+    DnSelectboxComponent
   ],
   providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',
@@ -117,7 +119,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   doctypeName: string;
   statusName: any;
   vatClassesViewModel: VatClassesViewModel;
-  supplier: string = '';
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
   columns: DnColumnDto[] = [];
@@ -130,13 +131,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
   customersViewModel: CustomersViewModel;
   customers: any;
-  customerNames: string[] = new Array();
-  nameControl = new FormControl();
-  skuControl = new FormControl('');
-  customer: CustomerDto = new CustomerDto();
   document_text: string;
-  filteredNames: Observable<string[]>;
-  filteredProducts: Observable<ProductDto[]>;
   customerPhone: number;
   vatNumber: number;
   documentProduct: DocumentProductDto = new DocumentProductDto();
@@ -162,10 +157,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   productsViewModel: ProductsViewModel;
   lineProduct = new ProductDto();
   products: ProductDto[];
-  sizeControlArray = new Array<FormControl>();
-  skuControlArray = new Array<FormControl>();
-  filteredSizes: Observable<ProductBarcodeDto[]>;
-  filteredSizesArray: Observable<ProductBarcodeDto[]>[];
+
   productsSizes = new Array<ProductBarcodeDto>();
   productSizesViewModel: ProductSizesViewModel;
   productBarcodesViewModel: ProductBarcodesViewModel;
@@ -229,25 +221,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productsViewModel.GetAll().subscribe((result: any) => {
       this.products = result;
       this.getData();
-
       this.getColumns();
-
-      // this.filteredProducts = this.skuControl.valueChanges.pipe(
-      //   startWith(''),
-      //   map((value: string | null) => this._skufilter(value || ''))
-      // );
     });
 
-    this.filteredNames = this.nameControl.valueChanges.pipe(
-      startWith(''),
-      map((value) => this._namefilter(value || ''))
-    );
 
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.customers = result;
-      this.customers.map((customer: any) => {
-        this.customerNames.push(customer.Name);
-      });
+
     });
 
     this.suppliersViewModel.GetAll().subscribe((result: any) => {
@@ -285,17 +265,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
       product.IsEditable = true
+      product.IsRowFilled =false
       this.productsDataSource.push(product);
-      //this.sizeControlArray.push(new FormControl(''));
-      // this.skuControlArray.push(new FormControl(''));
-      // this.filteredSizes = this.sizeControlArray[i].valueChanges.pipe(
-      //   startWith(''),
-      //   map((value: string | null) => this.sizefilter(value || ''))
-      // );
-      // this.filteredSizesArray = new Array<Observable<ProductBarcodeDto[]>>();
-      // this.filteredSizesArray.push(this.filteredSizes);
-
-      //this.getFilteredSizes(i);
     }
   }
 
@@ -303,7 +274,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
       this.document = result;
 
-      this.nameControl.setValue(result.CustomerName);
+      this.ref.detectChanges()
       this.document_text = this.document.DocumentCode;
       this.tabsService.setTabName(this.document_text);
       // this.ref.detectChanges();
@@ -324,6 +295,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         .GetByDocumentId(documentId)
         .subscribe((result: any) => {
           this.productsDataSource = result;
+          this.productsDataSource.forEach(product => {
+            product.SerialNumber = (this.productsDataSource.indexOf(product)+1)
+          });
           this.calculateDocumentTotal();
         });
     });
@@ -339,49 +313,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         });
       });
   }
-  getFilteredSizes(index: number) {
-    this.filteredSizesArray[index] = this.sizeControlArray[
-      index
-    ].valueChanges.pipe(
-      startWith(''),
-      map((value: string | null) => this.sizefilter(value || ''))
-    );
-  }
 
-  private sizefilter(value: string): ProductBarcodeDto[] {
-    const filterValue = value.toLowerCase();
-    return this.productsSizes.filter((size: ProductBarcodeDto) =>
-      size.SizeName!.toLowerCase().includes(filterValue)
-    );
-  }
-
-  private _namefilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.customerNames.filter((name) =>
-      name.toLowerCase().includes(filterValue)
-    );
-  }
-
-  private _skufilter(value: string): ProductDto[] {
-    const filterValue = value.toLowerCase();
-    return this.products.filter((product: ProductDto) =>
-      product.Sku?.toLowerCase().includes(filterValue)
-    );
-  }
-
-  onNameSelection(name: string) {
-    this.customer = this.customers.find(
-      (customer: CustomerDto) => customer.Name == name
-    );
-    this.document.CustomerPhone1 = this.customer.Phone1!;
-  }
-
-  onSupplierSelection(name: string) {
-    this.supplier = this.suppliers.find(
-      (supplier: SupplierDto) => supplier.Name == name
-    );
-    this.document.CustomerPhone1 = this.customer.Phone1!;
-  }
 
   onProductSkuSelection(sku: any, index: any) {
     this.productsViewModel.GetBySku(sku).subscribe((result: ProductDto) => {
@@ -404,7 +336,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             this.productsSizes = result as ProductBarcodeDto[];
 
             if (this.productsSizes.length > 0) {
-              this.getFilteredSizes(index);
+              // this.getFilteredSizes(index);
             } else {
               this.productsDataSource[index].SerialNumber = index + 1;
               this.productsDataSource[index].IsRowFilled = true;
@@ -487,9 +419,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       if (this.selectedDocType!.Id) {
         this.document.DocumentTypeId = this.selectedDocType.Id;
         this.document.DocumentStatusId = this.selectedStatus.Id;
-        this.document.CustomerId = this.customer.Id;
         this.document.DocumentTotal = this.total;
-
+debugger
         this.documentsViewModel
           .InsertDto(this.document)
           .subscribe((result: any) => {
@@ -529,6 +460,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                       this.displayNotification('Record inserted');
                     }
                   });
+                  this.getData()
               }
             });
           });
@@ -588,6 +520,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.total += this.addCharges;
   }
 
+  onProductRowDelete(data:any){
+    if(this.document.Id){
+
+    }else{
+      this.removeProduct(data)
+    }
+  }
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
@@ -632,44 +571,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       });
   }
 
-  // onBarcodeInput(e: any, index: number) {
-  //   //If product exists in the table
-  //   let exists = this.checkIfProductExistsInTheTable(
-  //     index,
-  //     this.productsDataSource[index].Barcode!
-  //   );
-  //   if (exists) {
-  //     this.addQuantityToExistingLine(index);
-  //   } else {
-  //     //If product doesn't exist in the table
-  //     if (this.barcodesLookupDatasource.includes(e.target.value)) {
-  //       this.productBarcodesViewModel
-  //         .GetByBarcode(e.target.value)
-  //         .subscribe((result: ProductBarcodeDto) => {
-  //           Object.assign(this.productsDataSource[index], result);
-
-  //           //this.GetProductVatAmount(result.VatClassId!, index);
-  //           this.productsDataSource[index].SerialNumber = index + 1;
-  //           this.productsDataSource[index].TotalPrice =
-  //             result.ProductRetailPrice;
-  //           this.productsDataSource[index].Quantity = 1;
-  //           this.productsDataSource[index].ProductNameCopy = result.ProductName;
-  //           this.productsDataSource[index].BarcodeCopy = e.target.value;
-  //           this.productsDataSource[index].IsRowFilled = true;
-
-  //           let cellsArray = this.cells.toArray();
-  //           cellsArray[index + 1].nativeElement.focus();
-  //           this.calculateDocumentTotal();
-  //         });
-  //     } else if (
-  //       this.productsDataSource[index].SerialNumber! >= 0 &&
-  //       this.productsDataSource[index].BarcodeCopy != e.target.value
-  //     ) {
-  //       this.productsDataSource[index].Barcode =
-  //         this.productsDataSource[index].BarcodeCopy;
-  //     }
-  //   }
-  // }
 
   onBarcodeInput(data: DocumentProductDto, productsDataSource: DocumentProductDto[]) {
     //If product exists in the table
@@ -695,7 +596,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             data.IsEditable = true;
             data.BarcodeCopy = data.Barcode;
             data.IsRowFilled = true;
-            data.SizeId = result.SizeId
+            data.ProductSizeId = result.SizeId
             data.SizeName = result.SizeName
             let row = productsDataSource.find(
               (x: DocumentProductDto) => x.Barcode == data.Barcode
@@ -715,13 +616,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  // checkIfProductExistsInTheTable(index: number, barcode: string) {
-  //   let exists = this.productsDataSource.some(
-  //     (x) => x.Barcode == barcode && x.IsRowFilled == true
-  //   );
-  //   return exists;
-  // }
-
   checkIfProductExistsInTheTable(
     productsDataSource: DocumentProductDto[],
     barcode: string
@@ -736,7 +630,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     let line = productsDataSource.find(
       (x) => x.Barcode == data.Barcode
     );
-debugger
     //Set cell value to empty string so the user can input another barcode
     if(line){
 
@@ -759,20 +652,31 @@ debugger
   }
   }
 
-  removeProduct(e: any, index: number) {
-    this.productsDataSource.splice(index, 1);
-    for (let i = index; i < this.productsDataSource.length - 1; i++) {
-      this.sizeControlArray[i] = this.sizeControlArray[i + 1];
+  removeProduct(data: any) {
+    this.productsDataSource.splice(data.rowIndex, 1);
+    for (let i = data.rowIndex; i < this.productsDataSource.length - 1; i++) {
+      // this.sizeControlArray[i] = this.sizeControlArray[i + 1];
       this.productstable.renderRows();
     }
 
     for (let i = this.productsDataSource.length; i < 5; i++) {
       let product = new DocumentProductDto();
-      product.SizeName = '';
-      product.Sku = '';
+      product.IsRowFilled =false
+      product.IsEditable = true
+
+      // product.SizeName = '';
+      // product.Sku = '';
       this.productsDataSource.push(product);
       this.productstable.renderRows();
     }
+
+    // When a product is removed we have to set again the serial numbers for each row and
+    // add the new value only to those rows that have IsRowFilled = true
+
+    this.productsDataSource.forEach(product => {
+      if(product.IsRowFilled)
+      product.SerialNumber = (this.productsDataSource.indexOf(product)+1)
+    });
     this.calculateDocumentTotal();
   }
 
@@ -804,7 +708,7 @@ debugger
               data.IsRowFilled = true;
               data.SerialNumber = rowIndex + 1;
               data.SizeName = data.SizeName;
-              data.SizeId = barcodeData.SizeId;
+              data.ProductSizeId = barcodeData.SizeId;
             }
            // let cellsArray = this.cells.toArray();
            // cellsArray[index + 1].nativeElement.focus();
@@ -818,7 +722,6 @@ debugger
     if (data.ProductRetailPrice) {
       data.TotalPrice =
       data.ProductRetailPrice! * data.Quantity!;
-      debugger
       this.GetProductVatAmount(data.VatClassId, data)
 
       this.calculateDocumentTotal();
@@ -905,17 +808,6 @@ debugger
     }
   }
 
-  displaySupplier(data: any): string {
-    if (data?.Name) {
-      if (this.document) {
-        this.document.SupplierId = data.Id;
-      }
-      return data.Name;
-    } else {
-      return '';
-    }
-  }
-
   onRefreshClicked(e: any) {
     this.getData();
     this.productstable.renderRows();
@@ -944,7 +836,6 @@ debugger
  getProductSizes(productId:Guid, columns:DnColumnDto[]){
       this.productBarcodesViewModel.GetByProductId(productId).subscribe(async(result:any)=>{
       this.productSizesDataSource = result
-      debugger
    columns=this.getColumns()
 this.ref.detectChanges()
     })
@@ -987,13 +878,13 @@ this.ref.detectChanges()
         Caption: 'Product Name',
       },
       {
-        DataField: 'SizeId',
+        DataField: 'ProductSizeId',
         DataType: 'string',
         Caption: 'Size',
         Dependent: true,
         Lookup:{
           DataSource:this.productSizesDataSource,
-          ValueExpr:'SizeId',
+          ValueExpr:'ProductSizeId',
           DisplayExpr:'SizeName'
         },
         OnClick:()=>{
@@ -1048,5 +939,9 @@ this.ref.detectChanges()
     ];
 
     return this.columns
+  }
+
+  onProductRowSaving(data:any){
+
   }
 }
