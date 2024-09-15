@@ -14,6 +14,7 @@ import { AuthService } from '../../../services/auth.service';
 import { faMagento, faOpencart, faShopify, faWordpress } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-connector-parameters',
@@ -46,7 +47,8 @@ export class ConnectorParametersComponent implements OnInit {
     private http: HttpClient,
     private auth: AuthService,
     private tabsService: TabsService,
-    private _snackBar:MatSnackBar
+    private _snackBar:MatSnackBar,
+    private router:Router
   ) {
     this.connectorParametersViewModel = new ConnectorParametersViewModel(
       this.http,
@@ -58,7 +60,7 @@ export class ConnectorParametersComponent implements OnInit {
   }
 
   ngOnInit() {
-    //TODO change with GetByCompanyId when Company functionality is Added
+    //TODO change with GetByCompanyId when Company functionality will be added
     this.connectorParametersViewModel.GetAll().subscribe((result: any) => {
       if (result) {
         this.connectorParameters = result;
@@ -68,7 +70,9 @@ export class ConnectorParametersComponent implements OnInit {
     });
   }
 
-  onCloseBtnClicked(e: any) {}
+  onCloseBtnClicked(e: any) {
+    this.router.navigate(['connector-home']);
+  }
 
   onConsumerKeyHideClick(e: any) {
     this.consumerKeyHide = !this.consumerKeyHide;

@@ -368,7 +368,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
         data.VatClassRate = result.Rate;
         data.VatClassId = result.Id;
-        debugger
         this.GetTotalVatAmount(data);
       });
     } else {
@@ -420,7 +419,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.document.DocumentTypeId = this.selectedDocType.Id;
         this.document.DocumentStatusId = this.selectedStatus.Id;
         this.document.DocumentTotal = this.total;
-debugger
         this.documentsViewModel
           .InsertDto(this.document)
           .subscribe((result: any) => {

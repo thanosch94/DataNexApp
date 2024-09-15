@@ -156,7 +156,6 @@ export class AppComponent {
   checkAndAddTab(data: RoutesRecognized) {
     let comp = data.state.root.firstChild?.component;
     let webAppBase = WebAppBase;
-debugger
 
     if (this.isMenuItem || this.isNavBarItem) {
       let tabItem = this.menuItemsArray.find(

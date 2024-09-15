@@ -142,7 +142,6 @@ export class DnGridComponent implements OnInit {
        this.dataSource[i].DataSource = []
 
       }
-      debugger
     }
     this.matDataSource = new MatTableDataSource(this._dataSource);
     this.matDataSource.paginator = this.paginator;

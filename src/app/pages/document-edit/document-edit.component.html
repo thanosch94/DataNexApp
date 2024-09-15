@@ -627,7 +627,7 @@
       </tr>
     </table> -->
 
-    <dn-grid
+    <dn-grid *ngIf="productsDataSource && columns"
       #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
