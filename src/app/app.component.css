@@ -39,7 +39,7 @@ margin-left:5%;
   cursor: pointer;
 }
 .main-content{
-  width: auto !important;;
+  width: 85% !important;;
 }
 
 .inline{
@@ -134,6 +134,8 @@ margin-right: auto;
 }
 .tab-group{
   margin-top: 1%;
+  overflow: hidden;
+  height: 94%;
 }
 
 ::ng-deep .tab-header{
@@ -179,3 +181,17 @@ margin-right: auto;
   padding-left:10%;
 }
 
+.footer{
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Smoother shadow */
+  background-color: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+  align-content: center;
+  position: fixed;
+  bottom: 0;
+  width: inherit;
+}
+.footer > div{
+  margin:2px 1% ;
+}
