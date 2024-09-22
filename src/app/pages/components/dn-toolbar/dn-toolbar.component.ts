@@ -24,6 +24,7 @@ export class DnToolbarComponent {
 @Input() title:string;
 @Input() entityId:Guid;
 @Input() isDialog:boolean;
+@Input() visible:boolean = true;
 
 @Output()onDeleteBtnClicked = new EventEmitter()
 @Output()onSaveBtnClicked = new EventEmitter()

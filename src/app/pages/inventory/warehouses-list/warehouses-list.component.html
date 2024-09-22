@@ -8,8 +8,8 @@
 <div class="warehouses-list">
 
     <dn-grid  #warehousesGrid
-    [dataSource]="warehousesDataSource"
-    [columns]="warehousesColumns"
+    [dataSource]="dataSource"
+    [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowSaving)="onWareHouseSaving($event)"

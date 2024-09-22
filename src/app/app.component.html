@@ -59,7 +59,10 @@
         </div>
       </mat-sidenav>
       <mat-sidenav-content [ngClass]="sidenavIsOpen?'main-content-with-opened-sidenav':'main-content-with-closed-sidenav'">
-        <mat-tab-group
+        <div *ngIf="tabs.length==0">
+          <app-sales-reports [displayToolbar]="false"></app-sales-reports>
+        </div>
+        <mat-tab-group [ngClass]="tabs.length>0?'display-tab-group':'hide-tab-group'"
           class="tab-group"
           [color]="'primary'"
           [selectedIndex]="selectedTab.value"
@@ -91,10 +94,10 @@
         </mat-tab-group>
         <div class="footer">
           <div>
-            Copyright © 2024
+            Copyright © 2024 DataNex. All rights reserved.
           </div>
           <div>
-            App Version: 1.0.2 / Api Version: 1.0.3
+            App Version: {{appVersion}} / Api Version: {{apiVersion}}
           </div>
         </div>
 

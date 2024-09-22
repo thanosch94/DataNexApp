@@ -38,6 +38,7 @@ import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
+import { SalesReportsComponent } from "./pages/sales/sales-reports/sales-reports.component";
 
 @Component({
   selector: 'app-root',
@@ -54,7 +55,8 @@ import { DnIconList } from './enumLists/dn-icon.list';
     HttpClientModule,
     MatDialogModule,
     MatTooltipModule,
-  ],
+    SalesReportsComponent
+],
   providers: [AuthService, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -75,6 +77,8 @@ export class AppComponent {
   faCaretDown: any;
   faCaretUp: any;
   selectedMenuItem: Guid;
+  appVersion: string;
+  apiVersion: string;
   constructor(
     private auth: AuthService,
     private router: Router,
@@ -91,7 +95,8 @@ export class AppComponent {
 
     this.faFile = faFile;
     this.faDoorOpen = faDoorOpen;
-
+    this.appVersion = WebAppBase.version
+    this.apiVersion = WebAppBase.apiVersion
     this.faCaretDown = faCaretDown;
     this.faCaretUp = faCaretUp;
     this.tabs = tabsService.getTabs();

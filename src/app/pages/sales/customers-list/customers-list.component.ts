@@ -26,6 +26,8 @@ import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
+import { DnColumnDto } from '../../../dto/dn-column.dto';
 
 @Component({
   selector: 'app-customers-list',
@@ -43,31 +45,18 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DnGridComponent
   ],
   templateUrl: './customers-list.component.html',
   styleUrl: './customers-list.component.css',
 })
 
 export class CustomersListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('customersTable') customersTable: MatTable<CustomerDto>;
-
-  displayedColumns: string[] = [
-    'Name',
-    'Address',
-    'Region',
-    'PostalCode',
-    'City',
-    'Country',
-    'Phone1',
-    'Phone2',
-    'buttons',
-  ];
-  dataSource: MatTableDataSource<CustomerDto>;
+  dataSource: CustomerDto[];
   customersViewModel: CustomersViewModel;
   customer_list_text: string;
+  columns:DnColumnDto[]
 
   constructor(
     private http: HttpClient,
@@ -82,33 +71,77 @@ export class CustomersListComponent implements OnInit {
 
   ngOnInit() {
     this.getData();
+    this.getColumns();
   }
 
   getData() {
     this.customersViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource = result;
+
     });
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  getColumns(){
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'Address',
+        DataType: 'string',
+        Caption: 'Address',
+      },
+      {
+        DataField: 'Region',
+        DataType: 'string',
+        Caption: 'Region',
+      },
+      {
+        DataField: 'PostalCode',
+        DataType: 'string',
+        Caption: 'Postal Code',
+      },
+      {
+        DataField: 'City',
+        DataType: 'string',
+        Caption: 'City',
+      },
+      {
+        DataField: 'Country',
+        DataType: 'string',
+        Caption: 'Country',
+      },
+      {
+        DataField: 'Phone1',
+        DataType: 'string',
+        Caption: 'Phone 1',
+      },
+      {
+        DataField: 'Phone2',
+        DataType: 'string',
+        Caption: 'Phone 2',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ]
   }
 
   addCustomer() {
     this.router.navigate(['customer-edit']);
   }
 
-  editCustomer(customer: any) {
-    WebAppBase.data = customer.Id;
-    this.router.navigate(['customer-edit']);
-  }
+
 
   deleteCustomer(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
@@ -155,6 +188,14 @@ export class CustomersListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.customersTable.renderRows();
+  }
+
+  onRowEditing(e:any){
+    WebAppBase.data = e.Id;
+    this.router.navigate(['customer-edit']);
+  }
+
+  onRowDelete(e:any){
+    this.deleteCustomer(e)
   }
 }

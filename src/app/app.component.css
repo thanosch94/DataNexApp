@@ -211,3 +211,10 @@ margin-right: auto;
 .tab-header{
   font-size: 11px !important;
 }
+
+.display-tab-group{
+  display: block;
+}
+.hide-tab-group{
+  display: none;
+}

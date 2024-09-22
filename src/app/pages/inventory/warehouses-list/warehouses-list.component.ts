@@ -22,9 +22,9 @@ export class WarehousesListComponent {
   @ViewChild('warehousesGrid') warehousesGrid:DnGridComponent
   warehouses_list_title_text: any;
 
-  warehousesColumns: DnColumnDto[] = [];
+  columns: DnColumnDto[] = [];
   warehousesViewModel: WarehousesViewModel;
-  warehousesDataSource: any;
+  dataSource: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -50,11 +50,11 @@ export class WarehousesListComponent {
 
   getData(){
     this.warehousesViewModel.GetAll().subscribe((result: any) => {
-      this.warehousesDataSource = result;
+      this.dataSource = result;
     });
   }
   getColumns() {
-    this.warehousesColumns = [
+    this.columns = [
       {
         DataField: 'Id',
         DataType: 'string',

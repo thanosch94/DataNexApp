@@ -1,4 +1,4 @@
-<mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
+<mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'" *ngIf="visible">
   <span class="toolbar-title">{{ title }}</span>
   <span class="example-spacer"></span>
   <button

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { color } from 'echarts';
 import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
@@ -17,6 +17,7 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
   styleUrl: './sales-reports.component.css',
 })
 export class SalesReportsComponent {
+  @Input() displayToolbar:boolean = true;
   salesPerMonthOptions: any;
   productsSoldPerMonthOptions: any;
   salesByLocationOptions: any;
