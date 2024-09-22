@@ -137,7 +137,7 @@ export class DnGridComponent implements OnInit {
   }
   public set dataSource(v: any) {
     this._dataSource = v;
-    if(this._dataSource.length>0){
+    if(this._dataSource?.length>0){
       for(let i=0; i<this._dataSource.length; i++){
        this.dataSource[i].DataSource = []
 

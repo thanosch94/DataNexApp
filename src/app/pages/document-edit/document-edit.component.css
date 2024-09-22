@@ -144,6 +144,7 @@ mat-form-field{
   width:100%;
 }
 
+
 .grid-e-docstatus{
   grid-area: e;
   gap:2rem;
@@ -320,9 +321,19 @@ width: 100%;
   border-radius: 3%!important;
 
 }
+::ng-deep span{
+  font-size: 12px!important;
+}
+::ng-deep input{
+  font-size: 12px!important;
 
-
+}
 
 .add-charges-btn{
   position: relative;
 }
+.form ::ng-deep mat-label{
+  font-size: 12px!important;
+
+}
+

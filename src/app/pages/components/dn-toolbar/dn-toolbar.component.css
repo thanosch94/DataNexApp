@@ -20,7 +20,6 @@
 
 .button{
   color: white;
-  padding:22px;
 }
 /* .button:hover{
   cursor: pointer!important;
@@ -31,7 +30,14 @@ span{
 }
 .icons{
   color:white;
+  padding: 0;
+  height: auto!important;
 }
 ::ng-deep .button:hover{
 cursor: pointer!important;;
 }
+
+.toolbar-title, .button-title, .icons{
+  font-size: small!important
+}
+

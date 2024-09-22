@@ -49,3 +49,7 @@ margin:2%;
 .right-click-menu-item:active {
   background-color: rgb(170, 170, 170);
 }
+
+.document-list{
+  margin:1%
+}

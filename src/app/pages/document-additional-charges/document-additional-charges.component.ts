@@ -57,12 +57,17 @@ export class DocumentAdditionalChargesComponent implements OnInit{
     this.documentAdditionalChargesViewModel = new DocumentAdditionalChargesViewModel(this.http, this.auth)
     this.additionalChargesViewModel = new AdditionalChargesViewModel(this.http, this.auth)
     this.documentId =dialogData.DocumentId
+    this.additionalChargesViewModel.GetAll().subscribe((result:any)=>{
+      this.additionalChargesDataSource = result
+
+    })
   }
 
   ngOnInit(): void {
     this.document_additionl_charges_text = "Additional Charges"
     this.getDocumentAdditionalCharges();
     this.getColumns()
+
   }
 
   getDocumentAdditionalCharges(){
@@ -76,8 +81,7 @@ export class DocumentAdditionalChargesComponent implements OnInit{
   }
 
   getColumns() {
-    this.additionalChargesViewModel.GetAll().subscribe((result:any)=>{
-      this.additionalChargesDataSource = result
+
     this.columns = [
       {
         DataField: 'Id',
@@ -106,7 +110,7 @@ export class DocumentAdditionalChargesComponent implements OnInit{
         Caption: '',
       },
     ];
-  })
+
   }
 
   onCloseBtnClicked(e:any){

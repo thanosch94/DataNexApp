@@ -1,7 +1,7 @@
 <div class="dn-grid-container">
-  <mat-form-field *ngIf="canDisplaySearch" class="margin">
+  <mat-form-field class=" search-input" style="height: 45px; width:35%;" *ngIf="canDisplaySearch">
     <mat-label>Search</mat-label>
-    <input
+    <input class="search-input-text"
       matInput
       (keyup)="applyFilter($event)"
       placeholder="Ex. Maria"
@@ -11,7 +11,7 @@
   <article *ngIf="enableAddButton" class="add-button example-form">
     <button mat-button class="button-add-row" (click)="add($event)">Add</button>
   </article>
-  <div class="mat-elevation-z8 table-container margin">
+  <div class="mat-elevation-z8 table-container">
     <table
       class="table"
       #matTable
@@ -30,7 +30,7 @@
           *matHeaderCellDef
           mat-sort-header
         >
-          {{ column.Caption }}
+          <span class="column-title"> {{ column.Caption }}</span>
         </th>
         <td
           [ngClass]="displayTableBorder ? 'display-border' : ''"
@@ -48,6 +48,7 @@
 
           >
             <input
+            class="string-input-text"
               *ngIf="row.IsEditable"
               matInput
               [readonly]="column.ReadOnly"
@@ -89,7 +90,7 @@
               column.DataType == 'boolean' && row.IsEditable && !column.Lookup
             "
             style="width: 100%"
-            class="white-input center"
+            class="white-input center "
           >
             <mat-checkbox
               *ngIf="row.IsEditable"
@@ -108,6 +109,7 @@
 
         >
           <input
+          class="autocomplete-input-text"
             *ngIf="row.IsEditable"
             matInput
             type="text"
@@ -125,7 +127,7 @@
               *ngFor="let data of column.Dependent && row.DataSource?row.DataSource[column.DataField]:column.Lookup.DataSource; trackBy:lookupFieldTrackBy"
               [value]="data"
             >
-              <span>{{ data[column.Lookup.DisplayExpr] }}</span>
+              <span class="autocomplete-options">{{ data[column.Lookup.DisplayExpr] }}</span>
 
             </mat-option>
 
@@ -190,8 +192,8 @@
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: matColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="matColumns" ></tr>
+      <tr mat-row class="table-row" *matRowDef="let row; columns: matColumns"></tr>
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>

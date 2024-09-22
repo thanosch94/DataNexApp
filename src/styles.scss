@@ -9,6 +9,28 @@ body { margin: 0; font-family: Roboto,"Helvetica Neue Light","Helvetica Neue","H
 
 
 
+/* width */
+::-webkit-scrollbar {
+  width: 7px!important;
+}
 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+p{
+  font-size: 12px;
+}
 
 

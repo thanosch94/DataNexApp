@@ -1,5 +1,5 @@
 <mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
-  <span>{{ title }}</span>
+  <span class="toolbar-title">{{ title }}</span>
   <span class="example-spacer"></span>
   <button
     class="button"
@@ -8,7 +8,7 @@
     (click)="onRefreshClicked($event)"
   >
     <mat-icon class="icons">refresh</mat-icon>
-    <span>Refresh</span>
+    <span class="button-title">Refresh</span>
   </button>
   <button
   class="button"
@@ -17,7 +17,7 @@
     (click)="onDeleteClicked($event)"
   >
     <mat-icon class="icons">delete</mat-icon>
-    <span>Delete</span>
+    <span class="button-title">Delete</span>
   </button>
   <button
     class="button"
@@ -26,7 +26,7 @@
     (click)="onInsertClicked($event)"
   >
     <mat-icon class="icons">add</mat-icon>
-    <span>Add</span>
+    <span class="button-title">Add</span>
   </button>
   <button
     class="button"
@@ -35,12 +35,12 @@
     (click)="onSaveClicked($event)"
   >
     <mat-icon class="icons">save</mat-icon>
-    <span>Save</span>
+    <span class="button-title">Save</span>
   </button>
   <mat-dialog-actions *ngIf="isDialog">
     <button class="button" *ngIf="canExit" mat-button [mat-dialog-close]="true">
       <mat-icon class="icons">close</mat-icon>
-      <span>Close</span>
+      <span class="button-title">Close</span>
     </button>
   </mat-dialog-actions>
   <button
@@ -50,6 +50,6 @@
     (click)="onCloseClicked($event)"
   >
     <mat-icon class="icons">exit_to_app</mat-icon>
-    <span>Close</span>
+    <span class="button-title">Close</span>
   </button>
 </mat-toolbar>

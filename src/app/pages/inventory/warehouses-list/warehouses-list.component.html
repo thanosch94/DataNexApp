@@ -5,8 +5,9 @@
   [title]="warehouses_list_title_text"
   (onInsertBtnClicked)="onInsertBtnClicked($event)"
 ></dn-toolbar>
+<div class="warehouses-list">
 
-    <dn-grid  class="margin" #warehousesGrid
+    <dn-grid  #warehousesGrid
     [dataSource]="warehousesDataSource"
     [columns]="warehousesColumns"
     [canDisplaySearch]="true"
@@ -17,3 +18,5 @@
     >
 
     </dn-grid>
+  </div>
+

@@ -1,3 +1,4 @@
+import { DocumentTypesViewModel } from './../../view-models/document-types.viewmodel';
 import { TabsService } from './../../services/tabs.service';
 import { AuthService } from './../../services/auth.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -23,6 +24,9 @@ import { CdkMenu, CdkMenuItem, CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from '../../base/navigation';
+import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
+import { DnColumnDto } from '../../dto/dn-column.dto';
+import { CustomersViewModel } from '../../view-models/customers.viewmodel';
 
 @Component({
   selector: 'app-documents-list',
@@ -45,29 +49,24 @@ import { Navigation } from '../../base/navigation';
     CommonModule,
     DnToolbarComponent,
     MatTooltipModule,
+    DnGridComponent,
   ],
   templateUrl: './documents-list.component.html',
   styleUrl: './documents-list.component.css',
 })
 export class DocumentsListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('documentListTable') documentListTable: MatTable<DocumentDto>;
-  displayedColumns: string[] = [
-    'DocumentTypeName',
-    'DocumentNumber',
-    'CustomerName',
-    'DocumentTotal',
-    'edit',
-  ];
-  dataSource: MatTableDataSource<CustomerDto>;
-  rowData: any;
-  customersViewModel: DocumentsViewModel;
+  dataSource: DocumentDto[];
+  customersViewModel: CustomersViewModel;
   documentsViewModel: DocumentsViewModel;
   documentlist_text: string;
   documentType: any;
   documentGroup: any;
   tabsService: TabsService;
+  columns: DnColumnDto[];
+  documentsTypeViewModel: DocumentTypesViewModel;
+  documentTypesDataSource: any;
+  customersDataSource: any;
+  rowData: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -76,8 +75,20 @@ export class DocumentsListComponent implements OnInit {
   ) {
     this.tabsService = new TabsService(route);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
+    this.documentsTypeViewModel = new DocumentTypesViewModel(
+      this.http,
+      this.auth
+    );
+    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.documentlist_text = 'Document List';
+    this.documentsTypeViewModel.GetAll().subscribe((result: any) => {
+      this.documentTypesDataSource = result;
+      this.customersViewModel.GetAll().subscribe((result: any) => {
+        this.customersDataSource = result;
+        this.getColumns();
 
+      });
+    });
     this.route.queryParams.subscribe((params: any) => {
       this.documentGroup = params['Group'];
       this.documentType = params['Type'];
@@ -99,49 +110,84 @@ export class DocumentsListComponent implements OnInit {
         if (
           this.documentType == 'SalesDocuments' ||
           this.documentType == 'PurchaseDocuments' ||
-          this.documentType =='InventoryAdjustments'
+          this.documentType == 'InventoryAdjustments'
         ) {
-          this.dataSource = new MatTableDataSource(result);
+          this.dataSource = result;
+          debugger
         } else if (this.documentType == 'Invoices-Receipts') {
           let invoicesReceiptDocument = result.filter(
             (x: any) =>
               x.DocumentTypeId == WebAppBase.Invoice ||
               x.Id == WebAppBase.Receipt
           );
-          this.dataSource = new MatTableDataSource(invoicesReceiptDocument);
+          this.dataSource = invoicesReceiptDocument;
         } else if (this.documentType == 'SupplierInvoices') {
           let purchaseInvoicesDocument = result.filter(
             (x: any) => x.DocumentTypeId == WebAppBase.PurchaseInvoice
           );
 
-          this.dataSource = new MatTableDataSource(purchaseInvoicesDocument);
+          this.dataSource = purchaseInvoicesDocument;
         }
-
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
       });
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  getColumns() {
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'DocumentTypeId',
+        DataType: 'string',
+        Caption: 'Document Type',
+        Lookup: {
+          DataSource: this.documentTypesDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+      },
+      {
+        DataField: 'DocumentNumber',
+        DataType: 'number',
+        Caption: 'Document Number',
+      },
+      {
+        DataField: 'CustomerId',
+        DataType: 'string',
+        Caption: 'Customer',
+        Lookup: {
+          DataSource: this.customersDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+      },
+      {
+        DataField: 'DocumentTotal',
+        DataType: 'number',
+        Caption: 'Total',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      }
+    ];
   }
+  // applyFilter(e: any) {
+  //   const filterValue = (e.target as HTMLInputElement).value;
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+
+  //   if (this.dataSource.paginator) {
+  //     this.dataSource.paginator.firstPage();
+  //   }
+  // }
   getRowData(rowData: any) {
     this.rowData = rowData;
   }
-  createNewDocument(id: number): DocumentDto {
-    let document = new DocumentDto();
-    return document;
-  }
 
-  addDocument() {
-    Navigation.data = this.documentGroup;
-    this.router.navigate(['document-edit']);
-  }
 
   editDocument(document: DocumentDto) {
     WebAppBase.data = document.Id;
@@ -151,7 +197,6 @@ export class DocumentsListComponent implements OnInit {
         docCode: document.DocumentTypeName + document.DocumentNumber,
       },
     });
-
   }
 
   onTransformDocumentClicked(e: any, row: any) {}
@@ -165,6 +210,15 @@ export class DocumentsListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.documentListTable.renderRows();
+  }
+
+  onRowEditing(e:any){
+    WebAppBase.data = e.Id;
+
+    this.router.navigate(['document-edit'], {
+      queryParams: {
+        docCode: e.DocumentTypeName + e.DocumentNumber,
+      },
+    });
   }
 }
