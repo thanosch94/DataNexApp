@@ -89,11 +89,14 @@ margin-right: auto;
 
 .nav-btns{
   display: inline-flex;
+  justify-content: space-evenly;
   margin-right: 2%;
 }
 
 .nav-menu-btn{
   margin-left:2%;
+  display: flex;
+  align-items: center;
 }
 
 ::ng-deep .mdc-tab__content{
@@ -115,7 +118,6 @@ margin-right: auto;
 
 .menu-btn{
   padding: 4px 7px;
-  border-radius: 5px;
   background-color: #0B6AA5;
   color:white;
 }
@@ -130,7 +132,12 @@ margin-right: auto;
   border-radius: 5px;
   background-color: #F38F1C;
   color:white;
-  margin-right: 6%;
+}
+.settings-btn{
+  padding: 4px 7px;
+  border-radius: 5px;
+  background-color: #0B6AA5;
+  color:white;
 }
 .menu-btn:hover{
   cursor: pointer;
@@ -143,6 +150,10 @@ margin-right: auto;
 .user-btn:hover{
   cursor: pointer;
   background-color: #D67E19;
+}
+.settings-btn:hover{
+  cursor: pointer;
+  background-color: #0d3b84;
 }
 .tab-group{
   margin-top: 1%;

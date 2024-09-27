@@ -193,6 +193,11 @@ export class Navigation {
       Icon: 'faGear',
       Children: [
         {
+          Id: Guid.parse('13be0b23-9fb5-49e0-9ec0-d32ac1c6a808'),
+          Name: 'Companies',
+          Path: 'companies-list',
+        },
+        {
           Id: Guid.parse('7cc4cbdc-44c7-405f-9b8a-a2ee1c267a04'),
           Name: 'Document Types',
           Path: 'document-types-list',

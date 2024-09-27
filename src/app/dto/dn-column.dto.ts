@@ -15,4 +15,5 @@ export class DnColumnDto {
   //Number Inputs
   Min?:number
   Max?:number
+  DefaultValue?: any;
 }

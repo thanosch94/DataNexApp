@@ -1,0 +1,22 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="companies_list_title_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-grid
+    class="margin"
+    #companiesGrid
+    [dataSource]="companiesDataSource"
+    [columns]="companiesColumns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onCompanySaving($event)"
+    (onRowDelete)="onCompanyDelete($event)"
+    (onRowStopEditing)="onCompaniesStopEditing($event)"
+  >
+  </dn-grid>
+</div>

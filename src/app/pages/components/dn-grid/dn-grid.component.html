@@ -124,7 +124,7 @@
             "
           >
             <mat-option
-              *ngFor="let data of column.Dependent && row.DataSource?row.DataSource[column.DataField]:column.Lookup.DataSource; trackBy:lookupFieldTrackBy"
+              *ngFor="let data of (column.Dependent && row.DataSource)?row.DataSource[column.DataField]:column.Lookup.DataSource; trackBy:lookupFieldTrackBy"
               [value]="data"
             >
               <span class="autocomplete-options">{{ data[column.Lookup.DisplayExpr] }}</span>

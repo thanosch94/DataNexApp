@@ -188,7 +188,7 @@ export class DnGridComponent implements OnInit {
       let newRow = new Object();
       this.columns.forEach((column) => {
         Object.defineProperty(newRow, column.DataField, {
-          value: null,
+          value: column.DefaultValue,
           writable: true,
         });
       });
@@ -245,11 +245,10 @@ export class DnGridComponent implements OnInit {
   }
 
    onDataLookupSelectionChanged(column: DnColumnDto, data: any, lookup: any) {
-    this.ngZone.run(()=>{
+    debugger
       data[column.DataField] = lookup[column.Lookup!.ValueExpr];
      column.OnSelectionChange(data, this.columns)
 
-    })
     this.renderRows()
 
 
@@ -264,6 +263,7 @@ export class DnGridComponent implements OnInit {
   });
 
   onValueChange(data:any, column:DnColumnDto){
+    debugger
     if(column.OnValueChange!=null){
           column.OnValueChange(data,this.dataSource)
           this.table.renderRows()
@@ -273,21 +273,21 @@ export class DnGridComponent implements OnInit {
 
   onClick(row:any, column:DnColumnDto) {
       //column.Lookup!.DataSource = col.Lookup!.DataSource
-
+debugger
       if(column.Dependent){
-      let col = this.columns.find(x=>x.DataField ==column.DataField)!;
+      let col = this.columns.find(x=>x.DataField ==column.DataField);
 
       let newDataSourceObject = new Object()
       Object.defineProperty(newDataSourceObject, column.DataField, {
-        value: col.Lookup!.DataSource,
+        value: col!.Lookup!.DataSource,
         writable: true,
       });
       if(!row.DataSource){
         row.DataSource = []
-        row.DataSource[column.DataField]=col.Lookup!.DataSource
+        row.DataSource[column.DataField]=col!.Lookup!.DataSource
 
       }else if(!row.DataSource.some((x:any)=>newDataSourceObject.hasOwnProperty(x[column.DataField]))){
-        row.DataSource[column.DataField]=col.Lookup!.DataSource
+        row.DataSource[column.DataField]=col!.Lookup!.DataSource
       }
       this.ref.detectChanges()
       this.renderRows()

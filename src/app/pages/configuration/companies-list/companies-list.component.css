@@ -1,0 +1,21 @@
+.margin{
+  margin:1%;
+}
+
+.table-header {
+  width: 90%;
+  text-align: right;
+  margin-bottom: 10px;
+}
+.flexbox{
+  display: flex;
+  justify-content: center;
+}
+.mat-column-buttons {
+  text-align: right;
+}
+
+::ng-deep .green-snackbar .mdc-snackbar__surface {
+  background-color:#1b9e1b!important;
+  color: white;
+}

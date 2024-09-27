@@ -47,8 +47,7 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
   styleUrl: './document-types.component.css',
 })
 export class DocumentTypesComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+
   @ViewChild('documentTypesGrid')
   documentTypesGrid: DnGridComponent;
   documentTypesDataSource: any;

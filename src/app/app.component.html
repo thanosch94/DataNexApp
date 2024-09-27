@@ -5,29 +5,43 @@
   <div class="navbar">
     <div class="nav-menu-btn">
       <button
+        [ngStyle]="{ transform: 'scale(0.8)' }"
         class="menu-btn"
-        mat-button
         matTooltip="Toggle Menu"
         (click)="onMenuBtnClicked()"
+        mat-mini-fab
       >
-        <i class="fa fa-bars" aria-hidden="true"></i></button
-      ><b class="menu-text"> Menu</b>
+        <mat-icon>menu</mat-icon>
+      </button>
+
+      <b class="menu-text"> Menu</b>
     </div>
     <div>
       <img [src]="logoPath" width="137" height="50" />
     </div>
     <div class="nav-btns">
       <button
+        [ngStyle]="{ transform: 'scale(0.9)' }"
+        class="settings-btn"
+        mat-mini-fab
+        matTooltip="Settings"
+        (click)="onGearBtnClicked($event)"
+      >
+        <i class="fa fa-gear"></i>
+      </button>
+      <button
+        [ngStyle]="{ transform: 'scale(0.9)' }"
         class="user-btn"
-        mat-button
+        mat-mini-fab
         matTooltip="User Info"
         (click)="onUserBtnClicked($event)"
       >
         <i class="fa fa-user"></i>
       </button>
       <button
+        [ngStyle]="{ transform: 'scale(0.9)' }"
         class="exit-btn"
-        mat-button
+        mat-mini-fab
         matTooltip="Log Out"
         (click)="onLogOutBtnClicked($event)"
       >
@@ -58,11 +72,18 @@
           </div>
         </div>
       </mat-sidenav>
-      <mat-sidenav-content [ngClass]="sidenavIsOpen?'main-content-with-opened-sidenav':'main-content-with-closed-sidenav'">
-        <div *ngIf="tabs.length==0">
+      <mat-sidenav-content
+        [ngClass]="
+          sidenavIsOpen
+            ? 'main-content-with-opened-sidenav'
+            : 'main-content-with-closed-sidenav'
+        "
+      >
+        <div *ngIf="tabs.length == 0">
           <app-sales-reports [displayToolbar]="false"></app-sales-reports>
         </div>
-        <mat-tab-group [ngClass]="tabs.length>0?'display-tab-group':'hide-tab-group'"
+        <mat-tab-group
+          [ngClass]="tabs.length > 0 ? 'display-tab-group' : 'hide-tab-group'"
           class="tab-group"
           [color]="'primary'"
           [selectedIndex]="selectedTab.value"
@@ -88,21 +109,18 @@
                 </button>
               </ng-template>
             </div>
-            <div><ng-container *ngComponentOutlet="tab.Component"></ng-container></div>
+            <div>
+              <ng-container *ngComponentOutlet="tab.Component"></ng-container>
+            </div>
           </mat-tab>
-
         </mat-tab-group>
         <div class="footer">
+          <div>Copyright © 2024 DataNex. All rights reserved.</div>
           <div>
-            Copyright © 2024 DataNex. All rights reserved.
-          </div>
-          <div>
-            App Version: {{appVersion}} / Api Version: {{apiVersion}}
+            App Version: {{ appVersion }} / Api Version: {{ apiVersion }}
           </div>
         </div>
-
       </mat-sidenav-content>
     </mat-sidenav-container>
   </div>
-
 </div>

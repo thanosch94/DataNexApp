@@ -882,7 +882,7 @@ this.ref.detectChanges()
         Dependent: true,
         Lookup:{
           DataSource:this.productSizesDataSource,
-          ValueExpr:'ProductSizeId',
+          ValueExpr:'SizeId',
           DisplayExpr:'SizeName'
         },
         OnClick:()=>{

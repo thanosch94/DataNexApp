@@ -39,6 +39,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
 import { SalesReportsComponent } from "./pages/sales/sales-reports/sales-reports.component";
+import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 
 @Component({
   selector: 'app-root',
@@ -55,7 +56,8 @@ import { SalesReportsComponent } from "./pages/sales/sales-reports/sales-reports
     HttpClientModule,
     MatDialogModule,
     MatTooltipModule,
-    SalesReportsComponent
+    SalesReportsComponent,
+    MatMiniFabButton
 ],
   providers: [AuthService, HttpClientModule],
   templateUrl: './app.component.html',
@@ -235,6 +237,12 @@ export class AppComponent {
     this.isNavBarItem = true;
     WebAppBase.data = this.auth.user.Id;
     this.router.navigate(['user-edit']);
+  }
+
+  onGearBtnClicked(e: any) {
+    //this.isNavBarItem = true;
+    //WebAppBase.data = this.auth.user.Id;
+    //this.router.navigate(['user-edit']);
   }
 
   onMenuCaretArrowClicked(e: any, menuItem: MenuItemDto) {

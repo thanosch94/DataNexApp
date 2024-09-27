@@ -26,6 +26,7 @@ import { DocumentTypesComponent } from './pages/configuration/document-types/doc
 import { StatusesListComponent } from './pages/configuration/statuses-list/statuses-list.component';
 import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier-edit.component';
 import { VatClassesComponent } from './pages/configuration/vat-classes/vat-classes.component';
+import { CompaniesListComponent } from './pages/configuration/companies-list/companies-list.component';
 
 export const routes: Routes = [
   {
@@ -167,6 +168,11 @@ export const routes: Routes = [
   {
     path:'vat-classes-list',
     component:VatClassesComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'companies-list',
+    component:CompaniesListComponent,
     canActivate:[authGuard]
   }
 
