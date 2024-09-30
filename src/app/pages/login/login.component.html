@@ -3,7 +3,10 @@
     <img [src]="logoPath" width="205" height="75" />
   </div>    <form method="post">
     	<input type="text" name="u" placeholder="Username" [(ngModel)]="loginData.UserName" required="required" />
-        <input type="password" name="p" placeholder="Password" [(ngModel)]="loginData.Password"  required="required" />
-        <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
+      <input type="password" name="p" placeholder="Password" [(ngModel)]="loginData.Password"  required="required" />
+      <select name="companies" id="companies"  [(ngModel)]="loginData.CompanyId">
+        <option *ngFor="let company of companies" [value]="company.Id">{{company.Name}}</option>
+
+      </select>      <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
     </form>
 </div>

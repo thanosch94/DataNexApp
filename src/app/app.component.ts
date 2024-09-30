@@ -1,3 +1,4 @@
+import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
@@ -40,6 +41,8 @@ import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
 import { SalesReportsComponent } from "./pages/sales/sales-reports/sales-reports.component";
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-root',
@@ -57,7 +60,10 @@ import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
     MatDialogModule,
     MatTooltipModule,
     SalesReportsComponent,
-    MatMiniFabButton
+    MatMiniFabButton,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule
 ],
   providers: [AuthService, HttpClientModule],
   templateUrl: './app.component.html',
@@ -81,7 +87,10 @@ export class AppComponent {
   selectedMenuItem: Guid;
   appVersion: string;
   apiVersion: string;
+  companiesViewModel: CompaniesViewModel;
+  loggedInCompanyName: any;
   constructor(
+    private http:HttpClient,
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
@@ -94,7 +103,6 @@ export class AppComponent {
     this.logoPath = './assets/images/datanex_logo.png';
 
     // }
-
     this.faFile = faFile;
     this.faDoorOpen = faDoorOpen;
     this.appVersion = WebAppBase.version
@@ -109,10 +117,12 @@ export class AppComponent {
         }
       }
       this.isAuthenticated = this.auth.isAuthenticated;
+      this.loggedInCompanyName=this.auth.loggedInCompany.Name
       //this.ref.detectChanges()
     });
 
     this.getMenuItemsForTabs();
+    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth)
   }
   menuItems: MenuItemDto[] = Navigation.menu;
   selectedTab = new FormControl(0);

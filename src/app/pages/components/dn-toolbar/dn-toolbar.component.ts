@@ -22,7 +22,7 @@ export class DnToolbarComponent {
 @Input() canInsert:boolean;
 @Input() canRefresh:boolean;
 @Input() title:string;
-@Input() entityId:Guid;
+@Input() entityId?:Guid;
 @Input() isDialog:boolean;
 @Input() visible:boolean = true;
 

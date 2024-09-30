@@ -66,7 +66,6 @@ export class DocumentAdditionalChargesComponent implements OnInit{
   ngOnInit(): void {
     this.document_additionl_charges_text = "Additional Charges"
     this.getDocumentAdditionalCharges();
-    this.getColumns()
 
   }
 
@@ -75,6 +74,8 @@ export class DocumentAdditionalChargesComponent implements OnInit{
       this.documentAdditionalChargesViewModel.GetByDocumentId(this.documentId).subscribe((result:any)=>{
         if(result){
           this.dataSource = result;
+          this.getColumns()
+
         }
       })
     }

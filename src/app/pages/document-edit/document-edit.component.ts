@@ -100,6 +100,7 @@ import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.co
 export class DocumentEditComponent implements OnInit, OnDestroy {
   @ViewChildren('td') cells: QueryList<ElementRef>;
   @ViewChild('productstable') productstable: DnGridComponent;
+
   selectedDocType: DocumentTypeDto = new DocumentTypeDto();
   documentsViewModel: DocumentsViewModel;
   documentId: any;
@@ -123,6 +124,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   suppliers: any;
   columns: DnColumnDto[] = [];
   productSizesDataSource: any[];
+  skuSelected: boolean;
   onKeydown(e: any, index: number) {
     if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
       let cellsArray = this.cells.toArray();
@@ -198,8 +200,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.documentAdditionalChargesViewModel =
       new DocumentAdditionalChargesViewModel(this.http, this.auth);
     this.documentId = WebAppBase.data;
-    this.currency = WebAppBase.currency;
-    WebAppBase.data = undefined;
+    WebAppBase.data = undefined;    this.currency = WebAppBase.currency;
     let activeTab = TabsService.tabs.find((x) => x.Active == true);
     activeTab!.Data.forEach((row: any) => {
       if (row['Group']) {
@@ -210,20 +211,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.documentType = row['Type'];
       }
     });
-    this.getLookups();
+
   }
 
   ngOnInit() {
+    this.getLookups();
 
     this.document_must_be_saved_in_order_to_add_charges_text =
       'Document must be saved first in order to add extra charges';
-
-    this.productsViewModel.GetAll().subscribe((result: any) => {
-      this.products = result;
-      this.getData();
-      this.getColumns();
-    });
-
 
     this.customersViewModel.GetAll().subscribe((result: any) => {
       this.customers = result;
@@ -233,6 +228,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.suppliersViewModel.GetAll().subscribe((result: any) => {
       this.suppliers = result;
     });
+
   }
 
   getLookups() {
@@ -240,13 +236,28 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       .GetActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
       .subscribe((result: any) => {
         this.docTypes = result;
+        this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
+          this.barcodesLookupDatasource = result;
+
+          this.statusesViewModel.GetAll().subscribe((result: any) => {
+            this.statusesList = result;
+
+            this.productSizesViewModel.GetAll().subscribe((result:any)=>{
+              this.productSizesDataSource = result
+              this.productsViewModel.GetAll().subscribe((result: any) => {
+                this.products = result;
+                this.getColumns();
+                this.getData()
+              });
+            })
+          });
+        });
+
       });
-    this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
-      this.barcodesLookupDatasource = result;
-    });
-    this.statusesViewModel.GetAll().subscribe((result: any) => {
-      this.statusesList = result;
-    });
+
+
+
+
   }
 
   getData() {
@@ -259,6 +270,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   initNewDocument() {
+    this.document = new DocumentDto()
     this.document_text = 'New Document';
     this.tabsService.setTabName(this.document_text);
     this.document.DocumentDateTime = new Date();
@@ -833,7 +845,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
  getProductSizes(productId:Guid, columns:DnColumnDto[]){
       this.productBarcodesViewModel.GetByProductId(productId).subscribe(async(result:any)=>{
+        await result
       this.productSizesDataSource = result
+      this.skuSelected =true
    columns=this.getColumns()
 this.ref.detectChanges()
     })
@@ -879,11 +893,10 @@ this.ref.detectChanges()
         DataField: 'ProductSizeId',
         DataType: 'string',
         Caption: 'Size',
-        Dependent: true,
         Lookup:{
           DataSource:this.productSizesDataSource,
-          ValueExpr:'SizeId',
-          DisplayExpr:'SizeName'
+          ValueExpr: this.skuSelected?'SizeId':'Id',
+          DisplayExpr:this.skuSelected?'SizeName':'Name'
         },
         OnClick:()=>{
         },

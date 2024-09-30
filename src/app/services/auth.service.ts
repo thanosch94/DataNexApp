@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user.dto';
 import { LoginDto } from '../dto/login.dto';
 import { environment } from '../../environments/environment';
+import { Guid } from 'guid-typescript';
+import { CompanyDto } from '../dto/company.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +15,7 @@ export class AuthService {
   accountViewModel: AccountViewModel;
   isAuthenticated: boolean = false;
 
+  loggedInCompany:CompanyDto
   private _user: UserDto;
 
   private token: string | undefined;

@@ -122,3 +122,70 @@
 
 }
 
+::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
+padding: 0!important;
+}
+
+::ng-deep .mat-mdc-icon-button{
+  width:35px !important;
+  height:35px!important;
+}
+::ng-deep .mat-row {
+  height: 35px; /* Set the desired height */
+}
+
+::ng-deep .mat-header-row {
+  height: 35px; /* Adjust the header row height if needed */
+}
+
+tr{
+  height: 35px; /* Adjust the header row height if needed */
+
+}
+
+::ng-deep .mat-icon{
+  margin-top:3%
+}
+
+.iconbutton{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.mat-mdc-cell.mat-column-buttons{
+  display: flex;
+  justify-content: end;
+}
+
+/* Removes the borders from the left and the right of the array */
+::ng-deep tr td:first-child {
+  border-left: none !important;
+}
+::ng-deep  tr td:last-child {
+  border-right: none!important;
+border-top:none!important;
+}
+
+
+/* Change the height of rows when in edit mode */
+.table ::ng-deep  .mat-mdc-form-field-infix{
+  padding: 0!important;
+}
+
+.table ::ng-deep  .mat-mdc-form-field{
+  height:35px!important;
+}
+
+/* Mat Options row height */
+.table ::ng-deep  .mat-mdc-option, .mat-mdc-option{
+  min-height:35px!important;
+}
+
+/* Align text in table cells when in edit mode */
+.table ::ng-deep  .mat-mdc-input-element{
+  margin-top:5px!important;
+  padding-left: 10px;
+}
+

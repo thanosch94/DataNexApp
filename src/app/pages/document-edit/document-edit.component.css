@@ -106,7 +106,7 @@ mat-form-field{
   height:50px!important;
 }
 
-.tab-1, .tab-2, .tab-3,.tab-4{
+.tab-1, .tab-2, .tab-3,.tab-4, .tab-5{
   margin-top: 3%;
 }
 
@@ -329,11 +329,29 @@ width: 100%;
 
 }
 
-.add-charges-btn{
-  position: relative;
-}
+
 .form ::ng-deep mat-label{
   font-size: 12px!important;
 
 }
+.add-charges-btn{
+  margin-bottom:20%
+}
+::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
+  padding: 0!important;
+  }
 
+::ng-deep .mat-mdc-icon-button{
+  width:35px !important;
+  height:35px!important;
+}
+.add-charges-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.tab5{
+  height: 25vh;
+}

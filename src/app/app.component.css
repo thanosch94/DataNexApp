@@ -69,7 +69,7 @@ margin-right: auto;
 }
 
 .screen{
-  height:calc(100% - 1px);
+  height:calc(100% - 40px);
 }
 
 
@@ -93,10 +93,19 @@ margin-right: auto;
   margin-right: 2%;
 }
 
+.logo-menu{
+  display:flex;
+  gap: 3rem !important;
+}
+
+.logo{
+  margin-left:2%
+}
 .nav-menu-btn{
   margin-left:2%;
   display: flex;
   align-items: center;
+  margin-bottom: 3%;
 }
 
 ::ng-deep .mdc-tab__content{
@@ -133,7 +142,7 @@ margin-right: auto;
   background-color: #F38F1C;
   color:white;
 }
-.settings-btn{
+.settings-btn, .company-btn{
   padding: 4px 7px;
   border-radius: 5px;
   background-color: #0B6AA5;
@@ -223,9 +232,28 @@ margin-right: auto;
   font-size: 11px !important;
 }
 
-.display-tab-group{
+/* .display-tab-group{
   display: block;
-}
+} */
 .hide-tab-group{
   display: none;
+}
+
+.flex-column{
+  flex-direction: column;
+  gap:.5rem;
+}
+
+.flex-inline{
+  display: inline-flex;
+  gap:.5rem
+}
+.basic-app-connection-info{
+  margin-top:1%;
+    width:40%;
+    justify-content: center;
+}
+.app-company-data{
+  margin-top: 1%;
+  margin-left: 3%
 }

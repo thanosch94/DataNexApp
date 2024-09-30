@@ -19,6 +19,13 @@ export class CompaniesViewModel {
     });
   }
 
+  public GetLookup() {
+
+    return this.http.get(this.service + 'Companies/getlookup', {
+      headers: this.headers,
+    });
+  }
+
   public GetById(id: Guid) {
 
     return this.http.get(this.service + 'Companies/getbyid/' + id, {

@@ -10,7 +10,6 @@ export class DnColumnDto {
   OnSelectionChange?: any;
   OnClick?: any;
   ReadOnly?: boolean = false;
-  Dependent?: boolean = false;
 
   //Number Inputs
   Min?:number

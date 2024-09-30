@@ -1,7 +1,12 @@
 <div class="dn-grid-container">
-  <mat-form-field class=" search-input" style="height: 45px; width:35%;" *ngIf="canDisplaySearch">
+  <mat-form-field
+    class="search-input"
+    style="height: 45px; width: 35%"
+    *ngIf="canDisplaySearch"
+  >
     <mat-label>Search</mat-label>
-    <input class="search-input-text"
+    <input
+      class="search-input-text"
       matInput
       (keyup)="applyFilter($event)"
       placeholder="Ex. Maria"
@@ -20,7 +25,10 @@
       matSort
     >
       <ng-container
-        *ngFor="let column of columns | visbleGridColumns; trackBy:columnsTrackBy"
+        *ngFor="
+          let column of columns | visbleGridColumns;
+          trackBy: columnsTrackBy
+        "
         matColumnDef="{{ column.DataField }}"
       >
         <th
@@ -45,10 +53,9 @@
             style="width: 100%"
             class="white-input"
             (click)="onClick(row, column)"
-
           >
             <input
-            class="string-input-text"
+              class="string-input-text"
               *ngIf="row.IsEditable"
               matInput
               [readonly]="column.ReadOnly"
@@ -62,21 +69,22 @@
           <!-- Number Input -->
           <mat-form-field
             *ngIf="
-              column.DataType == 'number' &&
-              row.IsEditable &&
-              !column.Lookup
+              column.DataType == 'number' && row.IsEditable && !column.Lookup
             "
             class="white-input"
             (click)="onClick(row, column)"
-
           >
             <input
               *ngIf="row.IsEditable"
               matInput
               [readonly]="column.ReadOnly"
               type="number"
-              [min]="column.Min !== undefined && column.Min !== null ?column.Min:null"
-              [max]="column.Max?column.Max:null"
+              [min]="
+                column.Min !== undefined && column.Min !== null
+                  ? column.Min
+                  : null
+              "
+              [max]="column.Max ? column.Max : null"
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
               (ngModelChange)="onValueChange(row, column)"
@@ -90,7 +98,7 @@
               column.DataType == 'boolean' && row.IsEditable && !column.Lookup
             "
             style="width: 100%"
-            class="white-input center "
+            class="white-input center"
           >
             <mat-checkbox
               *ngIf="row.IsEditable"
@@ -103,36 +111,41 @@
           </div>
 
           <mat-form-field
-          *ngIf="row.IsEditable && column.Lookup"
-          class="white-input no-underline"
-          (click)="onClick(row, column)"
-
-        >
-          <input
-          class="autocomplete-input-text"
-            *ngIf="row.IsEditable"
-            matInput
-            type="text"
-            [name]="column.Caption"
-            [matAutocomplete]="auto"
-            [ngModel]="row[column.Lookup.DisplayExpr]?row[column.Lookup.DisplayExpr]: row[column.DataField] | lookupName:row:column"
-          />
-          <mat-autocomplete
-            #auto="matAutocomplete"
-            (optionSelected)="
-              onDataLookupSelectionChanged(column, row, $event.option.value)
-            "
+            *ngIf="row.IsEditable && column.Lookup"
+            class="white-input no-underline"
+            (click)="onClick(row, column)"
           >
-            <mat-option
-              *ngFor="let data of (column.Dependent && row.DataSource)?row.DataSource[column.DataField]:column.Lookup.DataSource; trackBy:lookupFieldTrackBy"
-              [value]="data"
+            <input
+              class="autocomplete-input-text"
+              *ngIf="row.IsEditable"
+              matInput
+              type="text"
+              [name]="column.Caption"
+              [matAutocomplete]="auto"
+              [ngModel]="row[column.DataField]| lookupName : row : column
+              "
+            />
+            <mat-autocomplete
+              #auto="matAutocomplete"
+              (optionSelected)="
+                onDataLookupSelectionChanged(column, row, $event.option.value)
+              "
             >
-              <span class="autocomplete-options">{{ data[column.Lookup.DisplayExpr] }}</span>
-
-            </mat-option>
-
-          </mat-autocomplete>
-        </mat-form-field>
+              <mat-option
+                *ngFor="
+                  let data of row.DataSource
+                    ? row.DataSource[column.DataField]
+                    : column.Lookup.DataSource;
+                  trackBy: lookupFieldTrackBy
+                "
+                [value]="data"
+              >
+                <span class="autocomplete-options">{{
+                  data[column.Lookup.DisplayExpr]
+                }}</span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
           <p
             *ngIf="
               !row.IsEditable &&
@@ -156,11 +169,14 @@
           </p>
 
           <p *ngIf="!row.IsEditable && column.Lookup">
-            {{ row[column.DataField] | lookupName:row:column }}
+            {{ row[column.DataField] | lookupName : row : column }}
           </p>
-
           <button
-            *ngIf="column.DataType == 'buttons' && canEdit && !hideEditButtonOnEditing"
+            *ngIf="
+              column.DataType == 'buttons' &&
+              canEdit &&
+              !hideEditButtonOnEditing
+            "
             mat-icon-button
             class="iconbutton"
             color="primary"
@@ -170,16 +186,27 @@
             <mat-icon *ngIf="row.IsEditable">save</mat-icon>
           </button>
           <button
-            *ngIf="column.DataType == 'buttons' && canDelete "
+            *ngIf="column.DataType == 'buttons' && canDelete"
             mat-icon-button
             class="iconbutton"
             color="primary"
             (click)="
-              row.IsEditable && !displayDeleteButtonOnEditing ? stopEditing(row, index) : deleteRow(row, index)
+              row.IsEditable && !displayDeleteButtonOnEditing
+                ? stopEditing(row, index)
+                : deleteRow(row, index)
             "
           >
-            <mat-icon *ngIf="row.IsEditable  && !displayDeleteButtonOnEditing">close</mat-icon>
-            <mat-icon *ngIf="row.IsEditable && displayDeleteButtonOnEditing && row.IsRowFilled">delete</mat-icon>
+            <mat-icon *ngIf="row.IsEditable && !displayDeleteButtonOnEditing"
+              >close</mat-icon
+            >
+            <mat-icon
+              *ngIf="
+                row.IsEditable &&
+                displayDeleteButtonOnEditing &&
+                row.IsRowFilled
+              "
+              >delete</mat-icon
+            >
             <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
 
             <!-- displayDeleteButtonOnEditing is used to determine if the state of the row is in edit or not
@@ -187,13 +214,16 @@
 
             <!-- row.IsRowFilled is used when you have more than one empty rows to be filled.
              When the row is filled, the button will be visible -->
-
           </button>
         </td>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="matColumns" ></tr>
-      <tr mat-row class="table-row" *matRowDef="let row; columns: matColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
+      <tr
+        mat-row
+        class="table-row"
+        *matRowDef="let row; columns: matColumns"
+      ></tr>
 
       <!-- Row shown when there is no matching data. -->
       <tr class="mat-row" *matNoDataRow>

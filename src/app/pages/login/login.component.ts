@@ -1,3 +1,4 @@
+import { CompaniesViewModel } from './../../view-models/companies.viewmodel';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, isDevMode } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -11,6 +12,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
 import { ApiResponseDto } from '../../dto/api-response.dto';
 import { UserDto } from '../../dto/user.dto';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -29,19 +31,21 @@ export class LoginComponent {
   loginData: LoginDto = new LoginDto();
   logoPath: string;
   isLoading: boolean =false;
+  companiesViewModel: CompaniesViewModel;
+  companies: any;
 
   constructor(
+    private http:HttpClient,
     private auth: AuthService,
     private router: Router,
     private ref: ChangeDetectorRef,
     public dialog: MatDialog
   ) {
-    //if(isDevMode()){
-   //   this.logoPath = "../assets/images/datanex_logo.png"
-   // }else{
       this.logoPath = "./assets/images/datanex_logo.png"
-
-   // }
+    this.companiesViewModel = new CompaniesViewModel(this.http,this.auth)
+    this.companiesViewModel.GetLookup().subscribe((result:any)=>{
+      this.companies = result
+    })
   }
 
   onSubmitClicked(e: any) {
@@ -52,10 +56,14 @@ export class LoginComponent {
         if (result?.Success == true) {
           let user = result.Result as UserDto
           this.auth.isAuthenticated = true;
-          WebAppBase.isLoggedIn =true;
-          this.auth.user=user;
-          this.ref.detectChanges();
-          this.router.navigate(['/']);
+          this.companiesViewModel.GetById(this.loginData.CompanyId).subscribe((result:any)=>{
+            this.auth.loggedInCompany = result
+            WebAppBase.isLoggedIn =true;
+            this.auth.user=user;
+            this.ref.detectChanges();
+            this.router.navigate(['/']);
+          })
+
 
         } else {
           WebAppBase.isLoggedIn =false;
