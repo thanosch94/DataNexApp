@@ -21,6 +21,7 @@ import { DeleteConfirmComponent } from '../components/delete-confirm/delete-conf
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 
 @Component({
   selector: 'app-product-sizes-list',
@@ -38,19 +39,17 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DnGridComponent,
   ],
   templateUrl: './product-sizes-list.component.html',
   styleUrl: './product-sizes-list.component.css',
 })
+export class ProductSizesListComponent implements OnInit {
+  @ViewChild('productSizesGrid') productSizesGrid:DnGridComponent
 
-export class ProductSizesListComponent implements OnInit{
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('productSizesTable') productSizesTable: MatTable<ProductSizeDto>;
-
-  displayedColumns: string[] = ['Name', 'Abbreviation', 'buttons'];
-  dataSource: MatTableDataSource<ProductSizeDto>;
+  columns: any[];
+  dataSource: ProductSizeDto[];
   productSizesViewModel: ProductSizesViewModel;
   productSize: ProductSizeDto = new ProductSizeDto();
   product_sizes_list_text: string;
@@ -70,23 +69,39 @@ export class ProductSizesListComponent implements OnInit{
 
   ngOnInit() {
     this.getData();
+    this.getColumns();
   }
 
   getData() {
     this.productSizesViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource = result;
     });
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  getColumns() {
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'Abbreviation',
+        DataType: 'string',
+        Caption: 'Abbreviation',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
   }
 
   deleteProductSize(data: any) {
@@ -145,50 +160,53 @@ export class ProductSizesListComponent implements OnInit{
     });
   }
 
-  updateItem(data: any) {
-    this.productSize.Name = data;
+  onRowSaving(data: ProductSizeDto) {
+    let productSize = new ProductSizeDto();
+
+    if (data.Id) {
+      productSize.Id = data.Id;
+    }
+    productSize.Name = data.Name;
+    productSize.Abbreviation = data.Abbreviation;
+
+    if (!productSize.Id) {
+      this.insertItem(productSize);
+    } else {
+      this.updateItem(productSize);
+    }
+  }
+
+  updateItem(productSize: any) {
     this.productSizesViewModel
-      .UpdateDto(this.productSize)
+      .UpdateDto(productSize)
       .subscribe((result: any) => {
         this.getData();
-        this._snackBar.open('Record updated', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+        this.displayNotification('Record updated');
       });
   }
 
   onInsertClicked(e: any) {
-    const dialogRef = this.dialog.open(NewItemComponent, {
-      width: '500px',
-      data: {
-        title: 'New Item',
-      },
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.insertItem(data);
-      } else {
-      }
-    });
+    this.productSizesGrid.add(e)
   }
 
-  insertItem(data: any) {
-    let productSize = new ProductSizeDto();
-    productSize.Name = data;
+  insertItem(productSize: any) {
     this.productSizesViewModel
       .InsertDto(productSize)
       .subscribe((result: any) => {
-        this._snackBar.open('Record inserted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+        this.displayNotification('Record inserted');
+
         this.getData();
       });
   }
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.productSizesTable.renderRows();
+  }
+
+  displayNotification(text: string) {
+    this._snackBar.open(text, '', {
+      duration: 1000,
+      panelClass: 'green-snackbar',
+    });
   }
 }

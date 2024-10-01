@@ -22,6 +22,8 @@ import { UserDto } from '../../dto/user.dto';
 import { WebAppBase } from '../../base/web-app-base';
 import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
+import { DnColumnDto } from '../../dto/dn-column.dto';
 
 @Component({
   selector: 'app-users-list',
@@ -39,15 +41,15 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DnGridComponent
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css',
 })
 export class UsersListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('usersTable') usersTable: MatTable<UserDto>;
+
+  @ViewChild('usersGrid') usersGrid: DnGridComponent;
 
   displayedColumns: string[] = [
     'Name',
@@ -56,10 +58,10 @@ export class UsersListComponent implements OnInit {
     'UserRole',
     'buttons',
   ];
-  dataSource: MatTableDataSource<UserDto>;
+  dataSource: UserDto[];
   users_list_text: string;
   usersViewModel: UsersViewModel;
-
+  columns:DnColumnDto[]
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -69,20 +71,51 @@ export class UsersListComponent implements OnInit {
   ) {
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
     this.users_list_text = 'Users List';
+
   }
 
   ngOnInit() {
     this.getData();
+    this.getColumns()
   }
 
   getData() {
     this.usersViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource = result;
     });
   }
 
+  getColumns(){
+    this.columns=[
+      {
+        DataField:'Id',
+        DataType:'string',
+        Caption:'Id',
+        Visible:false
+      },
+      {
+        DataField:'Name',
+        DataType:'string',
+        Caption:'Name',
+      },
+      {
+        DataField:'Email',
+        DataType:'string',
+        Caption:'E-mail',
+      },
+      {
+        DataField:'UserRole',
+        DataType:'number',
+        Caption:'UserRole',
+
+      },
+      {
+        DataField:'buttons',
+        DataType:'buttons',
+        Caption:''
+      }
+    ]
+  }
   editUser(data: any) {
     WebAppBase.data = data.Id;
     this.router.navigate(['user-edit']);
@@ -92,14 +125,7 @@ export class UsersListComponent implements OnInit {
     this.router.navigate(['user-edit']);
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
-  }
 
   deleteUser(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
@@ -142,6 +168,5 @@ export class UsersListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.usersTable.renderRows();
   }
 }

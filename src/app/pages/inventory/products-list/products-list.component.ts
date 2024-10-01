@@ -24,6 +24,8 @@ import { ProductDto } from '../../../dto/product.dto';
 import { WebAppBase } from '../../../base/web-app-base';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { AuthService } from '../../../services/auth.service';
+import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
+import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
 
 @Component({
   selector: 'app-products-list',
@@ -41,20 +43,19 @@ import { AuthService } from '../../../services/auth.service';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DnGridComponent,
   ],
   templateUrl: './products-list.component.html',
   styleUrl: './products-list.component.css',
 })
 export class ProductsListComponent implements OnInit {
   dataSource: any;
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('productsTable') productsTable: MatTable<ProductDto>;
-
-  displayedColumns: string[] = ['Sku', 'Name', 'RetailPrice', 'Brand', 'buttons'];
+  columns: any[];
   productsViewModel: ProductsViewModel;
   products_list_text: string;
+  brandsViewModel: BrandsViewModel;
+  brands: any;
 
   constructor(
     private http: HttpClient,
@@ -64,28 +65,73 @@ export class ProductsListComponent implements OnInit {
     private _snackBar: MatSnackBar
   ) {
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
+    this.brandsViewModel.GetAll().subscribe((result: any) => {
+      this.brands = result;
+      debugger
+      this.getColumns();
+
+    });
     this.products_list_text = 'Products List';
   }
 
   ngOnInit() {
     this.getData();
+    this.getColumns();
   }
 
   getData() {
     this.productsViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource = result;
     });
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  getColumns() {
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Sku',
+        DataType: 'string',
+        Caption: 'Sku',
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
 
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+      {
+        DataField: 'RetailPrice',
+        DataType: 'number',
+        Caption: 'Price',
+      },
+      {
+        DataField: 'BrandName',
+        DataType: 'string',
+        Caption: 'Brand',
+
+      },
+      // {
+      //   DataField: 'Brand',
+      //   DataType: 'string',
+      //   Caption: 'Brand',
+      //   Lookup: {
+      //     DataSource: this.brands,
+      //     ValueExpr: 'Id',
+      //     DisplayExpr: 'Name',
+      //   },
+      // },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
   }
 
   addProduct(e: any) {
@@ -142,6 +188,5 @@ export class ProductsListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.productsTable.renderRows();
   }
 }

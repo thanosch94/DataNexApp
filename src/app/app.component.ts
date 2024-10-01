@@ -117,7 +117,7 @@ export class AppComponent {
         }
       }
       this.isAuthenticated = this.auth.isAuthenticated;
-      this.loggedInCompanyName=this.auth.loggedInCompany.Name
+      this.loggedInCompanyName=this.auth?.loggedInCompany?.Name
       //this.ref.detectChanges()
     });
 

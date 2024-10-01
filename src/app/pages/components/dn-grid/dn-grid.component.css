@@ -189,3 +189,9 @@ border-top:none!important;
   padding-left: 10px;
 }
 
+/* Word wrap in grid cells */
+td , th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 600px;
+}

@@ -21,6 +21,7 @@ import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-c
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { NewItemComponent } from '../../components/new-item/new-item.component';
+import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 
 @Component({
   selector: 'app-brands-list',
@@ -38,18 +39,16 @@ import { NewItemComponent } from '../../components/new-item/new-item.component';
     HttpClientModule,
     MatSortHeader,
     DnToolbarComponent,
-    MatTooltipModule
+    MatTooltipModule,
+    DnGridComponent
   ],
   templateUrl: './brands-list.component.html',
   styleUrl: './brands-list.component.css',
 })
 export class BrandsListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('brandsTable') brandsTable: MatTable<BrandDto>;
-
-  displayedColumns: string[] = ['Name', 'buttons'];
-  dataSource: MatTableDataSource<BrandDto>;
+  @ViewChild('brandsGrid') brandsGrid: DnGridComponent;
+  columns:any[]
+  dataSource: BrandDto[];
   brandsViewModel: BrandsViewModel;
   brand: BrandDto = new BrandDto();
   product_brands_list_text: string;
@@ -65,26 +64,37 @@ export class BrandsListComponent implements OnInit {
   }
   ngOnInit() {
     this.getData();
+    this.getColumns()
   }
 
   getData() {
     this.brandsViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.dataSource = result;
     });
   }
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
-    }
+  getColumns(){
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
   }
 
-  deleteProductSize(data: any) {
+  deleteBrand(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
       data: {
@@ -124,21 +134,23 @@ export class BrandsListComponent implements OnInit {
     });
   }
 
-  editProductSize(data: any) {
-    this.brand = data;
-    const dialogRef = this.dialog.open(NewItemComponent, {
-      width: '500px',
-      data: {
-        title: 'Edit Item',
-        name: this.brand.Name,
-      },
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.updateItem(data);
-      } else {
-      }
-    });
+  onInsertClicked(e: any) {
+    this.brandsGrid.add(e)
+  }
+
+  onRowSaving(data:any){
+    let brand = new BrandDto();
+
+    if (data.Id) {
+      brand.Id = data.Id;
+    }
+    brand.Name = data.Name;
+
+    if (!brand.Id) {
+      this.insertItem(brand);
+    } else {
+      this.updateItem(brand);
+    }
   }
 
   updateItem(data: any) {
@@ -149,21 +161,6 @@ export class BrandsListComponent implements OnInit {
         duration: 1000,
         panelClass: 'green-snackbar',
       });
-    });
-  }
-
-  onInsertClicked(e: any) {
-    const dialogRef = this.dialog.open(NewItemComponent, {
-      width: '500px',
-      data: {
-        title: 'New Item',
-      },
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.insertItem(data);
-      } else {
-      }
     });
   }
 
@@ -181,6 +178,5 @@ export class BrandsListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-    this.brandsTable.renderRows();
   }
 }
