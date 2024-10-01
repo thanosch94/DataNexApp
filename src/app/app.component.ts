@@ -89,6 +89,8 @@ export class AppComponent {
   apiVersion: string;
   companiesViewModel: CompaniesViewModel;
   loggedInCompanyName: any;
+  loggedInUserName: string;
+  today: Date;
   constructor(
     private http:HttpClient,
     private auth: AuthService,
@@ -118,6 +120,8 @@ export class AppComponent {
       }
       this.isAuthenticated = this.auth.isAuthenticated;
       this.loggedInCompanyName=this.auth?.loggedInCompany?.Name
+      this.loggedInUserName = this.auth?.user?.UserName
+      this.today = new Date()
       //this.ref.detectChanges()
     });
 

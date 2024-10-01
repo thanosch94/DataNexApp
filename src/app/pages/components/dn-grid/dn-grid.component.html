@@ -91,7 +91,27 @@
               matInput
             />
           </mat-form-field>
-
+ <!-- Date Input -->
+ <mat-form-field
+ *ngIf="
+   column.DataType == 'datetime' && row.IsEditable && !column.Lookup
+ "
+ style="width: 100%"
+ class="white-input"
+ (click)="onClick(row, column)"
+>
+ <input
+   class="date-input-text"
+   *ngIf="row.IsEditable"
+   matInput
+   [readonly]="column.ReadOnly"
+   type="date"
+   [name]="column.Caption"
+   [(ngModel)]="row[column.DataField]"
+   matInput
+   (ngModelChange)="onValueChange(row, column)"
+ />
+</mat-form-field>
           <!-- Boolean Input -->
           <div
             *ngIf="
@@ -154,6 +174,17 @@
             "
           >
             {{ row[column.DataField] }}
+          </p>
+          <p
+            *ngIf="
+              !row.IsEditable &&
+              !column.Lookup &&
+              (column.DataType == 'datetime')
+            "
+          >
+          <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->
+           <span *ngIf="column.Format"> {{ row[column.DataField] |date : column.Format }}</span>
+           <span *ngIf="!column.Format"> {{ row[column.DataField] }}</span>
           </p>
           <p
             *ngIf="

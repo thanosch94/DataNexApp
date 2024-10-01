@@ -10,7 +10,7 @@
 
       <div class="nav-menu-btn">
         <button
-          [ngStyle]="{ transform: 'scale(0.8)' }"
+          [ngStyle]="{ transform: 'scale(0.9)' }"
           class="menu-btn"
           matTooltip="Toggle Menu"
           (click)="onMenuBtnClicked()"
@@ -23,7 +23,7 @@
 
     <div class="flex-inline basic-app-connection-info">
       <div>
-        <mat-form-field appearance="outline">
+        <mat-form-field class="app-search-bar" appearance="outline">
           <input matInput placeholder="Search" />
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
@@ -41,8 +41,8 @@
         </div>
         <div class="flex-column">
           <b
-            >{{loggedInCompanyName}} | th.chatzopoulos
-            <p>Warehouse 1 - Main | 28/9/2024</p></b
+            >{{loggedInCompanyName}} | {{loggedInUserName}}
+            <p>Warehouse 1 - Main | {{today |date : "dd/MM/yyyy"}}</p></b
           >
         </div>
       </div>

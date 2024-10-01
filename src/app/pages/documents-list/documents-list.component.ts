@@ -1,3 +1,6 @@
+import { DocumentTypeGroupEnum } from './../../enums/document-type-group.enum';
+import { SuppliersViewModel } from './../../view-models/suppliers.viewmodel';
+import { StatusesViewModel } from './../../view-models/statuses.viewmodel';
 import { DocumentTypesViewModel } from './../../view-models/document-types.viewmodel';
 import { TabsService } from './../../services/tabs.service';
 import { AuthService } from './../../services/auth.service';
@@ -67,6 +70,10 @@ export class DocumentsListComponent implements OnInit {
   documentTypesDataSource: any;
   customersDataSource: any;
   rowData: any;
+  statusesViewModel: StatusesViewModel;
+  documentStatusesDataSource: any;
+  suppliersViewModel: SuppliersViewModel;
+  suppliersDataSource: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -75,6 +82,8 @@ export class DocumentsListComponent implements OnInit {
   ) {
     this.tabsService = new TabsService(route);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
+    this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
+    this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
     this.documentsTypeViewModel = new DocumentTypesViewModel(
       this.http,
       this.auth
@@ -85,7 +94,15 @@ export class DocumentsListComponent implements OnInit {
       this.documentTypesDataSource = result;
       this.customersViewModel.GetAll().subscribe((result: any) => {
         this.customersDataSource = result;
-        this.getColumns();
+        this.statusesViewModel.GetAll().subscribe((result:any)=>{
+          this.documentStatusesDataSource =result
+          this.suppliersViewModel.GetAll().subscribe((result:any)=>{
+            this.suppliersDataSource =result
+            this.getColumns();
+
+          })
+
+        })
 
       });
     });
@@ -140,19 +157,27 @@ export class DocumentsListComponent implements OnInit {
         Visible: false,
       },
       {
+        DataField: 'DocumentDateTime',
+        DataType: 'datetime',
+        Caption: 'Date',
+        Visible: true,
+        Format:"dd/MM/yyyy"
+      },
+      {
+        DataField: 'DocumentCode',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
         DataField: 'DocumentTypeId',
         DataType: 'string',
-        Caption: 'Document Type',
+        Caption: 'Type',
         Lookup: {
           DataSource: this.documentTypesDataSource,
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
-      },
-      {
-        DataField: 'DocumentNumber',
-        DataType: 'number',
-        Caption: 'Document Number',
+        Visible:false
       },
       {
         DataField: 'CustomerId',
@@ -163,7 +188,32 @@ export class DocumentsListComponent implements OnInit {
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
+        Visible:this.documentGroup ==DocumentTypeGroupEnum.Sales
       },
+      {
+        DataField: 'SupplierId',
+        DataType: 'string',
+        Caption: 'Supplier',
+        Lookup: {
+          DataSource: this.suppliersDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+        Visible:this.documentGroup ==DocumentTypeGroupEnum.Purchasing
+
+      },
+      {
+        DataField: 'DocumentStatusId',
+        DataType: 'string',
+        Caption: 'Status',
+        Lookup: {
+          DataSource: this.documentStatusesDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+      },
+
+
       {
         DataField: 'DocumentTotal',
         DataType: 'number',

@@ -10,7 +10,7 @@ export class DnColumnDto {
   OnSelectionChange?: any;
   OnClick?: any;
   ReadOnly?: boolean = false;
-
+  Format?:string //Date Format eg dd/MM/yyyy
   //Number Inputs
   Min?:number
   Max?:number

@@ -319,6 +319,7 @@
       [dataSource]="productsDataSource"
       [columns]="columns"
       [canEdit]="true"
+      (onRowStopEditing)="onProductRowStopEditing($event)"
       (onRowDelete)="onProductRowDelete($event)"
       (onRowSaving)="onProductRowSaving($event)"
     >
