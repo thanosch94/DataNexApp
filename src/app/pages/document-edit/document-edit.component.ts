@@ -709,7 +709,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         .GetByProductId(data.ProductId)
         .subscribe((result: ProductBarcodeDto[]) => {
           let barcodeData = result.find(
-            (x: ProductBarcodeDto) => x.Id == data.Id
+            (x: ProductBarcodeDto) => x.SizeId == data.ProductSizeId
           );
 
           let exists = this.checkIfProductExistsInTheTable(
@@ -722,9 +722,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             // this.addQuantityToExistingLine(index);
           } else {
             let rowIndex = productsDataSource.indexOf(data);
+debugger
             if (barcodeData) {
-              data.Barcode = barcodeData.Barcode;
               data.IsRowFilled = true;
+              data.Barcode = barcodeData.Barcode;
               data.SerialNumber = rowIndex + 1;
               data.SizeName = data.SizeName;
               data.ProductSizeId = barcodeData.SizeId;

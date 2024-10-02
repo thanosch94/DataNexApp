@@ -45,6 +45,7 @@ export class LoginComponent {
     this.companiesViewModel = new CompaniesViewModel(this.http,this.auth)
     this.companiesViewModel.GetLookup().subscribe((result:any)=>{
       this.companies = result
+      this.loginData.CompanyId=this.companies[0].Id
     })
   }
 

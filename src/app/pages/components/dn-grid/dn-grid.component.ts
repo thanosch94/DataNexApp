@@ -248,7 +248,7 @@ export class DnGridComponent implements OnInit {
     debugger
       data[column.DataField] = lookup[column.Lookup!.ValueExpr];
       if(column.OnSelectionChange){
-        column.OnSelectionChange(data, this.columns)
+        column.OnSelectionChange(data, this.dataSource)
 
       }
 
@@ -266,8 +266,8 @@ export class DnGridComponent implements OnInit {
   });
 
   onValueChange(data:any, column:DnColumnDto){
-    debugger
     if(column.OnValueChange!=null){
+      debugger
           column.OnValueChange(data,this.dataSource)
           this.table.renderRows()
 
@@ -276,7 +276,6 @@ export class DnGridComponent implements OnInit {
 
   onClick(row:any, column:DnColumnDto) {
       //column.Lookup!.DataSource = col.Lookup!.DataSource
-debugger
       let col = this.columns.find(x=>x.DataField ==column.DataField);
 
       let newDataSourceObject = new Object()
