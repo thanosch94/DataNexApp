@@ -31,7 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { DocumentDto } from '../../dto/document.dto';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCell, MatTable, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -93,7 +93,8 @@ import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.co
     DnGridComponent,
     DnSelectboxComponent,
   ],
-  providers: [provideNativeDateAdapter(), TabsService, HttpClientModule],
+
+  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },TabsService, HttpClientModule],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })

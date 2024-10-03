@@ -59,7 +59,7 @@ export class DocumentAdditionalChargesComponent implements OnInit{
     this.documentId =dialogData.DocumentId
     this.additionalChargesViewModel.GetAll().subscribe((result:any)=>{
       this.additionalChargesDataSource = result
-
+      this.getColumns()
     })
   }
 

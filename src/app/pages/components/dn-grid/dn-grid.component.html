@@ -179,7 +179,7 @@
             *ngIf="
               !row.IsEditable &&
               !column.Lookup &&
-              (column.DataType == 'datetime')
+              (column.DataType == 'datetime'||column.DataType == 'date')
             "
           >
           <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->

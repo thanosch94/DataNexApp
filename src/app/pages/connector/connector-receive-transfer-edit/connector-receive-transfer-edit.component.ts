@@ -223,6 +223,12 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
           column.DataField = key
           column.DataType = typeof(result.Result[0][key])
           column.Caption = key
+          debugger
+          if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(result.Result[0][key])){
+              column.DataType='date'
+              column.Format ='dd/MM/yyyy HH:mm:ss'
+          }
+
           this.wooItemsColumns.push(column)
         }
         //this.wooItemsColumns
