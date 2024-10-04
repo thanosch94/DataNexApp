@@ -15,4 +15,5 @@ export class DnColumnDto {
   Min?:number
   Max?:number
   DefaultValue?: any;
+  DisplayColumnTotal?:boolean = false
 }

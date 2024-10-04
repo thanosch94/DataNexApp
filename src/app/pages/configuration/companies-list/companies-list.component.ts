@@ -109,7 +109,6 @@ export class CompaniesListComponent {
     if (data.Id) {
       company.Id = data.Id;
     }
-    debugger
     company.Name = data.Name;
     company.IsDefault = data.IsDefault;
 

@@ -28,6 +28,10 @@ import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
 import {
+  MatCellDef,
+  MatFooterCell,
+  MatFooterRow,
+  MatFooterRowDef,
   MatTable,
   MatTableDataSource,
   MatTableModule,
@@ -41,6 +45,7 @@ import { VisbleGridColumnsPipe } from '../../../pipes/visble-grid-columns.pipe';
 import { Observable } from 'rxjs/internal/Observable';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LookupNamePipe } from "../../../pipes/lookup-name.pipe";
+import { ColumnDisplayTotalPipe } from "../../../pipes/column-display-total.pipe";
 
 @Component({
     selector: 'dn-grid',
@@ -48,38 +53,43 @@ import { LookupNamePipe } from "../../../pipes/lookup-name.pipe";
     templateUrl: './dn-grid.component.html',
     styleUrl: './dn-grid.component.css',
     imports: [
-        FormsModule,
-        MatFormFieldModule,
-        HttpClientModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatIconModule,
-        CommonModule,
-        MatSelectModule,
-        CdkTextareaAutosize,
-        TextFieldModule,
-        MatButtonModule,
-        MatPaginator,
-        MatPaginatorModule,
-        MatSort,
-        MatSortModule,
-        MatTableModule,
-        MatSortHeader,
-        DnPopupComponent,
-        MatTabsModule,
-        MatDialogActions,
-        MatButtonModule,
-        MatDialogModule,
-        DnToolbarComponent,
-        AsyncPipe,
-        VisbleGridColumnsPipe,
-        MatCheckboxModule,
-        LookupNamePipe
-    ]
+    FormsModule,
+    MatFormFieldModule,
+    HttpClientModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatIconModule,
+    CommonModule,
+    MatSelectModule,
+    CdkTextareaAutosize,
+    TextFieldModule,
+    MatButtonModule,
+    MatPaginator,
+    MatPaginatorModule,
+    MatSort,
+    MatSortModule,
+    MatTableModule,
+    MatSortHeader,
+    DnPopupComponent,
+    MatTabsModule,
+    MatDialogActions,
+    MatButtonModule,
+    MatDialogModule,
+    DnToolbarComponent,
+    AsyncPipe,
+    VisbleGridColumnsPipe,
+    MatCheckboxModule,
+    LookupNamePipe,
+    MatFooterRow,
+    MatFooterRowDef,
+    MatFooterCell,
+    MatCellDef,
+    ColumnDisplayTotalPipe
+]
 })
-export class DnGridComponent implements OnInit {
+export class DnGridComponent implements OnInit,AfterViewInit {
 
   @ViewChild('matTable') table: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -107,6 +117,9 @@ export class DnGridComponent implements OnInit {
 
   private _columns: DnColumnDto[] = [];
   zeroMin: number;
+  pageIndex: any =0;
+  pageSize: any =10; //Check to keep user defined settings
+hasAnyColumnDisplayTotalEnabled: boolean = false;
 
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
@@ -168,7 +181,9 @@ export class DnGridComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
+  ngAfterViewInit() {
+    this.ref.detectChanges();
+  }
 
   applyFilter(e: any) {
     const filterValue = (e.target as HTMLInputElement).value;
@@ -313,5 +328,38 @@ export class DnGridComponent implements OnInit {
 
   columnsTrackBy(index:number, item:any){
     return item.DataField
+  }
+
+  getTotal(column:any){
+    if(column.DataType=='number'){
+        let data = []
+        for(let i=this.pageIndex; i<this.pageSize; i++){
+          if(this.dataSource[i]){
+            let row = this.dataSource[i]
+            data.push(row)
+          }
+
+        }
+        return data.map((t:any) => t[column.DataField]).reduce((acc:any, value:any) => acc + value, 0);
+
+    }else{
+      return null
+    }
+
+  }
+
+  onPaginatorValueChange(e:any){
+
+      this.pageSize=e.pageSize
+      this.pageIndex =e.pageIndex
+  }
+
+  check(){
+    debugger
+    if(this.columns.some(x=>x.DisplayColumnTotal==true)){
+      return true
+    }else{
+      return false
+    }
   }
 }

@@ -195,3 +195,19 @@ td , th {
   word-wrap: break-word;
   max-width: 600px;
 }
+
+::ng-deep .row-total{
+  padding-left: 5% !important;
+}
+
+::ng-deep .mat-mdc-footer-row{
+  margin-top: 3%!important;
+  height:60px!important;
+}
+
+.display-footer{
+  display: block;
+}
+.hide-footer{
+  display: none;
+}

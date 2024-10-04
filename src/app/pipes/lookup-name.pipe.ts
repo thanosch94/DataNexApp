@@ -8,8 +8,6 @@ import { DnColumnDto } from '../dto/dn-column.dto';
 export class LookupNamePipe implements PipeTransform {
 
   transform(data: any, row:any, column: DnColumnDto) {
-    debugger
-
     if(column.Lookup?.DataSource){
       let dataToReturn = column.Lookup?.DataSource.find((x:any)=>x[column.Lookup!.ValueExpr]==data)
       if(dataToReturn){

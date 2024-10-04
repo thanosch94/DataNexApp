@@ -27,6 +27,7 @@
       <ng-container
         *ngFor="
           let column of columns | visbleGridColumns;
+          let i = index;
           trackBy: columnsTrackBy
         "
         matColumnDef="{{ column.DataField }}"
@@ -40,6 +41,18 @@
         >
           <span class="column-title"> {{ column.Caption }}</span>
         </th>
+        <!-- Adds Total text in the footer of the first column -->
+        <ng-container
+          *ngIf="
+            i == 0 &&
+            (hasAnyColumnDisplayTotalEnabled | columnDisplayTotal : columns)
+          "
+        >
+          <td mat-footer-cell *matFooterCellDef>
+            <b class="row-total">Total</b>
+          </td>
+        </ng-container>
+
         <td
           [ngClass]="displayTableBorder ? 'display-border' : ''"
           mat-cell
@@ -67,51 +80,53 @@
             />
           </mat-form-field>
           <!-- Number Input -->
+          <ng-container>
+            <mat-form-field
+              *ngIf="
+                column.DataType == 'number' && row.IsEditable && !column.Lookup
+              "
+              class="white-input"
+              (click)="onClick(row, column)"
+            >
+              <input
+                *ngIf="row.IsEditable"
+                matInput
+                [readonly]="column.ReadOnly"
+                type="number"
+                [min]="
+                  column.Min !== undefined && column.Min !== null
+                    ? column.Min
+                    : null
+                "
+                [max]="column.Max ? column.Max : null"
+                [name]="column.Caption"
+                [(ngModel)]="row[column.DataField]"
+                (ngModelChange)="onValueChange(row, column)"
+                matInput
+              />
+            </mat-form-field>
+          </ng-container>
+          <!-- Date Input -->
           <mat-form-field
             *ngIf="
-              column.DataType == 'number' && row.IsEditable && !column.Lookup
+              column.DataType == 'datetime' && row.IsEditable && !column.Lookup
             "
+            style="width: 100%"
             class="white-input"
             (click)="onClick(row, column)"
           >
             <input
+              class="date-input-text"
               *ngIf="row.IsEditable"
               matInput
               [readonly]="column.ReadOnly"
-              type="number"
-              [min]="
-                column.Min !== undefined && column.Min !== null
-                  ? column.Min
-                  : null
-              "
-              [max]="column.Max ? column.Max : null"
+              type="date"
               [name]="column.Caption"
               [(ngModel)]="row[column.DataField]"
-              (ngModelChange)="onValueChange(row, column)"
               matInput
+              (ngModelChange)="onValueChange(row, column)"
             />
           </mat-form-field>
- <!-- Date Input -->
- <mat-form-field
- *ngIf="
-   column.DataType == 'datetime' && row.IsEditable && !column.Lookup
- "
- style="width: 100%"
- class="white-input"
- (click)="onClick(row, column)"
->
- <input
-   class="date-input-text"
-   *ngIf="row.IsEditable"
-   matInput
-   [readonly]="column.ReadOnly"
-   type="date"
-   [name]="column.Caption"
-   [(ngModel)]="row[column.DataField]"
-   matInput
-   (ngModelChange)="onValueChange(row, column)"
- />
-</mat-form-field>
           <!-- Boolean Input -->
           <div
             *ngIf="
@@ -142,8 +157,7 @@
               type="text"
               [name]="column.Caption"
               [matAutocomplete]="auto"
-              [ngModel]="row[column.DataField]| lookupName : row : column
-              "
+              [ngModel]="row[column.DataField] | lookupName : row : column"
             />
             <mat-autocomplete
               #auto="matAutocomplete"
@@ -179,12 +193,14 @@
             *ngIf="
               !row.IsEditable &&
               !column.Lookup &&
-              (column.DataType == 'datetime'||column.DataType == 'date')
+              (column.DataType == 'datetime' || column.DataType == 'date')
             "
           >
-          <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->
-           <span *ngIf="column.Format"> {{ row[column.DataField] |date : column.Format }}</span>
-           <span *ngIf="!column.Format"> {{ row[column.DataField] }}</span>
+            <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->
+            <span *ngIf="column.Format">
+              {{ row[column.DataField] | date : column.Format }}</span
+            >
+            <span *ngIf="!column.Format"> {{ row[column.DataField] }}</span>
           </p>
           <p
             *ngIf="
@@ -247,6 +263,23 @@
              When the row is filled, the button will be visible -->
           </button>
         </td>
+        <!-- If DisplayColumnTotal is true then the total of the column will be displayed in the footer-->
+        <ng-container
+          *ngIf="
+            column.DisplayColumnTotal &&
+            (hasAnyColumnDisplayTotalEnabled | columnDisplayTotal : columns)
+          "
+          ><td mat-footer-cell *matFooterCellDef>
+            <b class="row-total"> {{ getTotal(column) }}</b>
+          </td></ng-container
+        >
+        <ng-container
+          *ngIf="
+            !column.DisplayColumnTotal &&
+            (hasAnyColumnDisplayTotalEnabled | columnDisplayTotal : columns)
+          "
+          ><td mat-footer-cell *matFooterCellDef><b class="row-total"></b></td
+        ></ng-container>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
@@ -260,12 +293,16 @@
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell no-data-text" colspan="4">No data found</td>
       </tr>
+      <ng-container  *ngIf="check()">
+        <tr mat-footer-row *matFooterRowDef="matColumns"></tr>
+      </ng-container>
     </table>
     <mat-paginator
       *ngIf="displayPaginator"
       #paginator
       [length]="matDataSource.data.length"
-      [pageSize]="10"
+      [pageSize]="pageSize"
+      (page)="onPaginatorValueChange($event)"
       [pageSizeOptions]="[5, 10, 25, 100]"
       aria-label="Select page"
     >

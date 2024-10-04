@@ -130,7 +130,6 @@ export class DocumentsListComponent implements OnInit {
           this.documentType == 'InventoryAdjustments'
         ) {
           this.dataSource = result;
-          debugger
         } else if (this.documentType == 'Invoices-Receipts') {
           let invoicesReceiptDocument = result.filter(
             (x: any) =>
@@ -218,6 +217,7 @@ export class DocumentsListComponent implements OnInit {
         DataField: 'DocumentTotal',
         DataType: 'number',
         Caption: 'Total',
+        DisplayColumnTotal:true
       },
       {
         DataField: 'buttons',
