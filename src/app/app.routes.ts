@@ -27,6 +27,7 @@ import { StatusesListComponent } from './pages/configuration/statuses-list/statu
 import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier-edit.component';
 import { VatClassesComponent } from './pages/configuration/vat-classes/vat-classes.component';
 import { CompaniesListComponent } from './pages/configuration/companies-list/companies-list.component';
+import { AccountsPayableComponent } from './pages/financial/accounts-payable/accounts-payable.component';
 
 export const routes: Routes = [
   {
@@ -173,6 +174,11 @@ export const routes: Routes = [
   {
     path:'companies-list',
     component:CompaniesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'accounts-payable-list',
+    component:AccountsPayableComponent,
     canActivate:[authGuard]
   }
 

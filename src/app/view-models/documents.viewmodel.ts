@@ -17,9 +17,20 @@ export class DocumentsViewModel {
       headers: this.headers,
     });
   }
+  public GetaAccountsPayableListData() {
+    return this.http.get(this.service + 'Documents/getaAccountsPayableListData', {
+      headers: this.headers,
+    });
+  }
 
   public GetById(id: Guid) {
     return this.http.get(this.service + 'Documents/getbyid/' + id, {
+      headers: this.headers,
+    });
+  }
+
+  public GetChargeableDocumentsBySupplierId(id: Guid) {
+    return this.http.get(this.service + 'Documents/getChargeableDocumentsBySupplierId/' + id, {
       headers: this.headers,
     });
   }

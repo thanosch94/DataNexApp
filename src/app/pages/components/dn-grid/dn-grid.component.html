@@ -262,6 +262,15 @@
             <!-- row.IsRowFilled is used when you have more than one empty rows to be filled.
              When the row is filled, the button will be visible -->
           </button>
+          <button
+            *ngIf="column.DataType == 'buttons' && showInfo"
+            mat-icon-button
+            class="iconbutton"
+            color="primary"
+            (click)="onInfoBtnClicked(row)"
+          >
+            <mat-icon *ngIf="!row.IsEditable">info</mat-icon>
+          </button>
         </td>
         <!-- If DisplayColumnTotal is true then the total of the column will be displayed in the footer-->
         <ng-container
@@ -293,7 +302,7 @@
       <tr class="mat-row" *matNoDataRow>
         <td class="mat-cell no-data-text" colspan="4">No data found</td>
       </tr>
-      <ng-container  *ngIf="check()">
+      <ng-container *ngIf="displayFooter()">
         <tr mat-footer-row *matFooterRowDef="matColumns"></tr>
       </ng-container>
     </table>

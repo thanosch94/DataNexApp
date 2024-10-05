@@ -1,5 +1,6 @@
 import { Guid } from "guid-typescript";
 import { DocumentTypeGroupEnum } from "../enums/document-type-group.enum";
+import { DocTypeAffectBehaviorEnum } from "../enums/doc-type-affect-behavior.enum";
 
 export class DocumentTypeDto {
   Id:Guid;
@@ -8,4 +9,6 @@ export class DocumentTypeDto {
   DocumentTypeGroup: DocumentTypeGroupEnum;
   Description?:string;
   IsActive:boolean;
+  PersonBalanceAffectBehavior:DocTypeAffectBehaviorEnum;
+  WareHouseAffectBehavior:DocTypeAffectBehaviorEnum;
 }

@@ -1,14 +1,14 @@
-
 <dn-toolbar
-[canExit]="true"
-[isDialog]="isDialog"
-[title]="entity_title_text"
-(onCloseBtnClicked)="onCloseClicked($event)"
-
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="accounts_payable_list_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-<div class="margin">
+<div class="accounts-payable-list">
   <dn-grid
-    #documents
+    #accountsPayable
     [dataSource]="dataSource"
     [columns]="columns"
     [canDisplaySearch]="true"
@@ -19,4 +19,3 @@
   >
   </dn-grid>
 </div>
-

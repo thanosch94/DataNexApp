@@ -1,3 +1,4 @@
+import { DocTypeAffectBehaviorEnum } from './../../../enums/doc-type-affect-behavior.enum';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -21,6 +22,7 @@ import { DocumentTypesViewModel } from '../../../view-models/document-types.view
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
 
 @Component({
   selector: 'app-document-types',
@@ -117,6 +119,28 @@ export class DocumentTypesComponent implements OnInit {
         Visible: false,
       },
       {
+        DataField: 'PersonBalanceAffectBehavior',
+        DataType: 'string',
+        Caption: 'Affects Balance',
+        Visible: true,
+        Lookup:{
+          DataSource:DocTypeAffectBehaviorEnumList.value,
+          ValueExpr:'Id',
+          DisplayExpr:'Name'
+        }
+      },
+      {
+        DataField: 'WareHouseAffectBehavior',
+        DataType: 'string',
+        Caption: 'Affects Warehouse',
+        Visible: true,
+        Lookup:{
+          DataSource:DocTypeAffectBehaviorEnumList.value,
+          ValueExpr:'Id',
+          DisplayExpr:'Name'
+        }
+      },
+      {
         DataField: 'IsActive',
         DataType: 'boolean',
         Caption: 'Is Active',
@@ -136,7 +160,7 @@ export class DocumentTypesComponent implements OnInit {
 
   onDocumentTypeSaving(data: DocumentTypeDto) {
     let documentType = new DocumentTypeDto();
-
+    let that=this
     if (data.Id) {
       documentType.Id = data.Id;
     }
@@ -145,6 +169,8 @@ export class DocumentTypesComponent implements OnInit {
     documentType.DocumentTypeGroup = data.DocumentTypeGroup;
     documentType.Description = data.Description;
     documentType.IsActive = data.IsActive;
+    documentType.PersonBalanceAffectBehavior = data.PersonBalanceAffectBehavior;
+    documentType.WareHouseAffectBehavior = data.WareHouseAffectBehavior;
 
     if (!documentType.Id) {
       this.documentTypesViewModel
@@ -166,8 +192,9 @@ export class DocumentTypesComponent implements OnInit {
                 Title: 'Message',
                 Message: err.error,
               },
+
             });
-            this.getData()
+            that.getData()
           }
         });
 

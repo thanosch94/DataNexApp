@@ -45,7 +45,7 @@ export class Navigation {
       Children: [
         {
           Id: Guid.parse('cacf4576-eb86-44df-9974-47c4cf6778fd'),
-          Name: 'Purchase Orders',
+          Name: 'Purchase Documents',
           Path: 'documents-list',
           Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"PurchaseDocuments"},
         },
@@ -106,7 +106,7 @@ export class Navigation {
         {
           Id: Guid.parse('8da5e45f-fcb4-462d-9a1a-86f99a5765c4'),
           Name: 'Accounts Payable',
-          Path: 'accounts-payable',
+          Path: 'accounts-payable-list',
         },
         {
           Id: Guid.parse('6a006f0c-6388-4993-95a5-93a87e9010d3'),
