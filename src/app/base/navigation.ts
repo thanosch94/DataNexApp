@@ -111,7 +111,7 @@ export class Navigation {
         {
           Id: Guid.parse('6a006f0c-6388-4993-95a5-93a87e9010d3'),
           Name: 'Accounts Receivable',
-          Path: 'accounts-receivable',
+          Path: 'accounts-receivable-list',
         },
         {
           Id: Guid.parse('1a7b0e61-0157-43ce-b666-c6ffaf095790'),

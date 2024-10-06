@@ -98,17 +98,7 @@ export class AccountsPayableComponent implements OnInit {
       //   },
       //   Visible:false
       // },
-      // {
-      //   DataField: 'CustomerId',
-      //   DataType: 'string',
-      //   Caption: 'Customer',
-      //   Lookup: {
-      //     DataSource: this.customersDataSource,
-      //     ValueExpr: 'Id',
-      //     DisplayExpr: 'Name',
-      //   },
-      //   Visible:this.documentGroup ==DocumentTypeGroupEnum.Sales
-      // },
+
       {
         DataField: 'SupplierId',
         DataType: 'string',
@@ -147,14 +137,13 @@ export class AccountsPayableComponent implements OnInit {
     ];
   }
 
-
-  onInsertClicked(e: any) {}
-
-  onRefreshClicked(e: any) {}
+  onRefreshClicked(e: any) {
+    this.getData()
+  }
 
   onInfoBtnClicked(row:any){
     this.documentsViewModel.GetChargeableDocumentsBySupplierId(row.SupplierId).subscribe((result:any)=>{
-      const dialogRef = this.dialog.open(ListWithFiltersComponent, {
+      this.dialog.open(ListWithFiltersComponent, {
         width: "50%",
         height: "80%",
         data: {

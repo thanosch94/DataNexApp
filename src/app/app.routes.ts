@@ -28,6 +28,7 @@ import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier
 import { VatClassesComponent } from './pages/configuration/vat-classes/vat-classes.component';
 import { CompaniesListComponent } from './pages/configuration/companies-list/companies-list.component';
 import { AccountsPayableComponent } from './pages/financial/accounts-payable/accounts-payable.component';
+import { AccountsReceivableComponent } from './pages/financial/accounts-receivable/accounts-receivable.component';
 
 export const routes: Routes = [
   {
@@ -179,6 +180,11 @@ export const routes: Routes = [
   {
     path:'accounts-payable-list',
     component:AccountsPayableComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'accounts-receivable-list',
+    component:AccountsReceivableComponent,
     canActivate:[authGuard]
   }
 

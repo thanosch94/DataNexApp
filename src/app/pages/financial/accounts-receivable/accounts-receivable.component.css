@@ -1,5 +1,5 @@
-.accounts-payable-list{
-  margin:1%;
+.accounts-receivable-list{
+  margin: 1%;
 }
 ::ng-deep .mat-mdc-dialog-surface.mdc-dialog__surface{
   border-radius: 3%!important;

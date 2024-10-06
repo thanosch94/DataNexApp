@@ -2,12 +2,12 @@
   [canInsert]="false"
   [canRefresh]="true"
   [isDialog]="false"
-  [title]="accounts_payable_list_text"
+  [title]="accounts_receivable_list_text"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-<div class="accounts-payable-list">
+<div class="accounts-receivable-list">
   <dn-grid
-    #accountsPayable
+    #accountsReceivable
     [dataSource]="dataSource"
     [columns]="columns"
     [canDisplaySearch]="true"

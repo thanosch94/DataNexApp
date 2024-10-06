@@ -22,6 +22,11 @@ export class DocumentsViewModel {
       headers: this.headers,
     });
   }
+  public GetaAccountsReceivableListData() {
+    return this.http.get(this.service + 'Documents/getaAccountsReceivableListData', {
+      headers: this.headers,
+    });
+  }
 
   public GetById(id: Guid) {
     return this.http.get(this.service + 'Documents/getbyid/' + id, {
@@ -31,6 +36,12 @@ export class DocumentsViewModel {
 
   public GetChargeableDocumentsBySupplierId(id: Guid) {
     return this.http.get(this.service + 'Documents/getChargeableDocumentsBySupplierId/' + id, {
+      headers: this.headers,
+    });
+  }
+
+  public GetChargeableDocumentsByCustomerId(id: Guid) {
+    return this.http.get(this.service + 'Documents/getChargeableDocumentsByCustomerId/' + id, {
       headers: this.headers,
     });
   }
