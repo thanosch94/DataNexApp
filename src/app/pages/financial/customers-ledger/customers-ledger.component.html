@@ -1,0 +1,30 @@
+<dn-toolbar
+  [canInsert]="false"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="customers_ledger_list_text"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+
+<div class="margin">
+  <dn-selectbox
+    [dataSource]="customers"
+    valueExpr="Id"
+    displayExpr="Name"
+    (valueChange)="onCustomerChange($event)"
+  ></dn-selectbox>
+
+  <ng-container *ngIf="dataSource">
+    <dn-grid
+      #customersLedger
+      [dataSource]="dataSource"
+      [columns]="columns"
+      [canDisplaySearch]="true"
+      [canDelete]="false"
+      [canEdit]="false"
+      [showInfo]="true"
+      (onInfoButtonClicked)="onDocumentInfoBtnClicked($event)"
+    >
+    </dn-grid>
+  </ng-container>
+</div>

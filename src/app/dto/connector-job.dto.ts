@@ -4,6 +4,8 @@ import { WooConnectionsDataDto } from "./woo-connections-data.dto";
 
 export class ConnectorJobDto {
   Id:Guid
+  SerialNumber?:number;
+  Code?:string;
   Name:string;
   Serialnumber:number;
   Description:string;

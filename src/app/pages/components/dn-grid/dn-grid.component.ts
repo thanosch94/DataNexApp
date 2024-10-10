@@ -340,7 +340,6 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   displayFooter() {
-    debugger;
     if (this.columns) {
       if (this.columns.some((x) => x.DisplayColumnTotal == true)) {
         return true;

@@ -4,6 +4,8 @@ import { DocTypeAffectBehaviorEnum } from "../enums/doc-type-affect-behavior.enu
 
 export class DocumentTypeDto {
   Id:Guid;
+  SerialNumber?:number;
+  Code?:string;
   Name:string;
   Abbreviation: string;
   DocumentTypeGroup: DocumentTypeGroupEnum;

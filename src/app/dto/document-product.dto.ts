@@ -2,11 +2,12 @@ import { Guid } from "guid-typescript";
 
 export class DocumentProductDto {
   Id:Guid;
+  SerialNumber?:number;
+  Code?:string;
   DocumentId:Guid;
   ProductId:Guid;
   Quantity?:number;
   ProductSizeId:Guid;
-  SerialNumber?:number;
   ProductRetailPrice?:number;
   VatAmount?:number;
   TotalVatAmount:number;

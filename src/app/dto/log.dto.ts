@@ -4,6 +4,8 @@ import { LogTypeEnum } from "../enums/log-type.enum";
 
 export class LogDto {
   Id:Guid;
+  SerialNumber?:number;
+  Code?:string;
   DateAdded:Date;
   AddedDateTimeFormatted:string;
   LogName:string;

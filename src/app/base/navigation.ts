@@ -119,6 +119,11 @@ export class Navigation {
           Path: 'customers-ledger',
         },
         {
+          Id: Guid.parse('14b2b55b-a273-4b1e-adfe-4f706e8b3a3c'),
+          Name: 'Suppliers ledger',
+          Path: 'uuppliers-ledger',
+        },
+        {
           Id: Guid.parse('0d79f95d-226e-4b1a-9a28-f9390c1b6ffa'),
           Name: 'Tax Management',
           Path: 'tax-management',

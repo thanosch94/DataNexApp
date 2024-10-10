@@ -29,6 +29,7 @@ import { VatClassesComponent } from './pages/configuration/vat-classes/vat-class
 import { CompaniesListComponent } from './pages/configuration/companies-list/companies-list.component';
 import { AccountsPayableComponent } from './pages/financial/accounts-payable/accounts-payable.component';
 import { AccountsReceivableComponent } from './pages/financial/accounts-receivable/accounts-receivable.component';
+import { CustomersLedgerComponent } from './pages/financial/customers-ledger/customers-ledger.component';
 
 export const routes: Routes = [
   {
@@ -185,6 +186,11 @@ export const routes: Routes = [
   {
     path:'accounts-receivable-list',
     component:AccountsReceivableComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'customers-ledger',
+    component:CustomersLedgerComponent,
     canActivate:[authGuard]
   }
 

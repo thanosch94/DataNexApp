@@ -2,6 +2,8 @@ import { Guid } from "guid-typescript";
 
 export class DocumentDto {
   Id:Guid;
+  SerialNumber?:number;
+  Code?:string;
   DocumentDateTime:Date|string|null;
   DocumentTypeId:Guid;
   DocumentTypeName:string;
