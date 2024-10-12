@@ -1,0 +1,27 @@
+.date-box ::ng-deep  .mat-mdc-form-field-infix{
+  padding: 0!important;
+}
+
+
+.date-box ::ng-deep  .mat-mdc-form-field{
+  height:45px!important;
+}
+
+.date-box ::ng-deep  .mat-mdc-text-field-wrapper, .mdc-text-field{
+  height:45px!important;
+}
+
+.date-box ::ng-deep .mat-mdc-input-element{
+  margin-top:19px;
+}
+
+.date-box ::ng-deep .mat-datepicker-toggle-default-icon{
+  position:absolute;
+  top:7px;
+  left:6px;
+}
+.date-box ::ng-deep .mat-mdc-form-field-icon-suffix{
+  position:absolute;
+  right:10px;
+  top:5px;
+}

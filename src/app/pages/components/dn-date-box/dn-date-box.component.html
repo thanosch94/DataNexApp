@@ -1,0 +1,14 @@
+<mat-form-field class="date-box" [class]="'width-' + width">
+  <mat-label>{{label}}</mat-label>
+  <input
+    matInput
+    [matDatepicker]="picker"
+    [readonly]="readOnly"
+    [placeholder]="placeholder"
+    [name]="name"
+    [(ngModel)]="value"
+    (ngModelChange)="onValueChange(value)"
+  />
+  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>

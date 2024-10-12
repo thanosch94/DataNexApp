@@ -11,15 +11,15 @@ export class DocumentDto {
   DocumentStatusId:Guid;
   CustomerId:Guid;
   CustomerName:string;
-  CustomerPhone1:number;
+  CustomerPhone1:string;
   DocumentTotal?:number;
   ShippingAddress?:string
   ShippingRegion?:string
-  ShippingPostalCode?:number;
+  ShippingPostalCode?:string;
   ShippingCity ?:string
   ShippingCountry?:string
-  ShippingPhone1?:number;
-  ShippingPhone2?:number;
+  ShippingPhone1?:string;
+  ShippingPhone2?:string;
   ShippingEmail?:string;
   UserText1?:string;
   UserText2?:string;

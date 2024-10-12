@@ -8,7 +8,22 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto,"Helvetica Neue Light","Helvetica Neue","Helvetica","Arial","Lucida Grande",sans-serif }
 
 
+.width-100{
+  width:100%;
+}
+.width-80{
+  width:80%;
+}
 
+.width-50{
+  width:50%;
+}
+.width-45{
+  width:45%;
+}
+.width-20{
+  width:20%;
+}
 /* width */
 ::-webkit-scrollbar {
   width: 7px!important;

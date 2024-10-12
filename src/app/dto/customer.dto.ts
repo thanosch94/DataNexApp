@@ -10,8 +10,8 @@ export class CustomerDto {
   PostalCode?: string;
   City?: string;
   Country?: string;
-  Phone1?: number;
-  Phone2?: number;
+  Phone1?: string;
+  Phone2?: string;
   Email?: string;
   VatNumber?: number;
   TaxOffice?: string;

@@ -45,6 +45,9 @@ import { VisbleGridColumnsPipe } from '../../../pipes/visble-grid-columns.pipe';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { LookupNamePipe } from '../../../pipes/lookup-name.pipe';
 import { ColumnDisplayTotalPipe } from '../../../pipes/column-display-total.pipe';
+import { DnTextboxComponent } from '../dn-textbox/dn-textbox.component';
+import { DnNumberBoxComponent } from '../dn-number-box/dn-number-box.component';
+import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
 
 @Component({
   selector: 'dn-grid',
@@ -86,7 +89,10 @@ import { ColumnDisplayTotalPipe } from '../../../pipes/column-display-total.pipe
     MatFooterCell,
     MatCellDef,
     ColumnDisplayTotalPipe,
-  ],
+    DnTextboxComponent,
+    DnNumberBoxComponent,
+    DnDateBoxComponent
+],
 })
 export class DnGridComponent implements OnInit, AfterViewInit {
   @ViewChild('matTable') table: MatTable<any>;

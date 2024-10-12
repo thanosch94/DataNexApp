@@ -65,6 +65,9 @@ import { SuppliersViewModel } from '../../view-models/suppliers.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../dto/dn-column.dto';
 import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.component';
+import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.component';
+import { DnNumberBoxComponent } from '../components/dn-number-box/dn-number-box.component';
+import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -92,6 +95,9 @@ import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.co
     MatTooltipModule,
     DnGridComponent,
     DnSelectboxComponent,
+    DnTextboxComponent,
+    DnNumberBoxComponent,
+    DnDateBoxComponent
   ],
 
   providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },TabsService, HttpClientModule],
@@ -102,10 +108,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   @ViewChildren('td') cells: QueryList<ElementRef>;
   @ViewChild('productstable') productstable: DnGridComponent;
 
-  selectedDocType: DocumentTypeDto = new DocumentTypeDto();
   documentsViewModel: DocumentsViewModel;
   documentId: any;
-  selectedStatus: DocumentTypeDto;
   statusesList: any;
   statusesViewModel: StatusesViewModel;
   currency: string;
@@ -118,8 +122,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   document_must_be_saved_in_order_to_add_charges_text: string;
   documentGroup: any;
   documentType: any;
-  doctypeName: string;
-  statusName: any;
+
   vatClassesViewModel: VatClassesViewModel;
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
@@ -228,6 +231,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.suppliersViewModel.GetAll().subscribe((result: any) => {
       this.suppliers = result;
     });
+
+
   }
 
   getLookups() {
@@ -284,19 +289,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       this.document_text = this.document.DocumentCode;
       this.tabsService.setTabName(this.document_text);
       // this.ref.detectChanges();
-      let selectedDocType = this.docTypes.find(
-        (x) => x.Id == this.document.DocumentTypeId
-      );
-      if (selectedDocType) {
-        this.doctypeName = selectedDocType.Abbreviation;
-      }
-
-      let selectedStatus = this.statusesList.find(
-        (x: any) => x.Id == this.document.DocumentStatusId
-      );
-      if (selectedStatus) {
-        this.statusName = selectedStatus.Name;
-      }
       this.getDocumentProducts(documentId);
     });
   }
@@ -396,36 +388,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     data.TotalVatAmount = data.VatAmount! * data.Quantity!;
   }
 
-  onDocTypeSelection(e: any) {
-    let selectedDocType = this.docTypes.find(
-      (docType: DocumentTypeDto) => docType.Abbreviation == e.value
-    );
 
-    if (selectedDocType) {
-      this.selectedDocType = selectedDocType;
-      this.document.DocumentTypeId = selectedDocType.Id;
-    }
-  }
-
-  onDocStatusSelection(e: any) {
-    let selectedStatus = this.statusesList.find(
-      (status: DocumentTypeDto) => status.Name == e.value
-    );
-
-    if (selectedStatus) {
-      this.selectedStatus = selectedStatus;
-      this.document.DocumentStatusId = selectedStatus.Id;
-    }
-  }
 
   onSaveClicked(e: any) {
     //If the first row is filled in then it passes the validation
     //this.document.DocumentDateTime =this.datepipe.transform(this.document.DocumentDateTime, 'dd/MM/YYYY')
     if (!this.document.Id) {
       if (this.productsDataSource[0].IsRowFilled) {
-        if (this.selectedDocType!.Id) {
-          this.document.DocumentTypeId = this.selectedDocType.Id;
-          this.document.DocumentStatusId = this.selectedStatus.Id;
+        if (this.document.DocumentTypeId) {
           this.document.DocumentTotal = this.total;
 
           this.documentsViewModel

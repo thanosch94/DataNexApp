@@ -59,55 +59,54 @@
           *matCellDef="let row; let index"
         >
           <!-- String Input -->
-          <mat-form-field
+          <dn-textbox
             *ngIf="
               column.DataType == 'string' && row.IsEditable && !column.Lookup
             "
             style="width: 100%"
             class="white-input"
-            (click)="onClick(row, column)"
+            [name]="column.Caption"
+            [readOnly]="column.ReadOnly ?? false"
+            [(value)]="row[column.DataField]"
+            (valueChange)="onValueChange(row, column)"
           >
-            <input
-              class="string-input-text"
-              *ngIf="row.IsEditable"
-              matInput
-              [readonly]="column.ReadOnly"
-              type="text"
-              [name]="column.Caption"
-              [(ngModel)]="row[column.DataField]"
-              matInput
-              (ngModelChange)="onValueChange(row, column)"
-            />
-          </mat-form-field>
+          </dn-textbox>
+
           <!-- Number Input -->
-          <ng-container>
-            <mat-form-field
-              *ngIf="
-                column.DataType == 'number' && row.IsEditable && !column.Lookup
-              "
-              class="white-input"
-              (click)="onClick(row, column)"
-            >
-              <input
-                *ngIf="row.IsEditable"
-                matInput
-                [readonly]="column.ReadOnly"
-                type="number"
-                [min]="
-                  column.Min !== undefined && column.Min !== null
-                    ? column.Min
-                    : null
-                "
-                [max]="column.Max ? column.Max : null"
-                [name]="column.Caption"
-                [(ngModel)]="row[column.DataField]"
-                (ngModelChange)="onValueChange(row, column)"
-                matInput
-              />
-            </mat-form-field>
-          </ng-container>
+          <dn-number-box
+            *ngIf="
+              column.DataType == 'number' && row.IsEditable && !column.Lookup
+            "
+            class="white-input"
+            [name]="column.Caption"
+            [readOnly]="column.ReadOnly ?? false"
+            [min]="
+              column.Min !== undefined && column.Min !== null
+                ? column.Min
+                : null
+            "
+            [max]="column.Max ? column.Max : null"
+            [(value)]="row[column.DataField]"
+            (valueChange)="onValueChange(row, column)"
+          >
+          </dn-number-box>
+
           <!-- Date Input -->
-          <mat-form-field
+          <dn-date-box
+          *ngIf="
+          column.DataType == 'datetime' && row.IsEditable && !column.Lookup
+        "
+          style="width: 100%"
+          class="white-input"
+          [name]="column.Caption"
+          [readOnly]="column.ReadOnly ?? false"
+          [(value)]="row[column.DataField]"
+          (valueChange)="onValueChange(row, column)"
+        >
+        </dn-date-box>
+
+
+          <!-- <mat-form-field
             *ngIf="
               column.DataType == 'datetime' && row.IsEditable && !column.Lookup
             "
@@ -126,7 +125,7 @@
               matInput
               (ngModelChange)="onValueChange(row, column)"
             />
-          </mat-form-field>
+          </mat-form-field> -->
           <!-- Boolean Input -->
           <div
             *ngIf="

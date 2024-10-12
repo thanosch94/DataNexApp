@@ -3,8 +3,7 @@ import { MenuItemDto } from '../dto/menu-item.dto';
 import { DocumentTypeGroupEnum } from '../enums/document-type-group.enum';
 
 export class Navigation {
-
-  static data:any;
+  static data: any;
   static menu: MenuItemDto[] = [
     {
       Id: Guid.parse('5131c4bc-befe-4d8c-8f44-03c2b69767d9'),
@@ -17,13 +16,19 @@ export class Navigation {
           Id: Guid.parse('af9d9c1e-f397-4d3c-b01a-7c10d23ace92'),
           Name: 'Sales Documents',
           Path: 'documents-list',
-          Params: { Group: DocumentTypeGroupEnum.Sales, Type:"SalesDocuments" },
+          Params: {
+            Group: DocumentTypeGroupEnum.Sales,
+            Type: 'SalesDocuments',
+          },
         },
         {
           Id: Guid.parse('abfa413f-55d1-4a44-a492-aa46b979a404'),
           Name: 'Invoices',
           Path: 'documents-list',
-          Params: { Group: DocumentTypeGroupEnum.Sales, Type:"Invoices-Receipts"  },
+          Params: {
+            Group: DocumentTypeGroupEnum.Sales,
+            Type: 'Invoices-Receipts',
+          },
         },
         {
           Id: Guid.parse('b76f583b-cc8d-4873-a5bd-ec213d9ad380'),
@@ -47,17 +52,23 @@ export class Navigation {
           Id: Guid.parse('cacf4576-eb86-44df-9974-47c4cf6778fd'),
           Name: 'Purchase Documents',
           Path: 'documents-list',
-          Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"PurchaseDocuments"},
+          Params: {
+            Group: DocumentTypeGroupEnum.Purchasing,
+            Type: 'PurchaseDocuments',
+          },
         },
         {
           Id: Guid.parse('2e6665d4-0552-40e8-abe1-6211ad027574'),
           Name: "Suppliers' Invoices",
           Path: 'documents-list',
-          Params: { Group: DocumentTypeGroupEnum.Purchasing, Type:"SupplierInvoices"},
+          Params: {
+            Group: DocumentTypeGroupEnum.Purchasing,
+            Type: 'SupplierInvoices',
+          },
         },
         {
           Id: Guid.parse('0aa967a4-12cb-46fd-ac6e-4d34f172ff28'),
-          Name: "Suppliers",
+          Name: 'Suppliers',
           Path: 'suppliers-list',
         },
         {
@@ -87,8 +98,10 @@ export class Navigation {
           Id: Guid.parse('ce490dc9-2e06-40a3-9281-b29fc5c0b6f5'),
           Name: 'Inventory Adjustments',
           Path: 'documents-list',
-          Params: { Group: DocumentTypeGroupEnum.Inventory, Type:"InventoryAdjustments"},
-
+          Params: {
+            Group: DocumentTypeGroupEnum.Inventory,
+            Type: 'InventoryAdjustments',
+          },
         },
         {
           Id: Guid.parse('54c97182-cf12-48ae-8df0-f78c0a2576b2'),
@@ -103,6 +116,17 @@ export class Navigation {
       Path: 'finance',
       Icon: 'faDollarSign',
       Children: [
+        {
+          Id: Guid.parse('cb5ccc83-60da-4228-a742-1f8bf69d660d'),
+          Name: 'Customer Receipts',
+          Path: 'customer-receipts-list',
+        },
+        {
+          Id: Guid.parse('37f9b587-74c8-492a-8b96-2397d234be5a'),
+          Name: 'Vendor Payments',
+          Path: 'vendor-payments-list',
+        },
+
         {
           Id: Guid.parse('8da5e45f-fcb4-462d-9a1a-86f99a5765c4'),
           Name: 'Accounts Payable',
@@ -248,5 +272,4 @@ export class Navigation {
       ],
     },
   ];
-
 }

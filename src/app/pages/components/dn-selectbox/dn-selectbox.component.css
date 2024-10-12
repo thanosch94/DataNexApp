@@ -1,17 +1,22 @@
-.width-100{
-  width:100%;
-}
-.width-80{
-  width:80%;
+
+
+.select-box ::ng-deep  .mat-mdc-form-field-infix{
+  padding: 0!important;
 }
 
-.width-50{
-  width:50%;
-}
-.width-45{
-  width:45%;
-}
-.width-20{
-  width:20%;
+/* Mat Options row height */
+ .select-box ::ng-deep  .mat-mdc-option, .mat-mdc-option{
+  min-height:35px!important;
 }
 
+.select-box ::ng-deep  .mat-mdc-form-field{
+  height:45px!important;
+}
+
+ .select-box ::ng-deep  .mat-mdc-text-field-wrapper, .mdc-text-field{
+  height:45px!important;
+}
+
+.select-box ::ng-deep .mat-mdc-input-element{
+  margin-top:19px;
+}

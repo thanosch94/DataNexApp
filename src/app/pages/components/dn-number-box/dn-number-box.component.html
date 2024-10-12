@@ -1,0 +1,15 @@
+<mat-form-field class="number-box" [class]="'width-' + width">
+  <mat-label>{{label}}</mat-label>
+  <input
+    matInput
+    [ngClass]="hideArrows?'hide-arrows':''"
+    type="number"
+    [min]="min"
+    [max]="max"
+    [readonly]="readOnly"
+    [placeholder]="placeholder"
+    [name]="name"
+    [(ngModel)]="value"
+    (ngModelChange)="onValueChange(value)"
+  />
+</mat-form-field>
