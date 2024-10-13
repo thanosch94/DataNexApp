@@ -7,13 +7,15 @@
 ></dn-toolbar>
 
 <div class="margin">
+  <div class="flex-column">
+  <b>Select a Customer</b>
   <dn-selectbox
     [dataSource]="customers"
     valueExpr="Id"
     displayExpr="Name"
     (valueChange)="onCustomerChange($event)"
   ></dn-selectbox>
-
+</div>
   <ng-container *ngIf="dataSource">
     <dn-grid
       #customersLedger

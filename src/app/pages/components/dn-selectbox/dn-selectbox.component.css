@@ -20,3 +20,11 @@
 .select-box ::ng-deep .mat-mdc-input-element{
   margin-top:19px;
 }
+
+::ng-deep span{
+  font-size: 12px!important;
+}
+::ng-deep input{
+  font-size: 12px!important;
+
+}
