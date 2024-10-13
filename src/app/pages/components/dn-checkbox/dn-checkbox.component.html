@@ -1,0 +1,14 @@
+<div class="flex-row">
+  <div>
+    <mat-checkbox
+      [name]="name"
+      [(ngModel)]="value"
+      [disabled]="disabled"
+      (ngModelChange)="onValueChange($event)"
+    >
+    </mat-checkbox>
+  </div>
+  <div>
+    {{ label }}
+  </div>
+</div>
