@@ -1,4 +1,4 @@
-import { DocTypeAffectBehaviorEnum } from './../../../enums/doc-type-affect-behavior.enum';
+import { DocTypeAffectBehaviorEnum } from '../../../enums/doc-type-affect-behavior.enum';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,6 +23,7 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-document-types',
@@ -45,10 +46,10 @@ import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affec
     FontAwesomeModule,
   ],
 
-  templateUrl: './document-types.component.html',
-  styleUrl: './document-types.component.css',
+  templateUrl: './document-types-list.component.html',
+  styleUrl: './document-types-list.component.css',
 })
-export class DocumentTypesComponent implements OnInit {
+export class DocumentTypesListComponent implements OnInit {
 
   @ViewChild('documentTypesGrid')
   documentTypesGrid: DnGridComponent;
@@ -64,7 +65,8 @@ export class DocumentTypesComponent implements OnInit {
     private auth: AuthService,
     private tabsService: TabsService,
     private _snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private router:Router
   ) {
     this.documentTypesViewModel = new DocumentTypesViewModel(
       this.http,
@@ -235,5 +237,9 @@ export class DocumentTypesComponent implements OnInit {
   onRefreshClicked(e: any) {
     this.getData();
     this.documentTypesGrid.renderRows();
+  }
+
+  onRowEditing(e:any){
+    this.router.navigate(['document-type-edit'],{ queryParams: {id:e.Id} })
   }
 }

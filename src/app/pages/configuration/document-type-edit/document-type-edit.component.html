@@ -1,0 +1,41 @@
+<dn-toolbar
+  [canExit]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="document_type_edit_title_text"
+  (onCloseBtnClicked)="onCloseBackClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+
+@if(documentType){
+<mat-tab-group class="margin">
+  <mat-tab label="Basic Info">
+    <div class="basic-info-tab">
+      <div class="code-name">
+        <div class="code">
+          <dn-textbox
+            [(value)]="documentType.Code"
+            label="Code"
+            [width]="100"
+          ></dn-textbox>
+        </div>
+        <div class="name">
+          <dn-textbox
+            [(value)]="documentType.Name"
+            label="Name"
+            [width]="100"
+          ></dn-textbox>
+        </div>
+      </div>
+      <div class="active ">
+        <dn-checkbox
+        [(value)]="documentType.IsActive"
+        label="Active"
+        ></dn-checkbox>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Details"> </mat-tab>
+</mat-tab-group>
+
+}

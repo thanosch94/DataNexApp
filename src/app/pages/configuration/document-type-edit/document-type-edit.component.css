@@ -1,0 +1,35 @@
+.margin{
+  margin:1%;
+}
+
+
+
+.code-name{
+  grid-area: a;
+  display: flex;
+  gap:1rem;
+
+}
+.active{
+  grid-area: d;
+  gap:1rem;
+
+}
+
+.code{
+  flex:1
+}
+.name{
+  flex:3
+}
+
+.basic-info-tab{
+  margin-top: 3%;
+  display: grid;
+  grid-template-areas:
+  "a a c d"
+  "e f g h"
+  "i j k l";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}

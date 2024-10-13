@@ -22,7 +22,7 @@ import { WarehousesListComponent } from './pages/inventory/warehouses-list/wareh
 import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
 import { SuppliersComponent } from './pages/purchasing/suppliers-list/suppliers-list.component';
 import { AdditionalChargesListComponent } from './pages/configuration/additional-charges-list/additional-charges-list.component';
-import { DocumentTypesComponent } from './pages/configuration/document-types/document-types.component';
+import { DocumentTypesListComponent } from './pages/configuration/document-types-list/document-types-list.component';
 import { StatusesListComponent } from './pages/configuration/statuses-list/statuses-list.component';
 import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier-edit.component';
 import { VatClassesComponent } from './pages/configuration/vat-classes/vat-classes.component';
@@ -30,6 +30,7 @@ import { CompaniesListComponent } from './pages/configuration/companies-list/com
 import { AccountsPayableComponent } from './pages/financial/accounts-payable/accounts-payable.component';
 import { AccountsReceivableComponent } from './pages/financial/accounts-receivable/accounts-receivable.component';
 import { CustomersLedgerComponent } from './pages/financial/customers-ledger/customers-ledger.component';
+import { DocumentTypeEditComponent } from './pages/configuration/document-type-edit/document-type-edit.component';
 
 export const routes: Routes = [
   {
@@ -95,7 +96,12 @@ export const routes: Routes = [
   },
   {
     path:'document-types-list',
-    component:DocumentTypesComponent,
+    component:DocumentTypesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'document-type-edit',
+    component:DocumentTypeEditComponent,
     canActivate:[authGuard]
   },
   {
