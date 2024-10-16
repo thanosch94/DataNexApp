@@ -86,44 +86,40 @@
             <input matInput name="image" [(ngModel)]="product.ImagePath" />
           </mat-form-field>
 
-
-
-
           <mat-form-field class="tab1-grid-g-vat-class">
-        <mat-label>Vat Class</mat-label>
+            <mat-label>Vat Class</mat-label>
 
-          <input
-            matInput
-            type="text"
-            matInput
-            name="vatClass"
-            [matAutocomplete]="vatClass"
-            [ngModel]="vatClassName"
-          />
-          <mat-autocomplete #vatClass="matAutocomplete"
-          (optionSelected)="onVatClassSelectionChanged($event)"
-          [displayWith]="displayFn.bind(this)"
-          >
-          <mat-option
-          *ngFor="let vatClass of vatClasses"
-          [value]="vatClass"
-        >
-          {{ vatClass.Name }}
-        </mat-option>
-          </mat-autocomplete>
-
-</mat-form-field>
-
+            <input
+              matInput
+              type="text"
+              matInput
+              name="vatClass"
+              [matAutocomplete]="vatClass"
+              [ngModel]="vatClassName"
+            />
+            <mat-autocomplete
+              #vatClass="matAutocomplete"
+              (optionSelected)="onVatClassSelectionChanged($event)"
+              [displayWith]="displayFn.bind(this)"
+            >
+              <mat-option
+                *ngFor="let vatClass of vatClasses"
+                [value]="vatClass"
+              >
+                {{ vatClass.Name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
 
           <div class="tab1-grid-d-image">
+            @if(product.ImagePath){
             <img
-              *ngIf="product.ImagePath"
               class="image"
               [src]="sanitizeUrl(product.ImagePath)"
               name="images"
             />
+            } @if(!product.ImagePath && product.ImagePath != ''){
             <img
-              *ngIf="!product.ImagePath && product.ImagePath != ''"
               class="image"
               src="{{ noImgPath }}"
               width="240"
@@ -132,13 +128,15 @@
               width="370"
               height="370"
             />
+            }
           </div>
         </div>
       </div>
     </mat-tab>
     <mat-tab label="Attributes & Categories"></mat-tab>
     <mat-tab label="Sizes">
-      <div *ngIf="productId">
+      @if(productId){
+      <div>
         <article class="table-header example-form">
           <button
             mat-button
@@ -153,8 +151,8 @@
             <ng-container matColumnDef="Barcode">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Barcode</th>
               <td mat-cell *matCellDef="let row; let index">
+                @if(row.IsEditable){
                 <mat-form-field
-                  *ngIf="row.IsEditable"
                   style="width: 100%"
                   class="white-input"
                 >
@@ -166,6 +164,7 @@
                     matInput
                     (input)="onBarcodeChanged($event)"
                 /></mat-form-field>
+              }
                 {{ row.IsEditable ? "" : row.Barcode }}
               </td>
             </ng-container>
@@ -173,8 +172,8 @@
             <ng-container matColumnDef="SizeId">
               <th mat-header-cell *matHeaderCellDef mat-sort-header>Size</th>
               <td mat-cell *matCellDef="let row">
+                @if(!row.SizeName && row.IsEditable && isEditable){
                 <mat-form-field
-                  *ngIf="!row.SizeName && row.IsEditable && isEditable"
                   class="white-input"
                 >
                   <input
@@ -197,6 +196,7 @@
                   </mat-autocomplete>
                   <!-- <input matInput class="white-input" [value]="row.Sku!=undefined?row.Sku:''" /> -->
                 </mat-form-field>
+              }
                 {{ row.SizeName }}
               </td>
             </ng-container>
@@ -214,8 +214,8 @@
                       : editProductBarcode(row, i)
                   "
                 >
-                  <mat-icon *ngIf="!row.IsEditable">edit</mat-icon>
-                  <mat-icon *ngIf="row.IsEditable">save</mat-icon>
+                 @if(!row.IsEditable){ <mat-icon>edit</mat-icon>}
+                 @if(row.IsEditable){ <mat-icon>save</mat-icon>}
                 </button>
                 <button
                   mat-icon-button
@@ -227,8 +227,8 @@
                       : deleteProductBarcode(row, i)
                   "
                 >
-                  <mat-icon *ngIf="!row.IsEditable">delete</mat-icon>
-                  <mat-icon *ngIf="row.IsEditable">close</mat-icon>
+                @if(!row.IsEditable){ <mat-icon>delete</mat-icon>}
+                @if(row.IsEditable){ <mat-icon>close</mat-icon>}
                 </button>
               </td>
             </ng-container>
@@ -251,6 +251,7 @@
           </mat-paginator>
         </div>
       </div>
+    }
     </mat-tab>
   </mat-tab-group>
 </form>

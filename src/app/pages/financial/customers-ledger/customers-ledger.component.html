@@ -8,15 +8,16 @@
 
 <div class="margin">
   <div class="flex-column">
-  <b>Select a Customer</b>
-  <dn-selectbox
-    [dataSource]="customers"
-    valueExpr="Id"
-    displayExpr="Name"
-    (valueChange)="onCustomerChange($event)"
-  ></dn-selectbox>
-</div>
-  <ng-container *ngIf="dataSource">
+    <b>Select a Customer</b>
+    <dn-selectbox
+      [dataSource]="customers"
+      valueExpr="Id"
+      displayExpr="Name"
+      (valueChange)="onCustomerChange($event)"
+    ></dn-selectbox>
+  </div>
+  @if(dataSource){
+  <ng-container>
     <dn-grid
       #customersLedger
       [dataSource]="dataSource"
@@ -29,4 +30,5 @@
     >
     </dn-grid>
   </ng-container>
+  }
 </div>

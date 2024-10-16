@@ -11,7 +11,8 @@
   (onSaveBtnClicked)="onSaveClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-<form class="form" *ngIf="document && columns">
+@if(document && columns){
+<form class="form">
   <mat-tab-group>
     <mat-tab label="Basic Info">
       <div class="tab-1">
@@ -27,7 +28,6 @@
           >
           </dn-selectbox>
 
-
           <dn-date-box
             class="grid-b-docdate"
             name="DocumentDateTime"
@@ -37,8 +37,8 @@
           >
           </dn-date-box>
 
+          @if(this.documentGroup == 1){
           <dn-selectbox
-            *ngIf="this.documentGroup == 1"
             class="grid-c-customer-supplier"
             [width]="100"
             label="Customer"
@@ -49,9 +49,8 @@
             valueExpr="Id"
             displayExpr="Name"
           ></dn-selectbox>
-
+          } @if(this.documentGroup == 2){
           <dn-selectbox
-            *ngIf="this.documentGroup == 2"
             class="grid-c-customer-supplier"
             [width]="100"
             label="Supplier"
@@ -62,7 +61,7 @@
             valueExpr="Id"
             displayExpr="Name"
           ></dn-selectbox>
-
+          }
           <dn-textbox
             class="grid-g-customerphone"
             name="phone"
@@ -85,7 +84,8 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab *ngIf="this.documentGroup == 1" label="Shipping Info">
+    @if(this.documentGroup == 1){
+    <mat-tab label="Shipping Info">
       <div class="tab-2">
         <div class="tab2-grid">
           <dn-textbox
@@ -153,6 +153,7 @@
         </div>
       </div>
     </mat-tab>
+    }
     <mat-tab label="Notes">
       <div class="tab-3">
         <mat-form-field class="notes">
@@ -295,8 +296,8 @@
 
 <div class="margin">
   <div>
+    @if(productsDataSource && columns){
     <dn-grid
-      *ngIf="productsDataSource && columns"
       #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
@@ -313,6 +314,7 @@
       (onRowSaving)="onProductRowSaving($event)"
     >
     </dn-grid>
+  }
     <br />
     <br />
     <div class="edit-document-charges-field">
@@ -341,3 +343,4 @@
     </div>
   </div>
 </div>
+}

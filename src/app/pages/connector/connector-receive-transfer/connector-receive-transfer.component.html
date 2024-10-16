@@ -16,11 +16,13 @@
 <mat-card *ngFor="let receiveJob of receiveConnectorJobs let i = index"  class="card" appearance="outlined"(click)="onJobClick(receiveJob)">
   <mat-card-header>
     <div class="icon-margin">
-      <fa-icon *ngIf="receiveJob.Icon"
+      @if(receiveJob.Icon){
+      <fa-icon
         [icon]="receiveJob.Icon=='wordpress'?faWordpress:faWordpress"
         style="color: #21759b"
         size="5x"
       ></fa-icon>
+    }
     </div>
     <mat-card-title-group>
       <mat-card-title>

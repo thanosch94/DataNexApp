@@ -8,6 +8,6 @@
 
         <option *ngFor="let company of companies" [value]="company.Id">{{company.Name}}</option>
 
-      </select>      <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in <i *ngIf="isLoading"class="fa fa-spinner fa-spin"></i></button>
+      </select>      <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}</button>
     </form>
 </div>

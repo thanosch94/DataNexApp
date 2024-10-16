@@ -7,7 +7,8 @@
   (onSaveBtnClicked)="onSaveBtnClicked($event)"
 ></dn-toolbar>
 
-<div class="margin" *ngIf="connectorJob">
+@if(connectorJob){
+<div class="margin">
   <mat-stepper [linear]="true">
     <mat-step [stepControl]="dataSourceFormGroup">
       <ng-template matStepLabel>Set DataSource</ng-template>
@@ -86,10 +87,8 @@
           </div>
         </div>
 
-        <div
-          *ngIf="connectorJob.DataSourceId == wordpressDataSourceId"
-          class="width-100"
-        >
+        @if(connectorJob.DataSourceId == wordpressDataSourceId){
+        <div class="width-100">
           <mat-form-field class="width-100">
             <mat-label>wooConnectionsDataSource</mat-label>
             <mat-select
@@ -105,13 +104,9 @@
             </mat-select>
           </mat-form-field>
         </div>
-
-        <div
-          *ngIf="
-            connectorJob.DataSourceId == wordpressDataSourceId &&
-            connectorJob.WooConnectionDataSourceId
-          "
-        >
+        } @if( connectorJob.DataSourceId == wordpressDataSourceId &&
+        connectorJob.WooConnectionDataSourceId){
+        <div>
           <div class="inline request-type">
             <mat-form-field class="width-100">
               <mat-label>Request Type</mat-label>
@@ -137,6 +132,7 @@
             </mat-form-field>
           </div>
         </div>
+        }
       </form>
     </mat-step>
     <mat-step>
@@ -150,47 +146,53 @@
             matButton
             (click)="onJobExecuteButtonClicked($event)"
           >
-            Execute Job <i *ngIf="isLoading" class="fa fa-spinner fa-spin"></i>
+            Execute Job @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}
           </button>
         </div>
         <br />
         <div>
-          <p *ngIf="wooItemsData">
-            *Job Completed Successfully - Check Results
-          </p>
-          <p *ngIf="connectorJobResponse?.Success == false">
-            *Job Completed Unsuccessfully - Check Results
-          </p>
+          @if(wooItemsData){
+          <p>*Job Completed Successfully - Check Results</p>
+          } @if(connectorJobResponse?.Success == false){
+          <p>*Job Completed Unsuccessfully - Check Results</p>
+          }
         </div>
       </div>
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Results</ng-template>
       <br />
-      <div *ngIf="connectorJobResponse?.Success" class="grid-container">
-        <div *ngIf="wooItemsData && wooItemsData.length == 0">
+      @if(connectorJobResponse?.Success){
+      <div class="grid-container">
+        @if(wooItemsData && wooItemsData.length == 0){
+        <div>
           <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
           <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
-          <p><b>Message: </b>No data found in the website </p>
+          <p><b>Message: </b>No data found in the website</p>
         </div>
+      }
+      @if(wooItemsData && wooItemsData.length > 0){
         <dn-grid
           #wooResultsGrid
-          *ngIf="wooItemsData && wooItemsData.length > 0"
           [dataSource]="wooItemsData"
           [columns]="wooItemsColumns"
           [canDisplaySearch]="true"
           [enableAddButton]="false"
         >
         </dn-grid>
-
+      }
       </div>
-      <div *ngIf="!connectorJobResponse?.Success">
+    }
+    @if(!connectorJobResponse?.Success){
+      <div>
         <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
         <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
         <p><b>Message: </b>{{ connectorJobResponse?.Message }}</p>
         <p><b>Result: </b>{{ connectorJobResponse?.Result }}</p>
         <p>{{ connectorJobResponse?.ExceptionMessage }}</p>
       </div>
+    }
     </mat-step>
   </mat-stepper>
 </div>
+}

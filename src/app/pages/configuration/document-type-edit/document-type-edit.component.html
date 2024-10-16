@@ -59,6 +59,7 @@
         [dataSource]="docTypeGroupDataSource"
         valueExpr="Id"
         displayExpr="Name"
+        label="Doc Type Group"
         [width]="100"
 
       >
@@ -131,7 +132,7 @@
           #documentTypesGrid
           [dataSource]="documentTypeSeriesDataSource"
           [columns]="documentTypeSeriesColumns"
-          [canDisplaySearch]="true"
+          [canDisplaySearch]="false"
           [enableAddButton]="true"
 
         >

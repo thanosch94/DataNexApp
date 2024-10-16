@@ -1,64 +1,46 @@
-<mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'" *ngIf="visible">
+@if(visible){
+<mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
   <span class="toolbar-title">{{ title }}</span>
   <span class="example-spacer"></span>
-  <button
-    class="button"
-    *ngIf="canRefresh"
-    mat-button
-    (click)="onRefreshClicked($event)"
-  >
+  @if(canRefresh){
+  <button class="button" mat-button (click)="onRefreshClicked($event)">
     <mat-icon class="icons">refresh</mat-icon>
     <span class="button-title">Refresh</span>
   </button>
-  <button
-  class="button"
-    *ngIf="canDelete && !isDialog && entityId"
-    mat-button
-    (click)="onDeleteClicked($event)"
-  >
+  } @if(canDelete && !isDialog && entityId){
+  <button class="button" mat-button (click)="onDeleteClicked($event)">
     <mat-icon class="icons">delete</mat-icon>
     <span class="button-title">Delete</span>
   </button>
-  <button
-  class="button"
-    *ngIf="canTransform"
-    mat-button
-    (click)="onTransformedClicked($event)"
-  >
+  } @if(canTransform){
+  <button class="button" mat-button (click)="onTransformedClicked($event)">
     <mat-icon class="icons">compare_arrows</mat-icon>
     <span class="button-title">Transform</span>
   </button>
-  <button
-    class="button"
-    *ngIf="canInsert"
-    mat-button
-    (click)="onInsertClicked($event)"
-  >
+  } @if(canInsert){
+  <button class="button" mat-button (click)="onInsertClicked($event)">
     <mat-icon class="icons">add</mat-icon>
     <span class="button-title">Add</span>
   </button>
-  <button
-    class="button"
-    *ngIf="canSave"
-    mat-button
-    (click)="onSaveClicked($event)"
-  >
+  } @if(canSave){
+  <button class="button" mat-button (click)="onSaveClicked($event)">
     <mat-icon class="icons">save</mat-icon>
     <span class="button-title">Save</span>
   </button>
-  <mat-dialog-actions *ngIf="isDialog">
-    <button class="button" *ngIf="canExit" mat-button [mat-dialog-close]="true">
+  } @if(isDialog){
+  <mat-dialog-actions>
+    @if(canExit){
+    <button class="button" mat-button [mat-dialog-close]="true">
       <mat-icon class="icons">close</mat-icon>
       <span class="button-title">Close</span>
     </button>
+    }
   </mat-dialog-actions>
-  <button
-    class="button"
-    *ngIf="!isDialog && canExit"
-    mat-button
-    (click)="onCloseClicked($event)"
-  >
+  } @if(!isDialog && canExit){
+  <button class="button" mat-button (click)="onCloseClicked($event)">
     <mat-icon class="icons">exit_to_app</mat-icon>
     <span class="button-title">Close</span>
   </button>
+  }
 </mat-toolbar>
+}

@@ -1,7 +1,10 @@
-<div *ngIf="isAuthenticated == false">
+@if(!isAuthenticated){
+<div>
   <router-outlet></router-outlet>
 </div>
-<div *ngIf="isAuthenticated == true" class="screen">
+}
+@if(isAuthenticated){
+<div class="screen">
   <div class="navbar">
     <div class="logo-menu">
       <div class="logo">
@@ -41,8 +44,8 @@
         </div>
         <div class="flex-column">
           <b
-            >{{loggedInCompanyName}} | {{loggedInUserName}}
-            <p>Warehouse 1 - Main | {{today |date : "dd/MM/yyyy"}}</p></b
+            >{{ loggedInCompanyName }} | {{ loggedInUserName }}
+            <p>Warehouse 1 - Main | {{ today | date : "dd/MM/yyyy" }}</p></b
           >
         </div>
       </div>
@@ -91,13 +94,15 @@
               [icon]="menuItem.IsOpen ? faCaretUp : faCaretDown"
             ></fa-icon>
           </p>
-          <div *ngIf="menuItem.IsOpen">
+          @if(menuItem.IsOpen){
+          <div>
             <mat-list *ngFor="let item of menuItem.Children">
               <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
                 <span class="menu-item">{{ item.Name }}</span></mat-list-item
               >
             </mat-list>
           </div>
+        }
         </div>
       </mat-sidenav>
       <mat-sidenav-content
@@ -107,9 +112,11 @@
             : 'main-content-with-closed-sidenav'
         "
       >
-        <div *ngIf="tabs.length == 0">
+      @if(tabs.length == 0){
+        <div>
           <app-sales-reports [displayToolbar]="false"></app-sales-reports>
         </div>
+      }
         <mat-tab-group
           [ngClass]="tabs.length > 0 ? 'display-tab-group' : 'hide-tab-group'"
           class="tab-group"
@@ -128,13 +135,14 @@
                 <div [matTooltip]="tab.Hint">
                   <span class="tab-header">{{ tab.Name }}</span>
                 </div>
+                @if(tab.Active){
                 <button
                   [ngClass]="tab.Active ? 'tab-close-button' : ''"
-                  *ngIf="tab.Active"
                   (click)="onTabCloseClicked($event, tab)"
                 >
                   <i class="fa fa-close"></i>
                 </button>
+              }
               </ng-template>
             </div>
             <ng-container *ngComponentOutlet="tab.Component"></ng-container>
@@ -150,3 +158,4 @@
     </mat-sidenav-container>
   </div>
 </div>
+}
