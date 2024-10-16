@@ -16,7 +16,7 @@ import { MatInputModule } from '@angular/material/input';
     FormsModule,
     ReactiveFormsModule,
     MatAutocompleteModule,
-    MatPseudoCheckboxModule
+    MatPseudoCheckboxModule,
   ],
   templateUrl: './dn-selectbox.component.html',
   styleUrl: './dn-selectbox.component.css',
@@ -35,41 +35,42 @@ export class DnSelectboxComponent {
   selectedOption: any;
 
   onSelection(data: any) {
+    debugger;
     this.selectedOption = this.dataSource.find(
       (option: any) => option[this.valueExpr] == data[this.valueExpr]
     );
 
-    this.valueChange.emit(this.selectedOption.Id)
+    this.valueChange.emit(this.selectedOption.Id);
   }
 
   display(data: any) {
-    if (data && typeof data == 'object') {
-      return data[this.displayExpr];
-    } else if (typeof data == 'string') {
-      this.selectedOption = this.dataSource.find(
-        (option: any) => option[this.valueExpr] == data
-      );
+    if (data) {
+      if (typeof data == 'object') {
+        return data[this.displayExpr];
+      } else if (typeof data == 'string' || 'number') {
+        this.selectedOption = this.dataSource.find(
+          (option: any) => option[this.valueExpr] == data
+        );
         this.value = this.selectedOption[this.valueExpr];
 
-      return this.selectedOption[this.displayExpr];
+        return this.selectedOption[this.displayExpr];
+      }
     }
   }
 
-  optionsTrackBy(index:number, option:any){
-    return option[this.valueExpr]
+  optionsTrackBy(index: number, option: any) {
+    return option[this.valueExpr];
   }
 
-  isOptionSelected(e:any){
-    if(this.selectedOption){
-      if(this.value = this.selectedOption[this.valueExpr]){
+  isOptionSelected(e: any) {
+    if (this.selectedOption) {
+      if ((this.value = this.selectedOption[this.valueExpr])) {
         return true;
-      }else{
+      } else {
         return false;
       }
-    }else{
+    } else {
       return false;
     }
-
-
   }
 }

@@ -1,8 +1,26 @@
 .margin{
   margin:1%;
 }
+.tab{
+  margin:2% 1%
+}
 
+.flex-row{
+  display: flex;
+  flex-direction: row;
+  gap: 5rem;
+  align-items: center;
+}
 
+.basic-info{
+  margin-top: 1%;
+  display: grid;
+  grid-template-areas:
+  "a a c d"
+  "b b e e";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}
 
 .code-name{
   grid-area: a;
@@ -10,26 +28,49 @@
   gap:1rem;
 
 }
+.abbreviation-description{
+  grid-area: b;
+  display: flex;
+  gap:1rem;
+
+}
 .active{
   grid-area: d;
+  display: flex;
+  justify-content: center;
   gap:1rem;
 
 }
 
-.code{
+.code, .abbreviation{
   flex:1
 }
-.name{
+.name, .description{
   flex:3
 }
+
 
 .basic-info-tab{
   margin-top: 3%;
   display: grid;
   grid-template-areas:
-  "a a c d"
+  "a a c c"
   "e f g h"
   "i j k l";
   grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: 2fr 1fr 1fr;
   gap:2 rem;
+}
+
+.basic-info-tab-a{
+  grid-area: a;
+}
+.basic-info-tab-c{
+  grid-area: c;
+}
+.basic-info-tab-e{
+  grid-area: e;
+}
+.basic-info-tab-i{
+  grid-area: i;
 }

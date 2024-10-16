@@ -4,7 +4,7 @@ import { StatusesViewModel } from './../../view-models/statuses.viewmodel';
 import { DocumentTypesViewModel } from './../../view-models/document-types.viewmodel';
 import { TabsService } from './../../services/tabs.service';
 import { AuthService } from './../../services/auth.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import {
@@ -78,7 +78,8 @@ export class DocumentsListComponent implements OnInit {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private ref: ChangeDetectorRef,
   ) {
     this.tabsService = new TabsService(route);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
@@ -270,5 +271,9 @@ export class DocumentsListComponent implements OnInit {
         docCode: e.DocumentTypeName + e.DocumentNumber,
       },
     });
+  }
+
+  onTransformedClicked(e:any){
+
   }
 }

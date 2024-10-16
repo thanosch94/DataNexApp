@@ -20,6 +20,15 @@
     <span class="button-title">Delete</span>
   </button>
   <button
+  class="button"
+    *ngIf="canTransform"
+    mat-button
+    (click)="onTransformedClicked($event)"
+  >
+    <mat-icon class="icons">compare_arrows</mat-icon>
+    <span class="button-title">Transform</span>
+  </button>
+  <button
     class="button"
     *ngIf="canInsert"
     mat-button

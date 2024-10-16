@@ -1,10 +1,12 @@
 <dn-toolbar
   [canInsert]="true"
   [canRefresh]="true"
+  [canTransform]="true"
   [isDialog]="false"
   [title]="documentlist_text"
   (onInsertBtnClicked)="onInsertClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
+  (onTransformedBtnClicked)="onTransformedClicked($event)"
 ></dn-toolbar>
 <div class="document-list">
   <dn-grid

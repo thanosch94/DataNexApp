@@ -129,12 +129,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   columns: DnColumnDto[] = [];
   productSizesDataSource: any[];
   skuSelected: boolean;
-  onKeydown(e: any, index: number) {
-    if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
-      let cellsArray = this.cells.toArray();
-      cellsArray[index + 1].nativeElement.focus();
-    }
-  }
+
   customersViewModel: CustomersViewModel;
   customers: any;
   document_text: string;
@@ -304,6 +299,14 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.calculateDocumentTotal();
       });
   }
+
+  onKeydown(e: any, index: number) {
+    if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
+      let cellsArray = this.cells.toArray();
+      cellsArray[index + 1].nativeElement.focus();
+    }
+  }
+
   getAdditionalCharges(documentId: Guid) {
     this.addCharges = 0;
     this.documentAdditionalChargesViewModel

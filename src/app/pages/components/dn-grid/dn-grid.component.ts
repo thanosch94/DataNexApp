@@ -125,6 +125,7 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   pageIndex: number = 0;
   pageSize: number = 10; //Check to keep user defined settings
   hasAnyColumnDisplayTotalEnabled: boolean = false;
+  selection: any;
 
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
@@ -257,8 +258,12 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     this.onRowDelete.emit(data);
   }
 
+  selectHandler(row: any) {
+    this.selection.toggle(row);
+  }
+
+
   onDataLookupSelectionChanged(column: DnColumnDto, data: any, lookup: any) {
-    debugger;
     data[column.DataField] = lookup[column.Lookup!.ValueExpr];
     if (column.OnSelectionChange) {
       column.OnSelectionChange(data, this.dataSource);
