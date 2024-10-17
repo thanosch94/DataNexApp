@@ -8,8 +8,9 @@ export class CompaniesViewModel {
   headers: any;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();
-    this.headers = this.auth.getHeaders();
-
+    let headers = {
+      'Content-Type': 'application/json',
+    };
   }
 
   public GetAll() {

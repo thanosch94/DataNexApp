@@ -32,6 +32,7 @@ export class AuthService {
     this.headers = {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
+      'CompanyId':this.loggedInCompany?.Id
     };
     return this.headers;
   }
