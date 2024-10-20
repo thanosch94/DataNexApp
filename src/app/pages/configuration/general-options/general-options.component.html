@@ -1,0 +1,14 @@
+<dn-toolbar
+  [canSave]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="general_options_text"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-checkbox
+    [(value)]="generalOptions.LotsEnabled"
+    label="Enable Lots"
+  ></dn-checkbox>
+</div>

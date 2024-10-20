@@ -31,6 +31,7 @@ import { AccountsPayableComponent } from './pages/financial/accounts-payable/acc
 import { AccountsReceivableComponent } from './pages/financial/accounts-receivable/accounts-receivable.component';
 import { CustomersLedgerComponent } from './pages/financial/customers-ledger/customers-ledger.component';
 import { DocumentTypeEditComponent } from './pages/configuration/document-type-edit/document-type-edit.component';
+import { GeneralOptionsComponent } from './pages/configuration/general-options/general-options.component';
 
 export const routes: Routes = [
   {
@@ -197,6 +198,11 @@ export const routes: Routes = [
   {
     path:'customers-ledger',
     component:CustomersLedgerComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'general-options',
+    component:GeneralOptionsComponent,
     canActivate:[authGuard]
   }
 
