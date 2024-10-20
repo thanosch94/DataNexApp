@@ -27,10 +27,10 @@ export class GeneralOptionsComponent {
     //General options is a single line of data in the database which is unique for each company
     //The first time someone accessing general options component if there are no options for the company
     ///we create them
-    this.getOrInsertGeneralOptions();
+    this.getOrInsertData();
   }
 
-  getOrInsertGeneralOptions() {
+  getOrInsertData() {
     this.generalOptionsViewModel
       .GetAll()
       .subscribe((result: GeneralOptionsDto) => {
@@ -64,7 +64,7 @@ export class GeneralOptionsComponent {
       });
   }
   onRefreshClicked(e:any){
-    this.getOrInsertGeneralOptions()
+    this.getOrInsertData()
   }
 
   displayNotification(text: string) {

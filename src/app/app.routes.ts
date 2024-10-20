@@ -32,6 +32,7 @@ import { AccountsReceivableComponent } from './pages/financial/accounts-receivab
 import { CustomersLedgerComponent } from './pages/financial/customers-ledger/customers-ledger.component';
 import { DocumentTypeEditComponent } from './pages/configuration/document-type-edit/document-type-edit.component';
 import { GeneralOptionsComponent } from './pages/configuration/general-options/general-options.component';
+import { LotslistComponent } from './pages/configuration/lots-list/lots-list.component';
 
 export const routes: Routes = [
   {
@@ -203,6 +204,11 @@ export const routes: Routes = [
   {
     path:'general-options',
     component:GeneralOptionsComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'lots-list',
+    component:LotslistComponent,
     canActivate:[authGuard]
   }
 

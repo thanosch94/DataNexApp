@@ -2,6 +2,12 @@
 <mat-toolbar [ngClass]="isDialog ? 'dialog-toolbar' : 'toolbar'">
   <span class="toolbar-title">{{ title }}</span>
   <span class="example-spacer"></span>
+  @if(displaySettings){
+    <button class="button" mat-button (click)="onSettingsClicked($event)">
+      <mat-icon class="icons">settings</mat-icon>
+      <span class="button-title">Settings</span>
+    </button>
+    }
   @if(canRefresh){
   <button class="button" mat-button (click)="onRefreshClicked($event)">
     <mat-icon class="icons">refresh</mat-icon>

@@ -1,0 +1,21 @@
+<dn-toolbar
+  [canExit]="true"
+  [canSave]="true"
+  [canRefresh]="true"
+  [isDialog]="true"
+  [title]="lots_settings_title_text"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <div class="flex-row">
+    <b>Lot Strategy</b>
+    <dn-selectbox
+      [(value)]="lotSettings.LotStrategy"
+      [dataSource]="lotStrategiesList"
+      valueExpr="Id"
+      displayExpr="Name"
+      label="Lot Strategy"
+    ></dn-selectbox>
+  </div>
+</div>
