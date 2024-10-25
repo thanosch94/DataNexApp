@@ -18,7 +18,7 @@ import { LotsSettingsComponent } from '../lots-settings/lots-settings.component'
   templateUrl: './lots-list.component.html',
   styleUrl: './lots-list.component.css',
 })
-export class LotslistComponent implements OnInit {
+export class LotsListComponent implements OnInit {
   @ViewChild('lotsGrid') lotsGrid: DnGridComponent;
 
   lots_title_text: string = 'Lots';
