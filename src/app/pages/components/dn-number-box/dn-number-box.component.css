@@ -26,3 +26,19 @@
     -moz-appearance: textfield;
 }
 
+::ng-deep .number-box-flex-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.number-box-icon{
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  margin-top:5px;
+}
+
+.number-box-icon:hover{
+  cursor: pointer;
+}

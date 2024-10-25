@@ -365,4 +365,8 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   onInfoBtnClicked(row: any) {
     this.onInfoButtonClicked.emit(row);
   }
+
+  onIconClicked(e:any, column:DnColumnDto, row:any){
+    column.OnIconClicked(row);
+  }
 }

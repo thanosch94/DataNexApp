@@ -17,17 +17,29 @@
     <mat-tab label="Basic Info">
       <div class="tab-1">
         <div class="tab1-grid">
-          <dn-selectbox
-            class="grid-a-doctype"
-            [dataSource]="docTypes"
-            valueExpr="Id"
-            displayExpr="Abbreviation"
-            label="Doc. Type"
-            [width]="100"
-            [(value)]="document.DocumentTypeId"
-          >
-          </dn-selectbox>
+          <div class="grid-a-doctype-series">
+              <dn-selectbox
+              class="doc-type"
+                [dataSource]="docTypes"
+                valueExpr="Id"
+                displayExpr="Abbreviation"
+                label="Doc. Type"
+                [width]="50"
+                [(value)]="document.DocumentTypeId"
+              >
+              </dn-selectbox>
 
+              <dn-selectbox
+                class="doc-series"
+                [dataSource]="docTypes"
+                valueExpr="Id"
+                displayExpr="Abbreviation"
+                label="Doc. Series"
+                [width]="50"
+                [(value)]="document.DocumentTypeId"
+              >
+              </dn-selectbox>
+          </div>
           <dn-date-box
             class="grid-b-docdate"
             name="DocumentDateTime"
@@ -314,7 +326,7 @@
       (onRowSaving)="onProductRowSaving($event)"
     >
     </dn-grid>
-  }
+    }
     <br />
     <br />
     <div class="edit-document-charges-field">

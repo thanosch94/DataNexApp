@@ -1,3 +1,5 @@
+import { LotsViewModel } from './../../view-models/lots.viewmodel';
+import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
 import { VatClassesViewModel } from './../../view-models/vat-classes.viewmodel';
 import { DocumentAdditionalChargesViewModel } from './../../view-models/document-additional-charges.viewmodel';
 import { WebAppBase } from './../../base/web-app-base';
@@ -31,7 +33,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { DocumentDto } from '../../dto/document.dto';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import {
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatCell, MatTable, MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
@@ -68,6 +73,9 @@ import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.co
 import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.component';
 import { DnNumberBoxComponent } from '../components/dn-number-box/dn-number-box.component';
 import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.component';
+import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
+import { LotDto } from '../../dto/configuration/lot.dto';
+import { ProductRowDetailComponent } from '../product-row-detail/product-row-detail.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -97,10 +105,15 @@ import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.compon
     DnSelectboxComponent,
     DnTextboxComponent,
     DnNumberBoxComponent,
-    DnDateBoxComponent
+    DnDateBoxComponent,
   ],
 
-  providers: [provideNativeDateAdapter(), { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },TabsService, HttpClientModule],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    TabsService,
+    HttpClientModule,
+  ],
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
@@ -164,6 +177,10 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
   datepipe: DatePipe = new DatePipe('en-US');
+  generalOptionsViewModel: GeneralOptionsViewModel;
+  generalOptions: GeneralOptionsDto;
+  lotsViewModel: LotsViewModel;
+  lotsDataSource: LotDto[];
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -174,6 +191,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef
   ) {
+    this.generalOptionsViewModel = new GeneralOptionsViewModel(
+      this.http,
+      this.auth
+    );
+    this.lotsViewModel = new LotsViewModel(this.http, this.auth);
     this.documentTypesViewModel = new DocumentTypesViewModel(
       this.http,
       this.auth
@@ -211,6 +233,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.documentType = row['Type'];
       }
     });
+    this.generalOptionsViewModel
+      .GetAll()
+      .subscribe((result: GeneralOptionsDto) => {
+        this.generalOptions = result;
+      });
   }
 
   ngOnInit() {
@@ -226,8 +253,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.suppliersViewModel.GetAll().subscribe((result: any) => {
       this.suppliers = result;
     });
-
-
   }
 
   getLookups() {
@@ -245,6 +270,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               this.productSizesDataSource = result;
               this.productsViewModel.GetAll().subscribe((result: any) => {
                 this.products = result;
+                this.lotsViewModel.GetLookup().subscribe((result: LotDto[]) => {
+                  this.lotsDataSource = result;
+                });
                 this.getColumns();
                 this.getData();
               });
@@ -359,7 +387,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   GetProductVatAmount(id: Guid, data: DocumentProductDto) {
-    debugger
+    debugger;
     if (!data.VatClassRate) {
       this.vatClassesViewModel.GetById(id).subscribe((result: any) => {
         let vatClass = result as VatClassDto;
@@ -390,8 +418,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   GetTotalVatAmount(data: DocumentProductDto) {
     data.TotalVatAmount = data.VatAmount! * data.Quantity!;
   }
-
-
 
   onSaveClicked(e: any) {
     //If the first row is filled in then it passes the validation
@@ -448,7 +474,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       } else {
         alert('Select DocType');
       }
-    }else {
+    } else {
       this.calculateDocumentTotal();
       this.documentsViewModel
         .UpdateDto(this.document)
@@ -696,7 +722,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             // this.addQuantityToExistingLine(index);
           } else {
             let rowIndex = productsDataSource.indexOf(data);
-debugger
+            debugger;
             if (barcodeData) {
               data.IsRowFilled = true;
               data.Barcode = barcodeData.Barcode;
@@ -735,7 +761,7 @@ debugger
   onPriceChange(data: DocumentProductDto) {
     if (data.Quantity) {
       data.TotalPrice = data.Quantity! * data.ProductRetailPrice!;
-      debugger
+      debugger;
       this.GetProductVatAmount(data.VatClassId, data);
     } else {
       data.ProductRetailPrice = undefined;
@@ -840,7 +866,7 @@ debugger
       {
         DataField: 'SerialNumber',
         DataType: 'number',
-        Caption: 'Serial Number',
+        Caption: 'S/N',
         ReadOnly: true,
       },
       {
@@ -869,21 +895,32 @@ debugger
         DataType: 'string',
         Caption: 'Product Name',
       },
+      // {
+      //   DataField: 'ProductSizeId',
+      //   DataType: 'string',
+      //   Caption: 'Size',
+      //   Lookup: {
+      //     DataSource: this.productSizesDataSource,
+      //     ValueExpr: this.skuSelected ? 'SizeId' : 'Id',
+      //     DisplayExpr: this.skuSelected ? 'SizeName' : 'Name',
+      //   },
+      //   OnClick: () => {},
+      //   OnSelectionChange: (
+      //     data: DocumentProductDto,
+      //     dataSource: DocumentProductDto[]
+      //   ) => {
+      //     this.onSizeSelectionChanged(data, dataSource);
+      //   },
+      // },
       {
-        DataField: 'ProductSizeId',
+        DataField: 'LotName',
         DataType: 'string',
-        Caption: 'Size',
+        Caption: 'Lot',
+        Visible: this.generalOptions.LotsEnabled,
         Lookup: {
-          DataSource: this.productSizesDataSource,
-          ValueExpr: this.skuSelected ? 'SizeId' : 'Id',
-          DisplayExpr: this.skuSelected ? 'SizeName' : 'Name',
-        },
-        OnClick: () => {},
-        OnSelectionChange: (
-          data: DocumentProductDto,
-          dataSource: DocumentProductDto[]
-        ) => {
-          this.onSizeSelectionChanged(data, dataSource);
+          DataSource: this.lotsDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
         },
       },
       {
@@ -906,8 +943,18 @@ debugger
         DataType: 'number',
         Caption: 'Quantity',
         Min: 1,
+        Icon: 'info',
         OnValueChange: (data: any, dataSource: any) => {
           this.onQuantityChange(data);
+        },
+        OnIconClicked: (row: DocumentProductDto) => {
+          if (row.ProductId) {
+            const dialogRef = this.dialog.open(ProductRowDetailComponent, {
+              width: '600px',
+              height: '500px',
+              data: { Row: row },
+            });
+          }
         },
       },
       {

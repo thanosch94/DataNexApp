@@ -116,14 +116,13 @@ mat-form-field{
   "a b c c d"
   "e f g h i"
   "j k l m n";
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap:2 rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
-.grid-a-doctype{
+.grid-a-doctype-series{
   grid-area: a;
-  gap:2rem;
-  width:90%
+  gap:1rem;
+  width:90%;
 }
 
 .grid-b-docdate{

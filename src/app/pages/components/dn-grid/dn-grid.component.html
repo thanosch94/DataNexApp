@@ -80,6 +80,9 @@
             [max]="column.Max ? column.Max : null"
             [(value)]="row[column.DataField]"
             (valueChange)="onValueChange(row, column)"
+            [icon]="column.Icon"
+            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+            (onIconClicked)="onIconClicked($event, column, row)"
           >
           </dn-number-box>
           }

@@ -16,4 +16,7 @@ export class DnColumnDto {
   Max?:number
   DefaultValue?: any;
   DisplayColumnTotal?:boolean = false
+  Icon?: string; //Used to display an icon in the input field
+  IconPosition?: string;//start-end
+  OnIconClicked?:any;
 }
