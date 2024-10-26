@@ -30,7 +30,7 @@ export class DnSelectboxComponent {
   @Input() valueExpr: string;
   @Input() displayExpr: string;
   @Input() dataSource: any;
-  @Input() width: number;
+  @Input() width: number = 100;
   @Output() valueChange = new EventEmitter();
   selectedOption: any;
 

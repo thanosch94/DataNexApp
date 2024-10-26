@@ -22,7 +22,7 @@ export class DnTextboxComponent {
   @Input() placeholder: string;
   @Input() name: string;
   @Input() value: any;
-  @Input() width: number;
+  @Input() width: number = 100;
   @Output() valueChange = new EventEmitter();
 
   onValueChange(value:string){

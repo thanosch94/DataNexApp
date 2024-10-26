@@ -52,12 +52,12 @@
         <td
           [ngClass]="displayTableBorder ? 'display-border' : ''"
           mat-cell
+          [ngStyle]="{width:column.Width?column.Width+'px':'' }"
           *matCellDef="let row; let index"
         >
           <!-- String Input -->
           @if(column.DataType == 'string' && row.IsEditable && !column.Lookup){
           <dn-textbox
-            style="width: 100%"
             class="white-input"
             [name]="column.Caption"
             [readOnly]="column.ReadOnly ?? false"
@@ -80,7 +80,7 @@
             [max]="column.Max ? column.Max : null"
             [(value)]="row[column.DataField]"
             (valueChange)="onValueChange(row, column)"
-            [icon]="column.Icon"
+            [icon]="row[column.DataField]?column.Icon:''"
             [iconPosition]="column.IconPosition?column.IconPosition:'end'"
             (onIconClicked)="onIconClicked($event, column, row)"
           >
@@ -91,7 +91,6 @@
           @if(column.DataType == 'datetime' && row.IsEditable &&
           !column.Lookup){
           <dn-date-box
-            style="width: 100%"
             class="white-input"
             [name]="column.Caption"
             [readOnly]="column.ReadOnly ?? false"
@@ -171,17 +170,28 @@
           } @if( !row.IsEditable && !column.Lookup && (column.DataType ==
           'string' || column.DataType == 'number')){
           <p>
-            {{ row[column.DataField] }}
+            <dn-textbox
+            [readOnly]="true"
+            [value]="row[column.DataField]"
+            ></dn-textbox>
           </p>
           } @if(!row.IsEditable && !column.Lookup && (column.DataType ==
           'datetime' || column.DataType == 'date')){
           <p>
             <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->
 
-            @if(column.Format){<span>
-              {{ row[column.DataField] | date : column.Format }}</span
-            >}
-            @if(!column.Format){<span> {{ row[column.DataField] }}</span>}
+            @if(column.Format){
+              <dn-textbox
+              [readOnly]="true"
+              [value]="row[column.DataField] | date : column.Format"
+              ></dn-textbox>
+            }
+            @if(!column.Format){
+              <dn-textbox
+              [readOnly]="true"
+              [value]="row[column.DataField]"
+              ></dn-textbox>
+            }
           </p>
           } @if(!row.IsEditable && !column.Lookup && column.DataType ==
           'boolean'){
@@ -195,7 +205,11 @@
           </p>
           } @if(!row.IsEditable && column.Lookup){
           <p>
-            {{ row[column.DataField] | lookupName : row : column }}
+            <dn-textbox
+            [readOnly]="true"
+            [value]=" row[column.DataField] | lookupName : row : column "
+            ></dn-textbox>
+
           </p>
           } @if(column.DataType == 'buttons' && canEdit &&
           !hideEditButtonOnEditing){

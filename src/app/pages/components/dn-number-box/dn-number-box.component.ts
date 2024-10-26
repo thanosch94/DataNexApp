@@ -29,7 +29,7 @@ export class DnNumberBoxComponent {
   @Input() readOnly: boolean;
   @Input() name: string;
   @Input() value: any;
-  @Input() width: number;
+  @Input() width: number = 100;
   @Input() icon: string|undefined;
   @Input() iconPosition: string|undefined = "end";
   @Output() valueChange = new EventEmitter();

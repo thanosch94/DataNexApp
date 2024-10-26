@@ -67,24 +67,18 @@
 
 }
 
-/* When not in editing mode */
- .table::ng-deep .mat-mdc-cell p{
-  margin-left: 5%!important;
-
+.table ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled){
+  background: white;
 }
 
  .table::ng-deep .mat-sort-header-container{
-    margin-left: 5%!important;
+    margin-left: 2%!important;
 
 }
 
 .table ::ng-deep .mdc-line-ripple {
   display: none
 }
-
-/* .table::ng-deep tr>td, .mat-mdc-cell{
-  line-height: 20px!important;
-} */
 
 /*To change the height of the search input  */
 .search-input ::ng-deep .mat-mdc-text-field-wrapper {
@@ -186,7 +180,6 @@ border-top:none!important;
 /* Align text in table cells when in edit mode */
 .table ::ng-deep  .mat-mdc-input-element{
   margin-top:5px!important;
-  padding-left: 10px;
 }
 
 /* Word wrap in grid cells */
