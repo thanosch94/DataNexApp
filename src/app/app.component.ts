@@ -2,7 +2,7 @@ import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { isDevMode } from '@angular/core';
+import { ElementRef, isDevMode, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
@@ -12,6 +12,7 @@ import {
 import { Route, Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import {
+  AsyncPipe,
   CommonModule,
   HashLocationStrategy,
   LocationStrategy,
@@ -30,7 +31,7 @@ import {
   faHome,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
-import { FormControl } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
 import { TabsService } from './services/tabs.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -39,10 +40,16 @@ import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
-import { SalesReportsComponent } from "./pages/sales/sales-reports/sales-reports.component";
+import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import {
+  MatAutocomplete,
+  MatAutocompleteModule,
+  MatAutocompleteTrigger,
+  MatOptgroup,
+} from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-root',
@@ -63,8 +70,13 @@ import { MatInputModule } from '@angular/material/input';
     MatMiniFabButton,
     MatFormFieldModule,
     MatInputModule,
-    MatIconModule
-],
+    MatIconModule,
+    MatAutocompleteModule,
+    MatOptgroup,
+    AsyncPipe,
+    FormsModule,
+    ReactiveFormsModule,
+  ],
   providers: [AuthService, HttpClientModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -91,8 +103,10 @@ export class AppComponent {
   loggedInCompanyName: any;
   loggedInUserName: string;
   today: Date;
+  selectedSearchItem: string | null;
+  searchItems: MenuItemDto[];
   constructor(
-    private http:HttpClient,
+    private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
@@ -107,8 +121,8 @@ export class AppComponent {
     // }
     this.faFile = faFile;
     this.faDoorOpen = faDoorOpen;
-    this.appVersion = WebAppBase.version
-    this.apiVersion = WebAppBase.apiVersion
+    this.appVersion = WebAppBase.version;
+    this.apiVersion = WebAppBase.apiVersion;
     this.faCaretDown = faCaretDown;
     this.faCaretUp = faCaretUp;
     this.tabs = tabsService.getTabs();
@@ -119,14 +133,14 @@ export class AppComponent {
         }
       }
       this.isAuthenticated = this.auth.isAuthenticated;
-      this.loggedInCompanyName=this.auth?.loggedInCompany?.Name
-      this.loggedInUserName = this.auth?.user?.UserName
-      this.today = new Date()
+      this.loggedInCompanyName = this.auth?.loggedInCompany?.Name;
+      this.loggedInUserName = this.auth?.user?.UserName;
+      this.today = new Date();
       //this.ref.detectChanges()
     });
 
     this.getMenuItemsForTabs();
-    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth)
+    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth);
   }
   menuItems: MenuItemDto[] = Navigation.menu;
   selectedTab = new FormControl(0);
@@ -140,6 +154,16 @@ export class AppComponent {
     });
   }
   onMenuItemClick(item: MenuItemDto) {
+    this.redirectToMenuItem(item);
+  }
+
+  onSearchItemClick(item: MenuItemDto) {
+    this.redirectToMenuItem(item);
+    this.selectedSearchItem = '';
+    this.searchItems = this.menuItems;
+  }
+
+  redirectToMenuItem(item: MenuItemDto) {
     this.isMenuItem = true;
     this.selectedMenuItem = item.Id;
     this.router.navigate([item.Path], { queryParams: item.Params });
@@ -180,7 +204,8 @@ export class AppComponent {
 
     if (this.isMenuItem || this.isNavBarItem) {
       let tabItem = this.menuItemsArray.find(
-        (x:any) =>x.Path == data.state.root.firstChild?.routeConfig?.path &&
+        (x: any) =>
+          x.Path == data.state.root.firstChild?.routeConfig?.path &&
           x.Id == this.selectedMenuItem
       );
       let tabItemName = tabItem ? tabItem.Name : '';
@@ -195,7 +220,7 @@ export class AppComponent {
         tab.Key = tabItemName;
         tab.Active = true;
         tab.Hint = tabItemName;
-        tab.OriginId = this.selectedMenuItem
+        tab.OriginId = this.selectedMenuItem;
         tab.Route = data.state.root.firstChild?.routeConfig;
         this.tabs.push(tab);
         this.selectedTab.setValue(this.tabs.length - 1);
@@ -210,10 +235,9 @@ export class AppComponent {
       }
       this.isMenuItem = false;
       this.isNavBarItem = false;
-    }
-     else if (!this.isMenuItem && !this.isNavBarItem) {
+    } else if (!this.isMenuItem && !this.isNavBarItem) {
       let tab = this.tabs.find((tab) => tab.Active == true);
-      if(tab){
+      if (tab) {
         tab!.Component = comp;
         tab!.Route = data.state.root.firstChild?.routeConfig;
       }
@@ -261,5 +285,17 @@ export class AppComponent {
 
   onMenuCaretArrowClicked(e: any, menuItem: MenuItemDto) {
     menuItem.IsOpen = !menuItem.IsOpen;
+  }
+
+  filterItems(e: any) {
+    let searchValue = e.toLowerCase();
+    this.searchItems = this.menuItems
+      .map((category: MenuItemDto) => ({
+        ...category,
+        Children: category.Children!.filter((item) =>
+          item.Name.toLowerCase().includes(searchValue)
+        ),
+      }))
+      .filter((category) => category.Children.length > 0); // Remove empty categories
   }
 }

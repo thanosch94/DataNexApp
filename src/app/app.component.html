@@ -27,7 +27,19 @@
     <div class="flex-inline basic-app-connection-info">
       <div>
         <mat-form-field class="app-search-bar" appearance="outline">
-          <input matInput placeholder="Search" />
+          <input  matInput placeholder="Search"
+
+          [(ngModel)]="selectedSearchItem" (ngModelChange)="filterItems($event)"
+          [matAutocomplete]="autoGroup">
+          <mat-autocomplete #autoGroup="matAutocomplete" [disableRipple]="true">
+            @for (itemCat of searchItems; track itemCat) {
+              <mat-optgroup [label]="itemCat.Name">
+                @for (item of itemCat.Children; track item) {
+                  <mat-option (click)="onSearchItemClick(item)" [value]="item.Name">{{item.Name}}</mat-option>
+                }
+              </mat-optgroup>
+            }
+        </mat-autocomplete>
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </div>
