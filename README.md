@@ -50,10 +50,6 @@ The application can be accessed at http://2.56.212.112/DataNexApp.
 
 <b>Password:</b> P@ssw0rd
 
-## Recommended Browser Settings
-
-For the best user experience, it is recommended to use the application at 67%-75% browser zoom.
-
 
 ## Development server
 
