@@ -474,7 +474,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                   );
                   productRow.DocumentProductLotsQuantities =
                     tempArrayOfDocumentProductLotsQuantities;
-                  debugger;
                   this.documentProductsViewModel
                     .InsertDto(productRow)
                     .subscribe((result: any) => {
@@ -747,7 +746,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
             // this.addQuantityToExistingLine(index);
           } else {
             let rowIndex = productsDataSource.indexOf(data);
-            debugger;
             if (barcodeData) {
               data.IsRowFilled = true;
               data.Barcode = barcodeData.Barcode;
@@ -801,7 +799,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   onPriceChange(data: DocumentProductDto) {
     if (data.Quantity) {
       data.TotalPrice = data.Quantity! * data.ProductRetailPrice!;
-      debugger;
       this.GetProductVatAmount(data.VatClassId, data);
     } else {
       data.ProductRetailPrice = undefined;
@@ -929,7 +926,6 @@ onSupplierValueChange(e:any){
           DisplayExpr: 'Sku',
         },
         OnSelectionChange: (data: any, columns: DnColumnDto[]) => {
-          debugger
           this.onSkuSelection(data, columns);
         },
       },

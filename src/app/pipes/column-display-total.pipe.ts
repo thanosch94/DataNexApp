@@ -9,7 +9,6 @@ import { DnColumnDto } from '../dto/dn-column.dto';
 export class ColumnDisplayTotalPipe implements PipeTransform {
 
   transform(value: any, columns?: DnColumnDto[]): any {
-    debugger
     if(columns){
       let showTotalRow = columns.some(x=>x.DisplayColumnTotal==true)
 

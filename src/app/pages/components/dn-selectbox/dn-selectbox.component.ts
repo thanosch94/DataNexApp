@@ -97,7 +97,6 @@ export class DnSelectboxComponent {
   }
 
   onIconClick(e:any){
-    debugger
     this.isOptionsPanelEnabled= false
     e.value=this.value;
     this.onIconClicked.emit(e)

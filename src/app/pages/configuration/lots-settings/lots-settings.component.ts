@@ -26,7 +26,6 @@ export class LotsSettingsComponent {
     private auth: AuthService,
     private _snackBar: MatSnackBar
   ) {
-    debugger
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
     this.lotStrategiesList = LotStrategyEnumList.value;
 

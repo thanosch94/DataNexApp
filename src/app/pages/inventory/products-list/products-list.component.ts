@@ -68,7 +68,6 @@ export class ProductsListComponent implements OnInit {
     this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
     this.brandsViewModel.GetAll().subscribe((result: any) => {
       this.brands = result;
-      debugger
       this.getColumns();
 
     });

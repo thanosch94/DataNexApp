@@ -60,7 +60,6 @@ export class ProductRowDetailComponent implements OnInit {
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
     if(data){
       this.rowData = data?.Row as DocumentProductDto;
-      debugger
       this.supplierIdSelected =data.Supplier
       this.documentGroup= data.DocumentGroup
 

@@ -42,7 +42,6 @@ export class DnNumberBoxComponent {
 
 
   onValueChange(value:number){
-    debugger
     this.valueChange.emit(value)
   }
 
