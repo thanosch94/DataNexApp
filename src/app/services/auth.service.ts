@@ -7,6 +7,7 @@ import { LoginDto } from '../dto/login.dto';
 import { environment } from '../../environments/environment';
 import { Guid } from 'guid-typescript';
 import { CompanyDto } from '../dto/company.dto';
+import { GeneralOptionsDto } from '../dto/configuration/general-options.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,7 @@ import { CompanyDto } from '../dto/company.dto';
 export class AuthService {
   accountViewModel: AccountViewModel;
   isAuthenticated: boolean = false;
+  appOptions:GeneralOptionsDto
 
   loggedInCompany:CompanyDto
   private _user: UserDto;
@@ -26,6 +28,7 @@ export class AuthService {
   public set user(v: UserDto) {
     this._user = v;
     this.token = v.Token;
+    this.getHeaders()
   }
 
   getHeaders() {

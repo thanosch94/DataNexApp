@@ -1,3 +1,4 @@
+import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
 import { CompaniesViewModel } from './../../view-models/companies.viewmodel';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, isDevMode } from '@angular/core';
@@ -13,6 +14,7 @@ import { WebAppBase } from '../../base/web-app-base';
 import { ApiResponseDto } from '../../dto/api-response.dto';
 import { UserDto } from '../../dto/user.dto';
 import { HttpClient } from '@angular/common/http';
+import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +35,7 @@ export class LoginComponent {
   isLoading: boolean =false;
   companiesViewModel: CompaniesViewModel;
   companies: any;
+  generalOptionsViewModel: GeneralOptionsViewModel;
 
   constructor(
     private http:HttpClient,
@@ -63,6 +66,10 @@ export class LoginComponent {
             this.auth.user=user;
             this.ref.detectChanges();
             this.router.navigate(['/']);
+            this.generalOptionsViewModel = new GeneralOptionsViewModel(this.http,this.auth)
+            this.generalOptionsViewModel.GetAll().subscribe((result:GeneralOptionsDto)=>{
+              this.auth.appOptions = result
+            })
           })
 
 

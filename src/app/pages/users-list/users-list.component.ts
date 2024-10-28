@@ -24,6 +24,7 @@ import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../dto/dn-column.dto';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-users-list',
@@ -42,7 +43,8 @@ import { DnColumnDto } from '../../dto/dn-column.dto';
     MatSortHeader,
     DnToolbarComponent,
     MatTooltipModule,
-    DnGridComponent
+    DnGridComponent,
+    AsyncPipe
   ],
   templateUrl: './users-list.component.html',
   styleUrl: './users-list.component.css',
@@ -58,7 +60,7 @@ export class UsersListComponent implements OnInit {
     'UserRole',
     'buttons',
   ];
-  dataSource: UserDto[];
+  dataSource: any;
   users_list_text: string;
   usersViewModel: UsersViewModel;
   columns:DnColumnDto[]
@@ -80,9 +82,7 @@ export class UsersListComponent implements OnInit {
   }
 
   getData() {
-    this.usersViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = result;
-    });
+    this.dataSource = this.usersViewModel.GetAll()
   }
 
   getColumns(){
