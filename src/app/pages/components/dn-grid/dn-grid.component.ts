@@ -270,8 +270,8 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 
-  onDataLookupSelectionChanged(column: DnColumnDto, data: any, lookup: any) {
-    data[column.DataField] = lookup[column.Lookup!.ValueExpr];
+  onDataLookupSelectionChanged(column: DnColumnDto, data: any, value: any) {
+    data[column.DataField] = value;
     if (column.OnSelectionChange) {
       column.OnSelectionChange(data, this.dataSource);
     }
@@ -296,29 +296,33 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   onClick(row: any, column: DnColumnDto) {
     //column.Lookup!.DataSource = col.Lookup!.DataSource
-    let col = this.columns.find((x) => x.DataField == column.DataField);
+  //   let col = this.columns.find((x) => x.DataField == column.DataField);
 
-    if(col?.Lookup?.DataSource){
+  //   if(col?.Lookup?.DataSource){
 
-    let newDataSourceObject = new Object();
-    Object.defineProperty(newDataSourceObject, column.DataField, {
-      value: col!.Lookup!.DataSource,
-      writable: true,
-    });
-    if (!row.DataSource) {
-      //row.DataSource = [];
-      //row.DataSource[column.DataField] = col!.Lookup!.DataSource;
-    } else if (
-      !row.DataSource.some((x: any) =>
-        newDataSourceObject.hasOwnProperty(x[column.DataField])
-      )
-    ) {
-      row.DataSource[column.DataField] = col!.Lookup!.DataSource;
-    }
-    this.ref.detectChanges();
-    this.renderRows();
+  //   let newDataSourceObject = new Object();
+  //   Object.defineProperty(newDataSourceObject, column.DataField, {
+  //     value: col!.Lookup!.DataSource,
+  //     writable: true,
+  //   });
+  //   if (!row.DataSource) {
+  //     //row.DataSource = [];
+  //     //row.DataSource[column.DataField] = col!.Lookup!.DataSource;
+  //   } else if (
+  //     !row.DataSource.some((x: any) =>
+  //       newDataSourceObject.hasOwnProperty(x[column.DataField])
+  //     )
+  //   ) {
+  //     row.DataSource[column.DataField] = col!.Lookup!.DataSource;
+  //   }
+  //   this.ref.detectChanges();
+  //   this.renderRows();
 
-  }else{
+  // }else{
+  //   column.OnClick(row, column)
+  // }
+
+  if(column.OnClick){
     column.OnClick(row, column)
   }
   }

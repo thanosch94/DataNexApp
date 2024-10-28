@@ -52,7 +52,7 @@ export class DnSelectboxComponent {
       (option: any) => option[this.valueExpr] == data[this.valueExpr]
     );
 
-    this.valueChange.emit(this.selectedOption);
+    this.valueChange.emit(this.selectedOption[this.valueExpr]);
   }
 
   onInputClick(e:any){
@@ -66,8 +66,13 @@ export class DnSelectboxComponent {
         return data[this.displayExpr];
       } else if (typeof data == 'string' || 'number') {
         this.selectedOption = this.dataSource.find(
-          (option: any) => option[this.valueExpr] == data
+          (option: any) => option[this.displayExpr] == data
         );
+        if(this.selectedOption==undefined){
+          this.selectedOption = this.dataSource.find(
+            (option: any) => option[this.valueExpr] == data
+          );
+        }
         this.value = this.selectedOption[this.valueExpr];
 
         return this.selectedOption[this.displayExpr];
