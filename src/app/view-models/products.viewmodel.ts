@@ -19,6 +19,12 @@ export class ProductsViewModel {
     });
   }
 
+  public GetLookup() {
+    return this.http.get<ProductDto[]>(this.service + 'Products/getlookup', {
+      headers: this.headers,
+    });
+  }
+
   public GetById(id: Guid) {
     return this.http.get(this.service + 'Products/getbyid/' + id, {
       headers: this.headers,

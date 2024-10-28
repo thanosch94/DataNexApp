@@ -19,6 +19,12 @@ export class SuppliersViewModel {
     });
   }
 
+  public GetLookup() {
+    return this.http.get<SupplierDto[]>(this.service + 'Suppliers/getlookup', {
+      headers: this.headers,
+    });
+  }
+
   public GetById(id: Guid) {
     return this.http.get(this.service + 'Suppliers/getbyid/' + id, {
       headers: this.headers,
