@@ -19,5 +19,8 @@ export class DnColumnDto {
   Icon?: string; //Used to display an icon in the input field
   IconPosition?: string;//start-end
   OnIconClicked?:any;
+  OnFocusOut?:any;
   Width?: number;
+  IconTooltip?: string;
+
 }

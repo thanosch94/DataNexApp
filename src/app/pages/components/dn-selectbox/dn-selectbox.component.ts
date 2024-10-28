@@ -1,10 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'dn-selectbox',
@@ -17,6 +19,10 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     MatAutocompleteModule,
     MatPseudoCheckboxModule,
+    MatIconModule,
+    MatSuffix,
+    MatPrefix,
+    MatTooltipModule
   ],
   templateUrl: './dn-selectbox.component.html',
   styleUrl: './dn-selectbox.component.css',
@@ -31,16 +37,27 @@ export class DnSelectboxComponent {
   @Input() displayExpr: string;
   @Input() dataSource: any;
   @Input() width: number = 100;
+  @Input() icon: string|undefined;
+  @Input() iconPosition?: string = "end";
+  @Input() iconTooltip: string='';
+  @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
+  @Output() onClick = new EventEmitter();
+
   selectedOption: any;
+  isOptionsPanelEnabled: boolean =true;
 
   onSelection(data: any) {
-    debugger;
     this.selectedOption = this.dataSource.find(
       (option: any) => option[this.valueExpr] == data[this.valueExpr]
     );
 
-    this.valueChange.emit(this.selectedOption.Id);
+    this.valueChange.emit(this.selectedOption);
+  }
+
+  onInputClick(e:any){
+    this.isOptionsPanelEnabled=true;
+    this.onClick.emit(e)
   }
 
   display(data: any) {
@@ -73,4 +90,12 @@ export class DnSelectboxComponent {
       return false;
     }
   }
+
+  onIconClick(e:any){
+    debugger
+    this.isOptionsPanelEnabled= false
+    e.value=this.value;
+    this.onIconClicked.emit(e)
+  }
+
 }

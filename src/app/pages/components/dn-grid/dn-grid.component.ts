@@ -48,6 +48,7 @@ import { ColumnDisplayTotalPipe } from '../../../pipes/column-display-total.pipe
 import { DnTextboxComponent } from '../dn-textbox/dn-textbox.component';
 import { DnNumberBoxComponent } from '../dn-number-box/dn-number-box.component';
 import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
+import { DnSelectboxComponent } from "../dn-selectbox/dn-selectbox.component";
 
 @Component({
   selector: 'dn-grid',
@@ -91,14 +92,14 @@ import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
     ColumnDisplayTotalPipe,
     DnTextboxComponent,
     DnNumberBoxComponent,
-    DnDateBoxComponent
+    DnDateBoxComponent,
+    DnSelectboxComponent
 ],
 })
-export class DnGridComponent implements OnInit, AfterViewInit {
+export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('matTable') table: MatTable<any>;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-
   @Output() onRowStopEditing = new EventEmitter();
   @Output() onRowDelete = new EventEmitter();
   @Output() onRowAdding = new EventEmitter();
@@ -180,6 +181,10 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   // }
 
   ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    this.renderRows()
+  }
   ngAfterViewInit() {
     this.matDataSource.paginator = this.paginator;
     this.ref.detectChanges();
@@ -221,7 +226,9 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   renderRows() {
-    this.table.renderRows();
+    if(this.table){
+      this.table.renderRows();
+    }
   }
   save(data: any, index: number) {
     this.onRowSaving.emit(data);
@@ -282,8 +289,7 @@ export class DnGridComponent implements OnInit, AfterViewInit {
 
   onValueChange(data: any, column: DnColumnDto) {
     if (column.OnValueChange != null) {
-      debugger;
-      column.OnValueChange(data, this.dataSource);
+      column.OnValueChange(data, this.dataSource, column);
       this.table.renderRows();
     }
   }
@@ -292,14 +298,16 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     //column.Lookup!.DataSource = col.Lookup!.DataSource
     let col = this.columns.find((x) => x.DataField == column.DataField);
 
+    if(col?.Lookup?.DataSource){
+
     let newDataSourceObject = new Object();
     Object.defineProperty(newDataSourceObject, column.DataField, {
       value: col!.Lookup!.DataSource,
       writable: true,
     });
     if (!row.DataSource) {
-      row.DataSource = [];
-      row.DataSource[column.DataField] = col!.Lookup!.DataSource;
+      //row.DataSource = [];
+      //row.DataSource[column.DataField] = col!.Lookup!.DataSource;
     } else if (
       !row.DataSource.some((x: any) =>
         newDataSourceObject.hasOwnProperty(x[column.DataField])
@@ -309,6 +317,10 @@ export class DnGridComponent implements OnInit, AfterViewInit {
     }
     this.ref.detectChanges();
     this.renderRows();
+
+  }else{
+    column.OnClick(row, column)
+  }
   }
 
   getLookupOptions(column: DnColumnDto, row: any, index: number) {
@@ -367,6 +379,15 @@ export class DnGridComponent implements OnInit, AfterViewInit {
   }
 
   onIconClicked(e:any, column:DnColumnDto, row:any){
-    column.OnIconClicked(row);
+    if(column.OnIconClicked){
+      column.OnIconClicked(row);
+    }
+  }
+
+  onFocusOut(e:any, column:DnColumnDto, row:any){
+    if(column.OnFocusOut){
+      column.OnFocusOut(row,column);
+
+    }
   }
 }

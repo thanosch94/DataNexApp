@@ -1,21 +1,32 @@
 <mat-form-field class="number-box" [class]="'width-' + width">
-  <mat-label>{{label}}</mat-label>
+  <mat-label>{{ label }}</mat-label>
   <div class="number-box-flex-row">
-  <input
-    matInput
-    [ngClass]="hideArrows?'hide-arrows':''"
-    type="number"
-    [min]="min"
-    [max]="max"
-    [readonly]="readOnly"
-    [placeholder]="placeholder"
-    [name]="name"
-    [(ngModel)]="value"
-    (ngModelChange)="onValueChange(value)"
-  />
-  @if(icon){
-    @if(iconPosition=="end"){<mat-icon class="number-box-icon" matSuffix (click)="onIconClick($event)">{{icon}}</mat-icon>}
-    @if(iconPosition=="start"){<mat-icon class="number-box-icon" matPreffix (click)="onIconClick($event)">{{icon}}</mat-icon>}
-  }
-</div>
+    <input
+      matInput
+      [ngClass]="hideArrows ? 'hide-arrows' : ''"
+      type="number"
+      [min]="min"
+      [max]="max"
+      [readonly]="readOnly"
+      [placeholder]="placeholder"
+      [name]="name"
+      [(ngModel)]="value"
+      (ngModelChange)="onValueChange(value)"
+      (blur)="onBlur()"
+      (click)="onInputClick($event)"
+    />
+    @if(icon){ @if(iconPosition=="end"){<mat-icon
+      class="number-box-icon"
+      [matTooltip]="iconTooltip"
+      matSuffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} @if(iconPosition=="start"){<mat-icon
+      class="number-box-icon"
+      [matTooltip]="iconTooltip"
+      matPreffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} }
+  </div>
 </mat-form-field>

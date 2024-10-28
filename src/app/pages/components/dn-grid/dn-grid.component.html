@@ -63,6 +63,10 @@
             [readOnly]="column.ReadOnly ?? false"
             [(value)]="row[column.DataField]"
             (valueChange)="onValueChange(row, column)"
+            [icon]="row[column.DataField]?column.Icon:''"
+            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+            (onIconClicked)="onIconClicked($event, column, row)"
+
           >
           </dn-textbox>
           }
@@ -83,10 +87,14 @@
             [icon]="row[column.DataField]?column.Icon:''"
             [iconPosition]="column.IconPosition?column.IconPosition:'end'"
             (onIconClicked)="onIconClicked($event, column, row)"
+            [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
+            (onFocusOut)="onFocusOut($event, column, row)"
+            (onClick)="onClick(row, column)"
           >
           </dn-number-box>
           }
 
+          <!-- TODO Icon must be visible with a condition in the columns and not here ---- row[column.DataField]?column.Icon:''-->
           <!-- Date Input -->
           @if(column.DataType == 'datetime' && row.IsEditable &&
           !column.Lookup){
@@ -133,7 +141,24 @@
             </mat-checkbox>
           </div>
           } @if(row.IsEditable && column.Lookup){
-          <mat-form-field
+            <dn-selectbox
+            #selectBox
+              [name]="column.Caption"
+              [dataSource]="column.Lookup.DataSource"
+              [valueExpr]="column.Lookup.ValueExpr"
+              [displayExpr]="column.Lookup.DisplayExpr"
+              [value]="row[column.DataField] | lookupName : row : column"
+              [icon]="column.Icon"
+              [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+              [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
+              (onIconClicked)="onIconClicked($event, column, row)"
+              (valueChange)="onDataLookupSelectionChanged(column, row, $event)"
+              (onClick)="onClick(row, column)"
+            >
+            </dn-selectbox>
+
+
+          <!-- <mat-form-field
             class="white-input no-underline"
             (click)="onClick(row, column)"
           >
@@ -166,13 +191,17 @@
                 }}</span>
               </mat-option>
             </mat-autocomplete>
-          </mat-form-field>
+          </mat-form-field> -->
           } @if( !row.IsEditable && !column.Lookup && (column.DataType ==
           'string' || column.DataType == 'number')){
           <p>
             <dn-textbox
             [readOnly]="true"
             [value]="row[column.DataField]"
+            [icon]="column.Icon"
+            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+            (onIconClicked)="onIconClicked($event, column, row)"
+            [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
             ></dn-textbox>
           </p>
           } @if(!row.IsEditable && !column.Lookup && (column.DataType ==

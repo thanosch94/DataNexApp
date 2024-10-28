@@ -14,3 +14,22 @@
 .text-box ::ng-deep .mat-mdc-input-element{
   margin-top:19px;
 }
+
+
+::ng-deep .text-box-flex-row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.text-box-icon{
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding-top:6px;
+  color: #0B6AA5!important;
+
+}
+
+.text-box-icon:hover{
+  cursor: pointer;
+}

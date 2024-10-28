@@ -1,12 +1,28 @@
 <mat-form-field class="text-box" [class]="'width-' + width">
-  <mat-label>{{label}}</mat-label>
-  <input
-    matInput
-    [readonly]="readOnly"
-    type="text"
-    [placeholder]="placeholder"
-    [name]="name"
-    [(ngModel)]="value"
-    (ngModelChange)="onValueChange(value)"
-  />
+  <mat-label>{{ label }}</mat-label>
+  <div class="text-box-flex-row">
+    <input
+      #input
+      matInput
+      [readonly]="readOnly"
+      type="text"
+      [placeholder]="placeholder"
+      [name]="name"
+      [(ngModel)]="value"
+      (ngModelChange)="onValueChange(value)"
+    />
+    @if(icon){ @if(iconPosition=="end"){<mat-icon
+      class="text-box-icon"
+      [matTooltip]="iconTooltip"
+      matSuffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} @if(iconPosition=="start"){<mat-icon
+      class="text-box-icon"
+      [matTooltip]="iconTooltip"
+      matPreffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} }
+  </div>
 </mat-form-field>

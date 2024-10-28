@@ -36,7 +36,9 @@
   font-size: 18px;
   display: flex;
   align-items: center;
-  margin-top:5px;
+  padding-top:6px;
+  color: #0B6AA5!important;
+
 }
 
 .number-box-icon:hover{

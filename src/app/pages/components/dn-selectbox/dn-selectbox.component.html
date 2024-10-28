@@ -1,23 +1,42 @@
 <mat-form-field class="select-box" [class]="'width-' + width">
   <mat-label>{{ label }}</mat-label>
-  <input
-    matInput
-    [type]="inputType"
-    [placeholder]="placeholder"
-    [name]="name"
-    [(ngModel)]="value"
-    [matAutocomplete]="auto"
-  />
-  <mat-autocomplete
-    #auto="matAutocomplete"
-    (optionSelected)="onSelection($event.option.value)"
-    [displayWith]="display.bind(this)"
-  >
-    <mat-option
-      *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
-      [value]="option"
+  <div class="select-box-flex-row">
+    <input
+      matInput
+      [type]="inputType"
+      [placeholder]="placeholder"
+      [name]="name"
+      [(ngModel)]="value"
+      [matAutocomplete]="auto"
+      (click)="onInputClick(value)"
+    />
+    @if(icon){ @if(iconPosition=="end"){<mat-icon
+      [matTooltip]="iconTooltip"
+      class="select-box-icon"
+      matSuffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} @if(iconPosition=="start"){<mat-icon
+      [matTooltip]="iconTooltip"
+      class="select-box-icon"
+      matPreffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} }
+    <mat-autocomplete
+      #matAutoComplete
+      #auto="matAutocomplete"
+      (optionSelected)="onSelection($event.option.value)"
+      [displayWith]="display.bind(this)"
     >
-    {{ option[displayExpr] }}
-    </mat-option>
-  </mat-autocomplete>
+      <ng-container *ngIf="isOptionsPanelEnabled">
+        <mat-option
+          *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
+          [value]="option"
+        >
+          {{ option[displayExpr] }}
+        </mat-option>
+      </ng-container>
+    </mat-autocomplete>
+  </div>
 </mat-form-field>
