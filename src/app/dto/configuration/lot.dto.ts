@@ -7,4 +7,6 @@ export class LotDto {
   ProdDate:string|Date|number;
   ExpDate:string|Date|number;
   CompanyId:Guid;
+  SupplierId: Guid;
+  ProductId: Guid;
 }

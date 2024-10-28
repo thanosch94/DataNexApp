@@ -17,6 +17,39 @@ export class LotsViewModel {
       headers: this.headers,
     });
   }
+  public GetLookup() {
+    return this.http.get<Array<LotDto>>(this.service + 'Lots/getlookup', {
+      headers: this.headers,
+    });
+  }
+  public GetLookupBySupplierId(supplierId:Guid) {
+    return this.http.get<Array<LotDto>>(this.service + 'Lots/getlookupbysupplierid/'+ supplierId, {
+      headers: this.headers,
+    });
+  }
+
+  public GetLookupBySupplierIdAndProductId(supplierId:Guid, productId:Guid) {
+    return this.http.get<Array<LotDto>>(this.service + 'Lots/getlookupbysupplieridandproductid/'+ supplierId+'/'+productId, {
+      headers: this.headers,
+    });
+  }
+
+  public GetLookupByProductIdWithRemainingQty(productId:Guid) {
+    return this.http.get<Array<LotDto>>(this.service + 'Lots/getlookupbyproductidwithremainingqty/'+ productId, {
+      headers: this.headers,
+    });
+  }
+
+  public GetLotQtiesOnSalesDocByProductQtyFIFO(productId: Guid, qty:number) {
+    return this.http.get(this.service + 'Lots/getlotqtiesonsalesdocbyproductqtyfifo/'+productId +'/'+ qty, {
+      headers: this.headers,
+    });
+  }
+  public GetLotQtiesOnSalesDocByProductQtyLIFO(productId: Guid, qty:number) {
+    return this.http.get(this.service + 'Lots/getlotqtiesonsalesdocbyproductqtylifo/'+productId +'/'+ qty, {
+      headers: this.headers,
+    });
+  }
 
   public GetById(id: Guid) {
     return this.http.get<LotDto>(this.service + 'Lots/getbyid/' + id, {

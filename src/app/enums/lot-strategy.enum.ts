@@ -1,5 +1,7 @@
 export enum LotStrategyEnum {
   None = 0,
-  FIFO = 1,
-  LIFO = 2
+  FIFORec= 1,
+  FIFO= 2,
+  LIFORec = 3,
+  LIFO = 4
 }
