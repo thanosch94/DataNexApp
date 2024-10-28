@@ -113,17 +113,22 @@ mat-form-field{
 .tab1-grid{
   display: grid;
   grid-template-areas:
-  "a b c c d"
-  "e f g h i"
-  "j k l m n";
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  "a b c c "
+  "e f g h "
+  "j k l m ";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .grid-a-doctype-series{
   grid-area: a;
   gap:1rem;
-  width:90%;
+  width:99%;
 }
+
+.doc-type{
+  margin-right:5% ;
+}
+
 
 .grid-b-docdate{
   grid-area: b;
@@ -147,7 +152,7 @@ mat-form-field{
 .grid-e-docstatus{
   grid-area: e;
   gap:2rem;
-  width:90%;
+  width:95%;
 }
 
 .notes{

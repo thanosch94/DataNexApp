@@ -1,0 +1,31 @@
+<dn-toolbar
+  [canExit]="true"
+  [isDialog]="false"
+  [title]="product_row_detail_text"
+  (onCloseBtnClicked)="onCloseBtnClicked($event)"
+></dn-toolbar>
+<mat-dialog-content>
+
+
+<div class="margin">
+
+<mat-tab-group>
+  @if(areLotsEnabled){
+  <mat-tab label="Lots" >
+    <dn-grid
+    #productLots
+    [dataSource]="lotsQuantitiesDataSource"
+    [columns]="lotsQuantitiesColumns"
+    [canDisplaySearch]="false"
+    [enableAddButton]="true"
+>
+
+    </dn-grid>
+    </mat-tab>
+  }
+  <mat-tab label="Variations">
+    </mat-tab>
+    </mat-tab-group>
+
+  </div>
+</mat-dialog-content>

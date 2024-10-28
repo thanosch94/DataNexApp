@@ -76,6 +76,11 @@ import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.compon
 import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
 import { LotDto } from '../../dto/configuration/lot.dto';
 import { ProductRowDetailComponent } from '../product-row-detail/product-row-detail.component';
+import { DocumentProductLotQuantityDto } from '../../dto/document-product-lot-quantity.dto';
+import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
+import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
+import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
+import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 
 @Component({
   selector: 'app-document-edit',
@@ -181,6 +186,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   generalOptions: GeneralOptionsDto;
   lotsViewModel: LotsViewModel;
   lotsDataSource: LotDto[];
+  lotSettingsViewModel: LotSettingsViewModel;
+  lotStrategyEnum: LotStrategyEnum;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -214,6 +221,11 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       this.http,
       this.auth
     );
+    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth)
+    this.lotSettingsViewModel.GetAll().subscribe((result:LotSettingsDto)=>{
+      this.lotStrategyEnum = result.LotStrategy
+
+    })
     this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
@@ -325,6 +337,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           product.SerialNumber = this.productsDataSource.indexOf(product) + 1;
         });
         this.calculateDocumentTotal();
+        this.getColumns();
       });
   }
 
@@ -387,7 +400,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   GetProductVatAmount(id: Guid, data: DocumentProductDto) {
-    debugger;
     if (!data.VatClassRate) {
       this.vatClassesViewModel.GetById(id).subscribe((result: any) => {
         let vatClass = result as VatClassDto;
@@ -450,6 +462,19 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
 
+                  let tempArrayOfDocumentProductLotsQuantities: DocumentProductLotQuantityDto[] =
+                    [];
+                  productRow.DocumentProductLotsQuantities.forEach(
+                    (x: DocumentProductLotQuantityDto) => {
+                      let dto = new DocumentProductLotQuantityDto();
+                      dto.Quantity = x.Quantity;
+                      dto.LotId = x.LotId;
+                      tempArrayOfDocumentProductLotsQuantities.push(dto);
+                    }
+                  );
+                  productRow.DocumentProductLotsQuantities =
+                    tempArrayOfDocumentProductLotsQuantities;
+                  debugger;
                   this.documentProductsViewModel
                     .InsertDto(productRow)
                     .subscribe((result: any) => {
@@ -464,9 +489,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                         this.ref.detectChanges();
 
                         this.displayNotification('Record inserted');
+                        this.getData();
                       }
                     });
-                  this.getData();
                 }
               });
             });
@@ -739,6 +764,21 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onQuantityChange(data: DocumentProductDto) {
+    if(this.documentGroup==DocumentTypeGroupEnum.Sales){
+      if(this.lotStrategyEnum==LotStrategyEnum.FIFORec||this.lotStrategyEnum==LotStrategyEnum.FIFO){
+        this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyFIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
+          data.DocumentProductLotsQuantities=result
+        })
+      }else if(this.lotStrategyEnum==LotStrategyEnum.LIFORec||this.lotStrategyEnum==LotStrategyEnum.LIFO){
+        this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyLIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
+          data.DocumentProductLotsQuantities=result
+        })
+      }
+    }
+
+    if (data.QuantityFromLots > 0) {
+      data.Quantity = data.QuantityFromLots;
+    }
     if (data.ProductRetailPrice) {
       data.TotalPrice = data.ProductRetailPrice! * data.Quantity!;
       this.GetProductVatAmount(data.VatClassId, data);
@@ -747,7 +787,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       data.Quantity = undefined;
     }
-  }
+    }
 
   onRowTotalChange(e: any, index: number) {
     if (this.productsDataSource[index].Sku) {
@@ -853,14 +893,15 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     this.productBarcodesViewModel
       .GetByProductId(productId)
       .subscribe(async (result: any) => {
-        await result;
         this.productSizesDataSource = result;
         this.skuSelected = true;
         columns = this.getColumns();
         this.ref.detectChanges();
       });
   }
-
+onSupplierValueChange(e:any){
+  this.getColumns()
+}
   getColumns() {
     this.columns = [
       {
@@ -868,6 +909,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         DataType: 'number',
         Caption: 'S/N',
         ReadOnly: true,
+        Width: 40,
       },
       {
         DataField: 'Barcode',
@@ -887,6 +929,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
           DisplayExpr: 'Sku',
         },
         OnSelectionChange: (data: any, columns: DnColumnDto[]) => {
+          debugger
           this.onSkuSelection(data, columns);
         },
       },
@@ -894,6 +937,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         DataField: 'ProductName',
         DataType: 'string',
         Caption: 'Product Name',
+        Width: 400,
       },
       // {
       //   DataField: 'ProductSizeId',
@@ -912,17 +956,17 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       //     this.onSizeSelectionChanged(data, dataSource);
       //   },
       // },
-      {
-        DataField: 'LotName',
-        DataType: 'string',
-        Caption: 'Lot',
-        Visible: this.generalOptions.LotsEnabled,
-        Lookup: {
-          DataSource: this.lotsDataSource,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
+      // {
+      //   DataField: 'LotName',
+      //   DataType: 'string',
+      //   Caption: 'Lot',
+      //   Visible: this.generalOptions.LotsEnabled,
+      //   Lookup: {
+      //     DataSource: this.lotsDataSource,
+      //     ValueExpr: 'Id',
+      //     DisplayExpr: 'Name',
+      //   },
+      // },
       {
         DataField: 'ProductRetailPrice',
         DataType: 'number',
@@ -943,17 +987,53 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         DataType: 'number',
         Caption: 'Quantity',
         Min: 1,
-        Icon: 'info',
-        OnValueChange: (data: any, dataSource: any) => {
-          this.onQuantityChange(data);
+        Icon: this.document.SupplierId|| this.documentGroup==DocumentTypeGroupEnum.Sales ?'info':'',
+        IconTooltip:'Lot/Variations Info',
+        OnClick: (row: DocumentProductDto, column: DnColumnDto) => {
+          if (row.QuantityFromLots && this.documentGroup==DocumentTypeGroupEnum.Purchasing) {
+            column.ReadOnly = true;
+          }
+        },
+        OnValueChange: (
+          row: DocumentProductDto,
+          dataSource: DocumentProductDto[]
+        ) => {
+          this.onQuantityChange(row);
         },
         OnIconClicked: (row: DocumentProductDto) => {
           if (row.ProductId) {
             const dialogRef = this.dialog.open(ProductRowDetailComponent, {
+              disableClose:true,
               width: '600px',
               height: '500px',
-              data: { Row: row },
+              data: { Row: row , DocumentGroup:this.documentGroup, Supplier: this.document.SupplierId},
+              viewContainerRef: this.viewContainerRef,
             });
+            dialogRef
+              .afterClosed()
+              .subscribe((data: DocumentProductLotQuantityDto[]) => {
+                if (data) {
+
+                  row.DocumentProductLotsQuantities = data;
+                  if (row.DocumentProductLotsQuantities.length>0) {
+                    let tempQty = row.Quantity
+                    row.Quantity = 0;
+                    row.DocumentProductLotsQuantities.map((x) => {
+                      if(x.Quantity){
+                        row.Quantity! += x.Quantity;
+                      }else{
+                        row.DocumentProductLotsQuantities = []
+                        row.Quantity = tempQty
+                      }
+                    });
+                    if (row.Quantity > 0) {
+                      row.QuantityFromLots = row.Quantity;
+                    }
+                    this.onQuantityChange(row);
+                  }
+                } else {
+                }
+              });
           }
         },
       },
@@ -981,6 +1061,18 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onProductRowSaving(data: any) {
+    let tempArrayOfDocumentProductLotsQuantities: DocumentProductLotQuantityDto[] =
+      [];
+    data.DocumentProductLotsQuantities.forEach(
+      (x: DocumentProductLotQuantityDto) => {
+        let dto = new DocumentProductLotQuantityDto();
+        dto.Quantity = x.Quantity;
+        dto.LotId = x.LotId;
+        tempArrayOfDocumentProductLotsQuantities.push(dto);
+      }
+    );
+    data.DocumentProductLotsQuantities =
+      tempArrayOfDocumentProductLotsQuantities;
     this.documentProductsViewModel.UpdateDto(data).subscribe((result: any) => {
       this.displayNotification('Record updated');
     });

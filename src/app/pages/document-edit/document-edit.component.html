@@ -18,27 +18,27 @@
       <div class="tab-1">
         <div class="tab1-grid">
           <div class="grid-a-doctype-series">
-              <dn-selectbox
+            <dn-selectbox
               class="doc-type"
-                [dataSource]="docTypes"
-                valueExpr="Id"
-                displayExpr="Abbreviation"
-                label="Doc. Type"
-                [width]="50"
-                [(value)]="document.DocumentTypeId"
-              >
-              </dn-selectbox>
+              [dataSource]="docTypes"
+              valueExpr="Id"
+              displayExpr="Abbreviation"
+              label="Doc. Type"
+              [width]="45"
+              [(value)]="document.DocumentTypeId"
+            >
+            </dn-selectbox>
 
-              <dn-selectbox
-                class="doc-series"
-                [dataSource]="docTypes"
-                valueExpr="Id"
-                displayExpr="Abbreviation"
-                label="Doc. Series"
-                [width]="50"
-                [(value)]="document.DocumentTypeId"
-              >
-              </dn-selectbox>
+            <dn-selectbox
+              class="doc-series"
+              [dataSource]="docTypes"
+              valueExpr="Id"
+              displayExpr="Abbreviation"
+              label="Doc. Series"
+              [width]="45"
+              [(value)]="document.DocumentTypeId"
+            >
+            </dn-selectbox>
           </div>
           <dn-date-box
             class="grid-b-docdate"

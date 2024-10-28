@@ -1,4 +1,5 @@
 import { Guid } from "guid-typescript";
+import { DocumentProductLotQuantityDto } from "./document-product-lot-quantity.dto";
 
 export class DocumentProductDto {
   Id:Guid;
@@ -11,6 +12,7 @@ export class DocumentProductDto {
   ProductRetailPrice?:number;
   VatAmount?:number;
   TotalVatAmount:number;
+  DocumentProductLotsQuantities:DocumentProductLotQuantityDto[];
 
   Sku?:string;
   DocumentDateString:string;
@@ -27,4 +29,6 @@ export class DocumentProductDto {
   VatClassRate: any;
   VatClassId: any;
   IsEditable: boolean;
+  QuantityFromLots: number; //Used to store the total quantity from lots
+
 }

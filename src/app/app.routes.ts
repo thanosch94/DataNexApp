@@ -32,7 +32,7 @@ import { AccountsReceivableComponent } from './pages/financial/accounts-receivab
 import { CustomersLedgerComponent } from './pages/financial/customers-ledger/customers-ledger.component';
 import { DocumentTypeEditComponent } from './pages/configuration/document-type-edit/document-type-edit.component';
 import { GeneralOptionsComponent } from './pages/configuration/general-options/general-options.component';
-import { LotsListComponent } from './pages/configuration/lots-list/lots-list.component';
+import { LotsListComponent } from './pages/configuration/lots/lots-list.component';
 
 export const routes: Routes = [
   {
