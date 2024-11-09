@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './dn-selectbox.component.css',
 })
 export class DnSelectboxComponent {
+  @ContentChild(TemplateRef) templateRef: TemplateRef<any>;
   @Input() label: string;
   @Input() placeholder: string;
   @Input() name: string;
@@ -40,6 +41,8 @@ export class DnSelectboxComponent {
   @Input() icon: string|undefined;
   @Input() iconPosition?: string = "end";
   @Input() iconTooltip: string='';
+  @Input() optionsTemplate: boolean;
+  @Input() panelWidth: number|string;
   @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
   @Output() onClick = new EventEmitter();

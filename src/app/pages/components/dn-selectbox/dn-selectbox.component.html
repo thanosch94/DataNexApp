@@ -9,6 +9,7 @@
       [(ngModel)]="value"
       [matAutocomplete]="auto"
       (click)="onInputClick(value)"
+
     />
     @if(icon){ @if(iconPosition=="end"){<mat-icon
       [matTooltip]="iconTooltip"
@@ -28,13 +29,23 @@
       #auto="matAutocomplete"
       (optionSelected)="onSelection($event.option.value)"
       [displayWith]="display.bind(this)"
+      [panelWidth]="panelWidth"
     >
       <ng-container *ngIf="isOptionsPanelEnabled">
         <mat-option
           *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
           [value]="option"
         >
-          {{ option[displayExpr] }}
+          <ng-container *ngIf="!optionsTemplate">{{
+            option[displayExpr]
+          }}</ng-container>
+          <ng-container *ngIf="optionsTemplate"
+          ><ng-template
+
+              [ngTemplateOutlet]="templateRef"
+              [ngTemplateOutletContext]="{ $implicit: option }"
+            ></ng-template>
+          </ng-container>
         </mat-option>
       </ng-container>
     </mat-autocomplete>
