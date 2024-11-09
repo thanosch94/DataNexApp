@@ -296,31 +296,6 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   onClick(row: any, column: DnColumnDto) {
     //column.Lookup!.DataSource = col.Lookup!.DataSource
-  //   let col = this.columns.find((x) => x.DataField == column.DataField);
-
-  //   if(col?.Lookup?.DataSource){
-
-  //   let newDataSourceObject = new Object();
-  //   Object.defineProperty(newDataSourceObject, column.DataField, {
-  //     value: col!.Lookup!.DataSource,
-  //     writable: true,
-  //   });
-  //   if (!row.DataSource) {
-  //     //row.DataSource = [];
-  //     //row.DataSource[column.DataField] = col!.Lookup!.DataSource;
-  //   } else if (
-  //     !row.DataSource.some((x: any) =>
-  //       newDataSourceObject.hasOwnProperty(x[column.DataField])
-  //     )
-  //   ) {
-  //     row.DataSource[column.DataField] = col!.Lookup!.DataSource;
-  //   }
-  //   this.ref.detectChanges();
-  //   this.renderRows();
-
-  // }else{
-  //   column.OnClick(row, column)
-  // }
 
   if(column.OnClick){
     column.OnClick(row, column)
@@ -394,4 +369,6 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
     }
   }
+
+
 }

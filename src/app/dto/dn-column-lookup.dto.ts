@@ -1,5 +1,6 @@
 export class DnColumnLookupDto {
   DataSource:any;
   ValueExpr:string;
-  DisplayExpr: string;
+  DisplayExpr?: string;
+  DisplayMultExpr?: any;
 }

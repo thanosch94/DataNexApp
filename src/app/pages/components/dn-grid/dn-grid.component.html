@@ -52,7 +52,7 @@
         <td
           [ngClass]="displayTableBorder ? 'display-border' : ''"
           mat-cell
-          [ngStyle]="{width:column.Width?column.Width+'px':'' }"
+          [ngStyle]="{ width: column.Width ? column.Width + 'px' : '' }"
           *matCellDef="let row; let index"
         >
           <!-- String Input -->
@@ -63,10 +63,9 @@
             [readOnly]="column.ReadOnly ?? false"
             [(value)]="row[column.DataField]"
             (valueChange)="onValueChange(row, column)"
-            [icon]="row[column.DataField]?column.Icon:''"
-            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+            [icon]="row[column.DataField] ? column.Icon : ''"
+            [iconPosition]="column.IconPosition ? column.IconPosition : 'end'"
             (onIconClicked)="onIconClicked($event, column, row)"
-
           >
           </dn-textbox>
           }
@@ -84,10 +83,10 @@
             [max]="column.Max ? column.Max : null"
             [(value)]="row[column.DataField]"
             (valueChange)="onValueChange(row, column)"
-            [icon]="row[column.DataField]?column.Icon:''"
-            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
+            [icon]="row[column.DataField] ? column.Icon : ''"
+            [iconPosition]="column.IconPosition ? column.IconPosition : 'end'"
             (onIconClicked)="onIconClicked($event, column, row)"
-            [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
+            [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
             (onFocusOut)="onFocusOut($event, column, row)"
             (onClick)="onClick(row, column)"
           >
@@ -141,22 +140,28 @@
             </mat-checkbox>
           </div>
           } @if(row.IsEditable && column.Lookup){
-            <dn-selectbox
+          <dn-selectbox
             #selectBox
-              [name]="column.Caption"
-              [dataSource]="column.Lookup.DataSource"
-              [valueExpr]="column.Lookup.ValueExpr"
-              [displayExpr]="column.Lookup.DisplayExpr"
-              [value]="row[column.DataField] | lookupName : row : column"
-              [icon]="column.Icon"
-              [iconPosition]="column.IconPosition?column.IconPosition:'end'"
-              [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
-              (onIconClicked)="onIconClicked($event, column, row)"
-              (valueChange)="onDataLookupSelectionChanged(column, row, $event)"
-              (onClick)="onClick(row, column)"
+            [name]="column.Caption"
+            [optionsTemplate]="column.Lookup.DisplayMultExpr!=null ? true : false"
+            [dataSource]="column.Lookup.DataSource"
+            [valueExpr]="column.Lookup.ValueExpr"
+            [displayExpr]="column.Lookup.DisplayExpr ?? ''"
+            [value]="row[column.DataField] | lookupName : row : column"
+            [icon]="column.Icon"
+            [iconPosition]="column.IconPosition ? column.IconPosition : 'end'"
+            [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
+            [panelWidth]="'auto'"
+            (onIconClicked)="onIconClicked($event, column, row)"
+            (valueChange)="onDataLookupSelectionChanged(column, row, $event)"
+            (onClick)="onClick(row, column)"
+          >
+            <ng-template
+              let-option
             >
-            </dn-selectbox>
-
+              {{ column.Lookup.DisplayMultExpr(option) }}
+            </ng-template>
+          </dn-selectbox>
 
           <!-- <mat-form-field
             class="white-input no-underline"
@@ -196,12 +201,12 @@
           'string' || column.DataType == 'number')){
           <p>
             <dn-textbox
-            [readOnly]="true"
-            [value]="row[column.DataField]"
-            [icon]="column.Icon"
-            [iconPosition]="column.IconPosition?column.IconPosition:'end'"
-            (onIconClicked)="onIconClicked($event, column, row)"
-            [iconTooltip]="column.IconTooltip?column.IconTooltip:''"
+              [readOnly]="true"
+              [value]="row[column.DataField]"
+              [icon]="column.Icon"
+              [iconPosition]="column.IconPosition ? column.IconPosition : 'end'"
+              (onIconClicked)="onIconClicked($event, column, row)"
+              [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
             ></dn-textbox>
           </p>
           } @if(!row.IsEditable && !column.Lookup && (column.DataType ==
@@ -210,16 +215,15 @@
             <!-- If Format has value (eg dd/MM/yyyy) we pass the value to DatePipe -->
 
             @if(column.Format){
-              <dn-textbox
+            <dn-textbox
               [readOnly]="true"
               [value]="row[column.DataField] | date : column.Format"
-              ></dn-textbox>
-            }
-            @if(!column.Format){
-              <dn-textbox
+            ></dn-textbox>
+            } @if(!column.Format){
+            <dn-textbox
               [readOnly]="true"
               [value]="row[column.DataField]"
-              ></dn-textbox>
+            ></dn-textbox>
             }
           </p>
           } @if(!row.IsEditable && !column.Lookup && column.DataType ==
@@ -235,10 +239,9 @@
           } @if(!row.IsEditable && column.Lookup){
           <p>
             <dn-textbox
-            [readOnly]="true"
-            [value]=" row[column.DataField] | lookupName : row : column "
+              [readOnly]="true"
+              [value]="row[column.DataField] | lookupName : row : column"
             ></dn-textbox>
-
           </p>
           } @if(column.DataType == 'buttons' && canEdit &&
           !hideEditButtonOnEditing){
@@ -294,13 +297,12 @@
           ><td mat-footer-cell *matFooterCellDef>
             <b class="row-total"> {{ getTotal(column) }}</b>
           </td></ng-container
-        >}
-        @if(!column.DisplayColumnTotal &&
-            (hasAnyColumnDisplayTotalEnabled | columnDisplayTotal : columns)){
+        >} @if(!column.DisplayColumnTotal && (hasAnyColumnDisplayTotalEnabled |
+        columnDisplayTotal : columns)){
         <ng-container
           ><td mat-footer-cell *matFooterCellDef><b class="row-total"></b></td
         ></ng-container>
-      }
+        }
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="matColumns"></tr>
@@ -318,7 +320,7 @@
       <ng-container>
         <tr mat-footer-row *matFooterRowDef="matColumns"></tr>
       </ng-container>
-    }
+      }
     </table>
     @if(displayPaginator){
     <mat-paginator
@@ -330,6 +332,6 @@
       aria-label="Select page"
     >
     </mat-paginator>
-  }
+    }
   </div>
 </div>

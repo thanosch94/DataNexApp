@@ -10,8 +10,11 @@ export class LookupNamePipe implements PipeTransform {
   transform(data: any, row:any, column: DnColumnDto) {
     if(column.Lookup?.DataSource){
       let dataToReturn = column.Lookup?.DataSource.find((x:any)=>x[column.Lookup!.ValueExpr]==data)
-      if(dataToReturn){
+      if(dataToReturn && column.Lookup.DisplayExpr){
         return dataToReturn[column.Lookup!.DisplayExpr]
+
+      }else if(dataToReturn && column.Lookup.DisplayMultExpr){
+        return dataToReturn[column.Lookup.DisplayMultExpr(dataToReturn)]
 
       }
     }

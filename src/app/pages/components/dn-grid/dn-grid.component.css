@@ -26,6 +26,10 @@
 
 }
 
+.table ::ng-deep .cdk-overlay-pane{
+  width:unset!important;
+}
+
 .button-add-row {
   background: #0B6AA5!important;
   color: #ffffff!important;
@@ -204,3 +208,9 @@ td , th {
 .hide-footer{
   display: none;
 }
+
+
+ body ::ng-deep .cdk-overlay-pane {
+  width: auto !important;
+}
+
