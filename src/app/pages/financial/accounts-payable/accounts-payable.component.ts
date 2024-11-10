@@ -144,7 +144,7 @@ export class AccountsPayableComponent implements OnInit {
   onInfoBtnClicked(row:any){
     this.documentsViewModel.GetChargeableDocumentsBySupplierId(row.SupplierId).subscribe((result:any)=>{
       this.dialog.open(ListWithFiltersComponent, {
-        width: "50%",
+        width: "60%",
         height: "80%",
         data: {
           Title:'Documents List',

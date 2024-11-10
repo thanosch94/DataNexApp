@@ -18,4 +18,15 @@
       label="Lot Strategy"
     ></dn-selectbox>
   </div>
+  <br>
+  <div class="flex-row">
+    <b>Apply Field</b>
+    <dn-selectbox
+      [(value)]="lotSettings.LotStrategyApplyField"
+      [dataSource]="lotStrategyApplyFieldsList"
+      valueExpr="Id"
+      displayExpr="Name"
+      label="Apply Field"
+    ></dn-selectbox>
+  </div>
 </div>

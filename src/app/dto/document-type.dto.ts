@@ -18,4 +18,5 @@ export class DocumentTypeDto {
   CancellationDocumentId: Guid;
   AutoIncrementCodeEnabled: boolean;
   ChecksWareHouseStockOnLineAdded: boolean;
+  LotAffectBehavior: DocTypeAffectBehaviorEnum;
 }

@@ -158,7 +158,7 @@ export class AccountsReceivableComponent {
       .GetChargeableDocumentsByCustomerId(row.CustomerId)
       .subscribe((result: any) => {
         this.dialog.open(ListWithFiltersComponent, {
-          width: '50%',
+          width: '60%',
           height: '80%',
           data: {
             Title: 'Documents List',

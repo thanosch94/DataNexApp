@@ -8,6 +8,8 @@
 .flex-row{
   display: flex;
   flex-direction: row;
+  justify-content: space-between;
+  margin-right:3%;
   gap: 5rem;
   align-items: center;
 }
@@ -55,7 +57,7 @@
   display: grid;
   grid-template-areas:
   "a a c c"
-  "e f g h"
+  "e f g g"
   "i j k l";
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 2fr 1fr 1fr;
@@ -70,6 +72,9 @@
 }
 .basic-info-tab-e{
   grid-area: e;
+}
+.basic-info-tab-g{
+  grid-area: g;
 }
 .basic-info-tab-i{
   grid-area: i;

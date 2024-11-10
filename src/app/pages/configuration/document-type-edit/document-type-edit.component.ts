@@ -1,3 +1,4 @@
+import { GeneralOptionsViewModel } from './../../../view-models/general-options.viewmodel';
 import { PriceTypeEnumlist } from './../../../enumLists/price-type.enumlist';
 import { DocumentTypesViewModel } from './../../../view-models/document-types.viewmodel';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
@@ -16,6 +17,8 @@ import { DocumentTypeGroupEnumList } from '../../../enumLists/document-type-grou
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { TabsService } from '../../../services/tabs.service';
+import { LotSettingsDto } from '../../../dto/configuration/lot-settings.dto';
+import { GeneralOptionsDto } from '../../../dto/configuration/general-options.dto';
 
 @Component({
   selector: 'app-document-type-edit',
@@ -40,12 +43,16 @@ export class DocumentTypeEditComponent implements OnInit {
   priceTypesDataSource: any[];
   uses_prices_text: string = 'Uses Prices';
   affects_customer_balance_text: string = 'Affects Customer Balance';
+  affects_lot_text: string = 'Affects Lot';
   docTypeAffectBehaviorDataSource: any[];
   docTypeGroupDataSource: any[];
   docTypesDataSource: any;
   documentTypeSeriesDataSource: any;
   documentTypeSeriesColumns: DnColumnDto[];
   routeSubscription: any;
+  lotsEnabled: boolean;
+  generalOptionsViewModel: GeneralOptionsViewModel;
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -57,6 +64,13 @@ export class DocumentTypeEditComponent implements OnInit {
       this.http,
       this.auth
     );
+    this.generalOptionsViewModel = new GeneralOptionsViewModel(
+      this.http,
+      this.auth
+    );
+    this.generalOptionsViewModel.GetAll().subscribe((result:GeneralOptionsDto)=>{
+      this.lotsEnabled=result.LotsEnabled
+    })
     this.routeSubscription = this.route.queryParams.subscribe((params: any) => {
       this.documentTypeId = params['id'];
       this.documentTypesViewModel

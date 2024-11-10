@@ -2,33 +2,27 @@ import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { ElementRef, isDevMode, ChangeDetectionStrategy, AfterViewInit } from '@angular/core';
 import {
   ChangeDetectorRef,
   Component,
-  NgModule,
+  LOCALE_ID,
   ViewChild,
 } from '@angular/core';
-import { Route, Router, RouterOutlet, RoutesRecognized } from '@angular/router';
+import { Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
 import {
   AsyncPipe,
-  CommonModule,
-  HashLocationStrategy,
-  LocationStrategy,
+  CommonModule
 } from '@angular/common';
 import { Guid } from 'guid-typescript';
 import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCaretDown,
   faCaretUp,
   faDoorOpen,
-  faFile,
-  faGear,
-  faHome,
+  faFile
 } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -41,15 +35,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
 import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
-import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
+import { MatMiniFabButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
-  MatAutocomplete,
   MatAutocompleteModule,
-  MatAutocompleteTrigger,
   MatOptgroup,
 } from '@angular/material/autocomplete';
+
 
 @Component({
   selector: 'app-root',
@@ -78,6 +71,7 @@ import {
     ReactiveFormsModule,
   ],
   providers: [AuthService, HttpClientModule],
+
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -113,6 +107,7 @@ export class AppComponent {
     private ref: ChangeDetectorRef,
     private tabsService: TabsService
   ) {
+
     //if(isDevMode()){
     //   this.logoPath = "../assets/images/datanex_logo.png"
     // }else{

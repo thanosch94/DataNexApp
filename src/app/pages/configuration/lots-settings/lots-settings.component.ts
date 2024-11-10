@@ -8,6 +8,7 @@ import { LotStrategyEnum } from 'c:/Local Code/DataNexApp/src/app/enums/lot-stra
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { LotStrategyApplyFieldEnumList } from '../../../enumLists/lot-strategy-apply-field.enumlist';
 
 @Component({
   selector: 'app-lots-settings',
@@ -21,6 +22,7 @@ export class LotsSettingsComponent {
   lotStrategiesList: { Id: LotStrategyEnum; Name: string }[];
   lotSettings: LotSettingsDto = new LotSettingsDto();
   lotSettingsViewModel: LotSettingsViewModel;
+  lotStrategyApplyFieldsList: { Id: import("c:/Local Code/DataNexApp/src/app/enums/lot-strategy-apply-field.enum").LotStrategyApplyFieldEnum; Name: string; }[];
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -28,7 +30,7 @@ export class LotsSettingsComponent {
   ) {
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
     this.lotStrategiesList = LotStrategyEnumList.value;
-
+    this.lotStrategyApplyFieldsList = LotStrategyApplyFieldEnumList.value
     //General options is a single line of data in the database which is unique for each company
     //The first time someone accessing general options component if there are no options for the company
     ///we create them

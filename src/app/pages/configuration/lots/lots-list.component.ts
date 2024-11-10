@@ -1,3 +1,4 @@
+import { DocumentsViewModel } from './../../../view-models/documents.viewmodel';
 import { SuppliersViewModel } from '../../../view-models/suppliers.viewmodel';
 import { Component, Inject, OnInit, Optional, ViewChild, ViewContainerRef } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
@@ -15,6 +16,7 @@ import { SupplierDto } from '../../../dto/supplier.dto';
 import { ProductsViewModel } from '../../../view-models/products.viewmodel';
 import { ProductDto } from '../../../dto/product.dto';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
 
 @Component({
   selector: 'app-lots-list',
@@ -35,6 +37,9 @@ export class LotsListComponent implements OnInit {
   suppliersDataSource: SupplierDto[];
   productsViewModel: ProductsViewModel;
   productsDataSource: ProductDto[];
+  lotDocumentsColumns:any[]
+  documentsViewModel: DocumentsViewModel;
+
 
   constructor(
     private http: HttpClient,
@@ -49,6 +54,7 @@ export class LotsListComponent implements OnInit {
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
     this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.productsViewModel.GetLookup().subscribe((result:ProductDto[])=>{
       this.productsDataSource = result
       this.suppliersViewModel.GetLookup().subscribe((result:SupplierDto[])=>{
@@ -73,6 +79,76 @@ export class LotsListComponent implements OnInit {
         this.dataSource = result;
       }
     });
+  }
+
+  getLotDocumentsColumns() {
+    this.lotDocumentsColumns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'DocumentDateTime',
+        DataType: 'datetime',
+        Caption: 'Date',
+        Visible: true,
+        Format:"dd/MM/yyyy"
+      },
+      {
+        DataField: 'DocumentCode',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      // {
+      //   DataField: 'DocumentTypeId',
+      //   DataType: 'string',
+      //   Caption: 'Type',
+      //   Lookup: {
+      //     DataSource: this.documentTypesDataSource,
+      //     ValueExpr: 'Id',
+      //     DisplayExpr: 'Name',
+      //   },
+      //   Visible:false
+      // },
+
+      {
+        DataField: 'SupplierId',
+        DataType: 'string',
+        Caption: 'Supplier',
+        Lookup: {
+          DataSource: this.suppliersDataSource,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+
+
+      },
+      // {
+      //   DataField: 'DocumentStatusId',
+      //   DataType: 'string',
+      //   Caption: 'Status',
+      //   Lookup: {
+      //     DataSource: this.documentStatusesDataSource,
+      //     ValueExpr: 'Id',
+      //     DisplayExpr: 'Name',
+      //   },
+      // },
+
+
+      {
+        DataField: 'DocumentTotal',
+        DataType: 'number',
+        Caption: 'Total',
+        DisplayColumnTotal:true
+      },
+      // {
+      //   DataField: 'buttons',
+      //   DataType: 'buttons',
+      //   Caption: '',
+      // }
+    ];
   }
 
   getColumns() {
@@ -130,6 +206,29 @@ export class LotsListComponent implements OnInit {
         DataField: 'Notes',
         DataType: 'string',
         Caption: 'Notes',
+      },
+      {
+        DataField: 'RemainingQty',
+        DataType: 'number',
+        Caption: 'Rem. Qty',
+        ReadOnly: true,
+        Icon:'info',
+        OnIconClicked:(data:any)=>{
+          // this.documentsViewModel.getChargeableDocumentsByLotId(data.Id).subscribe((result:any)=>{
+          //   const dialogRef = this.dialog.open(ListWithFiltersComponent, {
+          //     width: '60%',
+          //     height: '80%',
+          //     data: {
+          //       Title:'Documents List',
+          //       DataSource: result,
+          //       Columns:this.lotDocumentsColumns,
+          //     },
+          //     viewContainerRef: this.viewContainerRef,
+
+          //   });
+          // })
+
+        }
       },
       {
         DataField: 'buttons',

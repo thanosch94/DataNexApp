@@ -762,19 +762,22 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onQuantityChange(data: DocumentProductDto) {
+    let tempResults
     if(this.documentGroup==DocumentTypeGroupEnum.Sales){
       if(this.lotStrategyEnum==LotStrategyEnum.FIFORec||this.lotStrategyEnum==LotStrategyEnum.FIFO){
         this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyFIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
           data.DocumentProductLotsQuantities=result
+          tempResults=result
         })
       }else if(this.lotStrategyEnum==LotStrategyEnum.LIFORec||this.lotStrategyEnum==LotStrategyEnum.LIFO){
         this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyLIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
           data.DocumentProductLotsQuantities=result
+          tempResults=result
         })
       }
     }
 
-    if (data.QuantityFromLots > 0) {
+    if (tempResults && data.QuantityFromLots > 0) {
       data.Quantity = data.QuantityFromLots;
     }
     if (data.ProductRetailPrice) {
@@ -923,7 +926,10 @@ onSupplierValueChange(e:any){
         Lookup: {
           DataSource: this.products,
           ValueExpr: 'Sku',
-          DisplayExpr: 'Sku',
+          DisplayExpr:'Sku',
+          DisplayMultExpr: (data:any)=>{
+            return data.Sku +" - "+ data.Name
+          },
         },
         OnSelectionChange: (data: any, columns: DnColumnDto[]) => {
           this.onSkuSelection(data, columns);

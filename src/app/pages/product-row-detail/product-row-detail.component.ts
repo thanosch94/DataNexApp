@@ -49,6 +49,9 @@ export class ProductRowDetailComponent implements OnInit {
   areLotsEnabled: boolean;
   documentGroup: any;
   supplierIdSelected: any;
+  lotSettingsViewModel: LotSettingsViewModel;
+  lotSettings: LotSettingsDto;
+  canEdit: boolean;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -58,28 +61,33 @@ export class ProductRowDetailComponent implements OnInit {
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
-    if(data){
-      this.rowData = data?.Row as DocumentProductDto;
-      this.supplierIdSelected =data.Supplier
-      this.documentGroup= data.DocumentGroup
+    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
+    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
+      this.lotSettings = result;
 
+      this.canEdit =
+        (this.documentGroup == DocumentTypeGroupEnum.Sales &&
+          this.lotSettings.LotStrategy == LotStrategyEnum.FIFORec) ||
+        this.lotSettings.LotStrategy == LotStrategyEnum.LIFORec ||
+        this.documentGroup == DocumentTypeGroupEnum.Purchasing;
+
+      this.getLotsQuantitiesColumns();
+    });
+    if (data) {
+      this.rowData = data?.Row as DocumentProductDto;
+      this.supplierIdSelected = data.Supplier;
+      this.documentGroup = data.DocumentGroup;
     }
-    this.getLots()
+    this.getLots();
 
     if (this.rowData.DocumentProductLotsQuantities) {
       this.lotsQuantitiesDataSource =
         this.rowData.DocumentProductLotsQuantities;
     }
     this.areLotsEnabled = this.auth.appOptions.LotsEnabled;
-
-    this.getLotsQuantitiesColumns();
-
   }
 
-  ngOnInit(): void {
-
-
-  }
+  ngOnInit(): void {}
 
   getLotsQuantitiesColumns() {
     this.lotsQuantitiesColumns = [
@@ -100,18 +108,21 @@ export class ProductRowDetailComponent implements OnInit {
           DisplayExpr: 'Name',
         },
         //Cannot add new lot from Sales. Add is available only from purchasing because then adds qty as well
-        Icon: this.documentGroup==DocumentTypeGroupEnum.Purchasing?'add_circle':'',
-        IconTooltip:'Add New Lot',
+        Icon:
+          this.documentGroup == DocumentTypeGroupEnum.Purchasing
+            ? 'add_circle'
+            : '',
+        IconTooltip: 'Add New Lot',
         OnIconClicked: () => {
           const dialogRef = this.dialog.open(LotsListComponent, {
             disableClose: true,
             width: '800px',
             height: '500px',
-            data: {isDialog:true},
+            data: { isDialog: true },
             viewContainerRef: this.viewContainerRef,
           });
           dialogRef.afterClosed().subscribe((data: any) => {
-            this.getLots()
+            this.getLots();
           });
         },
       },
@@ -119,30 +130,43 @@ export class ProductRowDetailComponent implements OnInit {
         DataField: 'Quantity',
         DataType: 'number',
         Caption: 'Quantity',
-        Min:1
-      },
-
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
+        Min: 1,
       },
     ];
+
+    let buttons = {
+      DataField: 'buttons',
+      DataType: 'buttons',
+      Caption: '',
+    };
+
+    if (this.canEdit) {
+      this.lotsQuantitiesColumns.push(buttons);
+    }
   }
 
-  getLots(){
-    if(this.documentGroup==DocumentTypeGroupEnum.Purchasing && this.supplierIdSelected){
-      this.lotsViewModel.GetLookupBySupplierIdAndProductId(this.supplierIdSelected, this.rowData.ProductId).subscribe((result: LotDto[]) => {
-        this.lotsDataSource = result;
-        this.getLotsQuantitiesColumns();
-      });
-    }else if(this.documentGroup==DocumentTypeGroupEnum.Sales){
-      this.lotsViewModel.GetLookupByProductIdWithRemainingQty(this.rowData.ProductId).subscribe((result: LotDto[]) => {
-        this.lotsDataSource = result;
-        this.getLotsQuantitiesColumns();
-      });
+  getLots() {
+    if (
+      this.documentGroup == DocumentTypeGroupEnum.Purchasing &&
+      this.supplierIdSelected
+    ) {
+      this.lotsViewModel
+        .GetLookupBySupplierIdAndProductId(
+          this.supplierIdSelected,
+          this.rowData.ProductId
+        )
+        .subscribe((result: LotDto[]) => {
+          this.lotsDataSource = result;
+          this.getLotsQuantitiesColumns();
+        });
+    } else if (this.documentGroup == DocumentTypeGroupEnum.Sales) {
+      this.lotsViewModel
+        .GetLookupByProductIdWithRemainingQty(this.rowData.ProductId)
+        .subscribe((result: LotDto[]) => {
+          this.lotsDataSource = result;
+          this.getLotsQuantitiesColumns();
+        });
     }
-
   }
   onCloseBtnClicked(e: any) {
     this.dialogRef.close(this.lotsQuantitiesDataSource);

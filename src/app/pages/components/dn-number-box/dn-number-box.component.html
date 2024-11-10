@@ -11,7 +11,7 @@
       [placeholder]="placeholder"
       [name]="name"
       [(ngModel)]="value"
-      (ngModelChange)="onValueChange(value)"
+      (ngModelChange)="onValueChange($event)"
       (blur)="onBlur()"
       (click)="onInputClick($event)"
     />
