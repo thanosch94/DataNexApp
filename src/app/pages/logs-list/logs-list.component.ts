@@ -70,9 +70,10 @@ export class LogsListComponent {
         Visible:false
       },
       {
-        DataField:'AddedDateTimeFormatted',
-        DataType:'string',
+        DataField:'DateAdded',
+        DataType:'date',
         Caption:'Date',
+        Format:"dd/MM/yyyy HH:mm"
       },
       {
         DataField:'LogName',
