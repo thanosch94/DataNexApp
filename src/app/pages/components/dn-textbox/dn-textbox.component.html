@@ -10,6 +10,7 @@
       [name]="name"
       [(ngModel)]="value"
       (ngModelChange)="onValueChange(value)"
+      (input)="onValueInput($event)"
     />
     @if(icon){ @if(iconPosition=="end"){<mat-icon
       class="text-box-icon"

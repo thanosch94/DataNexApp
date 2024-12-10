@@ -188,6 +188,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   lotsDataSource: LotDto[];
   lotSettingsViewModel: LotSettingsViewModel;
   lotStrategyEnum: LotStrategyEnum;
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -461,8 +462,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               this.productsDataSource.forEach((productRow) => {
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
-
-                  let tempArrayOfDocumentProductLotsQuantities: DocumentProductLotQuantityDto[] =
+                  if(this.generalOptions.LotsEnabled){
+                    let tempArrayOfDocumentProductLotsQuantities: DocumentProductLotQuantityDto[] =
                     [];
                   productRow.DocumentProductLotsQuantities.forEach(
                     (x: DocumentProductLotQuantityDto) => {
@@ -474,6 +475,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
                   );
                   productRow.DocumentProductLotsQuantities =
                     tempArrayOfDocumentProductLotsQuantities;
+                  }
+
                   this.documentProductsViewModel
                     .InsertDto(productRow)
                     .subscribe((result: any) => {
@@ -883,7 +886,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         data.TotalPrice = result.RetailPrice;
         data.Quantity = 1;
         data.Barcode = undefined;
-        data.IsRowFilled = false;
+        data.IsRowFilled = true;
         this.GetProductVatAmount(result.VatClassId, data);
         this.getProductSizes(data.ProductId, columns);
       });
@@ -989,7 +992,7 @@ onSupplierValueChange(e:any){
         DataType: 'number',
         Caption: 'Quantity',
         Min: 1,
-        Icon: this.document.SupplierId|| this.documentGroup==DocumentTypeGroupEnum.Sales ?'info':'',
+        Icon: (this.document.SupplierId|| this.documentGroup==DocumentTypeGroupEnum.Sales)&& this.generalOptions.LotsEnabled ?'info':'',
         IconTooltip:'Lot/Variations Info',
         OnClick: (row: DocumentProductDto, column: DnColumnDto) => {
           if (row.QuantityFromLots && this.documentGroup==DocumentTypeGroupEnum.Purchasing) {

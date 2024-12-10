@@ -34,6 +34,8 @@ export class DnTextboxComponent {
   @Input() iconPosition?: string = "end";
   @Input() iconTooltip: string='';
   @Output() onIconClicked = new EventEmitter();
+  @Output() onInput = new EventEmitter();
+
 
   onValueChange(value:string){
     this.valueChange.emit(value)
@@ -44,4 +46,7 @@ export class DnTextboxComponent {
     this.onIconClicked.emit(e)
   }
 
+  onValueInput(e:any){
+    this.onInput.emit(e);
+  }
 }

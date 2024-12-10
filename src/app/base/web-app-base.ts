@@ -3,8 +3,8 @@ import { MenuItemDto } from '../dto/menu-item.dto';
 import { AppTabDto } from '../dto/app-tab.dto';
 
 export class WebAppBase {
-  static version = '1.0.10';
-  static apiVersion= '1.0.11';
+  static version = '1.0.11';
+  static apiVersion= '1.0.12';
 
   static data: any;
   static isLoggedIn: boolean;
