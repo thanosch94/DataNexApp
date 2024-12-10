@@ -20,6 +20,8 @@ import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
+import { DnCheckboxComponent } from "../../components/dn-checkbox/dn-checkbox.component";
+import { DnTextboxComponent } from "../../components/dn-textbox/dn-textbox.component";
 
 
 @Component({
@@ -36,7 +38,9 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
     CommonModule,
     MatDialogModule,
     DnToolbarComponent,
-  ],
+    DnCheckboxComponent,
+    DnTextboxComponent
+],
   providers: [TabsService],
   templateUrl: './customer-edit.component.html',
   styleUrl: './customer-edit.component.css',

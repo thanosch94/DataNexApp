@@ -14,91 +14,70 @@
 
 <div class="form" (submit)="onSaveClicked($event)">
   <div class="basic-info-contact">
-    <div>
-      <div class="info-categories">
-        <b>Contact Info</b>
-      </div>
+    <div class="contact-info-title">
+      <b>Contact Info</b>
+    </div>
+    <div class="basic-info-contact-container">
+
       <br />
       <div>
         <div>
-          <mat-form-field class="name">
-            <mat-label>Name</mat-label>
-            <input matInput name="Name" [(ngModel)]="customer.Name" />
-          </mat-form-field>
+          <dn-textbox [(value)]="customer.Name" [width]="100" label="Name" name="name"></dn-textbox>
+
         </div>
 
         <div>
-          <mat-form-field class="phone1">
-            <mat-label>Phone 1</mat-label>
-            <input matInput name="phone1" [(ngModel)]="customer.Phone1" />
-          </mat-form-field>
-          <mat-form-field class="phone2">
-            <mat-label>Phone 2</mat-label>
-            <input matInput name="phone2" [(ngModel)]="customer.Phone2" />
-          </mat-form-field>
+          <dn-textbox class="phone1" [(value)]="customer.Phone1" [width]="45" label="Phone 1" name="phone1"></dn-textbox>
+
+          <dn-textbox [(value)]="customer.Phone2" [width]="45" label="Phone 2" name="phone2"></dn-textbox>
+
         </div>
 
         <div>
-          <mat-form-field class="email">
-            <mat-label>Email</mat-label>
-            <input matInput name="email" [(ngModel)]="customer.Email" />
-          </mat-form-field>
+          <dn-textbox [(value)]="customer.Email" [width]="100" label="Email" name="email"></dn-textbox>
+
         </div>
       </div>
     </div>
   </div>
   <div class="addresses">
-    <div class="info-categories">
+    <div class="addresses-title">
       <b>Addresses</b>
     </div>
-    <br>
-    <div>
-      <mat-form-field class="address">
-        <mat-label>Address</mat-label>
-        <input matInput name="address" [(ngModel)]="customer.Address" />
-      </mat-form-field>
+    <div class="addresses-container">
 
-      <mat-form-field class="region">
-        <mat-label>Region</mat-label>
-        <input matInput name="region" [(ngModel)]="customer.Region" />
-      </mat-form-field>
-      <mat-form-field class="city">
-        <mat-label>City</mat-label>
-        <input matInput name="city" [(ngModel)]="customer.City" />
-      </mat-form-field>
-      <mat-form-field class="postal-code">
-        <mat-label>Postal Code</mat-label>
-        <input matInput name="postalcode" [(ngModel)]="customer.PostalCode" />
-      </mat-form-field>
+      <br />
+      <div>
+        <dn-textbox class="address" [(value)]="customer.Address" [width]="45" label="Address" name="address"></dn-textbox>
+        <dn-textbox [(value)]="customer.Region" [width]="45" label="Region" name="region"></dn-textbox>
 
-      <mat-form-field class="country">
-        <mat-label>Country</mat-label>
-        <input matInput name="country" [(ngModel)]="customer.Country" />
-      </mat-form-field>
+        <dn-textbox class="city" [(value)]="customer.City" [width]="45" label="City" name="city"></dn-textbox>
+        <dn-textbox  [(value)]="customer.PostalCode" [width]="45" label="Postal Code" name="postalcode"></dn-textbox>
+
+        <dn-textbox  [(value)]="customer.Country" [width]="45" label="country" name="country"></dn-textbox>
+
+      </div>
     </div>
   </div>
+
+
+
   <br /><br /><br /><br />
 </div>
+
 <div class="form">
-  <div class="invoice-info">
-    <div class="info-categories">
-      <b>Invoice Info</b>
-    </div>
+
+<div class="invoice-info">
+  <div class="info-title">
+    <b>Invoice Info</b>
+  </div>
+  <div class="invoice-info-container">
+
     <br />
     <div>
-      <mat-form-field class="vat-number">
-        <mat-label>Vat Id</mat-label>
-        <input
-          matInput
-          name="vatid"
-          [(ngModel)]="customer.VatNumber"
-          (input)="onVatIdValueChanged($event)"
-        />
-      </mat-form-field>
-      <mat-form-field class="tax-office">
-        <mat-label>Vat Id</mat-label>
-        <input matInput name="taxoffice" [(ngModel)]="customer.TaxOffice" />
-      </mat-form-field>
+      <dn-textbox class="vat-number" [(value)]="customer.VatNumber" [width]="45" label="Vat Number" name="vatnumber" (onInput)="onVatIdValueChanged($event)"></dn-textbox>
+
+      <dn-textbox  [(value)]="customer.TaxOffice" [width]="45" label="Tax Office" name="taxoffice"></dn-textbox>
     </div>
   </div>
 </div>

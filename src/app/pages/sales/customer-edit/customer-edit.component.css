@@ -3,15 +3,15 @@
   display:flex;
 }
 
-.info-categories{
-  margin-bottom:3%
+.info{
+  width: 100%;
 }
 
-.basic-info-contact, .invoice-info{
+.basic-info-contact{
   width:50%;
 }
 
-.addresses{
+.addresses, .invoice-info{
   width:50%;
 }
 
@@ -20,25 +20,21 @@
   color: white;
 }
 
-.name{
-  width:90%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.phone1, .email, .address, .vat-number,.city, .country{
-  width:40%;
-  margin-right: 5%;
-}
-
-.phone2, .region, .postal-code, .tax-office{
-  width:40%;
-  margin-left: 5%;
+.address, .city{
+  margin-right: 10%;
 }
 
 
+/* Titles */
+.contact-info-title, .addresses-title, .info-title{
+padding: 1%;
+background: lightgray;
+border-radius: 10px 10px 0% 0%;
+}
 
-
+.contact-info-title, .addresses-title, .info-title{
+  width: 92%;
+}
 
 /* Change the height of inputs */
 .basic-info-contact ::ng-deep  .mat-mdc-form-field-infix{
@@ -46,11 +42,11 @@
 }
 
 .basic-info-contact ::ng-deep  .mat-mdc-form-field{
-  height:75px!important;
+  height:70px!important;
 }
 
 .basic-info-contact ::ng-deep  .mat-mdc-option, .mat-mdc-option{
-  min-height:75px!important;
+  min-height:70px!important;
 }
 
 .addresses ::ng-deep  .mat-mdc-form-field-infix{
@@ -58,25 +54,25 @@
 }
 
 .addresses ::ng-deep  .mat-mdc-form-field{
-  height:75px!important;
+  height:70px!important;
 }
 
 .addresses ::ng-deep  .mat-mdc-option, .mat-mdc-option{
-  min-height:75px!important;
+  min-height:70px!important;
 }
 .invoice-info ::ng-deep  .mat-mdc-form-field-infix{
   padding: 0!important;
 }
 
 .invoice-info ::ng-deep  .mat-mdc-form-field{
-  height:75px!important;
+  height:70px!important;
 }
 
 .invoice-info ::ng-deep  .mat-mdc-option, .mat-mdc-option{
-  min-height:75px!important;
+  min-height:70px!important;
 }
 
-.basic-info-contact input{
+/* .basic-info-contact input{
   margin-top:25px;
 }
 .addresses input{
@@ -84,5 +80,16 @@
 }
 .invoice-info input{
   margin-top:25px;
+
+} */
+
+.basic-info-contact-container, .addresses-container, .invoice-info-container{
+  width:90%;
+  padding: 2%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
+
+.phone1, .vat-number{
+  margin-right:10%
+}
