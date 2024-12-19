@@ -6,14 +6,13 @@ import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
 import { ProductsViewModel } from './../../view-models/products.viewmodel';
-import { AsyncPipe, CommonModule, DatePipe, Location } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
   ChangeDetectorRef,
   Component,
   ElementRef,
-  EventEmitter,
   OnDestroy,
   OnInit,
   QueryList,
@@ -24,10 +23,7 @@ import {
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { map, startWith } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { CustomerDto } from '../../dto/customer.dto';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { DocumentDto } from '../../dto/document.dto';
@@ -38,7 +34,7 @@ import {
   provideNativeDateAdapter,
 } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatCell, MatTable, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
@@ -47,7 +43,7 @@ import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { StatusesViewModel } from '../../view-models/statuses.viewmodel';
@@ -63,9 +59,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DocumentAdditionalChargesComponent } from '../document-additional-charges/document-additional-charges.component';
 import { DocumentAdditionalChargeDto } from '../../dto/document-additional-charge.dto';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { Navigation } from '../../base/navigation';
 import { VatClassDto } from '../../dto/vat-class.dto';
-import { SupplierDto } from '../../dto/supplier.dto';
 import { SuppliersViewModel } from '../../view-models/suppliers.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../dto/dn-column.dto';
@@ -81,6 +75,7 @@ import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
 import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
+import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -89,7 +84,6 @@ import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
     FormsModule,
     MatFormFieldModule,
     HttpClientModule,
-    MatCell,
     MatInputModule,
     MatAutocompleteModule,
     ReactiveFormsModule,
@@ -101,7 +95,6 @@ import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
     MatPaginatorModule,
     MatTableModule,
     MatButtonModule,
-    AsyncPipe,
     MatTabsModule,
     DnToolbarComponent,
     MatDialogModule,
@@ -158,19 +151,6 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   productsDataSource: Array<DocumentProductDto> =
     new Array<DocumentProductDto>();
   document: DocumentDto = new DocumentDto();
-  productDisplayedColumns: string[] = [
-    'SerialNumber',
-    'Barcode',
-    'Sku',
-    'ProductName',
-    'SizeName',
-    'Price',
-    'VatAmount',
-    'Quantity',
-    'TotalVatAmount',
-    'RowTotal',
-    'buttons',
-  ];
   documentProductsViewModel: DocumentProductsViewModel;
   documentTypesViewModel: DocumentTypesViewModel;
   productsViewModel: ProductsViewModel;
@@ -188,6 +168,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   lotsDataSource: LotDto[];
   lotSettingsViewModel: LotSettingsViewModel;
   lotStrategyEnum: LotStrategyEnum;
+  pdfGeneratorComponent: PdfGeneratorComponent;
 
   constructor(
     private http: HttpClient,
@@ -251,6 +232,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       .subscribe((result: GeneralOptionsDto) => {
         this.generalOptions = result;
       });
+      this.pdfGeneratorComponent = new PdfGeneratorComponent()
   }
 
   ngOnInit() {
@@ -1085,5 +1067,9 @@ onSupplierValueChange(e:any){
 
   onProductRowStopEditing(e: any) {
     this.getDocumentProducts(this.document.Id);
+  }
+
+  onPrintClicked(e:any){
+    this.pdfGeneratorComponent.generate(this.document)
   }
 }

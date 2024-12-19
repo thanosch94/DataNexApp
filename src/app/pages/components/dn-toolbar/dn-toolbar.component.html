@@ -3,12 +3,16 @@
   <span class="toolbar-title">{{ title }}</span>
   <span class="example-spacer"></span>
   @if(displaySettings){
-    <button class="button" mat-button (click)="onSettingsClicked($event)">
-      <mat-icon class="icons">settings</mat-icon>
-      <span class="button-title">Settings</span>
-    </button>
-    }
-  @if(canRefresh){
+  <button class="button" mat-button (click)="onSettingsClicked($event)">
+    <mat-icon class="icons">settings</mat-icon>
+    <span class="button-title">Settings</span>
+  </button>
+  } @if(canPrint){
+  <button class="button" mat-button (click)="onPrintClicked($event)">
+    <mat-icon class="icons">print</mat-icon>
+    <span class="button-title">Print</span>
+  </button>
+  } @if(canRefresh){
   <button class="button" mat-button (click)="onRefreshClicked($event)">
     <mat-icon class="icons">refresh</mat-icon>
     <span class="button-title">Refresh</span>

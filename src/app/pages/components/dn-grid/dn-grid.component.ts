@@ -32,6 +32,7 @@ import {
   MatFooterCell,
   MatFooterRow,
   MatFooterRowDef,
+  MatHeaderCellDef,
   MatTable,
   MatTableDataSource,
   MatTableModule,
@@ -49,6 +50,7 @@ import { DnTextboxComponent } from '../dn-textbox/dn-textbox.component';
 import { DnNumberBoxComponent } from '../dn-number-box/dn-number-box.component';
 import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
 import { DnSelectboxComponent } from "../dn-selectbox/dn-selectbox.component";
+import { SelectionModel } from '@angular/cdk/collections';
 
 @Component({
   selector: 'dn-grid',
@@ -93,7 +95,8 @@ import { DnSelectboxComponent } from "../dn-selectbox/dn-selectbox.component";
     DnTextboxComponent,
     DnNumberBoxComponent,
     DnDateBoxComponent,
-    DnSelectboxComponent
+    DnSelectboxComponent,
+    MatHeaderCellDef
 ],
 })
 export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
@@ -107,6 +110,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() onRowEditing = new EventEmitter();
   @Output() columnsChange = new EventEmitter();
   @Output() onInfoButtonClicked = new EventEmitter();
+  @Output() onRowSelectionChanged = new EventEmitter();
   matColumns: string[] = [];
   @Input() enableAddButton = false;
   @Input() canDisplaySearch = true;
@@ -120,13 +124,12 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() displayTableBorder = false;
   @Input() tableHeaderBackgroundColor: string;
   @Input() tableHeaderFontColor: string;
-
+  selection = new SelectionModel<any>(true, []);
   private _columns: DnColumnDto[] = [];
   zeroMin: number;
   pageIndex: number = 0;
   pageSize: number = 10; //Check to keep user defined settings
   hasAnyColumnDisplayTotalEnabled: boolean = false;
-  selection: any;
 
   @Input('columns') public get columns(): DnColumnDto[] {
     return this._columns;
@@ -368,6 +371,24 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
       column.OnFocusOut(row,column);
 
     }
+  }
+
+  isAllSelected() {
+    const numSelected = this.selection.selected.length;
+    const numRows = this.dataSource.length;
+    return numSelected === numRows;
+  }
+
+  masterToggle() {
+    this.isAllSelected() ?
+        this.selection.clear() :
+        this.dataSource.forEach((row:any) => this.selection.select(row));
+  }
+
+  onRowSelectionChange(e:any, row:any) {
+    this.selection.toggle(row);
+    debugger
+    this.onRowSelectionChanged.emit(this.selection.selected)
   }
 
 

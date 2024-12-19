@@ -3,6 +3,7 @@
   [canRefresh]="documentId ? true : false"
   [canExit]="true"
   [canSave]="true"
+  [canPrint]="true"
   [isDialog]="false"
   [title]="document_text"
   [entityId]="document?.Id"
@@ -10,6 +11,7 @@
   (onDeleteBtnClicked)="onDeleteClicked($event)"
   (onSaveBtnClicked)="onSaveClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
+  (onPrintBtnClicked)="onPrintClicked($event)"
 ></dn-toolbar>
 @if(document && columns){
 <form class="form">

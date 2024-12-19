@@ -74,12 +74,13 @@ export class DocumentsListComponent implements OnInit {
   documentStatusesDataSource: any;
   suppliersViewModel: SuppliersViewModel;
   suppliersDataSource: any;
+  gridSelection: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private route: ActivatedRoute,
-    private ref: ChangeDetectorRef,
+    private ref: ChangeDetectorRef
   ) {
     this.tabsService = new TabsService(route);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
@@ -95,16 +96,13 @@ export class DocumentsListComponent implements OnInit {
       this.documentTypesDataSource = result;
       this.customersViewModel.GetAll().subscribe((result: any) => {
         this.customersDataSource = result;
-        this.statusesViewModel.GetAll().subscribe((result:any)=>{
-          this.documentStatusesDataSource =result
-          this.suppliersViewModel.GetAll().subscribe((result:any)=>{
-            this.suppliersDataSource =result
+        this.statusesViewModel.GetAll().subscribe((result: any) => {
+          this.documentStatusesDataSource = result;
+          this.suppliersViewModel.GetAll().subscribe((result: any) => {
+            this.suppliersDataSource = result;
             this.getColumns();
-
-          })
-
-        })
-
+          });
+        });
       });
     });
     this.route.queryParams.subscribe((params: any) => {
@@ -151,6 +149,12 @@ export class DocumentsListComponent implements OnInit {
   getColumns() {
     this.columns = [
       {
+        DataField: 'select',
+        DataType: 'select',
+        Caption: 'select',
+        Visible: true,
+      },
+      {
         DataField: 'Id',
         DataType: 'string',
         Caption: 'Id',
@@ -161,7 +165,7 @@ export class DocumentsListComponent implements OnInit {
         DataType: 'datetime',
         Caption: 'Date',
         Visible: true,
-        Format:"dd/MM/yyyy"
+        Format: 'dd/MM/yyyy',
       },
       {
         DataField: 'DocumentCode',
@@ -177,7 +181,7 @@ export class DocumentsListComponent implements OnInit {
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
-        Visible:false
+        Visible: false,
       },
       {
         DataField: 'CustomerId',
@@ -188,7 +192,7 @@ export class DocumentsListComponent implements OnInit {
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
-        Visible:this.documentGroup ==DocumentTypeGroupEnum.Sales
+        Visible: this.documentGroup == DocumentTypeGroupEnum.Sales,
       },
       {
         DataField: 'SupplierId',
@@ -199,8 +203,7 @@ export class DocumentsListComponent implements OnInit {
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
-        Visible:this.documentGroup ==DocumentTypeGroupEnum.Purchasing
-
+        Visible: this.documentGroup == DocumentTypeGroupEnum.Purchasing,
       },
       {
         DataField: 'DocumentStatusId',
@@ -213,18 +216,17 @@ export class DocumentsListComponent implements OnInit {
         },
       },
 
-
       {
         DataField: 'DocumentTotal',
         DataType: 'number',
         Caption: 'Total',
-        DisplayColumnTotal:true
+        DisplayColumnTotal: true,
       },
       {
         DataField: 'buttons',
         DataType: 'buttons',
         Caption: '',
-      }
+      },
     ];
   }
   // applyFilter(e: any) {
@@ -238,7 +240,6 @@ export class DocumentsListComponent implements OnInit {
   getRowData(rowData: any) {
     this.rowData = rowData;
   }
-
 
   editDocument(document: DocumentDto) {
     WebAppBase.data = document.Id;
@@ -263,7 +264,7 @@ export class DocumentsListComponent implements OnInit {
     this.getData();
   }
 
-  onRowEditing(e:any){
+  onRowEditing(e: any) {
     WebAppBase.data = e.Id;
 
     this.router.navigate(['document-edit'], {
@@ -273,7 +274,24 @@ export class DocumentsListComponent implements OnInit {
     });
   }
 
-  onTransformedClicked(e:any){
+  onTransformedClicked(e: any) {
+    let uniqueCustomers:any[] = [];
+    this.gridSelection.filter((customer:any) => {
+      if (uniqueCustomers.includes(customer.CustomerId)) {
+        return false;
+      } else {
+        uniqueCustomers.push(customer.CustomerId);
+        return true;
+      }
+    });
+    if (uniqueCustomers?.length > 1) {
+      alert('Cannot transform');
+    } else {
+      //alert('Successfully transformed');
+    }
+  }
 
+  onRowSelectionChanged(data: any) {
+    this.gridSelection = data;
   }
 }

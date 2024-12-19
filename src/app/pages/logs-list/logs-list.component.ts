@@ -4,13 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import {
-  MatTable,
-  MatTableDataSource,
-  MatTableModule,
-} from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule} from '@angular/material/table';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
 import { LogDto } from '../../dto/log.dto';
@@ -23,15 +19,12 @@ import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
   imports: [
     MatButtonModule,
     MatIconModule,
-    MatPaginator,
     MatPaginatorModule,
-    MatSort,
     MatSortModule,
     MatInputModule,
     MatFormFieldModule,
     MatTableModule,
     HttpClientModule,
-    MatSortHeader,
     DnToolbarComponent,
     DnGridComponent,
   ],

@@ -23,6 +23,7 @@
       [dataSource]="matDataSource"
       matSort
     >
+
       <ng-container
         *ngFor="
           let column of columns | visbleGridColumns;
@@ -38,7 +39,18 @@
           *matHeaderCellDef
           mat-sort-header
         >
+          @if(column.DataType=="select"){
+            <mat-checkbox
+            (change)="$event ? masterToggle() : null"
+            [checked]="selection.hasValue() && isAllSelected()"
+            [indeterminate]="selection.hasValue() && !isAllSelected()"
+          >
+          </mat-checkbox>
+        }
+
+        @if(column.DataType!="select"){
           <span class="column-title"> {{ column.Caption }}</span>
+        }
         </th>
         <!-- Adds Total text in the footer of the first column -->
         @if( i == 0 && (hasAnyColumnDisplayTotalEnabled | columnDisplayTotal :
@@ -49,12 +61,22 @@
           </td>
         </ng-container>
         }
+
         <td
           [ngClass]="displayTableBorder ? 'display-border' : ''"
           mat-cell
           [ngStyle]="{ width: column.Width ? column.Width + 'px' : '' }"
           *matCellDef="let row; let index"
         >
+
+          @if(column.DataType=="select"){
+            <mat-checkbox
+            (click)="$event.stopPropagation()"
+            (change)="onRowSelectionChange($event, row)"
+            [checked]="selection.isSelected(row)"
+          >
+          </mat-checkbox>
+          }
           <!-- String Input -->
           @if(column.DataType == 'string' && row.IsEditable && !column.Lookup){
           <dn-textbox
@@ -143,7 +165,9 @@
           <dn-selectbox
             #selectBox
             [name]="column.Caption"
-            [optionsTemplate]="column.Lookup.DisplayMultExpr!=null ? true : false"
+            [optionsTemplate]="
+              column.Lookup.DisplayMultExpr != null ? true : false
+            "
             [dataSource]="column.Lookup.DataSource"
             [valueExpr]="column.Lookup.ValueExpr"
             [displayExpr]="column.Lookup.DisplayExpr ?? ''"
@@ -156,9 +180,7 @@
             (valueChange)="onDataLookupSelectionChanged(column, row, $event)"
             (onClick)="onClick(row, column)"
           >
-            <ng-template
-              let-option
-            >
+            <ng-template let-option>
               {{ column.Lookup.DisplayMultExpr(option) }}
             </ng-template>
           </dn-selectbox>

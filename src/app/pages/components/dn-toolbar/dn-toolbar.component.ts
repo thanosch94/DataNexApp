@@ -21,6 +21,7 @@ export class DnToolbarComponent {
 @Input() canDelete:boolean;
 @Input() canInsert:boolean;
 @Input() canRefresh:boolean;
+@Input() canPrint:boolean;
 @Input() canTransform:boolean;
 @Input() displaySettings:boolean;
 @Input() title:string;
@@ -35,6 +36,7 @@ export class DnToolbarComponent {
 @Output()onRefreshBtnClicked = new EventEmitter()
 @Output()onTransformedBtnClicked = new EventEmitter()
 @Output()onSettingsBtnClicked = new EventEmitter()
+@Output()onPrintBtnClicked = new EventEmitter()
 
 onDeleteClicked(e:any){
   this.onDeleteBtnClicked.emit(e)
@@ -61,5 +63,7 @@ onTransformedClicked(e:any){
 onSettingsClicked(e:any){
   this.onSettingsBtnClicked.emit(e)
 }
-
+onPrintClicked(e:any){
+  this.onPrintBtnClicked.emit(e)
+}
 }
