@@ -9,11 +9,10 @@ import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
 import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
 
 @Component({
-  selector: 'app-accounts-receivable',
-  standalone: true,
-  imports: [DnToolbarComponent, DnGridComponent],
-  templateUrl: './accounts-receivable.component.html',
-  styleUrl: './accounts-receivable.component.css',
+    selector: 'app-accounts-receivable',
+    imports: [DnToolbarComponent, DnGridComponent],
+    templateUrl: './accounts-receivable.component.html',
+    styleUrl: './accounts-receivable.component.css'
 })
 export class AccountsReceivableComponent {
   accounts_receivable_list_text: string = 'Accounts Receivable';

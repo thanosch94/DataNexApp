@@ -16,11 +16,10 @@ import { Router } from '@angular/router';
 import { WebAppBase } from '../../../base/web-app-base';
 
 @Component({
-  selector: 'app-suppliers-list',
-  standalone: true,
-  imports: [DnToolbarComponent, DnGridComponent],
-  templateUrl: './suppliers-list.component.html',
-  styleUrl: './suppliers-list.component.css',
+    selector: 'app-suppliers-list',
+    imports: [DnToolbarComponent, DnGridComponent],
+    templateUrl: './suppliers-list.component.html',
+    styleUrl: './suppliers-list.component.css'
 })
 export class SuppliersComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;

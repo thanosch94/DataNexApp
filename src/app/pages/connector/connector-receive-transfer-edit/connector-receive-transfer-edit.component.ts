@@ -41,23 +41,22 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 
 @Component({
-  selector: 'app-connector-receive-transfer-edit',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    FormsModule,
-    CdkTextareaAutosize,
-    MatSelectModule,
-    CommonModule,
-    ReactiveFormsModule,
-    MatStepperModule,
-    MatButtonModule,
-    DnGridComponent
-  ],
-  templateUrl: './connector-receive-transfer-edit.component.html',
-  styleUrl: './connector-receive-transfer-edit.component.css',
+    selector: 'app-connector-receive-transfer-edit',
+    imports: [
+        DnToolbarComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        FormsModule,
+        CdkTextareaAutosize,
+        MatSelectModule,
+        CommonModule,
+        ReactiveFormsModule,
+        MatStepperModule,
+        MatButtonModule,
+        DnGridComponent
+    ],
+    templateUrl: './connector-receive-transfer-edit.component.html',
+    styleUrl: './connector-receive-transfer-edit.component.css'
 })
 export class ConnectorReceiveTransferEditComponent implements OnInit {
   jobId: Guid;

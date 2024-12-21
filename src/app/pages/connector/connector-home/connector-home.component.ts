@@ -18,11 +18,10 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-connector-home',
-  standalone: true,
-  imports: [FontAwesomeModule, MatCardModule, DnToolbarComponent],
-  templateUrl: './connector-home.component.html',
-  styleUrl: './connector-home.component.css',
+    selector: 'app-connector-home',
+    imports: [FontAwesomeModule, MatCardModule, DnToolbarComponent],
+    templateUrl: './connector-home.component.html',
+    styleUrl: './connector-home.component.css'
 })
 export class ConnectorHomeComponent {
   faWordpress = faWordpress;

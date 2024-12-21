@@ -21,19 +21,18 @@ import { LotSettingsDto } from '../../../dto/configuration/lot-settings.dto';
 import { GeneralOptionsDto } from '../../../dto/configuration/general-options.dto';
 
 @Component({
-  selector: 'app-document-type-edit',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    MatTabsModule,
-    DnTextboxComponent,
-    DnCheckboxComponent,
-    DnSelectboxComponent,
-    DnGridComponent,
-  ],
-  providers:[TabsService],
-  templateUrl: './document-type-edit.component.html',
-  styleUrl: './document-type-edit.component.css',
+    selector: 'app-document-type-edit',
+    imports: [
+        DnToolbarComponent,
+        MatTabsModule,
+        DnTextboxComponent,
+        DnCheckboxComponent,
+        DnSelectboxComponent,
+        DnGridComponent,
+    ],
+    providers: [TabsService],
+    templateUrl: './document-type-edit.component.html',
+    styleUrl: './document-type-edit.component.css'
 })
 export class DocumentTypeEditComponent implements OnInit {
   document_type_edit_title_text: string;

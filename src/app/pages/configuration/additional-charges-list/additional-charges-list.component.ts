@@ -11,14 +11,13 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
-  selector: 'app-additional-charges',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    DnGridComponent
-  ],
-  templateUrl: './additional-charges-list.component.html',
-  styleUrl: './additional-charges-list.component.css'
+    selector: 'app-additional-charges',
+    imports: [
+        DnToolbarComponent,
+        DnGridComponent
+    ],
+    templateUrl: './additional-charges-list.component.html',
+    styleUrl: './additional-charges-list.component.css'
 })
 export class AdditionalChargesListComponent implements OnInit{
   @ViewChild('additionalChargesGrid') additionalChargesGrid:DnGridComponent

@@ -28,22 +28,21 @@ import { Router } from '@angular/router';
 import { WooEntityEnumList } from '../../../enumLists/woo-entity.enumlist';
 
 @Component({
-  selector: 'app-connector-datasources-options',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTabsModule,
-    FormsModule,
-    FontAwesomeModule,
-    DnGridComponent,
-  ],
-  providers:[TabsService],
-  templateUrl: './connector-datasources-options.component.html',
-  styleUrl: './connector-datasources-options.component.css',
+    selector: 'app-connector-datasources-options',
+    imports: [
+        DnToolbarComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTabsModule,
+        FormsModule,
+        FontAwesomeModule,
+        DnGridComponent,
+    ],
+    providers: [TabsService],
+    templateUrl: './connector-datasources-options.component.html',
+    styleUrl: './connector-datasources-options.component.css'
 })
 export class ConnectorDatasourcesOptionsComponent {
   @ViewChild('wooConnectionGrid') wooConnectionGrid:DnGridComponent

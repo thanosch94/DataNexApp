@@ -17,11 +17,10 @@ import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filt
 import { SalesViews } from '../../../enums/sales-views.enum';
 
 @Component({
-  selector: 'product-options',
-  standalone: true,
-  imports: [FontAwesomeModule, DnPopupComponent, ProductEditComponent],
-  templateUrl: './product-options.component.html',
-  styleUrl: './product-options.component.css',
+    selector: 'product-options',
+    imports: [FontAwesomeModule],
+    templateUrl: './product-options.component.html',
+    styleUrl: './product-options.component.css'
 })
 
 export class ProductOptionsComponent {

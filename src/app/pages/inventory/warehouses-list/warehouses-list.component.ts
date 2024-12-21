@@ -12,11 +12,10 @@ import { Router } from '@angular/router';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 
 @Component({
-  selector: 'app-warehouses-list',
-  standalone: true,
-  imports: [DnGridComponent, DnToolbarComponent, FontAwesomeModule],
-  templateUrl: './warehouses-list.component.html',
-  styleUrl: './warehouses-list.component.css'
+    selector: 'app-warehouses-list',
+    imports: [DnGridComponent, DnToolbarComponent, FontAwesomeModule],
+    templateUrl: './warehouses-list.component.html',
+    styleUrl: './warehouses-list.component.css'
 })
 export class WarehousesListComponent {
   @ViewChild('warehousesGrid') warehousesGrid:DnGridComponent

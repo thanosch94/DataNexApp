@@ -19,20 +19,19 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 @Component({
-  selector: 'app-supplier-edit',
-  standalone: true,
-  imports: [    FormsModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatIconModule,
-    HttpClientModule,
-    MatSortModule,
-    MatSnackBarModule,
-    CommonModule,
-    MatDialogModule,
-    DnToolbarComponent],
-  templateUrl: './supplier-edit.component.html',
-  styleUrl: './supplier-edit.component.css'
+    selector: 'app-supplier-edit',
+    imports: [FormsModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatIconModule,
+        HttpClientModule,
+        MatSortModule,
+        MatSnackBarModule,
+        CommonModule,
+        MatDialogModule,
+        DnToolbarComponent],
+    templateUrl: './supplier-edit.component.html',
+    styleUrl: './supplier-edit.component.css'
 })
 export class SupplierEditComponent {
   supplier_text: string;

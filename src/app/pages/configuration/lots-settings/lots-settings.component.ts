@@ -11,11 +11,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { LotStrategyApplyFieldEnumList } from '../../../enumLists/lot-strategy-apply-field.enumlist';
 
 @Component({
-  selector: 'app-lots-settings',
-  standalone: true,
-  imports: [DnToolbarComponent, DnSelectboxComponent],
-  templateUrl: './lots-settings.component.html',
-  styleUrl: './lots-settings.component.css',
+    selector: 'app-lots-settings',
+    imports: [DnToolbarComponent, DnSelectboxComponent],
+    templateUrl: './lots-settings.component.html',
+    styleUrl: './lots-settings.component.css'
 })
 export class LotsSettingsComponent {
   lots_settings_title_text: string = 'Lots Settings';

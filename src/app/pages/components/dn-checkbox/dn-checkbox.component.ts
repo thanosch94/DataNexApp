@@ -4,11 +4,10 @@ import { FormsModule } from '@angular/forms';
 import {  MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
-  selector: 'dn-checkbox',
-  standalone: true,
-  imports: [MatCheckboxModule,CommonModule,FormsModule],
-  templateUrl: './dn-checkbox.component.html',
-  styleUrl: './dn-checkbox.component.css'
+    selector: 'dn-checkbox',
+    imports: [MatCheckboxModule, CommonModule, FormsModule],
+    templateUrl: './dn-checkbox.component.html',
+    styleUrl: './dn-checkbox.component.css'
 })
 export class DnCheckboxComponent {
   @Input() label: string;

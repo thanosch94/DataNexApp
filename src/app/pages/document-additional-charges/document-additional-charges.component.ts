@@ -22,27 +22,26 @@ import { AdditionalChargesViewModel } from '../../view-models/additional-charges
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-document-additional-charges',
-  standalone: true,
-  imports: [MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatCell,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnToolbarComponent,
-    CommonModule,
-    DnGridComponent,
+    selector: 'app-document-additional-charges',
+    imports: [MatButtonModule,
+        MatIconModule,
+        MatPaginator,
+        MatPaginatorModule,
+        MatSort,
+        MatCell,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        MatSortHeader,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnToolbarComponent,
+        CommonModule,
+        DnGridComponent,
     ],
-  templateUrl: './document-additional-charges.component.html',
-  styleUrl: './document-additional-charges.component.css'
+    templateUrl: './document-additional-charges.component.html',
+    styleUrl: './document-additional-charges.component.css'
 })
 export class DocumentAdditionalChargesComponent implements OnInit{
   @ViewChild('documentAdditionalCharges') documentAdditionalChargesGrid:DnGridComponent

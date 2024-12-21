@@ -19,30 +19,25 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 
 @Component({
-  selector: 'list-with-filters',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    MatToolbarModule,
-    CommonModule,
-    MatDialogActions,
-    MatDialogModule,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent
-  ],
-  templateUrl: './list-with-filters.component.html',
-  styleUrl: './list-with-filters.component.css',
+    selector: 'list-with-filters',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        MatToolbarModule,
+        CommonModule,
+        MatDialogModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent
+    ],
+    templateUrl: './list-with-filters.component.html',
+    styleUrl: './list-with-filters.component.css'
 })
 export class ListWithFiltersComponent implements OnInit {
   dataSource: MatTableDataSource<DocumentProductDto>;

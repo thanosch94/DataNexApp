@@ -26,28 +26,26 @@ import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affec
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-document-types',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-    FontAwesomeModule,
-  ],
-
-  templateUrl: './document-types-list.component.html',
-  styleUrl: './document-types-list.component.css',
+    selector: 'app-document-types',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginator,
+        MatPaginatorModule,
+        MatSort,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        MatSortHeader,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+        FontAwesomeModule,
+    ],
+    templateUrl: './document-types-list.component.html',
+    styleUrl: './document-types-list.component.css'
 })
 export class DocumentTypesListComponent implements OnInit {
 

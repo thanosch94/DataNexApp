@@ -14,12 +14,11 @@ import { ConnectorJobTypeEnum } from '../../../enums/connector-job-type.enum';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-connector-receive-transfer',
-  standalone: true,
-  imports: [DnToolbarComponent,FontAwesomeModule, MatCardModule, CommonModule],
-  providers: [TabsService],
-  templateUrl: './connector-receive-transfer.component.html',
-  styleUrl: './connector-receive-transfer.component.css',
+    selector: 'app-connector-receive-transfer',
+    imports: [DnToolbarComponent, FontAwesomeModule, MatCardModule, CommonModule],
+    providers: [TabsService],
+    templateUrl: './connector-receive-transfer.component.html',
+    styleUrl: './connector-receive-transfer.component.css'
 })
 export class ConnectorReceiveTransferComponent implements OnInit {
   connector_receive_transfer_text: string;

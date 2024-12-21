@@ -20,24 +20,22 @@ import { AuthService } from '../../services/auth.service';
 import { UserRolesEnum } from '../../enums/user-roles.enum';
 
 @Component({
-  selector: 'app-user-edit',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatIconModule,
-    HttpClientModule,
-    MatSortModule,
-    MatSnackBarModule,
-    CommonModule,
-    MatDialogModule,
-    DnToolbarComponent,
-  ],
-  providers: [TabsService],
-
-  templateUrl: './user-edit.component.html',
-  styleUrl: './user-edit.component.css',
+    selector: 'app-user-edit',
+    imports: [
+        FormsModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatIconModule,
+        HttpClientModule,
+        MatSortModule,
+        MatSnackBarModule,
+        CommonModule,
+        MatDialogModule,
+        DnToolbarComponent,
+    ],
+    providers: [TabsService],
+    templateUrl: './user-edit.component.html',
+    styleUrl: './user-edit.component.css'
 })
 
 export class UserEditComponent {

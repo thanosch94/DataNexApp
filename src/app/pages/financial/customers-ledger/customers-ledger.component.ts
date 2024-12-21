@@ -9,16 +9,15 @@ import { DocumentsViewModel } from '../../../view-models/documents.viewmodel';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-customers-ledger',
-  standalone: true,
-  imports: [
-    DnSelectboxComponent,
-    DnToolbarComponent,
-    DnGridComponent,
-    CommonModule,
-  ],
-  templateUrl: './customers-ledger.component.html',
-  styleUrl: './customers-ledger.component.css',
+    selector: 'app-customers-ledger',
+    imports: [
+        DnSelectboxComponent,
+        DnToolbarComponent,
+        DnGridComponent,
+        CommonModule,
+    ],
+    templateUrl: './customers-ledger.component.html',
+    styleUrl: './customers-ledger.component.css'
 })
 export class CustomersLedgerComponent implements OnInit {
   customers_ledger_list_text: string = 'Customers Ledger';

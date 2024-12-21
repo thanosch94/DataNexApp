@@ -8,21 +8,20 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NumberFormatPipe } from '../../../pipes/number-format.pipe';
 
 @Component({
-  selector: 'dn-number-box',
-  standalone: true,
-  imports: [    MatFormFieldModule,
-    MatInputModule,
-    CommonModule,
-  ReactiveFormsModule,
-  FormsModule,
-  MatIconModule,
-  MatSuffix,
-  MatPrefix,
-  MatTooltipModule,
-  NumberFormatPipe
-],
-  templateUrl: './dn-number-box.component.html',
-  styleUrl: './dn-number-box.component.css'
+    selector: 'dn-number-box',
+    imports: [MatFormFieldModule,
+        MatInputModule,
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatIconModule,
+        MatSuffix,
+        MatPrefix,
+        MatTooltipModule,
+        NumberFormatPipe
+    ],
+    templateUrl: './dn-number-box.component.html',
+    styleUrl: './dn-number-box.component.css'
 })
 export class DnNumberBoxComponent {
   @Input() label: string;

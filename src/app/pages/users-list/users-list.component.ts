@@ -27,27 +27,23 @@ import { DnColumnDto } from '../../dto/dn-column.dto';
 import { AsyncPipe } from '@angular/common';
 
 @Component({
-  selector: 'app-users-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-    AsyncPipe
-  ],
-  templateUrl: './users-list.component.html',
-  styleUrl: './users-list.component.css',
+    selector: 'app-users-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+        AsyncPipe
+    ],
+    templateUrl: './users-list.component.html',
+    styleUrl: './users-list.component.css'
 })
 export class UsersListComponent implements OnInit {
 

@@ -24,26 +24,25 @@ import { NewItemComponent } from '../../components/new-item/new-item.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 
 @Component({
-  selector: 'app-brands-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent
-  ],
-  templateUrl: './brands-list.component.html',
-  styleUrl: './brands-list.component.css',
+    selector: 'app-brands-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginator,
+        MatPaginatorModule,
+        MatSort,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        MatSortHeader,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent
+    ],
+    templateUrl: './brands-list.component.html',
+    styleUrl: './brands-list.component.css'
 })
 export class BrandsListComponent implements OnInit {
   @ViewChild('brandsGrid') brandsGrid: DnGridComponent;

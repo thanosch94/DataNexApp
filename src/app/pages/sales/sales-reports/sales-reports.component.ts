@@ -4,17 +4,16 @@ import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 
 @Component({
-  selector: 'app-sales-reports',
-  standalone: true,
-  imports: [NgxEchartsModule, DnToolbarComponent],
-  providers: [
-    {
-      provide: NGX_ECHARTS_CONFIG,
-      useValue: { echarts: () => import('echarts') },
-    },
-  ],
-  templateUrl: './sales-reports.component.html',
-  styleUrl: './sales-reports.component.css',
+    selector: 'app-sales-reports',
+    imports: [NgxEchartsModule, DnToolbarComponent],
+    providers: [
+        {
+            provide: NGX_ECHARTS_CONFIG,
+            useValue: { echarts: () => import('echarts') },
+        },
+    ],
+    templateUrl: './sales-reports.component.html',
+    styleUrl: './sales-reports.component.css'
 })
 export class SalesReportsComponent {
   @Input() displayToolbar:boolean = true;

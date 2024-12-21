@@ -27,17 +27,16 @@ import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 
 @Component({
-  selector: 'app-product-row-detail',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    MatTabsModule,
-    MatTabGroup,
-    DnGridComponent,
-    MatDialogModule,
-  ],
-  templateUrl: './product-row-detail.component.html',
-  styleUrl: './product-row-detail.component.css',
+    selector: 'app-product-row-detail',
+    imports: [
+        DnToolbarComponent,
+        MatTabsModule,
+        MatTabGroup,
+        DnGridComponent,
+        MatDialogModule,
+    ],
+    templateUrl: './product-row-detail.component.html',
+    styleUrl: './product-row-detail.component.css'
 })
 export class ProductRowDetailComponent implements OnInit {
   product_row_detail_text: string = 'Details';

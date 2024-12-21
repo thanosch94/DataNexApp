@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { DocumentDto } from '../../../dto/document.dto';
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 @Component({
-  selector: 'app-pdf-generator',
-  standalone: true,
-  imports: [],
-  templateUrl: './pdf-generator.component.html',
-  styleUrl: './pdf-generator.component.css',
+    selector: 'app-pdf-generator',
+    imports: [],
+    templateUrl: './pdf-generator.component.html',
+    styleUrl: './pdf-generator.component.css'
 })
 export class PdfGeneratorComponent {
   docDefinition:any

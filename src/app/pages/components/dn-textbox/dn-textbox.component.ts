@@ -7,20 +7,19 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'dn-textbox',
-  standalone: true,
-  imports: [    MatFormFieldModule,
-    MatInputModule,
-    CommonModule,
-  ReactiveFormsModule,
-  FormsModule,
-  MatIconModule,
-  MatSuffix,
-  MatPrefix,
-  MatTooltipModule
-],
-  templateUrl: './dn-textbox.component.html',
-  styleUrl: './dn-textbox.component.css'
+    selector: 'dn-textbox',
+    imports: [MatFormFieldModule,
+        MatInputModule,
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatIconModule,
+        MatSuffix,
+        MatPrefix,
+        MatTooltipModule
+    ],
+    templateUrl: './dn-textbox.component.html',
+    styleUrl: './dn-textbox.component.css'
 })
 export class DnTextboxComponent {
   @Input() label: string;

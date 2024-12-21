@@ -32,30 +32,25 @@ import { DnColumnDto } from '../../dto/dn-column.dto';
 import { CustomersViewModel } from '../../view-models/customers.viewmodel';
 
 @Component({
-  selector: 'app-documents-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    CdkContextMenuTrigger,
-    CdkMenu,
-    CdkMenuItem,
-    CommonModule,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-  ],
-  templateUrl: './documents-list.component.html',
-  styleUrl: './documents-list.component.css',
+    selector: 'app-documents-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        CdkMenu,
+        CdkMenuItem,
+        CommonModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+    ],
+    templateUrl: './documents-list.component.html',
+    styleUrl: './documents-list.component.css'
 })
 export class DocumentsListComponent implements OnInit {
   dataSource: DocumentDto[];

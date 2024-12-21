@@ -4,13 +4,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import {
-  MatTable,
-  MatTableDataSource,
-  MatTableModule,
-} from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { ProductSizeDto } from '../../dto/product-size.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -24,26 +20,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 
 @Component({
-  selector: 'app-product-sizes-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-  ],
-  templateUrl: './product-sizes-list.component.html',
-  styleUrl: './product-sizes-list.component.css',
+    selector: 'app-product-sizes-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+    ],
+    templateUrl: './product-sizes-list.component.html',
+    styleUrl: './product-sizes-list.component.css'
 })
 export class ProductSizesListComponent implements OnInit {
   @ViewChild('productSizesGrid') productSizesGrid:DnGridComponent

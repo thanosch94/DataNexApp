@@ -30,26 +30,22 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 
 @Component({
-  selector: 'app-customers-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent
-  ],
-  templateUrl: './customers-list.component.html',
-  styleUrl: './customers-list.component.css',
+    selector: 'app-customers-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent
+    ],
+    templateUrl: './customers-list.component.html',
+    styleUrl: './customers-list.component.css'
 })
 
 export class CustomersListComponent implements OnInit {

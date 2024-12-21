@@ -8,11 +8,10 @@ import { DnCheckboxComponent } from '../../components/dn-checkbox/dn-checkbox.co
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'app-general-options',
-  standalone: true,
-  imports: [DnToolbarComponent, DnCheckboxComponent],
-  templateUrl: './general-options.component.html',
-  styleUrl: './general-options.component.css',
+    selector: 'app-general-options',
+    imports: [DnToolbarComponent, DnCheckboxComponent],
+    templateUrl: './general-options.component.html',
+    styleUrl: './general-options.component.css'
 })
 export class GeneralOptionsComponent {
   general_options_text: string = "General Options";

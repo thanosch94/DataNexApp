@@ -19,11 +19,10 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
 
 @Component({
-  selector: 'app-lots-list',
-  standalone: true,
-  imports: [DnToolbarComponent, DnGridComponent],
-  templateUrl: './lots-list.component.html',
-  styleUrl: './lots-list.component.css',
+    selector: 'app-lots-list',
+    imports: [DnToolbarComponent, DnGridComponent],
+    templateUrl: './lots-list.component.html',
+    styleUrl: './lots-list.component.css'
 })
 export class LotsListComponent implements OnInit {
   @ViewChild('lotsGrid') lotsGrid: DnGridComponent;

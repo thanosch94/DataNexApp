@@ -9,23 +9,22 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
-  selector: 'dn-selectbox',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatAutocompleteModule,
-    MatPseudoCheckboxModule,
-    MatIconModule,
-    MatSuffix,
-    MatPrefix,
-    MatTooltipModule
-  ],
-  templateUrl: './dn-selectbox.component.html',
-  styleUrl: './dn-selectbox.component.css',
+    selector: 'dn-selectbox',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatAutocompleteModule,
+        MatPseudoCheckboxModule,
+        MatIconModule,
+        MatSuffix,
+        MatPrefix,
+        MatTooltipModule
+    ],
+    templateUrl: './dn-selectbox.component.html',
+    styleUrl: './dn-selectbox.component.css'
 })
 export class DnSelectboxComponent {
   @ContentChild(TemplateRef) templateRef: TemplateRef<any>;

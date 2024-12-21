@@ -9,11 +9,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
 
 @Component({
-  selector: 'app-accounts-payable',
-  standalone: true,
-  imports: [DnToolbarComponent, DnGridComponent],
-  templateUrl: './accounts-payable.component.html',
-  styleUrl: './accounts-payable.component.css',
+    selector: 'app-accounts-payable',
+    imports: [DnToolbarComponent, DnGridComponent],
+    templateUrl: './accounts-payable.component.html',
+    styleUrl: './accounts-payable.component.css'
 })
 export class AccountsPayableComponent implements OnInit {
   accounts_payable_list_text: string = 'Accounts Payable';

@@ -28,26 +28,22 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
 
 @Component({
-  selector: 'app-products-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-  ],
-  templateUrl: './products-list.component.html',
-  styleUrl: './products-list.component.css',
+    selector: 'app-products-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+    ],
+    templateUrl: './products-list.component.html',
+    styleUrl: './products-list.component.css'
 })
 export class ProductsListComponent implements OnInit {
   dataSource: any;

@@ -17,21 +17,20 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-connector-parameters',
-  standalone: true,
-  imports: [
-    DnToolbarComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTabsModule,
-    FormsModule,
-    FontAwesomeModule
-  ],
-  providers: [TabsService],
-  templateUrl: './connector-parameters.component.html',
-  styleUrl: './connector-parameters.component.css',
+    selector: 'app-connector-parameters',
+    imports: [
+        DnToolbarComponent,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTabsModule,
+        FormsModule,
+        FontAwesomeModule
+    ],
+    providers: [TabsService],
+    templateUrl: './connector-parameters.component.html',
+    styleUrl: './connector-parameters.component.css'
 })
 export class ConnectorParametersComponent implements OnInit {
   connector_parameters_text: any;

@@ -7,13 +7,12 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Guid } from 'guid-typescript';
 
 @Component({
-  selector: 'dn-toolbar',
-  standalone: true,
-  imports: [    MatDialogActions,
-    MatButtonModule,
-    MatDialogModule,MatToolbarModule,MatIconModule,CommonModule],
-  templateUrl: './dn-toolbar.component.html',
-  styleUrl: './dn-toolbar.component.css'
+    selector: 'dn-toolbar',
+    imports: [MatDialogActions,
+        MatButtonModule,
+        MatDialogModule, MatToolbarModule, MatIconModule, CommonModule],
+    templateUrl: './dn-toolbar.component.html',
+    styleUrl: './dn-toolbar.component.css'
 })
 export class DnToolbarComponent {
 @Input() canExit:boolean;

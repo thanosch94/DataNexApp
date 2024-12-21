@@ -8,11 +8,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Inject, Optional } from '@angular/core';
 
 @Component({
-  selector: 'app-new-item',
-  standalone: true,
-  imports: [MatDialogModule,MatFormFieldModule, FormsModule,MatButtonModule,MatInputModule],
-  templateUrl: './new-item.component.html',
-  styleUrls: ['./new-item.component.css']
+    selector: 'app-new-item',
+    imports: [MatDialogModule, MatFormFieldModule, FormsModule, MatButtonModule, MatInputModule],
+    templateUrl: './new-item.component.html',
+    styleUrls: ['./new-item.component.css']
 })
 export class NewItemComponent implements OnInit {
 

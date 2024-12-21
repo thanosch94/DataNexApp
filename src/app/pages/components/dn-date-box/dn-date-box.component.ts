@@ -7,20 +7,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'dn-date-box',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    CommonModule,
-    ReactiveFormsModule,
-    FormsModule,
-    MatDatepickerModule,
-  ],
-  providers: [provideNativeDateAdapter()],
-
-  templateUrl: './dn-date-box.component.html',
-  styleUrl: './dn-date-box.component.css',
+    selector: 'dn-date-box',
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        CommonModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatDatepickerModule,
+    ],
+    providers: [provideNativeDateAdapter()],
+    templateUrl: './dn-date-box.component.html',
+    styleUrl: './dn-date-box.component.css'
 })
 export class DnDateBoxComponent {
   @Input() label: string;

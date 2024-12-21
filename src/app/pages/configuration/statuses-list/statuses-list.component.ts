@@ -23,25 +23,24 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
 import { NewItemComponent } from '../../components/new-item/new-item.component';
 
 @Component({
-  selector: 'app-statuses-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginator,
-    MatPaginatorModule,
-    MatSort,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    MatSortHeader,
-    DnToolbarComponent,
-    MatTooltipModule
-  ],
-  templateUrl: './statuses-list.component.html',
-  styleUrl: './statuses-list.component.css',
+    selector: 'app-statuses-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginator,
+        MatPaginatorModule,
+        MatSort,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        MatSortHeader,
+        DnToolbarComponent,
+        MatTooltipModule
+    ],
+    templateUrl: './statuses-list.component.html',
+    styleUrl: './statuses-list.component.css'
 })
 export class StatusesListComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;

@@ -17,17 +17,15 @@ import { HttpClient } from '@angular/common/http';
 import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
 
 @Component({
-  selector: 'app-login',
-  standalone: true,
-  imports: [
-    MatFormFieldModule,
-    MatLabel,
-    CommonModule,
-    FormsModule,
-    MatInputModule,
-  ],
-  templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
+    selector: 'app-login',
+    imports: [
+        MatFormFieldModule,
+        CommonModule,
+        FormsModule,
+        MatInputModule,
+    ],
+    templateUrl: './login.component.html',
+    styleUrl: './login.component.css'
 })
 export class LoginComponent {
   loginData: LoginDto = new LoginDto();

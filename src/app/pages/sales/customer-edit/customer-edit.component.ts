@@ -25,25 +25,23 @@ import { DnTextboxComponent } from "../../components/dn-textbox/dn-textbox.compo
 
 
 @Component({
-  selector: 'app-customer-edit',
-  standalone: true,
-  imports: [
-    FormsModule,
-    MatInputModule,
-    MatToolbarModule,
-    MatIconModule,
-    HttpClientModule,
-    MatSortModule,
-    MatSnackBarModule,
-    CommonModule,
-    MatDialogModule,
-    DnToolbarComponent,
-    DnCheckboxComponent,
-    DnTextboxComponent
-],
-  providers: [TabsService],
-  templateUrl: './customer-edit.component.html',
-  styleUrl: './customer-edit.component.css',
+    selector: 'app-customer-edit',
+    imports: [
+        FormsModule,
+        MatInputModule,
+        MatToolbarModule,
+        MatIconModule,
+        HttpClientModule,
+        MatSortModule,
+        MatSnackBarModule,
+        CommonModule,
+        MatDialogModule,
+        DnToolbarComponent,
+        DnTextboxComponent
+    ],
+    providers: [TabsService],
+    templateUrl: './customer-edit.component.html',
+    styleUrl: './customer-edit.component.css'
 })
 
 export class CustomerEditComponent implements OnInit, OnDestroy {

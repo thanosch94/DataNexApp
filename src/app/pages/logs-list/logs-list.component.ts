@@ -14,22 +14,21 @@ import { LogsViewModel } from '../../view-models/logs.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 
 @Component({
-  selector: 'app-logs-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatTableModule,
-    HttpClientModule,
-    DnToolbarComponent,
-    DnGridComponent,
-  ],
-  templateUrl: './logs-list.component.html',
-  styleUrl: './logs-list.component.css',
+    selector: 'app-logs-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatInputModule,
+        MatFormFieldModule,
+        MatTableModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        DnGridComponent,
+    ],
+    templateUrl: './logs-list.component.html',
+    styleUrl: './logs-list.component.css'
 })
 export class LogsListComponent {
   columns:any[]

@@ -16,20 +16,18 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { CompaniesViewModel } from '../../../view-models/companies.viewmodel';
 
 @Component({
-  selector: 'app-companies-list',
-  standalone: true,
-  imports: [
-    MatButtonModule,
-    MatIconModule,
-
-    HttpClientModule,
-    DnToolbarComponent,
-    MatTooltipModule,
-    DnGridComponent,
-    FontAwesomeModule,
-  ],
-  templateUrl: './companies-list.component.html',
-  styleUrl: './companies-list.component.css',
+    selector: 'app-companies-list',
+    imports: [
+        MatButtonModule,
+        MatIconModule,
+        HttpClientModule,
+        DnToolbarComponent,
+        MatTooltipModule,
+        DnGridComponent,
+        FontAwesomeModule,
+    ],
+    templateUrl: './companies-list.component.html',
+    styleUrl: './companies-list.component.css'
 })
 export class CompaniesListComponent {
   @ViewChild('companiesGrid')

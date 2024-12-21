@@ -14,11 +14,10 @@ import { VatClassDto } from '../../../dto/vat-class.dto';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 
 @Component({
-  selector: 'app-vat-classes',
-  standalone: true,
-  imports: [DnGridComponent, DnToolbarComponent],
-  templateUrl: './vat-classes.component.html',
-  styleUrl: './vat-classes.component.css'
+    selector: 'app-vat-classes',
+    imports: [DnGridComponent, DnToolbarComponent],
+    templateUrl: './vat-classes.component.html',
+    styleUrl: './vat-classes.component.css'
 })
 export class VatClassesComponent {
   @ViewChild(MatPaginator) paginator: MatPaginator;
