@@ -1,4 +1,3 @@
-
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import {
@@ -42,7 +41,7 @@ import {
 } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Guid } from 'guid-typescript';
-import { Observable } from 'rxjs';
+import { firstValueFrom, Observable } from 'rxjs';
 import { WebAppBase } from '../../../base/web-app-base';
 import { BrandDto } from '../../../dto/brand.dto';
 import { ProductBarcodeDto } from '../../../dto/product-barcode.dto';
@@ -60,40 +59,56 @@ import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { VatClassesViewModel } from '../../../view-models/vat-classes.viewmodel';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-
+import { ProductsService } from '../../../services/products.service';
+import { Store } from '@ngrx/store';
+import {
+  insertProduct,
+  insertProductSuccess,
+  loadProductById,
+  updateProduct,
+  updateProductSuccess,
+} from '../../../state/products/products.actions';
+import { selectProductById } from '../../../state/products/products.selectors';
+import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
+import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
+import { DnNumberBoxComponent } from '../../components/dn-number-box/dn-number-box.component';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
-    selector: 'product-edit',
-    imports: [
-        FormsModule,
-        MatFormFieldModule,
-        HttpClientModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatIconModule,
-        CommonModule,
-        MatSelectModule,
-        CdkTextareaAutosize,
-        TextFieldModule,
-        MatButtonModule,
-        MatPaginator,
-        MatPaginatorModule,
-        MatSort,
-        MatSortModule,
-        MatTableModule,
-        MatSortHeader,
-        MatTabsModule,
-        MatButtonModule,
-        MatDialogModule,
-        DnToolbarComponent,
-        AsyncPipe,
-    ],
-    providers: [TabsService],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    templateUrl: './product-edit.component.html',
-    styleUrl: './product-edit.component.css'
+  selector: 'product-edit',
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatIconModule,
+    CommonModule,
+    MatSelectModule,
+    CdkTextareaAutosize,
+    TextFieldModule,
+    MatButtonModule,
+    MatPaginator,
+    MatPaginatorModule,
+    MatSort,
+    MatSortModule,
+    MatTableModule,
+    MatSortHeader,
+    MatTabsModule,
+    MatButtonModule,
+    MatDialogModule,
+    DnToolbarComponent,
+    AsyncPipe,
+    DnSelectboxComponent,
+    DnTextboxComponent,
+    DnNumberBoxComponent,
+  ],
+  providers: [TabsService],
+
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+  templateUrl: './product-edit.component.html',
+  styleUrl: './product-edit.component.css',
 })
 export class ProductEditComponent implements OnInit, OnDestroy {
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
@@ -101,7 +116,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   @ViewChild('optionSelected') optionSelected: MatOption;
   sizeControl = new FormControl('');
   brandControl = new FormControl('');
-  product = new ProductDto();
+  product: any;
   product_text: string;
   productsViewModel: ProductsViewModel;
   productId: any;
@@ -120,11 +135,11 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   sizeName: any;
   brandsViewModel: BrandsViewModel;
   brands: any;
-  filteredBrands: Observable<BrandDto[]>;
   previousTabName: string;
   vatClassName: any;
   vatClassesViewModel: VatClassesViewModel;
   vatClasses: any;
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -133,15 +148,25 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private tabsService: TabsService,
     private ref: ChangeDetectorRef,
-    private sanitizer:DomSanitizer,
+    private sanitizer: DomSanitizer,
+    private productsService: ProductsService,
+    private store: Store,
+    private actions$: Actions,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.productsViewModel = new ProductsViewModel(this.productsService);
     this.productBarcodesViewModel = new ProductBarcodesViewModel(
       this.http,
       this.auth
     );
+    this.productSizesViewModel = new ProductSizesViewModel(
+      this.http,
+      this.auth
+    );
+    this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
     this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
+
+
     //If opens from dialog
     if (data) {
       this.productId = data.product.ProductId;
@@ -151,54 +176,83 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       WebAppBase.data = undefined;
       this.isDialog = false;
     }
-    this.productSizesViewModel = new ProductSizesViewModel(
-      this.http,
-      this.auth
-    );
-    this.vatClassesViewModel =new VatClassesViewModel(this.http, this.auth)
-    //if(isDevMode()){
-    //  this.noImgPath = "../assets/images/no-img.jpg"
-    //}else{
-    this.noImgPath = './assets/images/no-img.jpg';
 
-    // }
+    this.noImgPath = './assets/images/no-img.jpg';
+    this.getLookups();
   }
 
   ngOnInit() {
+    this.setInsertProductSuccessActionResult();
+    this.setUpdateProductSuccessActionResult();
     this.getData();
   }
 
-  async getData() {
-    await this.vatClassesViewModel.GetAll().subscribe((result:any)=>{
-      this.vatClasses = result
-    })
-    this.brandsViewModel.GetAll().subscribe((result: any) => {
-      this.brands = result as Array<BrandDto>;
+  setUpdateProductSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(updateProductSuccess), take(1))
+      .subscribe((result: any) => {
+        this.previousTabName = this.product_text.toString();
+        this.product = result.product;
+        this.product_text = this.product.Sku + ' - ' + this.product.Name;
+        this.tabsService.setTabNameByOldName(
+          this.product_text,
+          this.previousTabName
+        );
+        this._snackBar.open('Record updated', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+      });
+  }
 
-      this.filteredBrands = this.brandControl.valueChanges.pipe(
-        startWith(''),
-        map((value) => this._brandsfilter(value || ''))
-      );
-    });
+  setInsertProductSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(insertProductSuccess), take(1))
+      .subscribe((result: any) => {
+        this.product = result.product;
+        this.productId = this.product.Id;
+        this.previousTabName = this.product_text.toString();
+        this.product_text = this.product.Sku + ' - ' + this.product.Name;
+        this.tabsService.setTabNameByOldName(
+          this.product_text,
+          this.previousTabName
+        );
+        this.getData()
+        this._snackBar.open('Record inserted', '', {
+          duration: 1000,
+          panelClass: 'green-snackbar',
+        });
+      });
+  }
+
+  async getLookups() {
+    let obs1 = this.brandsViewModel.GetAll();
+    this.brands = await firstValueFrom(obs1);
+
+    let obs2 = this.vatClassesViewModel.GetAll();
+    this.vatClasses = await firstValueFrom(obs2);
+
+    this.ref.detectChanges();
+  }
+
+  getData() {
     if (this.productId) {
-      this.productsViewModel
-        .GetById(this.productId)
-        .subscribe((result: any) => {
-          result as ProductDto;
-          this.product = result;
-          let vatClass = this.vatClasses.find((x:any)=>x.Id==this.product.VatClassId)
-          this.vatClassName = vatClass.Name
+      this.store.dispatch(loadProductById({ id: this.productId }));
+      this.store
+        .select(selectProductById(this.productId))
+        .subscribe((product) => {
+          this.product = { ...product } as ProductDto;
           this.product_text = this.product.Sku + ' - ' + this.product.Name;
-
           this.tabsService.setTabName(
             this.product.Sku + ' - ' + this.product.Name
           );
 
           this.getProductBarcodesData();
+
+          this.productSizesViewModel.GetAll().subscribe((result: any) => {
+            this.productsSizes = result as ProductSizeDto[];
+          });
         });
-      this.productSizesViewModel.GetAll().subscribe((result: any) => {
-        this.productsSizes = result as ProductSizeDto[];
-      });
     } else {
       this.product_text = 'New Product';
       this.product = new ProductDto();
@@ -210,6 +264,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       map((value: string | null) => this.sizefilter(value || ''))
     );
   }
+
   private getProductBarcodesData() {
     this.productBarcodesViewModel
       .GetByProductId(this.productId)
@@ -229,12 +284,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     );
   }
 
-  private _brandsfilter(value: string): BrandDto[] {
-    const filterValue = value.toLowerCase();
-    return this.brands.filter((brand: ProductDto) =>
-      brand.Name.toLowerCase().includes(filterValue)
-    );
-  }
   onCloseClicked(e: any) {
     this.router.navigate(['products-list']);
   }
@@ -256,6 +305,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   deleteItem(data: any) {
     this.productsViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
@@ -277,37 +327,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   }
 
   onSaveClicked(e: any) {
-    this.product.Id = this.productId;
-    if (this.product.Id != null && this.product.Id != Guid.parse(Guid.EMPTY)) {
-      this.productsViewModel
-        .UpdateDto(this.product)
-        .subscribe((result: any) => {
-          if (result) {
-            this.previousTabName = this.product_text.toString()
-            this.product = result;
-            this.product_text =this.product.Sku + ' - ' + this.product.Name
-            this.tabsService.setTabNameByOldName(this.product_text, this.previousTabName)
-            this._snackBar.open('Record updated', '', {
-              duration: 1000,
-              panelClass: 'green-snackbar',
-            });
-          }
-        });
+    if (this.product.Id != null) {
+      this.store.dispatch(updateProduct({ dto: this.product }));
     } else {
-      this.productsViewModel
-        .InsertDto(this.product)
-        .subscribe((result: any) => {
-          this.product = result;
-          this.productId = this.product.Id
-          this.previousTabName = this.product_text.toString()
-          this.product = result;
-          this.product_text =this.product.Sku + ' - ' + this.product.Name
-          this.tabsService.setTabNameByOldName(this.product_text, this.previousTabName)
-          this._snackBar.open('Record inserted', '', {
-            duration: 1000,
-            panelClass: 'green-snackbar',
-          });
-        });
+      this.store.dispatch(insertProduct({ dto: this.product }));
     }
   }
 
@@ -334,19 +357,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     }
   }
 
-  onProductBrandSelection(value: string) {
-    let selectedBrand = this.brands.find(
-      (brand: BrandDto) => brand.Name == value
-    );
-
-    if (selectedBrand) {
-      this.product.BrandId = selectedBrand.Id;
-      this.product.BrandName = selectedBrand.Name;
-    }
-  }
   editProductBarcode(data: any, index: number) {
     this.barcodesDataSource.data[index].IsEditable = true;
   }
+
   stopEditingProductBarcodes(data: any, index: number) {
     if (data.Id) {
       this.barcodesDataSource.data[index].IsEditable = false;
@@ -460,21 +474,4 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   onRefreshClicked(e: any) {
     this.getData();
   }
-
-  onVatClassSelectionChanged(data: any) {
-    this.vatClassName = data.Name
-  }
-
-
-  displayFn(data: any): string {
-    if (data?.Name) {
-      if(this.product){
-        this.product.VatClassId = data.Id
-      }
-      return data.Name;
-    } else {
-      return data;
-    }
-  }
-
 }

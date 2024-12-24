@@ -97,9 +97,9 @@ export class ProductSizesListComponent implements OnInit {
   }
 
   deleteProductSize(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
+    let dialogRef = this.dialog.open(DeleteConfirmComponent, {
+        maxHeight:'230px',
+        data: {
         title: 'Title',
         message: 'message',
         confirmText: 'Yes',
@@ -126,6 +126,7 @@ export class ProductSizesListComponent implements OnInit {
       },
       error: (err) => {
         const dialog = this.dialog.open(DnAlertComponent, {
+          height:'auto',
           data: {
             Title: 'Message',
             Message: err.error.innerExceptionMessage,

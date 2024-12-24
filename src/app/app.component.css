@@ -287,3 +287,18 @@ margin-right: auto;
     height:35px!important;
 
   }
+
+
+/* Dialog Css */
+  /* ::ng-deep .mat-mdc-dialog-container{
+    max-width: unset!important;
+  }
+
+  ::ng-deep .mat-mdc-dialog-surface{
+    height: unset!important;
+    width: unset!important;
+
+  } */
+  /* .mdc-dialog, .mdc-dialog__scrim{
+    position: relative;
+  } */

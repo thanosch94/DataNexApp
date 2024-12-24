@@ -10,7 +10,7 @@
 <div class="margin">
 
   <dn-grid  #productsGrid
-  [dataSource]="dataSource"
+  [dataSource]="dataSource|async"
   [columns]="columns"
   [canDisplaySearch]="true"
   [enableAddButton]="false"

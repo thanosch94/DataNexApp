@@ -76,6 +76,7 @@ import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
 import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
+import { ProductsService } from '../../services/products.service';
 
 @Component({
     selector: 'app-document-edit',
@@ -176,7 +177,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private tabsService: TabsService,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private productsService:ProductsService
   ) {
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
       this.http,
@@ -207,7 +209,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
 
     })
     this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
-    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.productsViewModel = new ProductsViewModel(this.productsService);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     this.documentAdditionalChargesViewModel =
@@ -827,7 +829,8 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     if (this.documentId) {
       const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
         width: '750px',
-        height: '550px',
+        height:'500px',
+        maxHeight: '50vh',
         data: {
           DocumentId: this.documentId,
         },

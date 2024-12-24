@@ -155,9 +155,12 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   public set dataSource(v: any) {
     this._dataSource = v;
     if (this._dataSource?.length > 0) {
-      for (let i = 0; i < this._dataSource.length; i++) {
-        this.dataSource[i].DataSource = [];
-      }
+      this._dataSource = this._dataSource.map((item:any) => {
+        return {
+          ...item,
+          DataSource: []
+        };
+      });
     }
     this.matDataSource = new MatTableDataSource(this._dataSource);
     this.matDataSource.paginator = this.paginator;

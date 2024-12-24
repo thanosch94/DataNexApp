@@ -17,6 +17,7 @@ import { ProductsViewModel } from '../../../view-models/products.viewmodel';
 import { ProductDto } from '../../../dto/product.dto';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
+import { ProductsService } from '../../../services/products.service';
 
 @Component({
     selector: 'app-lots-list',
@@ -45,6 +46,7 @@ export class LotsListComponent implements OnInit {
     private auth: AuthService,
     private _snackBar: MatSnackBar,
     private dialog:MatDialog,
+    private productsService: ProductsService,
     @Optional()private dialogRef:MatDialogRef<LotsListComponent>,
     @Optional() private viewContainerRef: ViewContainerRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
@@ -52,7 +54,7 @@ export class LotsListComponent implements OnInit {
   ) {
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
-    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.productsViewModel = new ProductsViewModel(this.productsService);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.productsViewModel.GetLookup().subscribe((result:ProductDto[])=>{
       this.productsDataSource = result

@@ -96,6 +96,7 @@ export class BrandsListComponent implements OnInit {
   deleteBrand(data: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
+      maxHeight:'300px',
       data: {
         title: 'Title',
         message: 'message',

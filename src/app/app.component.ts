@@ -42,6 +42,7 @@ import {
   MatAutocompleteModule,
   MatOptgroup,
 } from '@angular/material/autocomplete';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @Component({
@@ -65,11 +66,9 @@ import {
         MatIconModule,
         MatAutocompleteModule,
         MatOptgroup,
-        AsyncPipe,
         FormsModule,
         ReactiveFormsModule,
     ],
-    providers: [AuthService, HttpClientModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
 })

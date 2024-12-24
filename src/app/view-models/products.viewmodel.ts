@@ -1,56 +1,75 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Guid } from "guid-typescript";
-import { DocumentProductDto } from "../dto/document-product.dto";
-import { ProductDto } from "../dto/product.dto";
-import { AuthService } from "../services/auth.service";
+import { ProductsService } from './../services/products.service';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Guid } from 'guid-typescript';
+import { DocumentProductDto } from '../dto/document-product.dto';
+import { ProductDto } from '../dto/product.dto';
+import { AuthService } from '../services/auth.service';
+import { catchError, of, tap } from 'rxjs';
 
 export class ProductsViewModel {
   service: string;
   headers: any;
-  constructor(private http: HttpClient, private auth:AuthService) {
-    this.service = this.auth.getApiService();
-    this.headers = this.auth.getHeaders();
-
-  }
+  constructor(private productsService: ProductsService) {}
 
   public GetAll() {
-    return this.http.get(this.service + 'Products/getall', {
-      headers: this.headers,
-    });
+    return this.productsService.GetAll().pipe(
+      catchError((error) => {
+        //log Error
+        return of([]);
+      })
+    );
   }
 
   public GetLookup() {
-    return this.http.get<ProductDto[]>(this.service + 'Products/getlookup', {
-      headers: this.headers,
-    });
+    return this.productsService.GetLookup().pipe(
+      catchError((error) => {
+        //log Error
+        return of([]);
+      })
+    );
   }
 
   public GetById(id: Guid) {
-    return this.http.get(this.service + 'Products/getbyid/' + id, {
-      headers: this.headers,
-    });
+    return this.productsService.GetById(id).pipe(
+      catchError((error) => {
+        //log Error
+        let data = new ProductDto();
+        return of(data);
+      })
+    );
   }
   public GetBySku(sku: string) {
-    return this.http.get<ProductDto>(this.service + 'Products/getbysku/' + sku, {
-      headers: this.headers,
-    });
+    return this.productsService.GetBySku(sku).pipe(
+      catchError((error) => {
+        //log Error
+        let data = new ProductDto();
+        return of(data);
+      })
+    );
   }
 
   public InsertDto(product: ProductDto) {
-    return this.http.post(this.service + 'Products/insertdto', product, {
-      headers: this.headers,
-    });
+    return this.productsService.InsertDto(product).pipe(
+      catchError((error) => {
+        //log Error
+        return of(product);
+      })
+    )
   }
 
   public UpdateDto(product: ProductDto) {
-    return this.http.put(this.service + 'Products/updatedto', product, {
-      headers: this.headers,
-    });
-
+    return this.productsService.UpdateDto(product).pipe(
+      catchError((error) => {
+        //log Error
+        return of(product);
+      }))
   }
   public DeleteById(id: Guid) {
-    return this.http.delete(this.service + 'Products/deletebyid/' + id, {
-      headers: this.headers,
-    });
+    return this.productsService.DeleteById(id).pipe(
+      catchError((error) => {
+        //log Error
+        let data = new ProductDto();
+        return of(data);
+      }))
   }
 }

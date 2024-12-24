@@ -1,3 +1,4 @@
+import { ProductsService } from './../../../services/products.service';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -26,6 +27,10 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { AuthService } from '../../../services/auth.service';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
+import { Store } from '@ngrx/store';
+import { getAllProducts } from '../../../state/products/products.actions';
+import { AsyncPipe } from '@angular/common';
+import { selectAllProducts } from '../../../state/products/products.selectors';
 
 @Component({
     selector: 'app-products-list',
@@ -41,6 +46,7 @@ import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
         DnToolbarComponent,
         MatTooltipModule,
         DnGridComponent,
+        AsyncPipe
     ],
     templateUrl: './products-list.component.html',
     styleUrl: './products-list.component.css'
@@ -58,9 +64,11 @@ export class ProductsListComponent implements OnInit {
     private auth: AuthService,
     private router: Router,
     public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private productsService:ProductsService,
+    private store:Store
   ) {
-    this.productsViewModel = new ProductsViewModel(this.http, this.auth);
+    this.productsViewModel = new ProductsViewModel(this.productsService);
     this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
     this.brandsViewModel.GetAll().subscribe((result: any) => {
       this.brands = result;
@@ -76,9 +84,15 @@ export class ProductsListComponent implements OnInit {
   }
 
   getData() {
-    this.productsViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = result;
-    });
+    this.store.dispatch(getAllProducts())
+
+    this.dataSource = this.store.select(selectAllProducts);
+debugger
+    // this.productsViewModel.GetAll().subscribe((result: any) => {
+    //   debugger
+    //   this.dataSource = result;
+    // });
+
   }
 
   getColumns() {
