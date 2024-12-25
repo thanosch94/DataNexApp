@@ -9,9 +9,11 @@ import { ProductEffects } from './state/products/products.effects';
 import { provideStore } from '@ngrx/store';
 import { productsReducer } from './state/products/products.reducer';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
+import { brandsReducer } from './state/parameters/brands/brands.reducer';
+import { BrandsEffects } from './state/parameters/brands/brands.effects';
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes), provideAnimations(), provideHttpClient(), provideStore({ products: productsReducer }), provideEffects([ProductEffects]),   provideStoreDevtools({
+  providers: [provideRouter(routes), provideAnimations(), provideHttpClient(), provideStore({ products: productsReducer, brands:brandsReducer }), provideEffects([ProductEffects, BrandsEffects]),   provideStoreDevtools({
     maxAge: 25, // Retains last 25 states
     logOnly: !isDevMode(), // Restrict extension to log-only mode
     autoPause: true, // Pauses recording actions and state changes when the extension window is not open

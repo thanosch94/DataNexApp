@@ -97,24 +97,6 @@ export class ProductSizesListComponent implements OnInit {
   }
 
   deleteProductSize(data: any) {
-    let dialogRef = this.dialog.open(DeleteConfirmComponent, {
-        maxHeight:'230px',
-        data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-      }
-    });
-  }
-
-  deleteItem(data: any) {
     this.productSizesViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
         this.getData();

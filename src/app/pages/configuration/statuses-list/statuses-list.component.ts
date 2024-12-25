@@ -140,24 +140,6 @@ export class StatusesListComponent implements OnInit {
   }
 
   deleteStatus(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-      }
-    });
-  }
-
-  deleteItem(data: any) {
     this.statusesViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
         this.getData();
@@ -177,6 +159,7 @@ export class StatusesListComponent implements OnInit {
       },
     });
   }
+
 
   onRefreshBtnClicked(e: any) {
     this.getData();

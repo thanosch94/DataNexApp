@@ -112,6 +112,7 @@ export class UsersListComponent implements OnInit {
       }
     ]
   }
+
   editUser(data: any) {
     WebAppBase.data = data.Id;
     this.router.navigate(['user-edit']);
@@ -121,27 +122,7 @@ export class UsersListComponent implements OnInit {
     this.router.navigate(['user-edit']);
   }
 
-
-
   deleteUser(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-      }
-    });
-  }
-
-  deleteItem(data: any) {
     this.usersViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
         this.getData();

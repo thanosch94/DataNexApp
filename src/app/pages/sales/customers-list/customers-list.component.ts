@@ -138,26 +138,20 @@ export class CustomersListComponent implements OnInit {
   }
 
 
-
-  deleteCustomer(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-      }
-    });
+  onInsertClicked(e: any) {
+    this.router.navigate(['customer-edit']);
   }
 
-  deleteItem(data: any) {
+  onRefreshClicked(e: any) {
+    this.getData();
+  }
+
+  onRowEditing(e:any){
+    WebAppBase.data = e.Id;
+    this.router.navigate(['customer-edit']);
+  }
+
+  onRowDelete(data:any){
     this.customersViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
         this.getData();
@@ -175,23 +169,5 @@ export class CustomersListComponent implements OnInit {
           },
         });
       },
-    });
-  }
-
-  onInsertClicked(e: any) {
-    this.router.navigate(['customer-edit']);
-  }
-
-  onRefreshClicked(e: any) {
-    this.getData();
-  }
-
-  onRowEditing(e:any){
-    WebAppBase.data = e.Id;
-    this.router.navigate(['customer-edit']);
-  }
-
-  onRowDelete(e:any){
-    this.deleteCustomer(e)
-  }
+    });  }
 }

@@ -20,7 +20,7 @@ import {
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -51,6 +51,7 @@ import { DnNumberBoxComponent } from '../dn-number-box/dn-number-box.component';
 import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
 import { DnSelectboxComponent } from "../dn-selectbox/dn-selectbox.component";
 import { SelectionModel } from '@angular/cdk/collections';
+import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 
 @Component({
     selector: 'dn-grid',
@@ -174,7 +175,8 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   matDataSource: MatTableDataSource<any>;
   isEditable: boolean = false;
 
-  constructor(private ref: ChangeDetectorRef, private ngZone: NgZone) {
+  constructor(private ref: ChangeDetectorRef, private ngZone: NgZone, private dialog: MatDialog
+  ) {
     this.matDataSource = new MatTableDataSource(this.dataSource);
     this.zeroMin = 0;
   }
@@ -266,8 +268,24 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   deleteRow(data: any, index: number) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      maxHeight:'300px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.onRowDelete.emit(data);
+      } else {
+        //No action
+      }
+    });
     data.rowIndex = index;
-    this.onRowDelete.emit(data);
   }
 
   selectHandler(row: any) {

@@ -284,25 +284,6 @@ export class LotsListComponent implements OnInit {
   }
 
   onRowDeleting(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm:any) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-        //No action
-      }
-    });
-  }
-
-  deleteItem(data:any){
     this.lotsViewModel.DeleteById(data.Id).subscribe({
       next: (result)=>{
         if (result) {

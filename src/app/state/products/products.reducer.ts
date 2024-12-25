@@ -20,14 +20,14 @@ export interface ProductsState {
   error: string | null;
 }
 
-export const initialState: ProductsState = {
+export const initialProductsState: ProductsState = {
   products: [],
   selectedProducts: [],
   error: null,
 };
 
 export const productsReducer = createReducer(
-  initialState,
+  initialProductsState,
   //GetAll
   on(getAllProducts, (state) => ({ ...state })),
   on(loadProductsSuccess, (state, { products }) => ({

@@ -44,7 +44,6 @@ export class ProductsService {
   }
 
   public UpdateDto(product: ProductDto) {
-    debugger
     return this.http.put(this.service + 'Products/updatedto', product, {
       headers: this.auth.headers,
     });

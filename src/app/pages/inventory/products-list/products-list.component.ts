@@ -1,17 +1,13 @@
 import { ProductsService } from './../../../services/products.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import {
-  MatTable,
-  MatTableDataSource,
-  MatTableModule,
-} from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 
 import { MatDialog } from '@angular/material/dialog';
@@ -19,9 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ProductsViewModel } from '../../../view-models/products.viewmodel';
-import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { ProductDto } from '../../../dto/product.dto';
 import { WebAppBase } from '../../../base/web-app-base';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { AuthService } from '../../../services/auth.service';
@@ -33,23 +27,22 @@ import { AsyncPipe } from '@angular/common';
 import { selectAllProducts } from '../../../state/products/products.selectors';
 
 @Component({
-    selector: 'app-products-list',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatTableModule,
-        HttpClientModule,
-        DnToolbarComponent,
-        MatTooltipModule,
-        DnGridComponent,
-        AsyncPipe
-    ],
-    templateUrl: './products-list.component.html',
-    styleUrl: './products-list.component.css'
+  selector: 'app-products-list',
+  imports: [
+    MatButtonModule,
+    MatIconModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatTableModule,
+    DnToolbarComponent,
+    MatTooltipModule,
+    DnGridComponent,
+    AsyncPipe,
+  ],
+  templateUrl: './products-list.component.html',
+  styleUrl: './products-list.component.css',
 })
 export class ProductsListComponent implements OnInit {
   dataSource: any;
@@ -65,15 +58,14 @@ export class ProductsListComponent implements OnInit {
     private router: Router,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
-    private productsService:ProductsService,
-    private store:Store
+    private productsService: ProductsService,
+    private store: Store
   ) {
     this.productsViewModel = new ProductsViewModel(this.productsService);
     this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
     this.brandsViewModel.GetAll().subscribe((result: any) => {
       this.brands = result;
       this.getColumns();
-
     });
     this.products_list_text = 'Products List';
   }
@@ -84,15 +76,9 @@ export class ProductsListComponent implements OnInit {
   }
 
   getData() {
-    this.store.dispatch(getAllProducts())
+    this.store.dispatch(getAllProducts());
 
     this.dataSource = this.store.select(selectAllProducts);
-debugger
-    // this.productsViewModel.GetAll().subscribe((result: any) => {
-    //   debugger
-    //   this.dataSource = result;
-    // });
-
   }
 
   getColumns() {
@@ -123,7 +109,6 @@ debugger
         DataField: 'BrandName',
         DataType: 'string',
         Caption: 'Brand',
-
       },
       // {
       //   DataField: 'Brand',
@@ -157,24 +142,6 @@ debugger
   }
 
   deleteProduct(data: any) {
-    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
-      width: '320px',
-      data: {
-        title: 'Title',
-        message: 'message',
-        confirmText: 'Yes',
-        cancelText: 'No',
-      },
-    });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
-        this.deleteItem(data);
-      } else {
-      }
-    });
-  }
-
-  deleteItem(data: any) {
     this.productsViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
         this.getData();

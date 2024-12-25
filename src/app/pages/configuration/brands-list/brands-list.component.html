@@ -7,14 +7,15 @@
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
-  <dn-grid  #productSizesGrid
-  [dataSource]="dataSource"
+  <dn-grid  #brandsGrid
+  [dataSource]="dataSource |async"
   [columns]="columns"
   [canDisplaySearch]="true"
   [enableAddButton]="false"
   [canDelete]="true"
   (onRowSaving)="onRowSaving($event)"
-  (onRowDelete)="deleteBrand($event)"
+  (onRowDelete)="onRowDelete($event)"
+  (onRowStopEditing)="onRowStopEditing($event)"
   >
 
   </dn-grid>
