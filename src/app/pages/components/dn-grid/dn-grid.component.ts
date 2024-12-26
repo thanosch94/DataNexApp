@@ -217,6 +217,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
         Object.defineProperty(newRow, column.DataField, {
           value: column.DefaultValue,
           writable: true,
+          enumerable: true
         });
       });
       Object.defineProperty(newRow, 'IsEditable', {

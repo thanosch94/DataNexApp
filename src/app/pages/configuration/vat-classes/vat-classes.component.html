@@ -8,14 +8,13 @@
 ></dn-toolbar>
 <div class="margin">
     <dn-grid #vatClassesGrid
-    [dataSource]="vatClassesDataSource"
-    [columns]="vatClassesColumns"
+    [dataSource]="dataSource |async"
+    [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowSaving)="onVatClassSaving($event)"
     (onRowDelete)="onVatClassDelete($event)"
     (onRowStopEditing)="onVatClassStopEditing($event)"
     >
-
     </dn-grid>
 </div>

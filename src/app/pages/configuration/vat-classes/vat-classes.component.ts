@@ -1,64 +1,114 @@
 import { Component, ViewChild } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { VatClassesViewModel } from '../../../view-models/vat-classes.viewmodel';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { TabsService } from '../../../services/tabs.service';
-import { AuthService } from '../../../services/auth.service';
-import { HttpClient } from '@angular/common/http';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { VatClassDto } from '../../../dto/vat-class.dto';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { Store } from '@ngrx/store';
+import {
+  DeleteVatClassById,
+  DeleteVatClassByIdFailure,
+  DeleteVatClassByIdSuccess,
+  GetAllVatClasses,
+  InsertVatClassDto,
+  InsertVatClassDtoSuccess,
+  UpdateVatClassDto,
+  UpdateVatClassDtoFailure,
+  UpdateVatClassDtoSuccess,
+} from '../../../state/parameters/vat-classes/vat-classes.actions';
+import { selectAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.selectors';
+import { AsyncPipe } from '@angular/common';
+import { Observable } from 'rxjs';
+import { Actions, ofType } from '@ngrx/effects';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
-    selector: 'app-vat-classes',
-    imports: [DnGridComponent, DnToolbarComponent],
-    templateUrl: './vat-classes.component.html',
-    styleUrl: './vat-classes.component.css'
+  selector: 'app-vat-classes',
+  imports: [DnGridComponent, DnToolbarComponent, AsyncPipe],
+  templateUrl: './vat-classes.component.html',
+  styleUrl: './vat-classes.component.css',
 })
-export class VatClassesComponent {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
+export class VatClassesComponent extends BaseComponent {
   @ViewChild('vatClassesGrid')
   vatClassesGrid: DnGridComponent;
-  vatClassesDataSource: any;
-  vatClass: any;
-  vatClassesViewModel: VatClassesViewModel;
+  dataSource: Observable<VatClassDto[]>;
   document_types_list_title_text: string;
-  vatClassesColumns: DnColumnDto[] = [];
-  chartOptions: any;
+  columns: DnColumnDto[] = [];
   vat_classes_list_title_text: string;
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private tabsService: TabsService,
-    private _snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private store: Store,
+    private actions$: Actions
   ) {
-    this.vatClassesViewModel = new VatClassesViewModel(
-      this.http,
-      this.auth
-    );
-
+    super();
     this.vat_classes_list_title_text = 'Vat Classes List';
   }
 
   ngOnInit() {
+    this.setActionsResults()
     this.getData();
     this.getColumns();
   }
 
-  getData() {
-    this.vatClassesViewModel.GetAll().subscribe((result: any) => {
-      this.vatClassesDataSource = result;
-    });
+  setActionsResults(){
+    this.setInsertDtoSuccessActionResult();
+    this.setUpdateDtoSuccessActionResult();
+    this.setUpdateDtoFailureActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
   }
+
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertVatClassDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record inserted');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateVatClassDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record updated');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateVatClassDtoFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteVatClassByIdSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteVatClassByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  getData() {
+    this.store.dispatch(GetAllVatClasses());
+    this.dataSource = this.store.select(selectAllVatClasses);
+  }
+
   getColumns() {
-    this.vatClassesColumns = [
+    this.columns = [
       {
         DataField: 'Id',
         DataType: 'string',
@@ -105,78 +155,24 @@ export class VatClassesComponent {
   }
 
   onVatClassSaving(data: VatClassDto) {
-    let vatClass = new VatClassDto();
-
-    if (data.Id) {
-      vatClass.Id = data.Id;
-    }
-    vatClass.Name = data.Name;
-    vatClass.Abbreviation = data.Abbreviation;
-    vatClass.Description = data.Description;
-    vatClass.Rate  =data.Rate
-    vatClass.IsActive = data.IsActive;
+    let vatClass:VatClassDto={...data};
 
     if (!vatClass.Id) {
-      this.vatClassesViewModel
-        .InsertDto(vatClass)
-        .subscribe((result: any) => {
-          this.displayNotification('Record inserted');
-          this.getData();
-        });
+      this.store.dispatch(InsertVatClassDto({ dto: vatClass }));
     } else {
-      if (data.Id)
-        this.vatClassesViewModel.UpdateDto(vatClass).subscribe({
-          next: (result: any) => {
-            this.displayNotification('Record updated');
-            this.getData();
-          },
-          error:(err:any)=>{
-            const dialog = this.dialog.open(DnAlertComponent, {
-              data: {
-                Title: 'Message',
-                Message: err.error,
-              },
-            });
-            this.getData()
-          }
-        });
-
+      this.store.dispatch(UpdateVatClassDto({ dto: vatClass }));
     }
   }
 
   onVatClassDelete(data: VatClassDto) {
-    this.vatClassesViewModel.DeleteById(data.Id).subscribe({
-      next: (result: any) => {
-        let index = this.vatClassesGrid.matDataSource.data.indexOf(data);
-        this.vatClassesGrid.matDataSource.data.splice(index, 1);
-        this.getData();
-        this.vatClassesGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      },
-      error: (err: any) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error,
-          },
-        });
-      },
-    });
+    this.store.dispatch(DeleteVatClassById({ id: data.Id }));
   }
 
   onVatClassStopEditing(e: any) {
     this.getData();
   }
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
-
   onRefreshClicked(e: any) {
     this.getData();
-    this.vatClassesGrid.renderRows();
   }
 }

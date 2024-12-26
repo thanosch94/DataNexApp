@@ -1,4 +1,3 @@
-import { error } from 'console';
 import { Injectable } from '@angular/core';
 import { BrandsService } from '../../../services/parameters/brands.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
@@ -18,7 +17,6 @@ import {
   UpdateBrandDtoSuccess,
 } from './brands.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
-import { BrandDto } from '../../../dto/brand.dto';
 
 @Injectable()
 export class BrandsEffects {
@@ -35,8 +33,7 @@ export class BrandsEffects {
         this.brandsService.GetAll().pipe(
           map((brands: any) => GetAllBrandsSuccess({ data: brands })),
           catchError((error: any) => {
-            debugger;
-            return of(GetAllBrandsFailure({ error: error }));
+            return of(GetAllBrandsFailure({ error }));
           })
         )
       )

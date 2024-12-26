@@ -37,8 +37,6 @@ export class BrandsListComponent implements OnInit {
   product_brands_list_text: string;
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
     public dialog: MatDialog,
     private _snackBar: MatSnackBar,
     private store: Store,

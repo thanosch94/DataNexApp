@@ -58,7 +58,10 @@ input, span
 {
     font-size:12px!important;
 }
-::ng-deep .green-snackbar .mdc-snackbar__surface {
-  background-color:#1b9e1b!important;
-  color: white;
+
+:root{
+   .green-snackbar .mdc-snackbar__surface {
+    background-color:#1b9e1b!important;
+    color: white;
+  }
 }
