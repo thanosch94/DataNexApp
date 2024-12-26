@@ -13,14 +13,16 @@ import { brandsReducer } from './state/parameters/brands/brands.reducer';
 import { BrandsEffects } from './state/parameters/brands/brands.effects';
 import { vatClassesReducer } from './state/parameters/vat-classes/vat-classes.reducer';
 import { VatClassesEffects } from './state/parameters/vat-classes/vat-classes.effects';
+import { AdditionalChargesEffects } from './state/parameters/additional-charges/additional-charges.effects';
+import { additionalChargesReducer } from './state/parameters/additional-charges/additional-charges.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    provideStore({ products: productsReducer, brands: brandsReducer, vatClasses:vatClassesReducer }),
-    provideEffects([ProductEffects, BrandsEffects, VatClassesEffects]),
+    provideStore({ products: productsReducer, brands: brandsReducer, vatClasses:vatClassesReducer, additionalCharges:additionalChargesReducer }),
+    provideEffects([ProductEffects, BrandsEffects, VatClassesEffects, AdditionalChargesEffects]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode

@@ -10,7 +10,7 @@
 <div class="margin">
   <dn-grid
   #additionalChargesGrid
-    [dataSource]="dataSource"
+    [dataSource]="dataSource|async"
     [columns]="columns"
     (onRowSaving)="onAdditionalChargeRowSaving($event)"
     (onRowStopEditing)="onAdditionalChargeRowStopEditing($event)"
