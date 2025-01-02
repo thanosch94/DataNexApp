@@ -23,7 +23,6 @@ export class BrandsEffects {
   constructor(
     private brandsService: BrandsService,
     private actions$: Actions,
-    private store: Store
   ) {}
 
   loadBrands$ = createEffect(() =>

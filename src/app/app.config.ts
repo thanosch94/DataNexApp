@@ -15,14 +15,28 @@ import { vatClassesReducer } from './state/parameters/vat-classes/vat-classes.re
 import { VatClassesEffects } from './state/parameters/vat-classes/vat-classes.effects';
 import { AdditionalChargesEffects } from './state/parameters/additional-charges/additional-charges.effects';
 import { additionalChargesReducer } from './state/parameters/additional-charges/additional-charges.reducer';
+import { StatusesEffects } from './state/parameters/statuses/statuses.effects';
+import { statusesReducer } from './state/parameters/statuses/statuses.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    provideStore({ products: productsReducer, brands: brandsReducer, vatClasses:vatClassesReducer, additionalCharges:additionalChargesReducer }),
-    provideEffects([ProductEffects, BrandsEffects, VatClassesEffects, AdditionalChargesEffects]),
+    provideStore({
+      products: productsReducer,
+      brands: brandsReducer,
+      vatClasses: vatClassesReducer,
+      additionalCharges: additionalChargesReducer,
+      statuses: statusesReducer,
+    }),
+    provideEffects([
+      ProductEffects,
+      BrandsEffects,
+      VatClassesEffects,
+      AdditionalChargesEffects,
+      StatusesEffects,
+    ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
       logOnly: !isDevMode(), // Restrict extension to log-only mode

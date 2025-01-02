@@ -1,13 +1,11 @@
 import { createReducer, on } from '@ngrx/store';
 import { BrandDto } from '../../../dto/brand.dto';
 import {
-  DeleteBrandById,
   DeleteBrandByIdFailure,
   DeleteBrandByIdSuccess,
   GetAllBrands,
   GetAllBrandsFailure,
   GetAllBrandsSuccess,
-  InsertBrandDto,
   InsertBrandDtoFailure,
   InsertBrandDtoSuccess,
   UpdateBrandDtoFailure,
@@ -40,7 +38,7 @@ export const brandsReducer = createReducer(
   })),
   on(InsertBrandDtoFailure, (state, {error})=>({
     ...state,
-    error:error
+    error
   })),
 
   //UpdateDto

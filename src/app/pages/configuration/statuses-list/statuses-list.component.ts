@@ -1,54 +1,41 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatSort, MatSortModule, MatSortHeader } from '@angular/material/sort';
-import {
-  MatTable,
-  MatTableDataSource,
-  MatTableModule,
-} from '@angular/material/table';
-import { MatTooltipModule } from '@angular/material/tooltip';
 import { StatusDto } from '../../../dto/status.dto';
 import { AuthService } from '../../../services/auth.service';
 import { StatusesViewModel } from '../../../view-models/statuses.viewmodel';
-import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { NewItemComponent } from '../../components/new-item/new-item.component';
+import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
+import { AsyncPipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import {
+  DeleteStatusById,
+  DeleteStatusByIdFailure,
+  DeleteStatusByIdSuccess,
+  GetAllStatuses,
+  InsertStatusDto,
+  InsertStatusDtoSuccess,
+  UpdateStatusDto,
+  UpdateStatusDtoFailure,
+  UpdateStatusDtoSuccess,
+} from '../../../state/parameters/statuses/statuses.actions';
+import { selectAllStatuses } from '../../../state/parameters/statuses/statuses.selectors';
+import { BaseComponent } from '../../components/base/base.component';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
-    selector: 'app-statuses-list',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatPaginator,
-        MatPaginatorModule,
-        MatSort,
-        MatSortModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatTableModule,
-        HttpClientModule,
-        MatSortHeader,
-        DnToolbarComponent,
-        MatTooltipModule
-    ],
-    templateUrl: './statuses-list.component.html',
-    styleUrl: './statuses-list.component.css'
+  selector: 'app-statuses-list',
+  imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
+  templateUrl: './statuses-list.component.html',
+  styleUrl: './statuses-list.component.css',
 })
-export class StatusesListComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator: MatPaginator;
-  @ViewChild(MatSort) sort: MatSort;
-  @ViewChild('statusTable') statusTable: MatTable<StatusDto>;
-
-  displayedColumns: string[] = ['Name', 'buttons'];
-  dataSource: MatTableDataSource<StatusDto>;
+export class StatusesListComponent extends BaseComponent implements OnInit {
+  @ViewChild('statusGrid')
+  statusGrid: DnGridComponent;
+  columns: any[];
+  dataSource: any;
   status: any;
   statusesViewModel: StatusesViewModel;
   statuses_list_text: string;
@@ -56,113 +43,121 @@ export class StatusesListComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    public dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private store: Store,
+    private actions$: Actions
   ) {
+    super();
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     this.statuses_list_text = 'Statuses List';
   }
 
   ngOnInit() {
+    this.setActionsResults();
     this.getData();
+    this.getColumns();
+  }
+
+  setActionsResults() {
+    this.setInsertDtoSuccessActionResult();
+    this.setUpdateDtoSuccessActionResult();
+    this.setUpdateDtoFailureActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
+  }
+
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertStatusDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record inserted');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateStatusDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record updated');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateStatusDtoFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteStatusByIdSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteStatusByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
   }
 
   getData() {
-    this.statusesViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = new MatTableDataSource(result);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
-    });
+    this.store.dispatch(GetAllStatuses());
+    this.dataSource = this.store.select(selectAllStatuses);
   }
 
-  editStatus(data: any) {
-    this.status = data;
-    const dialogRef = this.dialog.open(NewItemComponent, {
-      width: '500px',
-      data: {
-        title: 'Edit Item',
-        name: this.status.Name,
+  getColumns() {
+    this.columns = [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
       },
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.updateItem(data);
-      } else {
-      }
-    });
-  }
-
-  updateItem(data: any) {
-    this.status.Name = data;
-    this.statusesViewModel.UpdateDto(this.status).subscribe((result: any) => {
-      this.getData();
-      this._snackBar.open('Record updated', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-    });
-  }
-
-  onInsertClicked(e: any) {
-    const dialogRef = this.dialog.open(NewItemComponent, {
-      width: '500px',
-      data: {
-        title: 'New Item',
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
       },
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      if (data) {
-        this.insertItem(data);
-      } else {
-      }
-    });
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
   }
 
-  insertItem(data: any) {
-    let status = new StatusDto();
-    status.Name = data;
-    this.statusesViewModel.InsertDto(status).subscribe((result: any) => {
-      this._snackBar.open('Record inserted', '', {
-        duration: 1000,
-        panelClass: 'green-snackbar',
-      });
-      this.getData();
-    });
-  }
+  onRowSaving(data: any) {
+    let status: StatusDto = { ...data };
 
-  applyFilter(e: any) {
-    const filterValue = (e.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-
-    if (this.dataSource.paginator) {
-      this.dataSource.paginator.firstPage();
+    if (!status.Id) {
+      this.store.dispatch(InsertStatusDto({ dto: status }));
+    } else {
+      this.store.dispatch(UpdateStatusDto({ dto: status }));
     }
   }
 
-  deleteStatus(data: any) {
-    this.statusesViewModel.DeleteById(data.Id).subscribe({
-      next: (result) => {
-        this.getData();
-
-        this._snackBar.open('Record deleted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-      },
-      error: (err) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error.innerExceptionMessage,
-          },
-        });
-      },
-    });
+  onInsertClicked(e: any) {
+    this.statusGrid.add(e);
   }
 
+  onRowDelete(data: any) {
+    this.store.dispatch(DeleteStatusById({ id: data.Id }));
+  }
+  onRowStopEditing(e: any) {
+    this.getData();
+  }
 
   onRefreshBtnClicked(e: any) {
     this.getData();
-    this.statusTable.renderRows();
   }
 }

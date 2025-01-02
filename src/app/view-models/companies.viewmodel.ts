@@ -8,7 +8,7 @@ export class CompaniesViewModel {
   headers: any;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();
-    let headers = {
+    this.headers = {
       'Content-Type': 'application/json',
     };
   }
@@ -16,7 +16,7 @@ export class CompaniesViewModel {
   public GetAll() {
 
     return this.http.get(this.service + 'Companies/getall', {
-      headers: this.headers,
+      headers: this.auth.headers,
     });
   }
 
