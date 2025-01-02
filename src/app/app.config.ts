@@ -17,6 +17,8 @@ import { AdditionalChargesEffects } from './state/parameters/additional-charges/
 import { additionalChargesReducer } from './state/parameters/additional-charges/additional-charges.reducer';
 import { StatusesEffects } from './state/parameters/statuses/statuses.effects';
 import { statusesReducer } from './state/parameters/statuses/statuses.reducer';
+import { CompaniesEffects } from './state/parameters/companies/companies.effects';
+import { companiesReducer } from './state/parameters/companies/companies.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,6 +31,7 @@ export const appConfig: ApplicationConfig = {
       vatClasses: vatClassesReducer,
       additionalCharges: additionalChargesReducer,
       statuses: statusesReducer,
+      companies:companiesReducer
     }),
     provideEffects([
       ProductEffects,
@@ -36,6 +39,7 @@ export const appConfig: ApplicationConfig = {
       VatClassesEffects,
       AdditionalChargesEffects,
       StatusesEffects,
+      CompaniesEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

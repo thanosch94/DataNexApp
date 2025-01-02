@@ -37,17 +37,10 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
   columns: any[];
   dataSource: any;
   status: any;
-  statusesViewModel: StatusesViewModel;
   statuses_list_text: string;
 
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private store: Store,
-    private actions$: Actions
-  ) {
+  constructor(private store: Store, private actions$: Actions) {
     super();
-    this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
     this.statuses_list_text = 'Statuses List';
   }
 
@@ -153,6 +146,7 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
   onRowDelete(data: any) {
     this.store.dispatch(DeleteStatusById({ id: data.Id }));
   }
+
   onRowStopEditing(e: any) {
     this.getData();
   }

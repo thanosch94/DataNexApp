@@ -14,55 +14,109 @@ import { MatDialog } from '@angular/material/dialog';
 import { CompanyDto } from '../../../dto/company.dto';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { CompaniesViewModel } from '../../../view-models/companies.viewmodel';
+import { Store } from '@ngrx/store';
+import {
+  DeleteCompanyById,
+  DeleteCompanyByIdFailure,
+  DeleteCompanyByIdSuccess,
+  GetAllCompanies,
+  InsertCompanyDto,
+  InsertCompanyDtoSuccess,
+  UpdateCompanyDto,
+  UpdateCompanyDtoFailure,
+  UpdateCompanyDtoSuccess,
+} from '../../../state/parameters/companies/companies.actions';
+import { selectAllCompanies } from '../../../state/parameters/companies/companies.selectors';
+import { AsyncPipe } from '@angular/common';
+import { Actions, ofType } from '@ngrx/effects';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
-    selector: 'app-companies-list',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        HttpClientModule,
-        DnToolbarComponent,
-        MatTooltipModule,
-        DnGridComponent,
-        FontAwesomeModule,
-    ],
-    templateUrl: './companies-list.component.html',
-    styleUrl: './companies-list.component.css'
+  selector: 'app-companies-list',
+  imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
+  templateUrl: './companies-list.component.html',
+  styleUrl: './companies-list.component.css',
 })
-export class CompaniesListComponent {
+export class CompaniesListComponent extends BaseComponent {
   @ViewChild('companiesGrid')
   companiesGrid: DnGridComponent;
-  companiesDataSource: any;
+  dataSource: any;
   company: any;
-  companiesViewModel: CompaniesViewModel;
   companies_list_title_text: string;
-  companiesColumns: DnColumnDto[] = [];
+  columns: DnColumnDto[] = [];
   chartOptions: any;
 
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private tabsService: TabsService,
-    private _snackBar: MatSnackBar,
-    private dialog: MatDialog
-  ) {
-    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth);
-
+  constructor(private store: Store, private actions$: Actions) {
+    super();
     this.companies_list_title_text = 'Document Types List';
   }
 
   ngOnInit() {
+    this.setActionsResults();
     this.getData();
     this.getColumns();
   }
 
-  getData() {
-    this.companiesViewModel.GetAll().subscribe((result: any) => {
-      this.companiesDataSource = result;
-    });
+  setActionsResults() {
+    this.setInsertDtoSuccessActionResult();
+    this.setUpdateDtoSuccessActionResult();
+    this.setUpdateDtoFailureActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
   }
+
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertCompanyDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record inserted');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateCompanyDtoSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record updated');
+        this.getData();
+      });
+  }
+
+  setUpdateDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateCompanyDtoFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteCompanyByIdSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteCompanyByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  getData() {
+    this.store.dispatch(GetAllCompanies());
+    this.dataSource = this.store.select(selectAllCompanies);
+  }
+
   getColumns() {
-    this.companiesColumns = [
+    this.columns = [
       {
         DataField: 'Id',
         DataType: 'string',
@@ -79,15 +133,14 @@ export class CompaniesListComponent {
         DataType: 'boolean',
         Caption: 'Is Default',
         Visible: true,
-        DefaultValue: false
+        DefaultValue: false,
       },
       {
         DataField: 'IsActive',
         DataType: 'boolean',
         Caption: 'Is Active',
         Visible: true,
-        DefaultValue: true
-
+        DefaultValue: true,
       },
       {
         DataField: 'buttons',
@@ -102,84 +155,24 @@ export class CompaniesListComponent {
   }
 
   onCompanySaving(data: CompanyDto) {
-    let company = new CompanyDto();
-
-    if (data.Id) {
-      company.Id = data.Id;
-    }
-    company.Name = data.Name;
-    company.IsDefault = data.IsDefault;
+    let company: CompanyDto = { ...data };
 
     if (!company.Id) {
-      this.companiesViewModel.InsertDto(company).subscribe({
-        next: (result: any) => {
-          this.displayNotification('Record inserted');
-          this.getData();
-        },
-        error: (err: any) => {
-          this.getData();
-
-          const dialog = this.dialog.open(DnAlertComponent, {
-            data: {
-              Title: 'Message',
-              Message: err.error,
-            },
-          });
-        },
-      });
+      this.store.dispatch(InsertCompanyDto({ dto: company }));
     } else {
-      if (data.Id)
-        this.companiesViewModel.UpdateDto(company).subscribe({
-          next: (result: any) => {
-            this.displayNotification('Record updated');
-            this.getData();
-          },
-          error: (err: any) => {
-            const dialog = this.dialog.open(DnAlertComponent, {
-              data: {
-                Title: 'Message',
-                Message: err.error,
-              },
-            });
-            this.getData();
-          },
-        });
+      this.store.dispatch(UpdateCompanyDto({ dto: company }));
     }
   }
 
   onCompanyDelete(data: CompanyDto) {
-    this.companiesViewModel.DeleteById(data.Id).subscribe({
-      next: (result: any) => {
-        let index = this.companiesGrid.matDataSource.data.indexOf(data);
-        this.companiesGrid.matDataSource.data.splice(index, 1);
-        this.getData();
-        this.companiesGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      },
-      error: (err: any) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error,
-          },
-        });
-      },
-    });
+    this.store.dispatch(DeleteCompanyById({ id: data.Id }));
   }
 
   onCompaniesStopEditing(e: any) {
     this.getData();
   }
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
-
   onRefreshClicked(e: any) {
     this.getData();
-    this.companiesGrid.renderRows();
   }
 }

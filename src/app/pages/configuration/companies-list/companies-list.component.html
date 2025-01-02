@@ -10,8 +10,8 @@
   <dn-grid
     class="margin"
     #companiesGrid
-    [dataSource]="companiesDataSource"
-    [columns]="companiesColumns"
+    [dataSource]="dataSource|async"
+    [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowSaving)="onCompanySaving($event)"

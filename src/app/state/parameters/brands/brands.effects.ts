@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BrandsService } from '../../../services/parameters/brands.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { Store } from '@ngrx/store';
 import {
   DeleteBrandById,
   DeleteBrandByIdFailure,
