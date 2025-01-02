@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { ReportsService } from './../../../services/reports.service';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { color } from 'echarts';
 import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
@@ -25,9 +26,119 @@ export class SalesReportsComponent {
   options: any;
   option2: any;
   sales_reports_text: any;
+  ordersByStatusData: any[];
+  monthAvgOrder: any[];
+  ordersTotalPerMonthData: any[];
 
-  constructor(){
+  constructor(private reportsService:ReportsService, private ref:ChangeDetectorRef){
     this.sales_reports_text = "Sales Reports"
+
+    this.reportsService.GetOrdersTotalPerMonth().subscribe((result:any)=>{
+      this.ordersTotalPerMonthData = result
+
+      this.salesPerMonthOptions = {
+        title: {
+          text: 'Sales per month',
+        },
+        tooltip: {},
+        xAxis: {
+          data: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
+        },
+        yAxis: {},
+        series: [
+          {
+            name: 'Sales',
+            type: 'bar',
+            color: 'darkblue',
+            data: this.ordersTotalPerMonthData,
+          },
+        ],
+      };
+    })
+
+    this.reportsService.GetAverageOrderPerMonth().subscribe((result:any)=>{
+      this.monthAvgOrder = result
+
+      this.avgSalePerMonth = {
+        title: {
+          text: 'Average Order per Month',
+        },
+        tooltip: {
+          trigger: 'item',
+        },
+        xAxis: {
+          type: 'category',
+          data: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
+        },
+        yAxis: {
+          type: 'value',
+        },
+        series: [
+          {
+            data:this.monthAvgOrder,
+            type: 'bar',
+          },
+        ],
+      };
+    })
+
+    this.reportsService.GetOrdersByStatus().subscribe((result:any)=>{
+      this.ordersByStatusData= result
+      this.orderStatusOptions = {
+        title: {
+          text: 'Orders by Status',
+          left: 'center',
+        },
+        tooltip: {
+          trigger: 'item',
+        },
+        legend: {
+          orient: 'vertical',
+          left: 'left',
+        },
+        series: [
+          {
+            name: 'Orders by Status',
+            type: 'pie',
+            radius: '50%',
+            data: this.ordersByStatusData,
+            emphasis: {
+              itemStyle: {
+                shadowBlur: 10,
+                shadowOffsetX: 0,
+                shadowColor: 'rgba(0, 0, 0, 0.5)',
+              },
+            },
+          },
+        ],
+      };
+      })
   }
 
 
@@ -93,40 +204,6 @@ export class SalesReportsComponent {
       ],
     };
 
-    this.orderStatusOptions = {
-      title: {
-        text: 'Orders by Status',
-        left: 'center',
-      },
-      tooltip: {
-        trigger: 'item',
-      },
-      legend: {
-        orient: 'vertical',
-        left: 'left',
-      },
-      series: [
-        {
-          name: 'Orders by Status',
-          type: 'pie',
-          radius: '50%',
-          data: [
-            { value: 14, name: 'Pending' },
-            { value: 1, name: 'On Hold' },
-            { value: 12, name: 'Invoiced' },
-            { value: 45, name: 'Completed' },
-            { value: 4, name: 'Returned' },
-          ],
-          emphasis: {
-            itemStyle: {
-              shadowBlur: 10,
-              shadowOffsetX: 0,
-              shadowColor: 'rgba(0, 0, 0, 0.5)',
-            },
-          },
-        },
-      ],
-    };
 
     this.options = {
       title: {
@@ -163,116 +240,40 @@ export class SalesReportsComponent {
       ],
     };
 
-    this.salesPerMonthOptions = {
-      title: {
-        text: 'Sales per month',
-      },
-      tooltip: {},
-      xAxis: {
-        data: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ],
-      },
-      yAxis: {},
-      series: [
-        {
-          name: 'Sales',
-          type: 'bar',
-          color: 'darkblue',
-          data: [5, 20, , 36, 10, , 10, , , 20],
-        },
-      ],
-    };
 
-    this.productsSoldPerMonthOptions = {
-      title: {
-        text: 'Sales per month',
-      },
-      tooltip: {},
-      xAxis: {
-        data: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ],
-      },
-      yAxis: {},
-      series: [
-        {
-          name: 'Sales',
-          type: 'bar',
-          color: 'darkgreen',
-          data: [65, 40, 37, 53, 30, 42, 15, 10, 41, 52, 24, 57],
-        },
-      ],
-    };
-    this.avgSalePerMonth = {
-      title: {
-        text: 'Average Order per Month',
-      },
-      xAxis: {
-        type: 'category',
-        data: [
-          'Jan',
-          'Feb',
-          'Mar',
-          'Apr',
-          'May',
-          'Jun',
-          'Jul',
-          'Aug',
-          'Sep',
-          'Oct',
-          'Nov',
-          'Dec',
-        ],
-      },
-      yAxis: {
-        type: 'value',
-      },
-      series: [
-        {
-          data: [
-            45.7,
-            {
-              value: 79.3,
-              itemStyle: {
-                color: '#a90000',
-              },
-            },
-            23.4,
-            30,
-            36.7,
-            21.3,
-            65.2,
-            46.8,
-            52.1,
-            34.9,
-          ],
-          type: 'bar',
-        },
-      ],
-    };
+
+    // this.productsSoldPerMonthOptions = {
+    //   title: {
+    //     text: 'Sales per month',
+    //   },
+    //   tooltip: {},
+    //   xAxis: {
+    //     data: [
+    //       'Jan',
+    //       'Feb',
+    //       'Mar',
+    //       'Apr',
+    //       'May',
+    //       'Jun',
+    //       'Jul',
+    //       'Aug',
+    //       'Sep',
+    //       'Oct',
+    //       'Nov',
+    //       'Dec',
+    //     ],
+    //   },
+    //   yAxis: {},
+    //   series: [
+    //     {
+    //       name: 'Sales',
+    //       type: 'bar',
+    //       color: 'darkgreen',
+    //       data: [65, 40, 37, 53, 30, 42, 15, 10, 41, 52, 24, 57],
+    //     },
+    //   ],
+    // };
+
     this.salesByLocationOptions = {
       title: {
         text: 'Sales by Location',

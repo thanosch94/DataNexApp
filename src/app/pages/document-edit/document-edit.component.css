@@ -107,13 +107,13 @@ mat-form-field{
 }
 
 .tab-1, .tab-2, .tab-3,.tab-4, .tab-5{
-  margin-top: 3%;
+  margin-top: 1%;
 }
 
 .tab1-grid{
   display: grid;
   grid-template-areas:
-  "a b c c "
+  "a b c d "
   "e f g h "
   "j k l m ";
   grid-template-columns: 1fr 1fr 1fr 1fr;
@@ -123,6 +123,10 @@ mat-form-field{
   grid-area: a;
   gap:1rem;
   width:99%;
+}
+.grid-d-warehouse{
+  grid-area: d;
+  gap:1rem;
 }
 
 .doc-type{
@@ -145,11 +149,16 @@ mat-form-field{
 .grid-c-customer-supplier{
   grid-area: c;
   gap:2rem;
-  width:100%;
+  width:90%;
 }
 
 
-.grid-e-docstatus{
+.grid-f-docstatus{
+  grid-area: f;
+  gap:2rem;
+  width:90%;
+}
+.grid-e-vatClasses{
   grid-area: e;
   gap:2rem;
   width:95%;

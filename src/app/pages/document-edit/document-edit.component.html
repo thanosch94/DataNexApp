@@ -77,6 +77,19 @@
             displayExpr="Name"
           ></dn-selectbox>
           }
+
+          @if(document.WarehouseId){<dn-selectbox
+          class="grid-d-warehouse"
+          name="warehouse"
+          [dataSource]="warehousesList"
+          valueExpr="Id"
+          displayExpr="Name"
+          [(value)]="document.WarehouseId"
+          label="Warehouse"
+          [width]="100"
+        >
+          </dn-selectbox>
+        }
           <dn-textbox
             class="grid-g-customerphone"
             name="phone"
@@ -85,9 +98,18 @@
             [width]="100"
           >
           </dn-textbox>
-
           <dn-selectbox
-            class="grid-e-docstatus"
+            class="grid-e-vatClasses"
+            [dataSource]="vatClassesList"
+            valueExpr="Id"
+            displayExpr="Name"
+            label="Vat Class"
+            [width]="100"
+            [(value)]="document.VatClassId"
+          >
+          </dn-selectbox>
+          <dn-selectbox
+            class="grid-f-docstatus"
             [dataSource]="statusesList"
             valueExpr="Id"
             displayExpr="Name"

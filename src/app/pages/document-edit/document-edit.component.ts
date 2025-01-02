@@ -77,42 +77,44 @@ import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
 import { ProductsService } from '../../services/products.service';
+import { WarehousesViewModel } from '../../view-models/warehouses.viewmodel';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
-    selector: 'app-document-edit',
-    imports: [
-        FormsModule,
-        MatFormFieldModule,
-        HttpClientModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatIconModule,
-        CommonModule,
-        MatSelectModule,
-        MatDatepickerModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatButtonModule,
-        MatTabsModule,
-        DnToolbarComponent,
-        MatDialogModule,
-        MatTooltipModule,
-        DnGridComponent,
-        DnSelectboxComponent,
-        DnTextboxComponent,
-        DnNumberBoxComponent,
-        DnDateBoxComponent
-    ],
-    providers: [
-        provideNativeDateAdapter(),
-        { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-        TabsService,
-        HttpClientModule,
-    ],
-    templateUrl: './document-edit.component.html',
-    styleUrl: './document-edit.component.css'
+  selector: 'app-document-edit',
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    HttpClientModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatIconModule,
+    CommonModule,
+    MatSelectModule,
+    MatDatepickerModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatButtonModule,
+    MatTabsModule,
+    DnToolbarComponent,
+    MatDialogModule,
+    MatTooltipModule,
+    DnGridComponent,
+    DnSelectboxComponent,
+    DnTextboxComponent,
+    DnNumberBoxComponent,
+    DnDateBoxComponent,
+  ],
+  providers: [
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    TabsService,
+    HttpClientModule,
+  ],
+  templateUrl: './document-edit.component.html',
+  styleUrl: './document-edit.component.css',
 })
 export class DocumentEditComponent implements OnInit, OnDestroy {
   @ViewChildren('td') cells: QueryList<ElementRef>;
@@ -137,7 +139,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
   columns: DnColumnDto[] = [];
-  productSizesDataSource: any[];
+  productSizesDataSource: any;
   skuSelected: boolean;
 
   customersViewModel: CustomersViewModel;
@@ -168,6 +170,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   lotSettingsViewModel: LotSettingsViewModel;
   lotStrategyEnum: LotStrategyEnum;
   pdfGeneratorComponent: PdfGeneratorComponent;
+  warehousesViewModel: WarehousesViewModel;
+  warehousesList: any;
+  vatClassesList: any;
 
   constructor(
     private http: HttpClient,
@@ -178,7 +183,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     private _snackBar: MatSnackBar,
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
-    private productsService:ProductsService
+    private productsService: ProductsService
   ) {
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
       this.http,
@@ -203,12 +208,13 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       this.http,
       this.auth
     );
-    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth)
-    this.lotSettingsViewModel.GetAll().subscribe((result:LotSettingsDto)=>{
-      this.lotStrategyEnum = result.LotStrategy
-
-    })
+    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
+    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
+      this.lotStrategyEnum = result.LotStrategy;
+    });
     this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
+    this.warehousesViewModel = new WarehousesViewModel(this.http, this.auth);
+
     this.productsViewModel = new ProductsViewModel(this.productsService);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.statusesViewModel = new StatusesViewModel(this.http, this.auth);
@@ -232,7 +238,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
       .subscribe((result: GeneralOptionsDto) => {
         this.generalOptions = result;
       });
-      this.pdfGeneratorComponent = new PdfGeneratorComponent()
+    this.pdfGeneratorComponent = new PdfGeneratorComponent();
   }
 
   ngOnInit() {
@@ -250,31 +256,38 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  getLookups() {
-    this.documentTypesViewModel
-      .GetActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
-      .subscribe((result: any) => {
-        this.docTypes = result;
-        this.productBarcodesViewModel.GetLookup().subscribe((result: any) => {
-          this.barcodesLookupDatasource = result;
+  async getLookups() {
+    let wareHousesObs = this.warehousesViewModel.GetAll();
+    this.warehousesList = await firstValueFrom(wareHousesObs);
 
-          this.statusesViewModel.GetAll().subscribe((result: any) => {
-            this.statusesList = result;
+    let vatClassesObs = this.vatClassesViewModel.GetAll();
+    this.vatClassesList = await firstValueFrom(vatClassesObs);
 
-            this.productSizesViewModel.GetAll().subscribe((result: any) => {
-              this.productSizesDataSource = result;
-              this.productsViewModel.GetAll().subscribe((result: any) => {
-                this.products = result;
-                this.lotsViewModel.GetLookup().subscribe((result: LotDto[]) => {
-                  this.lotsDataSource = result;
-                });
-                this.getColumns();
-                this.getData();
-              });
-            });
-          });
-        });
-      });
+    let activeDocTypesObs =
+      this.documentTypesViewModel.GetActiveDocumentTypesLookupByDocumentTypeGroup(
+        this.documentGroup
+      );
+    this.docTypes = (await firstValueFrom(
+      activeDocTypesObs
+    )) as Array<DocumentTypeDto>;
+
+    let productBarcodesObs = this.productBarcodesViewModel.GetLookup();
+    this.barcodesLookupDatasource = await firstValueFrom(productBarcodesObs);
+
+    let statusesObs = this.statusesViewModel.GetAll();
+    this.statusesList = await firstValueFrom(statusesObs);
+
+    let productSizesObs = this.productSizesViewModel.GetAll();
+    this.productSizesDataSource = await firstValueFrom(productSizesObs);
+
+    let productsObs = this.productsViewModel.GetAll();
+    this.products = (await firstValueFrom(productsObs)) as ProductDto[];
+
+    let lotsObs = this.lotsViewModel.GetLookup();
+    this.lotsDataSource = await firstValueFrom(lotsObs);
+
+    this.getColumns();
+    this.getData();
   }
 
   getData() {
@@ -289,14 +302,28 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   initNewDocument() {
     this.document = new DocumentDto();
     this.document_text = 'New Document';
+
     this.tabsService.setTabName(this.document_text);
+
     this.document.DocumentDateTime = new Date();
+
+    let defaultWarehouse = this.getDefaultWareHouse()
+    this.document.WarehouseId = defaultWarehouse.Id;
+
+
     for (let i = 0; i < 5; i++) {
       let product = new DocumentProductDto();
       product.IsEditable = true;
       product.IsRowFilled = false;
       this.productsDataSource.push(product);
     }
+  }
+
+  getDefaultWareHouse(){
+    let defaultWarehouse = this.warehousesList.find(
+      (x: any) => x.IsDefault == true
+    );
+    return defaultWarehouse
   }
 
   getDocumentData(documentId: Guid) {
@@ -444,19 +471,19 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
               this.productsDataSource.forEach((productRow) => {
                 if (productRow.IsRowFilled) {
                   productRow.DocumentId = result.Id;
-                  if(this.generalOptions.LotsEnabled){
+                  if (this.generalOptions.LotsEnabled) {
                     let tempArrayOfDocumentProductLotsQuantities: DocumentProductLotQuantityDto[] =
-                    [];
-                  productRow.DocumentProductLotsQuantities.forEach(
-                    (x: DocumentProductLotQuantityDto) => {
-                      let dto = new DocumentProductLotQuantityDto();
-                      dto.Quantity = x.Quantity;
-                      dto.LotId = x.LotId;
-                      tempArrayOfDocumentProductLotsQuantities.push(dto);
-                    }
-                  );
-                  productRow.DocumentProductLotsQuantities =
-                    tempArrayOfDocumentProductLotsQuantities;
+                      [];
+                    productRow.DocumentProductLotsQuantities.forEach(
+                      (x: DocumentProductLotQuantityDto) => {
+                        let dto = new DocumentProductLotQuantityDto();
+                        dto.Quantity = x.Quantity;
+                        dto.LotId = x.LotId;
+                        tempArrayOfDocumentProductLotsQuantities.push(dto);
+                      }
+                    );
+                    productRow.DocumentProductLotsQuantities =
+                      tempArrayOfDocumentProductLotsQuantities;
                   }
 
                   this.documentProductsViewModel
@@ -747,18 +774,28 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
   }
 
   onQuantityChange(data: DocumentProductDto) {
-    let tempResults
-    if(this.documentGroup==DocumentTypeGroupEnum.Sales){
-      if(this.lotStrategyEnum==LotStrategyEnum.FIFORec||this.lotStrategyEnum==LotStrategyEnum.FIFO){
-        this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyFIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
-          data.DocumentProductLotsQuantities=result
-          tempResults=result
-        })
-      }else if(this.lotStrategyEnum==LotStrategyEnum.LIFORec||this.lotStrategyEnum==LotStrategyEnum.LIFO){
-        this.lotsViewModel.GetLotQtiesOnSalesDocByProductQtyLIFO(data.ProductId, data.Quantity!).subscribe((result:any)=>{
-          data.DocumentProductLotsQuantities=result
-          tempResults=result
-        })
+    let tempResults;
+    if (this.documentGroup == DocumentTypeGroupEnum.Sales) {
+      if (
+        this.lotStrategyEnum == LotStrategyEnum.FIFORec ||
+        this.lotStrategyEnum == LotStrategyEnum.FIFO
+      ) {
+        this.lotsViewModel
+          .GetLotQtiesOnSalesDocByProductQtyFIFO(data.ProductId, data.Quantity!)
+          .subscribe((result: any) => {
+            data.DocumentProductLotsQuantities = result;
+            tempResults = result;
+          });
+      } else if (
+        this.lotStrategyEnum == LotStrategyEnum.LIFORec ||
+        this.lotStrategyEnum == LotStrategyEnum.LIFO
+      ) {
+        this.lotsViewModel
+          .GetLotQtiesOnSalesDocByProductQtyLIFO(data.ProductId, data.Quantity!)
+          .subscribe((result: any) => {
+            data.DocumentProductLotsQuantities = result;
+            tempResults = result;
+          });
       }
     }
 
@@ -773,7 +810,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     } else {
       data.Quantity = undefined;
     }
-    }
+  }
 
   onRowTotalChange(e: any, index: number) {
     if (this.productsDataSource[index].Sku) {
@@ -829,7 +866,7 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
     if (this.documentId) {
       const dialogRef = this.dialog.open(DocumentAdditionalChargesComponent, {
         width: '750px',
-        height:'500px',
+        height: '500px',
         maxHeight: '50vh',
         data: {
           DocumentId: this.documentId,
@@ -885,9 +922,9 @@ export class DocumentEditComponent implements OnInit, OnDestroy {
         this.ref.detectChanges();
       });
   }
-onSupplierValueChange(e:any){
-  this.getColumns()
-}
+  onSupplierValueChange(e: any) {
+    this.getColumns();
+  }
   getColumns() {
     this.columns = [
       {
@@ -912,9 +949,9 @@ onSupplierValueChange(e:any){
         Lookup: {
           DataSource: this.products,
           ValueExpr: 'Sku',
-          DisplayExpr:'Sku',
-          DisplayMultExpr: (data:any)=>{
-            return data.Sku +" - "+ data.Name
+          DisplayExpr: 'Sku',
+          DisplayMultExpr: (data: any) => {
+            return data.Sku + ' - ' + data.Name;
           },
         },
         OnSelectionChange: (data: any, columns: DnColumnDto[]) => {
@@ -975,10 +1012,18 @@ onSupplierValueChange(e:any){
         DataType: 'number',
         Caption: 'Quantity',
         Min: 1,
-        Icon: (this.document.SupplierId|| this.documentGroup==DocumentTypeGroupEnum.Sales)&& this.generalOptions.LotsEnabled ?'info':'',
-        IconTooltip:'Lot/Variations Info',
+        Icon:
+          (this.document.SupplierId ||
+            this.documentGroup == DocumentTypeGroupEnum.Sales) &&
+          this.generalOptions.LotsEnabled
+            ? 'info'
+            : '',
+        IconTooltip: 'Lot/Variations Info',
         OnClick: (row: DocumentProductDto, column: DnColumnDto) => {
-          if (row.QuantityFromLots && this.documentGroup==DocumentTypeGroupEnum.Purchasing) {
+          if (
+            row.QuantityFromLots &&
+            this.documentGroup == DocumentTypeGroupEnum.Purchasing
+          ) {
             column.ReadOnly = true;
           }
         },
@@ -991,27 +1036,30 @@ onSupplierValueChange(e:any){
         OnIconClicked: (row: DocumentProductDto) => {
           if (row.ProductId) {
             const dialogRef = this.dialog.open(ProductRowDetailComponent, {
-              disableClose:true,
+              disableClose: true,
               width: '600px',
               height: '500px',
-              data: { Row: row , DocumentGroup:this.documentGroup, Supplier: this.document.SupplierId},
+              data: {
+                Row: row,
+                DocumentGroup: this.documentGroup,
+                Supplier: this.document.SupplierId,
+              },
               viewContainerRef: this.viewContainerRef,
             });
             dialogRef
               .afterClosed()
               .subscribe((data: DocumentProductLotQuantityDto[]) => {
                 if (data) {
-
                   row.DocumentProductLotsQuantities = data;
-                  if (row.DocumentProductLotsQuantities.length>0) {
-                    let tempQty = row.Quantity
+                  if (row.DocumentProductLotsQuantities.length > 0) {
+                    let tempQty = row.Quantity;
                     row.Quantity = 0;
                     row.DocumentProductLotsQuantities.map((x) => {
-                      if(x.Quantity){
+                      if (x.Quantity) {
                         row.Quantity! += x.Quantity;
-                      }else{
-                        row.DocumentProductLotsQuantities = []
-                        row.Quantity = tempQty
+                      } else {
+                        row.DocumentProductLotsQuantities = [];
+                        row.Quantity = tempQty;
                       }
                     });
                     if (row.Quantity > 0) {
@@ -1070,7 +1118,7 @@ onSupplierValueChange(e:any){
     this.getDocumentProducts(this.document.Id);
   }
 
-  onPrintClicked(e:any){
-    this.pdfGeneratorComponent.generate(this.document)
+  onPrintClicked(e: any) {
+    this.pdfGeneratorComponent.generate(this.document);
   }
 }

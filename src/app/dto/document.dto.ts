@@ -36,4 +36,6 @@ export class DocumentDto {
 DocumentStatusName: any;
   DocumentCode: string;
 SupplierId?: Guid;
+WarehouseId: Guid;
+VatClassId: Guid;
 }
