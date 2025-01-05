@@ -10,12 +10,11 @@
   <dn-grid
     class="margin"
     #documentTypesGrid
-    [dataSource]="documentTypesDataSource"
-    [columns]="documentTypesColumns"
+    [dataSource]="dataSource|async"
+    [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowEditing)="onRowEditing($event)"
-    (onRowSaving)="onDocumentTypeSaving($event)"
     (onRowDelete)="onDocumentTypeDelete($event)"
     (onRowStopEditing)="onDocumentTypesStopEditing($event)"
   >

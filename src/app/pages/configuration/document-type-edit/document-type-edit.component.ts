@@ -1,3 +1,8 @@
+import {
+  GetDocumentTypesLookup,
+  InsertDocumentTypeDto,
+  UpdateDocumentTypeDto,
+} from './../../../state/parameters/document-types/document-types.actions';
 import { GeneralOptionsViewModel } from './../../../view-models/general-options.viewmodel';
 import { PriceTypeEnumlist } from './../../../enumLists/price-type.enumlist';
 import { DocumentTypesViewModel } from './../../../view-models/document-types.viewmodel';
@@ -19,26 +24,42 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { TabsService } from '../../../services/tabs.service';
 import { LotSettingsDto } from '../../../dto/configuration/lot-settings.dto';
 import { GeneralOptionsDto } from '../../../dto/configuration/general-options.dto';
+import { Store } from '@ngrx/store';
+import { Actions, ofType } from '@ngrx/effects';
+import {
+  DeleteDocumentTypeByIdFailure,
+  DeleteDocumentTypeByIdSuccess,
+  GetDocumentTypeById,
+  GetDocumentTypeByIdFailure,
+  GetDocumentTypeByIdSuccess,
+  InsertDocumentTypeDtoFailure,
+  InsertDocumentTypeDtoSuccess,
+  UpdateDocumentTypeDtoFailure,
+  UpdateDocumentTypeDtoSuccess,
+} from '../../../state/parameters/document-types/document-types.actions';
+import { BaseComponent } from '../../components/base/base.component';
+import { selectDocumentTypesLookup, selectSelectedDocumentType } from '../../../state/parameters/document-types/document-types.selectors';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
-    selector: 'app-document-type-edit',
-    imports: [
-        DnToolbarComponent,
-        MatTabsModule,
-        DnTextboxComponent,
-        DnCheckboxComponent,
-        DnSelectboxComponent,
-        DnGridComponent,
-    ],
-    providers: [TabsService],
-    templateUrl: './document-type-edit.component.html',
-    styleUrl: './document-type-edit.component.css'
+  selector: 'app-document-type-edit',
+  imports: [
+    DnToolbarComponent,
+    MatTabsModule,
+    DnTextboxComponent,
+    DnCheckboxComponent,
+    DnSelectboxComponent,
+    DnGridComponent,
+    AsyncPipe,
+  ],
+  providers: [TabsService],
+  templateUrl: './document-type-edit.component.html',
+  styleUrl: './document-type-edit.component.css',
 })
-export class DocumentTypeEditComponent implements OnInit {
+export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
   document_type_edit_title_text: string;
-  documentType: DocumentTypeDto = new DocumentTypeDto();
+  documentType: any;
   documentTypeId: Guid;
-  documentTypesViewModel: DocumentTypesViewModel;
   priceTypesDataSource: any[];
   uses_prices_text: string = 'Uses Prices';
   affects_customer_balance_text: string = 'Affects Customer Balance';
@@ -56,54 +77,135 @@ export class DocumentTypeEditComponent implements OnInit {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private route: ActivatedRoute,
-    private tabsService: TabsService
+    private tabsService: TabsService,
+    private store: Store,
+    private actions$: Actions
   ) {
-    this.documentTypesViewModel = new DocumentTypesViewModel(
-      this.http,
-      this.auth
-    );
+    super();
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
       this.http,
       this.auth
     );
-    this.generalOptionsViewModel.GetAll().subscribe((result:GeneralOptionsDto)=>{
-      this.lotsEnabled=result.LotsEnabled
-    })
-    this.routeSubscription = this.route.queryParams.subscribe((params: any) => {
-      this.documentTypeId = params['id'];
-      this.documentTypesViewModel
-      .GetById(this.documentTypeId)
-      .subscribe((result: any) => {
-        this.documentType = result;
-        this.getData();
-          this.getToolbarTitle()
+    this.getLookups();
+    this.generalOptionsViewModel
+      .GetAll()
+      .subscribe((result: GeneralOptionsDto) => {
+        this.lotsEnabled = result.LotsEnabled;
       });
-    });
+    this.documentTypeId = history.state?.id;
   }
 
   ngOnInit(): void {
+    this.setActionsResults();
+    this.getData();
     this.getDocumentTypeSeriesColumns();
-    this.routeSubscription.unsubscribe()
+    //this.routeSubscription.unsubscribe();
   }
 
-  getToolbarTitle(){
-    if(this.documentType?.Id){
-      this.document_type_edit_title_text = this.documentType.Name
-    }else{
-      this.document_type_edit_title_text = "New Document Type"
+  setActionsResults() {
+    this.getByIdFailureActionResult();
+    this.setInsertDtoSuccessActionResult();
+    this.setInsertDtoFailureActionResult();
+    this.setUpdateDtoSuccessActionResult();
+    this.setUpdateDtoFailureActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
+  }
 
+
+
+  getByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(GetDocumentTypeByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+      });
+  }
+
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertDocumentTypeDtoSuccess))
+      .subscribe((result: any) => {
+        this.documentTypeId =result.dto.Id;
+        this.getData();
+        this.displayNotification('Record inserted');
+      });
+  }
+
+  setInsertDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(InsertDocumentTypeDtoFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+      });
+  }
+
+  setUpdateDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateDocumentTypeDtoSuccess))
+      .subscribe((result: any) => {
+        this.getData();
+        this.getToolbarTitle();
+        this.displayNotification('Record updated');
+      });
+  }
+
+  setUpdateDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateDocumentTypeDtoFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+      });
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteDocumentTypeByIdSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.router.navigate(['document-types-list']);
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteDocumentTypeByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+      });
+  }
+
+  getData() {
+    if (this.documentTypeId) {
+      this.store.dispatch(GetDocumentTypeById({ id: this.documentTypeId }));
+
+      this.store.select(selectSelectedDocumentType).subscribe((result:any)=>{
+        this.documentType = {...result}
+        this.getToolbarTitle();
+
+      })
+    } else {
+      this.documentType = new DocumentTypeDto();
+      this.getToolbarTitle();
+    }
+  }
+
+  getToolbarTitle() {
+    if (this.documentType?.Id) {
+      this.document_type_edit_title_text = this.documentType.Name;
+    } else {
+      this.document_type_edit_title_text = 'New Document Type';
     }
     this.tabsService.setTabName(this.document_type_edit_title_text);
-
   }
-  getData() {
+  getLookups() {
     this.priceTypesDataSource = PriceTypeEnumlist.value;
     this.docTypeAffectBehaviorDataSource = DocTypeAffectBehaviorEnumList.value;
     this.docTypeGroupDataSource = DocumentTypeGroupEnumList.value;
-    this.documentTypesViewModel.GetAll().subscribe((result: any) => {
-      this.docTypesDataSource = result;
-    });
+
+    //Document Types
+    this.store.dispatch(GetDocumentTypesLookup());
+    this.docTypesDataSource = this.store.select(selectDocumentTypesLookup);
   }
 
   getDocumentTypeSeriesColumns() {
@@ -134,25 +236,14 @@ export class DocumentTypeEditComponent implements OnInit {
   }
 
   onCloseBackClicked(e: any) {
-    this.tabsService.setActiveTabPreviousName();
     this.router.navigate(['document-types-list']);
   }
 
   onSaveClicked(e: any) {
     if (this.documentType.Id) {
-      this.documentTypesViewModel
-        .UpdateDto(this.documentType)
-        .subscribe((result: any) => {
-          this.documentType = result;
-          this.getToolbarTitle()
-        });
+      this.store.dispatch(UpdateDocumentTypeDto({ dto: this.documentType }));
     } else {
-      this.documentTypesViewModel
-        .InsertDto(this.documentType)
-        .subscribe((result: any) => {
-          this.documentType = result;
-          this.getToolbarTitle()
-        });
+      this.store.dispatch(InsertDocumentTypeDto({ dto: this.documentType }));
     }
   }
 

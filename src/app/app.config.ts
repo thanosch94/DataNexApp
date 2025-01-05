@@ -19,6 +19,8 @@ import { StatusesEffects } from './state/parameters/statuses/statuses.effects';
 import { statusesReducer } from './state/parameters/statuses/statuses.reducer';
 import { CompaniesEffects } from './state/parameters/companies/companies.effects';
 import { companiesReducer } from './state/parameters/companies/companies.reducer';
+import { documentTypesReducer } from './state/parameters/document-types/document-types.reducer';
+import { DocumentTypesEffects } from './state/parameters/document-types/document-types.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -31,7 +33,8 @@ export const appConfig: ApplicationConfig = {
       vatClasses: vatClassesReducer,
       additionalCharges: additionalChargesReducer,
       statuses: statusesReducer,
-      companies:companiesReducer
+      companies:companiesReducer,
+      documentTypes:documentTypesReducer
     }),
     provideEffects([
       ProductEffects,
@@ -39,7 +42,8 @@ export const appConfig: ApplicationConfig = {
       VatClassesEffects,
       AdditionalChargesEffects,
       StatusesEffects,
-      CompaniesEffects
+      CompaniesEffects,
+      DocumentTypesEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

@@ -10,7 +10,6 @@
 ></dn-toolbar>
 
 <div class="margin">
-  @if(documentType){
   <div class="basic-info">
     <div class="code-name">
       <div class="code">
@@ -69,7 +68,7 @@
     <div class="cancellation-doc-code">
       <dn-selectbox
       [(value)]="documentType.CancellationDocumentId"
-      [dataSource]="docTypesDataSource"
+      [dataSource]="docTypesDataSource|async"
       valueExpr="Id"
       displayExpr="Name"
       label="Cancellation Code"
@@ -155,5 +154,5 @@
 
     </mat-tab>
   </mat-tab-group>
-  }
+
 </div>

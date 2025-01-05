@@ -1,91 +1,87 @@
-import { DocTypeAffectBehaviorEnum } from '../../../enums/doc-type-affect-behavior.enum';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
-import { MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { TabsService } from './../../../services/tabs.service';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
 import { DocumentTypeGroupEnumList } from '../../../enumLists/document-type-group.enumlist';
-import { AuthService } from '../../../services/auth.service';
-import { TabsService } from '../../../services/tabs.service';
 import { DocumentTypesViewModel } from '../../../view-models/document-types.viewmodel';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
 import { Router } from '@angular/router';
+import { Store } from '@ngrx/store';
+import {
+  DeleteDocumentTypeById,
+  DeleteDocumentTypeByIdFailure,
+  DeleteDocumentTypeByIdSuccess,
+  GetAllDocumentTypes,
+} from '../../../state/parameters/document-types/document-types.actions';
+import { selectAllDocumentTypes } from '../../../state/parameters/document-types/document-types.selectors';
+import { AsyncPipe } from '@angular/common';
+import { Actions, ofType } from '@ngrx/effects';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
-    selector: 'app-document-types',
-    imports: [
-        MatButtonModule,
-        MatIconModule,
-        MatPaginator,
-        MatPaginatorModule,
-        MatSort,
-        MatSortModule,
-        MatInputModule,
-        MatFormFieldModule,
-        MatTableModule,
-        HttpClientModule,
-        MatSortHeader,
-        DnToolbarComponent,
-        MatTooltipModule,
-        DnGridComponent,
-        FontAwesomeModule,
-    ],
-    templateUrl: './document-types-list.component.html',
-    styleUrl: './document-types-list.component.css'
+  selector: 'app-document-types',
+  imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
+  templateUrl: './document-types-list.component.html',
+  styleUrl: './document-types-list.component.css',
 })
-export class DocumentTypesListComponent implements OnInit {
-
-  @ViewChild('documentTypesGrid')
-  documentTypesGrid: DnGridComponent;
-  documentTypesDataSource: any;
-  documentType: any;
-  documentTypesViewModel: DocumentTypesViewModel;
+export class DocumentTypesListComponent
+  extends BaseComponent
+  implements OnInit
+{
+  dataSource: any;
   document_types_list_title_text: string;
-  documentTypesColumns: DnColumnDto[] = [];
-  chartOptions: any;
+  columns: DnColumnDto[] = [];
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private tabsService: TabsService,
-    private _snackBar: MatSnackBar,
-    private dialog: MatDialog,
-    private router:Router
+    private router: Router,
+    private store: Store,
+    private actions$: Actions,
+    private tabsService:TabsService
   ) {
-    this.documentTypesViewModel = new DocumentTypesViewModel(
-      this.http,
-      this.auth
-    );
-
+    super();
     this.document_types_list_title_text = 'Document Types List';
+    this.tabsService.setActiveTabName(this.document_types_list_title_text)
   }
 
   ngOnInit() {
+    this.setActionsResults();
     this.getData();
     this.getColumns();
   }
 
-  getData() {
-    this.documentTypesViewModel.GetAll().subscribe((result: any) => {
-      this.documentTypesDataSource = result;
-    });
+  setActionsResults() {
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
   }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteDocumentTypeByIdSuccess))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteDocumentTypeByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+
+  getData() {
+    this.store.dispatch(GetAllDocumentTypes());
+    this.dataSource = this.store.select(selectAllDocumentTypes);
+  }
+
   getColumns() {
-    this.documentTypesColumns = [
+    this.columns = [
       {
         DataField: 'Id',
         DataType: 'string',
@@ -123,22 +119,22 @@ export class DocumentTypesListComponent implements OnInit {
         DataType: 'string',
         Caption: 'Affects Balance',
         Visible: true,
-        Lookup:{
-          DataSource:DocTypeAffectBehaviorEnumList.value,
-          ValueExpr:'Id',
-          DisplayExpr:'Name'
-        }
+        Lookup: {
+          DataSource: DocTypeAffectBehaviorEnumList.value,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
       },
       {
         DataField: 'WareHouseAffectBehavior',
         DataType: 'string',
         Caption: 'Affects Warehouse',
         Visible: true,
-        Lookup:{
-          DataSource:DocTypeAffectBehaviorEnumList.value,
-          ValueExpr:'Id',
-          DisplayExpr:'Name'
-        }
+        Lookup: {
+          DataSource: DocTypeAffectBehaviorEnumList.value,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
       },
       {
         DataField: 'IsActive',
@@ -155,89 +151,22 @@ export class DocumentTypesListComponent implements OnInit {
   }
 
   onInsertClicked(e: any) {
-    this.documentTypesGrid.add(e);
-  }
-
-  onDocumentTypeSaving(data: DocumentTypeDto) {
-    let documentType = new DocumentTypeDto();
-    let that=this
-    if (data.Id) {
-      documentType.Id = data.Id;
-    }
-    documentType.Name = data.Name;
-    documentType.Abbreviation = data.Abbreviation;
-    documentType.DocumentTypeGroup = data.DocumentTypeGroup;
-    documentType.Description = data.Description;
-    documentType.IsActive = data.IsActive;
-    documentType.PersonBalanceAffectBehavior = data.PersonBalanceAffectBehavior;
-    documentType.WareHouseAffectBehavior = data.WareHouseAffectBehavior;
-
-    if (!documentType.Id) {
-      this.documentTypesViewModel
-        .InsertDto(documentType)
-        .subscribe((result: any) => {
-          this.displayNotification('Record inserted');
-          this.getData();
-        });
-    } else {
-      if (data.Id)
-        this.documentTypesViewModel.UpdateDto(documentType).subscribe({
-          next: (result: any) => {
-            this.displayNotification('Record updated');
-            this.getData();
-          },
-          error:(err:any)=>{
-            const dialog = this.dialog.open(DnAlertComponent, {
-              data: {
-                Title: 'Message',
-                Message: err.error,
-              },
-
-            });
-            that.getData()
-          }
-        });
-
-    }
+    this.router.navigate(['document-type-edit']);
   }
 
   onDocumentTypeDelete(data: DocumentTypeDto) {
-    this.documentTypesViewModel.DeleteById(data.Id).subscribe({
-      next: (result: any) => {
-        let index = this.documentTypesGrid.matDataSource.data.indexOf(data);
-        this.documentTypesGrid.matDataSource.data.splice(index, 1);
-        this.getData();
-        this.documentTypesGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      },
-      error: (err: any) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error,
-          },
-        });
-      },
-    });
+    this.store.dispatch(DeleteDocumentTypeById({ id: data.Id }));
   }
 
   onDocumentTypesStopEditing(e: any) {
     this.getData();
   }
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
-
   onRefreshClicked(e: any) {
     this.getData();
-    this.documentTypesGrid.renderRows();
   }
 
-  onRowEditing(e:any){
-    this.router.navigate(['document-type-edit'],{ queryParams: {id:e.Id} })
+  onRowEditing(e: any) {
+    this.router.navigate(['document-type-edit'], { state: { id: e.Id }});
   }
 }

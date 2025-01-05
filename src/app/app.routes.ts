@@ -33,6 +33,7 @@ import { CustomersLedgerComponent } from './pages/financial/customers-ledger/cus
 import { DocumentTypeEditComponent } from './pages/configuration/document-type-edit/document-type-edit.component';
 import { GeneralOptionsComponent } from './pages/configuration/general-options/general-options.component';
 import { LotsListComponent } from './pages/configuration/lots/lots-list.component';
+import { Guid } from 'guid-typescript';
 
 export const routes: Routes = [
   {
@@ -104,7 +105,7 @@ export const routes: Routes = [
   {
     path:'document-type-edit',
     component:DocumentTypeEditComponent,
-    canActivate:[authGuard]
+    canActivate:[authGuard],
   },
   {
     path:'home',
