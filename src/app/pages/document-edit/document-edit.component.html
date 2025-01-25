@@ -338,12 +338,12 @@
       #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
+      [enableAddButton]="true"
+      [addButtonText]="'Add Product'"
       [canDisplaySearch]="false"
-      [hideEditButtonOnEditing]="document.Id ? false : true"
-      [displayDeleteButtonOnEditing]="document.Id ? false : true"
       [displayPaginator]="false"
       [displayTableBorder]="true"
-      [dataSource]="productsDataSource"
+      [(dataSource)]="productsDataSource"
       [columns]="columns"
       [canEdit]="true"
       (onRowStopEditing)="onProductRowStopEditing($event)"
@@ -375,7 +375,7 @@
       </mat-form-field>
       <b class="total-title">Total</b>
       <mat-form-field appearance="outline" style="width: 120px; height: 50px">
-        <input matInput [readonly]="true" [(ngModel)]="total" />
+        <input matInput [readonly]="true" [(ngModel)]="document.DocumentTotal" />
       </mat-form-field>
     </div>
   </div>

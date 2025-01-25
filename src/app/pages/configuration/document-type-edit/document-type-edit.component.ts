@@ -1,3 +1,4 @@
+import { firstValueFrom } from 'rxjs';
 import {
   GetDocumentTypesLookup,
   InsertDocumentTypeDto,
@@ -72,6 +73,8 @@ export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
   routeSubscription: any;
   lotsEnabled: boolean;
   generalOptionsViewModel: GeneralOptionsViewModel;
+documentTypesTransformationsDataSource: any;
+documentTypesTransformationsColumns: DnColumnDto[];
 
   constructor(
     private http: HttpClient,
@@ -99,6 +102,7 @@ export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
     this.setActionsResults();
     this.getData();
     this.getDocumentTypeSeriesColumns();
+    this.getDocumentTypesTransformationsColumns()
     //this.routeSubscription.unsubscribe();
   }
 
@@ -177,6 +181,7 @@ export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
 
   getData() {
     if (this.documentTypeId) {
+      this.documentTypesTransformationsDataSource=[]
       this.store.dispatch(GetDocumentTypeById({ id: this.documentTypeId }));
 
       this.store.select(selectSelectedDocumentType).subscribe((result:any)=>{
@@ -206,9 +211,10 @@ export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
     //Document Types
     this.store.dispatch(GetDocumentTypesLookup());
     this.docTypesDataSource = this.store.select(selectDocumentTypesLookup);
+    debugger
   }
 
-  getDocumentTypeSeriesColumns() {
+  async getDocumentTypeSeriesColumns() {
     this.documentTypeSeriesColumns = [
       {
         DataField: 'Id',
@@ -226,13 +232,45 @@ export class DocumentTypeEditComponent extends BaseComponent implements OnInit {
         DataType: 'string',
         Caption: 'Type',
         Lookup: {
-          DataSource: this.docTypesDataSource,
+          DataSource: await firstValueFrom(this.docTypesDataSource),
           ValueExpr: 'Id',
           DisplayExpr: 'Name',
         },
         Visible: false,
       },
     ];
+  }
+
+  getDocumentTypesTransformationsColumns(){
+    this.docTypesDataSource.subscribe((result:any)=>{
+      let documentTypes = result
+      this.documentTypesTransformationsColumns = [
+        {
+          DataField: 'Id',
+          DataType: 'string',
+          Caption: 'Id',
+          Visible: false,
+        },
+        {
+          DataField: 'DocumentTypeId',
+          DataType: 'string',
+          Caption: 'Type',
+          Lookup: {
+            DataSource: documentTypes,
+            ValueExpr: 'Id',
+            DisplayExpr: 'Name',
+          },
+          Visible: true,
+        },
+        {
+          DataField: 'buttons',
+          DataType: 'buttons',
+          Caption: '',
+        },
+      ]
+    })
+
+
   }
 
   onCloseBackClicked(e: any) {

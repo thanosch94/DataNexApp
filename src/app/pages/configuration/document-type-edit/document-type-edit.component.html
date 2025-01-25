@@ -153,6 +153,21 @@
       </div>
 
     </mat-tab>
+    <mat-tab label="Transformations">
+      <div class="margin">
+        <dn-grid
+          class="margin"
+          #documentTypesGrid
+          [dataSource]="documentTypesTransformationsDataSource"
+          [columns]="documentTypesTransformationsColumns"
+          [canDisplaySearch]="false"
+          [enableAddButton]="true"
+
+        >
+        </dn-grid>
+      </div>
+
+    </mat-tab>
   </mat-tab-group>
 
 </div>

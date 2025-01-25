@@ -82,6 +82,9 @@ margin-right: auto;
   height: fit-content;
 }
 
+/* ::ng-deep .mat-mdc-tab-body{
+  height: 100vh!important;
+} */
 .sidenav{
   height: calc(100% - 55px);
 }

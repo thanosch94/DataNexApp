@@ -104,6 +104,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @Output() onRowStopEditing = new EventEmitter();
+  @Output() dataSourceChange = new EventEmitter();
   @Output() onRowDelete = new EventEmitter();
   @Output() onRowAdding = new EventEmitter();
   @Output() onRowSaving = new EventEmitter();
@@ -113,6 +114,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() onRowSelectionChanged = new EventEmitter();
   matColumns: string[] = [];
   @Input() enableAddButton = false;
+  @Input() addButtonText:string ='Add'
   @Input() canDisplaySearch = true;
   @Input() canEdit = true;
   @Input() hideEditButtonOnEditing = false;
