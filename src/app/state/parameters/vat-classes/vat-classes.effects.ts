@@ -8,6 +8,9 @@ import {
   GetAllVatClasses,
   GetAllVatClassesFailure,
   GetAllVatClassesSuccess,
+  GetVatClassById,
+  GetVatClassByIdFailure,
+  GetVatClassByIdSuccess,
   InsertVatClassDto,
   InsertVatClassDtoFailure,
   InsertVatClassDtoSuccess,
@@ -34,6 +37,22 @@ export class VatClassesEffects {
           ),
           catchError((error) => {
             return of(GetAllVatClassesFailure({ error }));
+          })
+        )
+      )
+    )
+  );
+
+  loadVatClassById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GetVatClassById),
+      mergeMap((action:any) =>
+        this.vatClassesService.GetById(action.id).pipe(
+          map((vatClass: any) =>
+            GetVatClassByIdSuccess({ data: vatClass })
+          ),
+          catchError((error) => {
+            return of(GetVatClassByIdFailure({ error }));
           })
         )
       )

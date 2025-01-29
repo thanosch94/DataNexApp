@@ -29,7 +29,6 @@ export class DocumentTypesService {
   }
 
   public GetById(id: Guid) {
-    debugger
     return this.http.get(this.service + 'DocumentTypes/getbyid/' + id, {
       headers: this.auth.headers,
     });

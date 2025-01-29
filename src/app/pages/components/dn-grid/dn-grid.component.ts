@@ -165,6 +165,10 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
         };
       });
     }
+    if(this._dataSource){
+          this._dataSource= [...this._dataSource]
+
+    }
     this.matDataSource = new MatTableDataSource(this._dataSource);
     this.matDataSource.paginator = this.paginator;
     this.matDataSource.sort = this.sort;
@@ -191,9 +195,16 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['dataSource']) {
+
+      this.dataSourceChange.emit(changes['dataSource'].currentValue)
+    }
     this.renderRows()
+
   }
+
   ngAfterViewInit() {
     this.matDataSource.paginator = this.paginator;
     this.ref.detectChanges();
@@ -296,8 +307,8 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 
-  onDataLookupSelectionChanged(column: DnColumnDto, data: any, value: any) {
-    data[column.DataField] = value;
+  onDataLookupSelectionChanged(column: DnColumnDto, data: any, e: any) {
+    data[column.DataField] = e;
     if (column.OnSelectionChange) {
       column.OnSelectionChange(data, this.dataSource);
     }
@@ -410,7 +421,6 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   onRowSelectionChange(e:any, row:any) {
     this.selection.toggle(row);
-    debugger
     this.onRowSelectionChanged.emit(this.selection.selected)
   }
 

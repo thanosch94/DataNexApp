@@ -8,7 +8,6 @@ export class NumberFormatPipe implements PipeTransform {
 
   transform(value: any, locale: string = 'en-US'): string {
     // Check if the value is a valid number
-    debugger
     if (value === null || value === undefined || isNaN(value)) {
       return '';
     }

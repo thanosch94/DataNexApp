@@ -16,7 +16,6 @@ export class BrandsService {
   }
 
   public GetAll() {
-debugger
     return this.http.get(this.service + 'Brands/getall', {
       headers: this.auth.headers,
     });
@@ -44,7 +43,6 @@ debugger
 
   }
   public DeleteById(id: Guid) {
-debugger
     return this.http.delete(this.service + 'Brands/deletebyid/' + id, {
       headers: this.auth.headers,
     });

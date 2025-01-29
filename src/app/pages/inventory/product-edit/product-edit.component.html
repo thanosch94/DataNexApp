@@ -20,11 +20,14 @@
             <dn-textbox [(value)]="product.Name" label="Name"> </dn-textbox>
           </div>
 
-          <div class="tab1-grid-e-sku">
+          <div class="tab1-grid-e-barcode">
+            <dn-textbox [(value)]="product.Barcode" label="Barcode">
+            </dn-textbox>
+          </div>
+          <div class="tab1-grid-f-sku">
             <dn-textbox [(value)]="product.Sku" label="Sku"> </dn-textbox>
           </div>
-          @if(brands){
-          <div class="tab1-grid-f-brand">
+          <div class="tab1-grid-h-brand">
             <dn-selectbox
               [dataSource]="brands"
               valueExpr="Id"
@@ -34,7 +37,7 @@
             >
             </dn-selectbox>
           </div>
-          }
+
           <div class="tab1-grid-i-price">
             <dn-number-box
               [min]="0.01"
@@ -102,7 +105,21 @@
         </div>
       </div>
     </mat-tab>
-    <mat-tab label="Attributes & Categories"></mat-tab>
+    <mat-tab label="Attributes & Categories">
+      <div class="tab-2">
+        <div class="tab2-grid">
+          <div class="tab2-grid-a-category1">
+            <dn-selectbox  [dataSource]="[]" valueExpr="Id" displayExpr="Name" [(value)]="product.Cateory1Id" label="Category 1"> </dn-selectbox>
+          </div>
+          <div class="tab2-grid-e-category2">
+            <dn-selectbox [dataSource]="[]" valueExpr="Id" displayExpr="Name" [(value)]="product.Cateory2Id" label="Category 2"> </dn-selectbox>
+          </div>
+          <div class="tab2-grid-i-category3">
+            <dn-selectbox  [dataSource]="[]" valueExpr="Id" displayExpr="Name" [(value)]="product.Cateory3Id" label="Category 3"> </dn-selectbox>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
     <mat-tab label="Sizes">
       @if(productId){
       <div>

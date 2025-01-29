@@ -106,6 +106,7 @@
             label="Vat Class"
             [width]="100"
             [(value)]="document.VatClassId"
+            (selectionChange)="onVatClassSelectionChanged($event)"
           >
           </dn-selectbox>
           <dn-selectbox

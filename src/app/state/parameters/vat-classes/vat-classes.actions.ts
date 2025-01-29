@@ -9,6 +9,13 @@ export const GetAllVatClassesSuccess = createAction('[Vat Classes List] GetAll S
 
 export const GetAllVatClassesFailure = createAction('[Vat Classes List] GetAll Failure', props<{error:string}>())
 
+//Get By Id
+export const GetVatClassById = createAction('[Vat Classes List] GetById', props<{id:Guid}>())
+
+export const GetVatClassByIdSuccess = createAction('[Vat Classes List] GetById Success', props<{data:VatClassDto}>())
+
+export const GetVatClassByIdFailure = createAction('[Vat Classes List] GetById Failure', props<{error:string}>())
+
 
 //InsertDto
 export const InsertVatClassDto = createAction('[Vat Classes List] InsertDto', props<{dto:VatClassDto}>())

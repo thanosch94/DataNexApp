@@ -6,6 +6,9 @@ import {
   GetAllVatClasses,
   GetAllVatClassesFailure,
   GetAllVatClassesSuccess,
+  GetVatClassById,
+  GetVatClassByIdFailure,
+  GetVatClassByIdSuccess,
   InsertVatClassDto,
   InsertVatClassDtoFailure,
   InsertVatClassDtoSuccess,
@@ -16,11 +19,13 @@ import {
 
 export interface VatClassesState {
   data: VatClassDto[];
+  selected: VatClassDto
   error: any;
 }
 
 export const initialVatClassesState: VatClassesState = {
   data: [],
+  selected: new VatClassDto(),
   error: null,
 };
 
@@ -33,6 +38,15 @@ export const vatClassesReducer = createReducer(
     error: null,
   })),
   on(GetAllVatClassesFailure, (state, { error }) => ({ ...state, error })),
+
+  //Get By Id
+  on(GetVatClassById, (state) => ({ ...state })),
+  on(GetVatClassByIdSuccess, (state, { data }) => ({
+    ...state,
+    selected:data,
+    error: null,
+  })),
+  on(GetVatClassByIdFailure, (state, { error }) => ({ ...state, error })),
 
   //InsertDto
   on(InsertVatClassDto, (state)=>({...state})),

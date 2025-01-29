@@ -80,7 +80,6 @@ export class BrandsEffects {
             map((brand: any) =>
               DeleteBrandByIdSuccess({ dto:brand })),
             catchError((error:any)=>{
-              debugger
               return of(DeleteBrandByIdFailure({error}))
             })
           )

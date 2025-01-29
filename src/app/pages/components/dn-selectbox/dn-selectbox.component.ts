@@ -44,18 +44,24 @@ export class DnSelectboxComponent {
   @Input() panelWidth: number|string;
   @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
+  @Output() selectionChange = new EventEmitter();
   @Output() onClick = new EventEmitter();
 
+  previousValue:any
   selectedOption: any;
   isOptionsPanelEnabled: boolean =true;
 
-  onSelection(data: any) {
+  onValueChanged(data: any) {
     this.selectedOption = this.dataSource.find(
       (option: any) => option[this.valueExpr] == data[this.valueExpr]
     );
 
     this.valueChange.emit(this.selectedOption[this.valueExpr]);
+    let dto ={value:this.selectedOption[this.valueExpr], previousValue:this.previousValue}
+    this.selectionChange.emit(dto);
+    this.previousValue =this.selectedOption[this.valueExpr]
   }
+
 
   onInputClick(e:any){
     this.isOptionsPanelEnabled=true;

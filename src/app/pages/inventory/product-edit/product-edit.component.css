@@ -114,14 +114,19 @@ margin:1%
   width:95%;
 }
 
-.tab1-grid-e-sku{
+.tab1-grid-e-barcode{
   grid-area: e;
   gap:2rem;
   width:90%;
 }
-
-.tab1-grid-f-brand{
+.tab1-grid-f-sku{
   grid-area: f;
+  gap:2rem;
+  width:90%;
+}
+
+.tab1-grid-h-brand{
+  grid-area: h;
   gap:2rem;
   width:90%;
 }
@@ -174,5 +179,31 @@ margin:1%
 ::ng-deep .green-snackbar .mdc-snackbar__surface {
   background-color:#1b9e1b!important;
   color: white;
+}
+
+.tab2-grid{
+  display: grid;
+  grid-template-areas:
+  "a b c d"
+  "e f g d"
+  "i j h d";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2rem;
+}
+
+.tab2-grid-a-category1{
+  grid-area: a;
+  gap:2rem;
+  width:90%;
+}
+.tab2-grid-e-category2{
+  grid-area: e;
+  gap:2rem;
+  width:90%;
+}
+.tab2-grid-i-category3{
+  grid-area: i;
+  gap:2rem;
+  width:90%;
 }
 

@@ -27,7 +27,7 @@
     <mat-autocomplete
       #matAutoComplete
       #auto="matAutocomplete"
-      (optionSelected)="onSelection($event.option.value)"
+      (optionSelected)="onValueChanged($event.option.value)"
       [displayWith]="display.bind(this)"
       [panelWidth]="panelWidth"
     >

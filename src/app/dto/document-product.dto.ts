@@ -30,5 +30,6 @@ export class DocumentProductDto {
   VatClassId: any;
   IsEditable: boolean;
   QuantityFromLots: number; //Used to store the total quantity from lots
+  ProductRetailPriceCopy: number | undefined;
 
 }

@@ -82,12 +82,14 @@ import { firstValueFrom } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { GetAllStatuses } from '../../state/parameters/statuses/statuses.actions';
 import { selectAllStatuses } from '../../state/parameters/statuses/statuses.selectors';
-import { GetAllVatClasses } from '../../state/parameters/vat-classes/vat-classes.actions';
+import {
+  GetAllVatClasses,
+  GetVatClassById,
+} from '../../state/parameters/vat-classes/vat-classes.actions';
 import {
   selectAllVatClasses,
   selectVatClassById,
 } from '../../state/parameters/vat-classes/vat-classes.selectors';
-import { After } from 'v8';
 
 @Component({
   selector: 'app-document-edit',
@@ -124,7 +126,6 @@ import { After } from 'v8';
   styleUrl: './document-edit.component.css',
 })
 export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChildren('td') cells: QueryList<ElementRef>;
   @ViewChild('productstable') productstable: DnGridComponent;
 
   documentsViewModel: DocumentsViewModel;
@@ -178,6 +179,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   warehousesViewModel: WarehousesViewModel;
   warehousesList: any;
   vatClassesList: any;
+  vatClassRate: any;
 
   constructor(
     private http: HttpClient,
@@ -296,7 +298,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     let productsObs = this.productsViewModel.GetAll();
     this.products = (await firstValueFrom(productsObs)) as ProductDto[];
 
-    if(this.generalOptions.LotsEnabled){
+    if (this.generalOptions.LotsEnabled) {
       let lotsObs = this.lotsViewModel.GetLookup();
       this.lotsDataSource = await firstValueFrom(lotsObs);
     }
@@ -324,7 +326,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     let defaultWarehouse = this.getDefaultWareHouse();
     this.document.WarehouseId = defaultWarehouse.Id;
-
   }
 
   getDefaultWareHouse() {
@@ -349,21 +350,13 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.documentProductsViewModel
       .GetByDocumentId(documentId)
       .subscribe((result: any) => {
-        this.productstable.dataSource = result;
-        this.productstable.dataSource.forEach((product: any) => {
-          product.SerialNumber =
-            this.productstable.dataSource.indexOf(product) + 1;
+        this.productsDataSource = result;
+        this.productsDataSource.forEach((product: any) => {
+          product.SerialNumber = this.productsDataSource.indexOf(product) + 1;
         });
         this.getColumns();
         this.calculateDocumentTotal();
       });
-  }
-
-  onKeydown(e: any, index: number) {
-    if (this.productsDataSource[index].IsRowFilled && e.keyCode == 40) {
-      let cellsArray = this.cells.toArray();
-      cellsArray[index + 1].nativeElement.focus();
-    }
   }
 
   getAdditionalCharges(documentId: Guid) {
@@ -377,23 +370,22 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       });
   }
 
-  GetProductVatAmount(id: Guid, data: DocumentProductDto) {
-    if (!data.VatClassRate) {
-      this.store.select(selectVatClassById(id)).subscribe((result: any) => {
-        let vatClass = { ...result } as VatClassDto;
-        data.VatAmount = this.calculateProductVatAmount(data, vatClass.Rate);
+  async GetProductVatAmount(id: Guid, data: DocumentProductDto) {
+    debugger;
+      let obs = this.store.select(selectVatClassById(id));
+      let result = (await firstValueFrom(obs)) as VatClassDto;
 
-        data.VatClassRate = vatClass.Rate;
-        data.VatClassId = vatClass.Id;
-        this.GetTotalVatAmount(data);
-      });
-    } else {
-      data.VatAmount = this.calculateProductVatAmount(data, data.VatClassRate);
+      let vatClass = { ...result } as VatClassDto;
+      data.VatAmount = this.calculateProductVatAmount(data, vatClass.Rate);
+
+      data.VatClassRate = vatClass.Rate;
+      data.VatClassId = vatClass.Id;
       this.GetTotalVatAmount(data);
-    }
+
   }
 
   calculateProductVatAmount(data: DocumentProductDto, rate: number) {
+    debugger;
     let vatAmount =
       Math.round(
         ((data.ProductRetailPrice as number) -
@@ -528,9 +520,9 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   calculateDocumentTotal() {
     this.total = 0;
-    for (let i = 0; i < this.productstable.dataSource.length; i++) {
-      if (this.productstable.dataSource[i]?.TotalPrice) {
-        this.total += this.productstable.dataSource[i].TotalPrice!;
+    for (let i = 0; i < this.productsDataSource.length; i++) {
+      if (this.productsDataSource[i]?.TotalPrice) {
+        this.total += this.productsDataSource[i].TotalPrice!;
       }
     }
     this.total += this.addCharges;
@@ -549,7 +541,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       if (product) {
         let index = this.productsDataSource.indexOf(product);
         this.productsDataSource.splice(index, 1);
-        this.productstable.dataSource = this.productsDataSource;
+        this.productsDataSource = [...this.productsDataSource];
       }
     }
   }
@@ -687,49 +679,46 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
         this.displayNotification('Record deleted');
       });
-
   }
 
-  displaySizes(value: string) {
-    return value ? value : '';
-  }
+  // displaySizes(value: string) {
+  //   return value ? value : '';
+  // }
+  //
+  // onSizeSelectionChanged(
+  //   data: DocumentProductDto,
+  //   productsDataSource: DocumentProductDto[]
+  // ) {
+  //   if (data.ProductId) {
+  //     this.productBarcodesViewModel
+  //       .GetByProductId(data.ProductId)
+  //       .subscribe((result: ProductBarcodeDto[]) => {
+  //         let barcodeData = result.find(
+  //           (x: ProductBarcodeDto) => x.SizeId == data.ProductSizeId
+  //         );
 
-  onSizeSelectionChanged(
-    data: DocumentProductDto,
-    productsDataSource: DocumentProductDto[]
-  ) {
-    if (data.ProductId) {
-      this.productBarcodesViewModel
-        .GetByProductId(data.ProductId)
-        .subscribe((result: ProductBarcodeDto[]) => {
-          let barcodeData = result.find(
-            (x: ProductBarcodeDto) => x.SizeId == data.ProductSizeId
-          );
+  //         let exists = this.checkIfProductExistsInTheTable(
+  //           productsDataSource,
+  //           barcodeData != null ? barcodeData.Barcode : ''
+  //         );
+  //         //data.Barcode = barcodeData!.Barcode;
 
-          let exists = this.checkIfProductExistsInTheTable(
-            productsDataSource,
-            barcodeData != null ? barcodeData.Barcode : ''
-          );
-          //data.Barcode = barcodeData!.Barcode;
-
-          if (exists) {
-            // this.addQuantityToExistingLine(index);
-          } else {
-            let rowIndex = productsDataSource.indexOf(data);
-            if (barcodeData) {
-              data.IsRowFilled = true;
-              data.Barcode = barcodeData.Barcode;
-              data.SerialNumber = rowIndex + 1;
-              data.SizeName = data.SizeName;
-              data.ProductSizeId = barcodeData.SizeId;
-            }
-            // let cellsArray = this.cells.toArray();
-            // cellsArray[index + 1].nativeElement.focus();
-          }
-        });
-    }
-    this.calculateDocumentTotal();
-  }
+  //         if (exists) {
+  //           // this.addQuantityToExistingLine(index);
+  //         } else {
+  //           let rowIndex = productsDataSource.indexOf(data);
+  //           if (barcodeData) {
+  //             data.IsRowFilled = true;
+  //             data.Barcode = barcodeData.Barcode;
+  //             data.SerialNumber = rowIndex + 1;
+  //             data.SizeName = data.SizeName;
+  //             data.ProductSizeId = barcodeData.SizeId;
+  //           }
+  //         }
+  //       });
+  //   }
+  //   this.calculateDocumentTotal();
+  // }
 
   onQuantityChange(data: DocumentProductDto) {
     let tempResults;
@@ -833,21 +822,26 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     WebAppBase.data = undefined;
   }
 
-  onSkuSelection(data: DocumentProductDto, columns: DnColumnDto[]) {
+  async onSkuSelection(data: DocumentProductDto, columns: DnColumnDto[]) {
     this.productsViewModel
       .GetBySku(data.Sku!)
       .subscribe(async (result: ProductDto) => {
         data.ProductId = result.Id;
         data.ProductName = result.Name;
-        data.ProductRetailPrice = result.RetailPrice;
-        data.TotalPrice = result.RetailPrice;
         data.Quantity = 1;
+        data.ProductRetailPrice = result.RetailPrice;
+        this.productsDataSource = this.productstable.dataSource;
+        debugger;
+
+        await this.GetProductVatAmount(result.VatClassId, data);
+
+        await this.recalculateLine(data, this.vatClassRate);
+
         data.Barcode = undefined;
 
         data.IsRowFilled = true;
-        this.GetProductVatAmount(result.VatClassId, data);
+
         //this.getProductSizes(data.ProductId, columns);
-        this.calculateDocumentTotal();
       });
   }
 
@@ -1041,7 +1035,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
         tempArrayOfDocumentProductLotsQuantities;
     }
 
-    this.calculateDocumentTotal();
     if (this.document.Id && data.Id) {
       this.documentProductsViewModel
         .UpdateDto(data)
@@ -1059,6 +1052,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     } else {
       this.productsDataSource = this.productstable.dataSource;
     }
+    this.calculateDocumentTotal();
   }
 
   onProductRowStopEditing(e: any) {
@@ -1067,5 +1061,51 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onPrintClicked(e: any) {
     this.pdfGeneratorComponent.generate(this.document);
+  }
+
+  onVatClassSelectionChanged(e: any) {
+    if (e.previousValue == e.value) return;
+
+    this.store
+      .select(selectVatClassById(this.document.VatClassId))
+      .subscribe((result: any) => {
+        this.vatClassRate = result.Rate;
+        this.productsDataSource.forEach(async (product) => {
+          //If the customer VatClass Rate is lower than the product's Rate, then the lowest rate is applied
+          product.VatAmount = this.calculateProductVatAmount(
+            product,
+            result.Rate
+          );
+          await this.recalculateLine(product, result.Rate);
+        });
+      });
+  }
+
+  async recalculateLine(product: DocumentProductDto, rate: number) {
+    if (!product.VatClassRate) {
+      let obs = this.store.select(selectVatClassById(product.VatClassId));
+      let result = (await firstValueFrom(obs)) as VatClassDto;
+      product.VatClassRate = result?.Rate;
+    }
+    debugger
+    if (rate < product.VatClassRate) {
+      let priceWithoutVat =
+        product.ProductRetailPrice! / (1 + product.VatClassRate / 100);
+      let price = Math.round(priceWithoutVat * (1 + rate / 100) * 100) / 100;
+      product.ProductRetailPrice = price;
+      product.TotalPrice = product.ProductRetailPrice! * product.Quantity!;
+      this.GetProductVatAmount(this.document.VatClassId, product);
+
+    } else {
+      //Get Price From state
+      let obs = this.productsViewModel.GetBySku(product.Sku!);
+      let result = (await firstValueFrom(obs)) as ProductDto;
+      product.ProductRetailPrice = result.RetailPrice;
+      product.TotalPrice = product.ProductRetailPrice! * product.Quantity!;
+      this.GetProductVatAmount(result.VatClassId, product);
+    }
+    this.calculateDocumentTotal();
+
+    this.productsDataSource = [...this.productsDataSource];
   }
 }

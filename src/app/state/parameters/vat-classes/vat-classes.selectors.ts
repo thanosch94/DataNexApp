@@ -15,3 +15,9 @@ export const selectVatClassById = (id:Guid)=>
     state=>(state.data).find((x:any)=>x.Id==id)
   )
 
+// export const selectVatClassById = (id:Guid)=>
+//   createSelector(
+//     selectVatClassesState,
+//     state=>state.selected
+//   )
+

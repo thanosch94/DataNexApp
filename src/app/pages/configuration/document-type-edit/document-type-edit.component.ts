@@ -211,7 +211,6 @@ documentTypesTransformationsColumns: DnColumnDto[];
     //Document Types
     this.store.dispatch(GetDocumentTypesLookup());
     this.docTypesDataSource = this.store.select(selectDocumentTypesLookup);
-    debugger
   }
 
   async getDocumentTypeSeriesColumns() {
