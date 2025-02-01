@@ -214,3 +214,18 @@ td , th {
   width: auto !important;
 }
 
+::ng-deep .table-container {
+  border-radius: 10px;
+}
+.table ::ng-deep .select-box  .mdc-text-field {
+  border-radius: unset;
+}
+.table ::ng-deep .text-box  .mdc-text-field {
+  border-radius: unset;
+}
+.table ::ng-deep .date-box  .mdc-text-field {
+  border-radius: unset;
+}
+.table ::ng-deep .number-box  .mdc-text-field {
+  border-radius: unset;
+}

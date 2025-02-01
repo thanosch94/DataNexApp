@@ -194,18 +194,21 @@ margin-right: auto;
   flex-grow: 0!important;
   width: 14%!important;
   height:30px!important;
+  padding-right: 10px;
+  padding-left: 15px;
+  transition: 0.5s ease-in-out;
 
 }
 
 ::ng-deep .mdc-tab-indicator--active, .mat-ripple.mat-mdc-tab-ripple{
   background: linear-gradient(90deg, rgba(235,233,233,1) 0%, rgba(241,241,241,1) 100%, rgba(211,212,212,1) 100%)!important;
-  border-radius: 25px!important;
+  border-radius: 10px!important;
   overflow: hidden !important;
   text-align: center!important;
 }
 
 ::ng-deep .mat-mdc-tab-labels> div{
-  border-radius:25px!important;
+  border-radius:10px!important;
   overflow: hidden !important;
   height:40px!important;
 
