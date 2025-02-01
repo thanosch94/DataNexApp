@@ -3,7 +3,7 @@
   [canRefresh]="documentId ? true : false"
   [canExit]="true"
   [canSave]="true"
-  [canPrint]="true"
+  [canPrint]="documentId ? true : false"
   [isDialog]="false"
   [title]="document_text"
   [entityId]="document.Id"
@@ -323,9 +323,7 @@
     <mat-tab label="Attachments">
       <div class="tab-5">
         <div class="tab5">
-          <div>
-            <input type="file" />
-          </div>
+          <dn-file-uploader></dn-file-uploader>
         </div>
       </div>
     </mat-tab>

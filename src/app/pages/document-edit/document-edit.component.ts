@@ -90,6 +90,7 @@ import {
   selectAllVatClasses,
   selectVatClassById,
 } from '../../state/parameters/vat-classes/vat-classes.selectors';
+import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-uploader.component';
 
 @Component({
   selector: 'app-document-edit',
@@ -116,6 +117,7 @@ import {
     DnTextboxComponent,
     DnNumberBoxComponent,
     DnDateBoxComponent,
+    DnFileUploaderComponent
   ],
   providers: [
     provideNativeDateAdapter(),

@@ -1,0 +1,41 @@
+p {
+  font-family: Lato;
+}
+.dropzone {
+  border-radius: 10px;
+  min-height: 100px;
+  min-width: 400px;
+  display: table;
+  width: 99%;
+  background-color: #eee;
+  border: dotted 1px #aaa;
+}
+
+.text-wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.centered {
+  font-size: 1.3em;
+  text-align:center;
+}
+
+.grid{
+  display: grid;
+  grid-template-areas:
+   "a b";
+  gap: 2rem;
+}
+
+.grid-area-a{
+  grid-area: a;
+}
+.grid-area-b{
+  grid-area: b;
+}
+
+.docs-to-upload{
+  display : flex;
+     justify-content: between;
+}

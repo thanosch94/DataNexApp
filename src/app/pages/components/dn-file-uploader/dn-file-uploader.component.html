@@ -1,0 +1,36 @@
+<div [ngClass]="files.length == 0 ? '' : 'grid'">
+  <div class="grid-area-a dropzone" dragAndDrop (files)="filesDropped($event)">
+    <div class="text-wrapper">
+      <div class="centered">
+        <img
+          src="../../../../assets/images/cloud-computing.png"
+          width="50"
+          height="50"
+        />
+        <div>Drop your file here</div>
+      </div>
+    </div>
+  </div>
+
+  @if(files.length>0){
+  <div class="grid-area-b">
+    <div class=" docs-to-upload">
+
+    <div *ngFor="let file of files">
+      <img
+        src="../../../../assets/images/document.png"
+        width="40px"
+        height="40px"
+      />
+      <div style="width: 100px; margin-right: 1%">
+        <p>{{ file.file.name }}</p>
+      </div>
+    </div>
+  </div>
+  <button style="width:150px" mat-stroked-button (click)="upload()">Upload</button>
+
+
+  </div>
+
+  }
+</div>
