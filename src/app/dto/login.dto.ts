@@ -4,4 +4,5 @@ export class LoginDto {
   UserName: string;
   Password:string;
   CompanyId: Guid;
+  CompanyCode: string;
 }

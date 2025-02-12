@@ -1,13 +1,111 @@
 <div class="login">
   <div class="img">
     <img [src]="logoPath" width="205" height="75" />
-  </div>    <form method="post">
-    	<input type="text" name="u" placeholder="Username" [(ngModel)]="loginData.UserName" required="required" />
-      <input type="password" name="p" placeholder="Password" [(ngModel)]="loginData.Password"  required="required" />
-      <select name="companies" id="companies" [(ngModel)]="loginData.CompanyId">
+  </div>
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmitClicked($event)">
+    <!-- Username -->
+    <input
+      [ngClass]="
+        !(
+          loginForm.get('userName')!.touched &&
+          loginForm.get('userName')!.invalid
+        )
+          ? 'input-margin-bottom'
+          : ''
+      "
+      type="text"
+      id="userName"
+      name="userName"
+      placeholder="Username"
+      formControlName="userName"
+    />
+    <p
+      [ngClass]="
+        loginForm.get('userName')!.touched && loginForm.get('userName')!.invalid
+          ? 'input-margin-bottom'
+          : ''
+      "
+      *ngIf="
+        loginForm.get('userName')!.touched && loginForm.get('userName')!.invalid
+      "
+    >
+      <small
+        style="color: red"
+        *ngIf="loginForm.get('userName')!.hasError('required')"
+        >Username is required</small
+      >
+  </p>
 
-        <option *ngFor="let company of companies" [value]="company.Id">{{company.Name}}</option>
+    <!-- Password -->
+    <input
+      [ngClass]="
+        !(
+          loginForm.get('password')!.touched &&
+          loginForm.get('password')!.invalid
+        )
+          ? 'input-margin-bottom'
+          : ''
+      "
+      type="password"
+      name="password"
+      placeholder="Password"
+      formControlName="password"
+    />
+    <p
+      [ngClass]="
+        loginForm.get('password')!.touched && loginForm.get('password')!.invalid
+          ? 'input-margin-bottom'
+          : ''
+      "
+      *ngIf="
+        loginForm.get('password')!.touched && loginForm.get('password')!.invalid
+      "
+    >
+      <small
+        style="color: red"
+        *ngIf="loginForm.get('password')!.hasError('required')"
+        >Password is required</small
+      >
+    </p>
 
-      </select>      <button type="submit" class="btn btn-primary btn-block btn-large" (click)="onSubmitClicked($event)">Log in @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}</button>
-    </form>
+    <!-- Company Code -->
+    <input
+    [ngClass]="
+      !(
+        loginForm.get('companyCode')!.touched &&
+        loginForm.get('companyCode')!.invalid
+      )
+        ? 'input-margin-bottom'
+        : ''
+    "
+    type="text"
+    name="companyCode"
+    placeholder="Company Code"
+    formControlName="companyCode"
+  />
+  <p
+    [ngClass]="
+      loginForm.get('companyCode')!.touched && loginForm.get('companyCode')!.invalid
+        ? 'input-margin-bottom'
+        : ''
+    "
+    *ngIf="
+      loginForm.get('companyCode')!.touched && loginForm.get('companyCode')!.invalid
+    "
+  >
+    <small
+      style="color: red"
+      *ngIf="loginForm.get('companyCode')!.hasError('required')"
+      >Company Code is required</small
+    >
+  </p>
+
+    <button type="submit" class="btn btn-primary btn-block btn-large">
+      Log in @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}
+    </button>
+    <div class="register-text">
+      <p>Don't have an account?</p>
+      <p><a href="register-form"> Register now</a></p>
+    </div>
+  </form>
 </div>

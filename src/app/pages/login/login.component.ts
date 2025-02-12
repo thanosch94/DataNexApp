@@ -2,7 +2,13 @@ import { GeneralOptionsViewModel } from './../../view-models/general-options.vie
 import { CompaniesViewModel } from './../../view-models/companies.viewmodel';
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, isDevMode } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule, MatLabel } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthService } from '../../services/auth.service';
@@ -17,75 +23,94 @@ import { HttpClient } from '@angular/common/http';
 import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
 
 @Component({
-    selector: 'app-login',
-    imports: [
-        MatFormFieldModule,
-        CommonModule,
-        FormsModule,
-        MatInputModule,
-    ],
-    templateUrl: './login.component.html',
-    styleUrl: './login.component.css'
+  selector: 'app-login',
+  imports: [
+    MatFormFieldModule,
+    CommonModule,
+    MatInputModule,
+    ReactiveFormsModule,
+  ],
+  templateUrl: './login.component.html',
+  styleUrl: './login.component.css',
 })
 export class LoginComponent {
   loginData: LoginDto = new LoginDto();
   logoPath: string;
-  isLoading: boolean =false;
-  companiesViewModel: CompaniesViewModel;
-  companies: any;
+  isLoading: boolean = false;
+  //companiesViewModel: CompaniesViewModel;
+  //companies: any;
   generalOptionsViewModel: GeneralOptionsViewModel;
+  loginForm: FormGroup;
 
   constructor(
-    private http:HttpClient,
+    private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private ref: ChangeDetectorRef,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private fb: FormBuilder
   ) {
-      this.logoPath = "./assets/images/datanex_logo.png"
-    this.companiesViewModel = new CompaniesViewModel(this.http,this.auth)
-    this.companiesViewModel.GetLookup().subscribe((result:any)=>{
-      this.companies = result
-      this.loginData.CompanyId=this.companies[0].Id
-    })
+    //When someone navigates from register to login
+    this.loginData.UserName = history.state?.Username;
+    this.loginData.Password = history.state?.Password;
+    this.loginData.CompanyCode = history.state?.CompanyCode;
+
+    this.logoPath = './assets/images/datanex_logo.png';
+
+    this.loginForm = this.fb.group({
+      userName: ['', Validators.required],
+      password: ['', [Validators.required]],
+      companyCode: ['', [Validators.required]],
+    });
   }
 
   onSubmitClicked(e: any) {
-    this.isLoading =true
-    this.auth.login(this.loginData).subscribe({
-      next: (result: any) => {
-        result as ApiResponseDto
-        if (result?.Success == true) {
-          let user = result.Result as UserDto
-          this.auth.isAuthenticated = true;
-          this.companiesViewModel.GetById(this.loginData.CompanyId).subscribe((result:any)=>{
-            this.auth.loggedInCompany = result
-            WebAppBase.isLoggedIn =true;
-            this.auth.user=user;
+    if (this.loginForm.valid) {
+      this.isLoading = true;
+      this.auth.login(this.loginData).subscribe({
+        next: (result: any) => {
+          result as ApiResponseDto;
+          if (result?.Success == true) {
+            let user = result.Result as UserDto;
+            this.auth.isAuthenticated = true;
+            this.auth.loggedInCompany = user.Company;
+            WebAppBase.isLoggedIn = true;
+            this.auth.user = user;
             this.ref.detectChanges();
             this.router.navigate(['/']);
-            this.generalOptionsViewModel = new GeneralOptionsViewModel(this.http,this.auth)
-            this.generalOptionsViewModel.GetAll().subscribe((result:GeneralOptionsDto)=>{
-              this.auth.appOptions = result
-            })
-          })
+            this.generalOptionsViewModel = new GeneralOptionsViewModel(
+              this.http,
+              this.auth
+            );
+            this.generalOptionsViewModel
+              .GetAll()
+              .subscribe((result: GeneralOptionsDto) => {
+                this.auth.appOptions = result;
+              });
+          } else {
+            WebAppBase.isLoggedIn = false;
+          }
+        },
+        error: (err) => {
+          this.isLoading = false;
+debugger
+          const dialog = this.dialog.open(DnAlertComponent, {
+            data: {
+              Title: 'Message',
+              Message: err.status==0?'It seems there is a network issue. Please check your internet connection':err.error,
+            },
+          });
+        },
+      });
+    } else {
+      this.markAllAsTouched();
 
+    }
+  }
 
-        } else {
-          WebAppBase.isLoggedIn =false;
-
-        }
-      },
-      error: (err) => {
-        this.isLoading =false
-
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error,
-          },
-        });
-      },
+  markAllAsTouched() {
+    Object.keys(this.loginForm.controls).forEach((key) => {
+      this.loginForm.controls[key].markAsTouched();
     });
   }
 }
