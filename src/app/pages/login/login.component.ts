@@ -1,7 +1,12 @@
 import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
 import { CompaniesViewModel } from './../../view-models/companies.viewmodel';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, isDevMode } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  isDevMode,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -33,7 +38,7 @@ import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements AfterViewInit {
   loginData: LoginDto = new LoginDto();
   logoPath: string;
   isLoading: boolean = false;
@@ -57,6 +62,40 @@ export class LoginComponent {
 
     this.logoPath = './assets/images/datanex_logo.png';
 
+    this.initializeForm()
+  }
+
+  ngAfterViewInit() {
+    // Check if there are autofilled values
+    setTimeout(() => {
+      const userName = this.loginForm.get('userName');
+      const password = this.loginForm.get('password');
+      const companyCode = this.loginForm.get('companyCode');
+      const userNameValue = (<HTMLInputElement>(
+        document.getElementById('userName')
+      ))?.value;
+      const passwordValue = (<HTMLInputElement>(
+        document.getElementById('password')
+      ))?.value;
+      const companyCodeValue = (<HTMLInputElement>(
+        document.getElementById('companyCode')
+      ))?.value;
+
+      if (userNameValue) {
+        userName!.setValue(userNameValue);
+      }
+
+      if (passwordValue) {
+        password!.setValue(passwordValue);
+      }
+
+      if (companyCodeValue) {
+        companyCode!.setValue(companyCodeValue);
+      }
+    }, 500);
+  }
+
+  initializeForm(){
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       password: ['', [Validators.required]],
@@ -65,6 +104,9 @@ export class LoginComponent {
   }
 
   onSubmitClicked(e: any) {
+    this.loginData.UserName = this.loginForm.get('userName')?.value;
+    this.loginData.Password = this.loginForm.get('password')?.value;
+    this.loginData.CompanyCode = this.loginForm.get('companyCode')?.value;
     if (this.loginForm.valid) {
       this.isLoading = true;
       this.auth.login(this.loginData).subscribe({
@@ -93,18 +135,19 @@ export class LoginComponent {
         },
         error: (err) => {
           this.isLoading = false;
-debugger
           const dialog = this.dialog.open(DnAlertComponent, {
             data: {
               Title: 'Message',
-              Message: err.status==0?'It seems there is a network issue. Please check your internet connection':err.error,
+              Message:
+                err.status == 0
+                  ? 'It seems there is a network issue. Please check your internet connection'
+                  : err.error,
             },
           });
         },
       });
     } else {
       this.markAllAsTouched();
-
     }
   }
 
@@ -112,5 +155,11 @@ debugger
     Object.keys(this.loginForm.controls).forEach((key) => {
       this.loginForm.controls[key].markAsTouched();
     });
+  }
+
+  isTouchedOrInvalid(field: string) {
+    return (
+      this.loginForm.get(field)!.touched && this.loginForm.get(field)!.invalid
+    );
   }
 }

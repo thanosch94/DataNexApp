@@ -5,61 +5,35 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmitClicked($event)">
     <!-- Username -->
     <input
-      [ngClass]="
-        !(
-          loginForm.get('userName')!.touched &&
-          loginForm.get('userName')!.invalid
-        )
-          ? 'input-margin-bottom'
-          : ''
-      "
+      [ngClass]="!isTouchedOrInvalid('userName') ? 'input-margin-bottom' : ''"
       type="text"
-      id="userName"
       name="userName"
       placeholder="Username"
       formControlName="userName"
     />
     <p
-      [ngClass]="
-        loginForm.get('userName')!.touched && loginForm.get('userName')!.invalid
-          ? 'input-margin-bottom'
-          : ''
-      "
-      *ngIf="
-        loginForm.get('userName')!.touched && loginForm.get('userName')!.invalid
-      "
+      *ngIf="isTouchedOrInvalid('userName')"
+      [ngClass]="isTouchedOrInvalid('userName') ? 'input-margin-bottom' : ''"
     >
       <small
         style="color: red"
         *ngIf="loginForm.get('userName')!.hasError('required')"
         >Username is required</small
       >
-  </p>
+    </p>
 
     <!-- Password -->
-    <input
-      [ngClass]="
-        !(
-          loginForm.get('password')!.touched &&
-          loginForm.get('password')!.invalid
-        )
-          ? 'input-margin-bottom'
-          : ''
-      "
-      type="password"
-      name="password"
-      placeholder="Password"
-      formControlName="password"
-    />
+    <ng-container>
+      <input
+        [ngClass]="!isTouchedOrInvalid('password') ? 'input-margin-bottom' : ''"
+        type="password"
+        name="password"
+        placeholder="Password"
+        formControlName="password"
+    /></ng-container>
     <p
-      [ngClass]="
-        loginForm.get('password')!.touched && loginForm.get('password')!.invalid
-          ? 'input-margin-bottom'
-          : ''
-      "
-      *ngIf="
-        loginForm.get('password')!.touched && loginForm.get('password')!.invalid
-      "
+      *ngIf="isTouchedOrInvalid('password')"
+      [ngClass]="isTouchedOrInvalid('password') ? 'input-margin-bottom' : ''"
     >
       <small
         style="color: red"
@@ -70,35 +44,22 @@
 
     <!-- Company Code -->
     <input
-    [ngClass]="
-      !(
-        loginForm.get('companyCode')!.touched &&
-        loginForm.get('companyCode')!.invalid
-      )
-        ? 'input-margin-bottom'
-        : ''
-    "
-    type="text"
-    name="companyCode"
-    placeholder="Company Code"
-    formControlName="companyCode"
-  />
-  <p
-    [ngClass]="
-      loginForm.get('companyCode')!.touched && loginForm.get('companyCode')!.invalid
-        ? 'input-margin-bottom'
-        : ''
-    "
-    *ngIf="
-      loginForm.get('companyCode')!.touched && loginForm.get('companyCode')!.invalid
-    "
-  >
-    <small
-      style="color: red"
-      *ngIf="loginForm.get('companyCode')!.hasError('required')"
-      >Company Code is required</small
+      [ngClass]="!isTouchedOrInvalid('companyCode') ? 'input-margin-bottom' : ''"
+      type="text"
+      name="companyCode"
+      placeholder="Company Code"
+      formControlName="companyCode"
+    />
+    <p
+      *ngIf="isTouchedOrInvalid('companyCode')"
+      [ngClass]="isTouchedOrInvalid('companyCode') ? 'input-margin-bottom' : ''"
     >
-  </p>
+      <small
+        style="color: red"
+        *ngIf="loginForm.get('companyCode')!.hasError('required')"
+        >Company Code is required</small
+      >
+    </p>
 
     <button type="submit" class="btn btn-primary btn-block btn-large">
       Log in @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}
