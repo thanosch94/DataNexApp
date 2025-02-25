@@ -6,7 +6,7 @@
 .alert-msg {
   white-space: normal;
   word-wrap: break-word;
-  width: 500px;
+  max-width: 500px;
   word-break: break-word;
 }
 
