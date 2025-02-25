@@ -5,15 +5,15 @@
   <form [formGroup]="loginForm" (ngSubmit)="onSubmitClicked($event)">
     <!-- Username -->
     <input
-      [ngClass]="!isTouchedOrInvalid('userName') ? 'input-margin-bottom' : ''"
+      [ngClass]="!isTouchedOrInvalid(loginForm,'userName') ? 'input-margin-bottom' : ''"
       type="text"
       name="userName"
       placeholder="Username"
       formControlName="userName"
     />
     <p
-      *ngIf="isTouchedOrInvalid('userName')"
-      [ngClass]="isTouchedOrInvalid('userName') ? 'input-margin-bottom' : ''"
+      *ngIf="isTouchedOrInvalid(loginForm,'userName')"
+      [ngClass]="isTouchedOrInvalid(loginForm,'userName') ? 'input-margin-bottom' : ''"
     >
       <small
         style="color: red"
@@ -25,15 +25,15 @@
     <!-- Password -->
     <ng-container>
       <input
-        [ngClass]="!isTouchedOrInvalid('password') ? 'input-margin-bottom' : ''"
+        [ngClass]="!isTouchedOrInvalid(loginForm,'password') ? 'input-margin-bottom' : ''"
         type="password"
         name="password"
         placeholder="Password"
         formControlName="password"
     /></ng-container>
     <p
-      *ngIf="isTouchedOrInvalid('password')"
-      [ngClass]="isTouchedOrInvalid('password') ? 'input-margin-bottom' : ''"
+      *ngIf="isTouchedOrInvalid(loginForm,'password')"
+      [ngClass]="isTouchedOrInvalid(loginForm,'password') ? 'input-margin-bottom' : ''"
     >
       <small
         style="color: red"
@@ -44,15 +44,15 @@
 
     <!-- Company Code -->
     <input
-      [ngClass]="!isTouchedOrInvalid('companyCode') ? 'input-margin-bottom' : ''"
+      [ngClass]="!isTouchedOrInvalid(loginForm,'companyCode') ? 'input-margin-bottom' : ''"
       type="text"
       name="companyCode"
       placeholder="Company Code"
       formControlName="companyCode"
     />
     <p
-      *ngIf="isTouchedOrInvalid('companyCode')"
-      [ngClass]="isTouchedOrInvalid('companyCode') ? 'input-margin-bottom' : ''"
+      *ngIf="isTouchedOrInvalid(loginForm,'companyCode')"
+      [ngClass]="isTouchedOrInvalid(loginForm,'companyCode') ? 'input-margin-bottom' : ''"
     >
       <small
         style="color: red"

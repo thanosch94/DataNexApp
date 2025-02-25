@@ -26,6 +26,7 @@ import { ApiResponseDto } from '../../dto/api-response.dto';
 import { UserDto } from '../../dto/user.dto';
 import { HttpClient } from '@angular/common/http';
 import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
+import { GenericFormComponent } from '../components/generic-form/generic-form.component';
 
 @Component({
   selector: 'app-login',
@@ -38,7 +39,7 @@ import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
 })
-export class LoginComponent implements AfterViewInit {
+export class LoginComponent extends GenericFormComponent implements AfterViewInit {
   loginData: LoginDto = new LoginDto();
   logoPath: string;
   isLoading: boolean = false;
@@ -55,6 +56,7 @@ export class LoginComponent implements AfterViewInit {
     public dialog: MatDialog,
     private fb: FormBuilder
   ) {
+    super()
     //When someone navigates from register to login
     this.loginData.UserName = history.state?.Username;
     this.loginData.Password = history.state?.Password;
@@ -62,40 +64,31 @@ export class LoginComponent implements AfterViewInit {
 
     this.logoPath = './assets/images/datanex_logo.png';
 
-    this.initializeForm()
+    this.initializeForm();
   }
 
   ngAfterViewInit() {
     // Check if there are autofilled values
-    setTimeout(() => {
+    if (history.state) {
       const userName = this.loginForm.get('userName');
       const password = this.loginForm.get('password');
       const companyCode = this.loginForm.get('companyCode');
-      const userNameValue = (<HTMLInputElement>(
-        document.getElementById('userName')
-      ))?.value;
-      const passwordValue = (<HTMLInputElement>(
-        document.getElementById('password')
-      ))?.value;
-      const companyCodeValue = (<HTMLInputElement>(
-        document.getElementById('companyCode')
-      ))?.value;
 
-      if (userNameValue) {
-        userName!.setValue(userNameValue);
+      if (history.state.Username) {
+        userName!.setValue(history.state.Username);
       }
 
-      if (passwordValue) {
-        password!.setValue(passwordValue);
+      if (history.state.Password) {
+        password!.setValue(history.state.Password);
       }
 
-      if (companyCodeValue) {
-        companyCode!.setValue(companyCodeValue);
+      if (history.state.CompanyCode) {
+        companyCode!.setValue(history.state.CompanyCode);
       }
-    }, 500);
+    }
   }
 
-  initializeForm(){
+  initializeForm() {
     this.loginForm = this.fb.group({
       userName: ['', Validators.required],
       password: ['', [Validators.required]],
@@ -147,19 +140,9 @@ export class LoginComponent implements AfterViewInit {
         },
       });
     } else {
-      this.markAllAsTouched();
+      this.markAllAsTouched(this.loginForm);
     }
   }
 
-  markAllAsTouched() {
-    Object.keys(this.loginForm.controls).forEach((key) => {
-      this.loginForm.controls[key].markAsTouched();
-    });
-  }
 
-  isTouchedOrInvalid(field: string) {
-    return (
-      this.loginForm.get(field)!.touched && this.loginForm.get(field)!.invalid
-    );
-  }
 }

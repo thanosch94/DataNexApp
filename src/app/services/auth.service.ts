@@ -1,5 +1,5 @@
 import { HttpClient, HttpXhrBackend } from '@angular/common/http';
-import { AccountViewModel as AccountViewModel } from './../view-models/login.viewmodel';
+import { AccountViewModel as AccountViewModel } from '../view-models/account.viewmodel';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { UserDto } from '../dto/user.dto';
@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 import { Guid } from 'guid-typescript';
 import { CompanyDto } from '../dto/company.dto';
 import { GeneralOptionsDto } from '../dto/configuration/general-options.dto';
+import { RegisterDto } from '../dto/register.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -35,7 +36,8 @@ export class AuthService {
     this.headers = {
       Authorization: `Bearer ${this.token}`,
       'Content-Type': 'application/json',
-      'CompanyId':this.loggedInCompany?.Id
+      'CompanyId':this.loggedInCompany?.Id,
+      'CompanyCode':this.loggedInCompany?.CompanyLoginCode
     };
     return this.headers;
   }
@@ -52,6 +54,18 @@ export class AuthService {
     this.accountViewModel = new AccountViewModel(http);
 
     return this.accountViewModel.Login(loginData);
+  }
+
+  register(registerData: RegisterDto): Observable<Object> {
+    let http = new HttpClient(
+      new HttpXhrBackend({
+        build: () => new XMLHttpRequest(),
+      })
+    );
+
+    this.accountViewModel = new AccountViewModel(http);
+
+    return this.accountViewModel.Register(registerData);
   }
 
   getApiService() {

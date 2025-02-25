@@ -1,5 +1,6 @@
 import { Guid } from "guid-typescript";
 import { UserRolesEnum } from "../enums/user-roles.enum";
+import { CompanyDto } from "./company.dto";
 
 export class UserDto {
   Id:Guid;
@@ -12,4 +13,5 @@ export class UserDto {
   UserRole:UserRolesEnum;
   CompanyId:Guid;
   Token?: string;
+  Company:CompanyDto;
 }

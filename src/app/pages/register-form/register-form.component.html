@@ -1,0 +1,727 @@
+<div class="register">
+  <div class="img">
+    <img [src]="logoPath" width="205" height="75" />
+  </div>
+  @if(!isRegistrationCompleted){
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmitClicked($event)">
+    <div class="register-data-container">
+      <div class="client-data">
+        <div>
+          <b style="padding-bottom: 1rem; display: flex">Client Data</b>
+          <div
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'ClientName')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'ClientName')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="name"
+              placeholder="Name*"
+              formControlName="ClientName"
+              (input)="onInputChange(registerForm, 'ClientName')"
+            />
+          </div>
+          <div
+            *ngIf="isTouchedOrInvalid(registerForm, 'ClientName')"
+            [ngClass]="
+              isTouchedOrInvalid(registerForm, 'ClientName')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <p>
+              <small
+                style="color: red"
+                *ngIf="registerForm.get('ClientName')!.hasError('required')"
+                >Field is required</small
+              >
+            </p>
+          </div>
+          <div
+            class="inline"
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'ClientAddress') &&
+              !isTouchedOrInvalid(registerForm, 'ClientPostalCode')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <div>
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientAddress')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="address"
+                placeholder="Address*"
+                formControlName="ClientAddress"
+                (input)="onInputChange(registerForm, 'ClientAddress')"
+              />
+              <div
+                *ngIf="isTouchedOrInvalid(registerForm, 'ClientAddress')"
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientAddress')
+                    ? 'input-margin-bottom'
+                    : ''
+                "
+              >
+                <p>
+                  <small
+                    style="color: red"
+                    *ngIf="
+                      registerForm.get('ClientAddress')!.hasError('required')
+                    "
+                    >Field is required</small
+                  >
+                </p>
+              </div>
+            </div>
+            <div>
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientPostalCode')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="postal-code"
+                placeholder="Postal Code*"
+                formControlName="ClientPostalCode"
+                (input)="onInputChange(registerForm, 'ClientPostalCode')"
+              />
+              <div
+                *ngIf="isTouchedOrInvalid(registerForm, 'ClientPostalCode')"
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientPostalCode')
+                    ? 'input-margin-bottom'
+                    : ''
+                "
+              >
+                <p>
+                  <small
+                    style="color: red"
+                    *ngIf="
+                      registerForm.get('ClientPostalCode')!.hasError('required')
+                    "
+                    >Field is required</small
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="inline"
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'ClientCity') &&
+              !isTouchedOrInvalid(registerForm, 'ClientCountry')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <div class="w-100">
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientCity')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="city"
+                placeholder="City*"
+                formControlName="ClientCity"
+                (input)="onInputChange(registerForm, 'ClientCity')"
+              />
+              <div
+                *ngIf="isTouchedOrInvalid(registerForm, 'ClientCity')"
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientCity')
+                    ? 'input-margin-bottom'
+                    : ''
+                "
+              >
+                <p>
+                  <small
+                    style="color: red"
+                    *ngIf="registerForm.get('ClientCity')!.hasError('required')"
+                    >Field is required</small
+                  >
+                </p>
+              </div>
+            </div>
+            <div class="w-100">
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientCountry')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="country"
+                placeholder="Country*"
+                formControlName="ClientCountry"
+                (input)="onInputChange(registerForm, 'ClientCountry')"
+              />
+              <div
+                *ngIf="isTouchedOrInvalid(registerForm, 'ClientCountry')"
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientCountry')
+                    ? 'input-margin-bottom'
+                    : ''
+                "
+              >
+                <p>
+                  <small
+                    style="color: red"
+                    *ngIf="
+                      registerForm.get('ClientCountry')!.hasError('required')
+                    "
+                    >Field is required</small
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="inline"
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'ClientPhone1') &&
+              !isTouchedOrInvalid(registerForm, 'ClientPhone2')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <div class="w-100">
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientPhone1')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="phone1"
+                placeholder="Phone 1*"
+                formControlName="ClientPhone1"
+                (input)="onInputChange(registerForm, 'ClientPhone1')"
+              />
+            </div>
+            <div class="w-100">
+              <input
+                type="text"
+                name="phone2"
+                placeholder="Phone 2"
+                formControlName="ClientPhone2"
+              />
+            </div>
+          </div>
+          <div
+            *ngIf="isTouchedOrInvalid(registerForm, 'ClientPhone1')"
+            [ngClass]="
+              isTouchedOrInvalid(registerForm, 'ClientPhone1')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <p>
+              <small
+                style="color: red"
+                *ngIf="registerForm.get('ClientPhone1')!.hasError('required')"
+                >Field is required</small
+              >
+            </p>
+          </div>
+          <div
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'ClientEmail')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <div class="w-100">
+              <input
+                [ngClass]="
+                  isTouchedOrInvalid(registerForm, 'ClientEmail')
+                    ? 'red-border'
+                    : ''
+                "
+                type="text"
+                name="email"
+                placeholder="Email*"
+                formControlName="ClientEmail"
+                (input)="onInputChange(registerForm, 'ClientEmail')"
+              />
+            </div>
+          </div>
+          <div
+            *ngIf="isTouchedOrInvalid(registerForm, 'ClientEmail')"
+            [ngClass]="
+              isTouchedOrInvalid(registerForm, 'ClientEmail')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <p>
+              <small
+                style="color: red"
+                *ngIf="registerForm.get('ClientEmail')!.hasError('required')"
+                >Field is required</small
+              >
+              <small
+                style="color: red"
+                *ngIf="registerForm.get('ClientEmail')!.hasError('email')"
+                >Email is not valid</small
+              >
+            </p>
+          </div>
+          <div>
+            <textarea rows="4" matInput placeholder="Notes"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="company-data">
+        <b style="padding-bottom: 1rem; display: flex">Company Data</b>
+        <div
+          [ngClass]="
+            !isTouchedOrInvalid(registerForm, 'CompanyName')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <input
+            [ngClass]="
+              isTouchedOrInvalid(registerForm, 'CompanyName')
+                ? 'red-border'
+                : ''
+            "
+            type="text"
+            name="name"
+            placeholder="Name*"
+            formControlName="CompanyName"
+            (input)="onInputChange(registerForm, 'CompanyName')"
+          />
+        </div>
+        <div
+          *ngIf="isTouchedOrInvalid(registerForm, 'CompanyName')"
+          [ngClass]="
+            isTouchedOrInvalid(registerForm, 'CompanyName')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <p>
+            <small
+              style="color: red"
+              *ngIf="registerForm.get('CompanyName')!.hasError('required')"
+              >Field is required</small
+            >
+          </p>
+        </div>
+        <div
+          class="inline"
+          [ngClass]="
+            !isTouchedOrInvalid(registerForm, 'CompanyVatNumber') &&
+            !isTouchedOrInvalid(registerForm, 'CompanyTaxOffice')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyVatNumber')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="vat-number*"
+              placeholder="Vat Number*"
+              formControlName="CompanyVatNumber"
+              (input)="onInputChange(registerForm, 'CompanyVatNumber')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyVatNumber')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyVatNumber')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyVatNumber')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyTaxOffice')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="tax-office"
+              placeholder="Tax Office*"
+              formControlName="CompanyTaxOffice"
+              (input)="onInputChange(registerForm, 'CompanyTaxOffice')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyTaxOffice')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyTaxOffice')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyTaxOffice')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="inline"
+          [ngClass]="
+            !isTouchedOrInvalid(registerForm, 'CompanyAddress') &&
+            !isTouchedOrInvalid(registerForm, 'CompanyPostalCode')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyAddress')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="address"
+              placeholder="Address*"
+              formControlName="CompanyAddress"
+              (input)="onInputChange(registerForm, 'CompanyAddress')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyAddress')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyAddress')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyAddress')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyPostalCode')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="postal-code"
+              placeholder="Postal Code*"
+              formControlName="CompanyPostalCode"
+              (input)="onInputChange(registerForm, 'CompanyPostalCode')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyPostalCode')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyPostalCode')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyPostalCode')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="inline"
+          [ngClass]="
+            !isTouchedOrInvalid(registerForm, 'CompanyCity') &&
+            !isTouchedOrInvalid(registerForm, 'CompanyCountry')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyCity')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="city"
+              placeholder="City*"
+              formControlName="CompanyCity"
+              (input)="onInputChange(registerForm, 'CompanyCity')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyCity')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyCity')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="registerForm.get('CompanyCity')!.hasError('required')"
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyCountry')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="country"
+              placeholder="Country*"
+              formControlName="CompanyCountry"
+              (input)="onInputChange(registerForm, 'CompanyCountry')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyCountry')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyCountry')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyCountry')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div
+          class="inline"
+          [ngClass]="
+            !isTouchedOrInvalid(registerForm, 'CompanyPhone1') &&
+            !isTouchedOrInvalid(registerForm, 'CompanyPhone2')
+              ? 'input-margin-bottom'
+              : ''
+          "
+        >
+          <div class="w-100">
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyPhone1')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="phone1"
+              placeholder="Phone 1*"
+              formControlName="CompanyPhone1"
+              (input)="onInputChange(registerForm, 'CompanyPhone1')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyPhone1')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyPhone1')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyPhone1')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+          <div class="w-100">
+            <input
+              type="text"
+              name="phone2"
+              placeholder="Phone 2"
+              formControlName="CompanyPhone2"
+              (input)="onInputChange(registerForm, 'CompanyPhone2')"
+            />
+          </div>
+        </div>
+        <div>
+          <div
+            class="w-100"
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'CompanyEmail')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyEmail')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="email"
+              placeholder="Email*"
+              formControlName="CompanyEmail"
+              (input)="onInputChange(registerForm, 'CompanyEmail')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyEmail')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyEmail')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="registerForm.get('CompanyEmail')!.hasError('required')"
+                  >Field is required</small
+                >
+                <small
+                  style="color: red"
+                  *ngIf="registerForm.get('CompanyEmail')!.hasError('email')"
+                  >Email is not valid</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div
+            class="w-100"
+            [ngClass]="
+              !isTouchedOrInvalid(registerForm, 'CompanyLoginCode')
+                ? 'input-margin-bottom'
+                : ''
+            "
+          >
+            <input
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyLoginCode')
+                  ? 'red-border'
+                  : ''
+              "
+              type="text"
+              name="login-code"
+              placeholder="Login Code*"
+              formControlName="CompanyLoginCode"
+              (input)="onInputChange(registerForm, 'CompanyLoginCode')"
+            />
+            <div
+              *ngIf="isTouchedOrInvalid(registerForm, 'CompanyLoginCode')"
+              [ngClass]="
+                isTouchedOrInvalid(registerForm, 'CompanyLoginCode')
+                  ? 'input-margin-bottom'
+                  : ''
+              "
+            >
+              <p>
+                <small
+                  style="color: red"
+                  *ngIf="
+                    registerForm.get('CompanyLoginCode')!.hasError('required')
+                  "
+                  >Field is required</small
+                >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <b style="padding-bottom: 1rem; display: flex">Select Modules</b>
+
+      <div>
+        <textarea rows="5" matInput placeholder="Notes"></textarea>
+      </div>
+      <div>
+        <dn-checkbox
+          label="I have read and accept the terms of use and the privacy policy"
+        >
+        </dn-checkbox>
+      </div>
+    </div>
+    <div class="register-btn">
+      <button type="submit" class="btn btn-primary w-25 btn-large">
+        Register @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}
+      </button>
+    </div>
+  </form>
+  } @if(isRegistrationCompleted){
+  <div>
+    <p>
+      Thank you for registering! Your account has been created successfully.
+    </p>
+
+    <p>Login to your account with the following credentials:</p>
+    <p><b>Username</b>: admin</p>
+    <p><b>Password</b>: P&#64;ssw0rd</p>
+    <p><b>CompanyCode</b>: {{ registerData.CompanyLoginCode }}</p>
+  </div>
+  <div class="login-btn">
+    <button
+      class="btn btn-primary w-25 btn-large"
+      (click)="onLoginClicked($event)"
+    >
+      Login @if(isLoading){<i class="fa fa-spinner fa-spin"></i>}
+    </button>
+  </div>
+  }
+</div>
