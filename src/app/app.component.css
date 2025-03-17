@@ -25,6 +25,12 @@
  padding: 1%!important;
 
 }
+
+.menu-items ::ng-deep .mdc-list-item__primary-text{
+  width: 95%;
+  display: inline-flex !important;
+  justify-content: space-between!important;
+}
 .menu-item{
   font-size: 11px;
 }

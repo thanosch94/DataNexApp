@@ -8,4 +8,5 @@ export class MenuItemDto {
   Icon?:string;
   Params?:Object;
   Children?: MenuItemDto[]
+  IsFavorite?: any;
 }

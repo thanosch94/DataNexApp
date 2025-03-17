@@ -22,7 +22,9 @@ import {
   faCaretDown,
   faCaretUp,
   faDoorOpen,
-  faFile
+  faFile,
+  faHeart,
+  faHeartCirclePlus
 } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -35,7 +37,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { DnIconList } from './enumLists/dn-icon.list';
 import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
-import { MatMiniFabButton } from '@angular/material/button';
+import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
@@ -68,6 +70,7 @@ import { EffectsModule } from '@ngrx/effects';
         MatOptgroup,
         FormsModule,
         ReactiveFormsModule,
+        MatButtonModule
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css'
@@ -96,6 +99,8 @@ export class AppComponent {
   today: Date;
   selectedSearchItem: string | null;
   searchItems: MenuItemDto[];
+  faHeartCirclePlus: any;
+  faHeart: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -117,6 +122,8 @@ export class AppComponent {
     this.apiVersion = WebAppBase.apiVersion;
     this.faCaretDown = faCaretDown;
     this.faCaretUp = faCaretUp;
+    this.faHeartCirclePlus=faHeartCirclePlus
+    this.faHeart=faHeart
     this.tabs = tabsService.getTabs();
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
@@ -289,5 +296,22 @@ export class AppComponent {
         ),
       }))
       .filter((category) => category.Children.length > 0); // Remove empty categories
+  }
+
+  onAddRemoveToFavoritesMenuItem(e:any, item:any){
+    e.stopPropagation()
+    item.IsFavorite = !item.IsFavorite
+  }
+
+  onSideMenuFavoritesBtnClicked(e:any){
+    this.menuItems = Navigation.menu.map(item => {
+      const filteredChildren = item.Children ? item.Children.filter(child => child.IsFavorite) : [];
+      return { ...item, Children: filteredChildren.length ? filteredChildren : undefined };
+    }).filter(item => item.IsFavorite || item.Children?.length);
+
+  }
+
+  onSideMenuBtnClicked(e:any){
+    this.menuItems=Navigation.menu
   }
 }
