@@ -1,81 +1,281 @@
 <dn-toolbar
-[canDelete]="true"
-[canExit]="true"
-[canSave]="true"
-[canRefresh]="userId?true:false"
-[isDialog]="false"
-[title]="user_text"
-[entityId]="user.Id"
-(onCloseBtnClicked)="onCloseClicked($event)"
-(onDeleteBtnClicked)="onDeleteClicked($event)"
-(onSaveBtnClicked)="onSaveClicked($event)"
-(onRefreshBtnClicked)="onRefreshClicked($event)"
+  [canDelete]="true"
+  [canExit]="true"
+  [canSave]="true"
+  [canRefresh]="userId ? true : false"
+  [isDialog]="false"
+  [title]="user_text"
+  [entityId]="user.Id"
+  (onCloseBtnClicked)="onCloseClicked($event)"
+  (onDeleteBtnClicked)="onDeleteClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
-
-<div class="form">
-  <div class="basic-info-contact">
-    <div>
-      <div class="info-user">
-        <b>User Info</b>
-      </div>
-      <br />
-      <div>
-        <div>
-          <mat-form-field class="name">
-            <mat-label>Name</mat-label>
-            <input matInput name="Name" [(ngModel)]="user.Name" />
-          </mat-form-field>
-        </div>
-        <br />
-        <br />
-        <div>
-          <mat-form-field class="email">
-            <mat-label>Email</mat-label>
-            <input matInput name="email" [(ngModel)]="user.Email" />
-          </mat-form-field>
-        </div>
-      </div>
-    </div>
+<div
+  [ngClass]="
+    displayPasswordSetReminder
+      ? 'password-set-reminder-container'
+      : 'password-set-reminder-container-hide'
+  "
+>
+  <div>
+    <fa-icon class="triangle-icon" [icon]="faTriangleExclamation"></fa-icon>
+    <span
+      >User password is not set. Set pasword by clicking on the key next to
+      username field</span
+    >
   </div>
-  <div class="addresses">
-    <div class="info-user">
-      <b>Login Info</b>
-    </div>
-    <br />
-    <div>
-      <mat-form-field class="address">
-        <mat-label>Username</mat-label>
-        <input matInput name="address" [(ngModel)]="user.UserName" />
-      </mat-form-field>
-
-      <mat-form-field class="region">
-        <mat-label>User Role</mat-label>
-        <input matInput name="region" [(ngModel)]="user.UserRole"/>
-      </mat-form-field>
-
-    </div>
-  </div>
-  <br /><br /><br /><br />
-</div>
-<div class="form">
-  <div class="invoice-info">
-    <div class="info-user">
-      <b>Change Password</b>
-    </div>
-    <br />
-    <div>
-      <mat-form-field class="vat-number">
-        <mat-label>New Password</mat-label>
-        <input matInput name="vatid" [(ngModel)]="user.Password"  type="password"/>
-      </mat-form-field>
-
-    </div>
-    <div>
-      <mat-form-field class="vat-number">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput name="vatid" [(ngModel)]="confirmPassword"  type="password"/>
-      </mat-form-field>
-
-    </div>
+  <div>
+    <fa-icon
+      class="circle-x-icon"
+      [icon]="faCircleXmark"
+      (click)="onClosePasswordSetReminder($event)"
+    ></fa-icon>
   </div>
 </div>
+<form [formGroup]="form">
+  <mat-tab-group class="user-tabs">
+    <mat-tab label="Info">
+      <div class="form user-edit-container">
+        <div class="flex marginb-2 width-100">
+          <div class="flex basic-info-container">
+            <div>
+              <b>Basic Info</b>
+            </div>
+            <div class="flex">
+              <div matTooltip="Add New Photo" class="avatar">
+                <fa-icon [icon]="faCamera" size="3x"></fa-icon>
+              </div>
+              <div class="basic-info">
+                <div>
+                  <div class="flex">
+                    <div class="margin-auto width-45">
+                      <dn-textbox
+                        formControlName="name"
+                        label="Full Name"
+                        name="name"
+                      ></dn-textbox>
+                    </div>
+                    <div class="margin-5 width-45">
+                      <dn-date-box
+                        formControlName="birthday"
+                        [width]="100"
+                        label="Birthday"
+                        name="birthday"
+                      ></dn-date-box>
+                    </div>
+                  </div>
+
+                  <div class="flex">
+                    <div class="margin-5 width-45">
+                      <dn-textbox
+                        formControlName="occupation"
+                        label="Occupation"
+                        [width]="100"
+                        name="occupation"
+                      ></dn-textbox>
+                    </div>
+                    <div class="button-container">
+                      @if(user.IsActive){
+                      <button
+                        class="active-button"
+                        mat-fab
+                        extended
+                        matTooltip="Click to deactivate user"
+                        (click)="onUserActiveBtnClicked($event)"
+                      >
+                        <mat-icon>check_circle</mat-icon>
+                        Active
+                      </button>
+                      } @if(!user.IsActive){
+                      <button
+                        class="inactive-button"
+                        mat-fab
+                        extended
+                        matTooltip="Click to activate user"
+                        (click)="onUserActiveBtnClicked($event)"
+                      >
+                        <mat-icon>check_circle_outline</mat-icon>
+
+                        Inactive
+                      </button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex" style="width: 100%">
+            <div class="flex login-info-container">
+              <div>
+                <b>Login Info</b>
+              </div>
+              <div class="login-info">
+                <dn-textbox
+                  class="margin-5"
+                  formControlName="username"
+                  label="Username"
+                  [width]="45"
+                  name="username"
+                  icon="key"
+                  iconTooltip="Change Password"
+                  (onIconClicked)="onKeyClicked($event)"
+                ></dn-textbox
+                >
+                <!-- Maybe need to fix selectbox for reactive forms -->
+                <dn-selectbox
+                  label="User Role"
+                  formControlName="role"
+                  [dataSource]="appRoles"
+                  valueExpr="Id"
+                  displayExpr="Name"
+                  [width]="45"
+                >
+                </dn-selectbox>
+              </div>
+              <div>
+                <div class="margin-auto width-45">
+                  <dn-textbox
+                    formControlName="email"
+                    label="Email"
+                    [width]="100"
+                    name="email"
+                  ></dn-textbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex space-between width-100 marginb-2">
+          <div class="flex width-50 contact-info-container">
+            <div>
+              <b>Contact Info</b>
+            </div>
+            <div class="contact-info flex space-between">
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="address"
+                [width]="100"
+                label="Address"
+                name="address"
+              ></dn-textbox>
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="postalCode"
+                label="Postal Code"
+                name="postalCode"
+              ></dn-textbox>
+            </div>
+            <div class="flex space-between">
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="city"
+                [width]="100"
+                label="City"
+                name="city"
+              ></dn-textbox>
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="country"
+                label="Country"
+                name="country"
+              ></dn-textbox>
+            </div>
+            <div class="flex space-between">
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="phone1"
+                [width]="100"
+                label="Phone 1"
+                name="phone1"
+              ></dn-textbox>
+              <dn-textbox
+                class="margin-5 width-45"
+                formControlName="phone2"
+                label="Phone 2"
+                name="phone2"
+              ></dn-textbox>
+            </div>
+          </div>
+          <div class="flex width-50 social-media-container">
+            <div>
+              <b>Social Media</b>
+            </div>
+            <div class="personal-info flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faFacebook" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>Facebook</b>
+                </div>
+              </div>
+              <dn-textbox
+                class="margin-5 facebook-url"
+                formControlName="facebookUrl"
+                label="Facebook Url"
+                name="facebook"
+              ></dn-textbox>
+            </div>
+
+            <div class="flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faInstagram" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>Instagram</b>
+                </div>
+              </div>
+              <dn-textbox
+                class="margin-5 instagram-url"
+                formControlName="instagramUrl"
+                label="Instagram Url"
+                name="instagram"
+              ></dn-textbox>
+            </div>
+            <div class="flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faLinkedin" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>LinkedIn</b>
+                </div>
+              </div>
+              <dn-textbox
+                class="margin-5 linkedIn-url"
+                formControlName="linkedInUrl"
+                label="LinkedIn Url"
+                name="linkedIn"
+              ></dn-textbox>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Permissions"></mat-tab>
+    <mat-tab label="Tasks"></mat-tab>
+    <mat-tab label="Notes">
+      <div class="flex width-100 notes-container">
+        <div>
+          <b>Notes</b>
+        </div>
+        <div class="notes">
+          <mat-form-field class="width-100">
+            <textarea
+              matInput
+              cdkTextareaAutosize
+              name="notes"
+              #autosize
+              cdkAutosizeMinRows="5"
+              formControlName="notes"
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+</form>

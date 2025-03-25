@@ -12,7 +12,9 @@ body { margin: 0; font-family: Roboto,"Helvetica Neue Light","Helvetica Neue","H
 .width-80{
   width:80%;
 }
-
+.width-75{
+  width:75%;
+}
 .width-50{
   width:50%;
 }
@@ -21,6 +23,9 @@ body { margin: 0; font-family: Roboto,"Helvetica Neue Light","Helvetica Neue","H
 }
 .width-40{
   width:40%;
+}
+.width-30{
+  width:30%;
 }
 .width-20{
   width:20%;
@@ -65,3 +70,14 @@ input, span
     color: white;
   }
 }
+
+// input:-webkit-autofill
+//  {
+//   box-shadow: 0 0 0 30px #f5f4f4  inset !important;
+// }
+// input:-webkit-autofill:focus,
+// input:-webkit-autofill:active
+// {
+//   box-shadow: 0 0 0 30px #e4e3e3  inset !important;
+
+// }

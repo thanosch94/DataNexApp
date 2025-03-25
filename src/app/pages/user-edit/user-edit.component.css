@@ -1,15 +1,49 @@
 .form{
-  margin:2%;
-  display:flex;
+  margin:1%;
+}
+.flex{
+  display: flex;
 }
 
-.info-user{
-  margin-bottom:3%
+.marginb-2{
+  margin-bottom: 2%;
 }
 
-.basic-info-contact, .invoice-info{
-  width:50%;
+.avatar{
+  width:200px;
+  height: 150px;
+  background-color: lightgray;
+  clip-path: circle(45%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 3%;
 }
+
+.avatar:hover{
+  background-color: gray;
+  cursor: pointer;
+
+}
+
+.basic-info, .login-info, .personal-info, .contact-info, .notes{
+  margin-top: 25px;
+  width:100%
+}
+.margin-5{
+  margin-right:5% ;
+}
+.margin-auto{
+  margin-right:auto ;
+}
+
+.space-between{
+  justify-content: space-between;
+}
+.space-around{
+  justify-content: space-around;
+}
+
 .addresses{
   width:50%;
 }
@@ -25,7 +59,7 @@
   margin-right: auto;
 }
 
-.phone1, .email, .address, .vat-number,.city, .country{
+.phone1, .email, .vat-number,.city, .country, .username{
   width:40%;
   margin-right: 5%;
 }
@@ -36,3 +70,94 @@
 }
 
 
+::ng-deep .change-password-container .mat-mdc-dialog-surface.mdc-dialog__surface   {
+  border-radius: 4%!important;
+}
+
+.active-button{
+  background-color:green;
+  width:130px;
+  height: 35px;
+
+}
+
+.basic-info-container, .login-info-container{
+  flex-direction: column;
+  width: 100%
+}
+
+.contact-info-container, .social-media-container, .notes-container{
+  flex-direction: column
+}
+
+.button-container{
+  display: flex;
+  align-items: center;
+  margin-bottom: 4%;
+}
+
+.inactive-button{
+  background-color:#DE005D;
+  width:130px;
+  height: 35px;
+}
+
+.inline{
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.user-edit-container ::ng-deep .text-box{
+  margin-bottom: 15px;
+}
+
+.social-container{
+  display: flex;
+  align-items: center;
+}
+
+.social-icon{
+  margin-right:10%
+}
+.facebook-url, .instagram-url, .linkedIn-url{
+  width: 70%;
+}
+
+.user-tabs{
+  margin-top: 1%;
+  margin-left:1%
+}
+
+.triangle-icon{
+  margin-right: 5px;
+  margin-left: 10px;
+}
+.circle-x-icon{
+  margin-right: 10px;
+  color: #ff4081;
+}
+.circle-x-icon:hover{
+cursor: pointer;
+}
+
+.password-set-reminder-container{
+  background: lightyellow;
+  display:flex;
+  justify-content: space-between;
+  overflow: hidden;
+  max-height: 80px;
+  padding: 5px; /* Include padding for a smoother collapse effect */
+  box-sizing: border-box;
+  opacity:1
+}
+
+.password-set-reminder-container-hide {
+  display:flex;
+  justify-content: space-between;
+  background: lightyellow;
+  opacity: 0;
+  padding: 0; /* Collapse padding to zero */
+  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
+  max-height:0
+}

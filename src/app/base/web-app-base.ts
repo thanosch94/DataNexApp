@@ -1,6 +1,7 @@
 import { Guid } from 'guid-typescript';
 import { MenuItemDto } from '../dto/menu-item.dto';
 import { AppTabDto } from '../dto/app-tab.dto';
+import { LookupDto } from '../dto/lookup.dto';
 
 export class WebAppBase {
   static version = '1.0.11';
@@ -35,4 +36,11 @@ export class WebAppBase {
    static PurchaseInvoice = Guid.parse("c7825a32-6007-48b4-936d-f558c9b788c3");
    static CreditNote = Guid.parse("4437b7c7-c4a1-4de9-ace3-4e807b9a5f13");
   static currency = '€';
+
+  //Roles
+  static AppRoles:LookupDto[]=[
+    {Id: "5839db80-9584-4d96-9ac7-5ac44b990ca9", Name:"User"},
+    {Id: "b9d63f45-c0b7-4dd2-94d3-13173ddd8ff3", Name:"Admin"},
+    {Id: "2aa7696b-012a-4a0e-b7e7-09e07025c05a", Name:"Supervisor"}
+  ]
 }

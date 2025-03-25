@@ -5,7 +5,7 @@
       #input
       matInput
       [readonly]="readOnly"
-      type="text"
+      [type]="type"
       [placeholder]="placeholder"
       [name]="name"
       [(ngModel)]="value"
@@ -25,5 +25,5 @@
       (click)="onIconClick($event)"
       >{{ icon }}</mat-icon
     >} }
-  </div>
+    </div>
 </mat-form-field>
