@@ -11,6 +11,7 @@
   (onSaveBtnClicked)="onSaveClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
+@if(isComponentReady){
 <div
   [ngClass]="
     displayPasswordSetReminder
@@ -33,6 +34,7 @@
     ></fa-icon>
   </div>
 </div>
+}
 <form [formGroup]="form">
   <mat-tab-group class="user-tabs">
     <mat-tab label="Info">
@@ -49,17 +51,32 @@
               <div class="basic-info">
                 <div>
                   <div class="flex">
-                    <div class="margin-auto width-45">
+                    <div
+                      class="width-45 margin-auto"
+                      [ngClass]="isTouchedOrInvalid(form, 'Name') ? '' : 'name'"
+                    >
                       <dn-textbox
-                        formControlName="name"
+                        formControlName="Name"
                         label="Full Name"
                         name="name"
+                        (onBlur)="onBlur($event, 'Name')"
                       ></dn-textbox>
+                      <div
+                        class="error-message"
+                        *ngIf="isTouchedOrInvalid(form, 'Name')"
+                      >
+                        <p>
+                          <small
+                            style="color: red"
+                            *ngIf="form.get('Name')!.hasError('required')"
+                            >Field is required</small
+                          >
+                        </p>
+                      </div>
                     </div>
-                    <div class="margin-5 width-45">
+                    <div class="margin-5 width-45 birthday">
                       <dn-date-box
-                        formControlName="birthday"
-                        [width]="100"
+                        formControlName="BirthDay"
                         label="Birthday"
                         name="birthday"
                       ></dn-date-box>
@@ -67,9 +84,9 @@
                   </div>
 
                   <div class="flex">
-                    <div class="margin-5 width-45">
+                    <div class="margin-5 width-45 occupation">
                       <dn-textbox
-                        formControlName="occupation"
+                        formControlName="Occupation"
                         label="Occupation"
                         [width]="100"
                         name="occupation"
@@ -112,32 +129,55 @@
                 <b>Login Info</b>
               </div>
               <div class="login-info">
-                <dn-textbox
-                  class="margin-5"
-                  formControlName="username"
-                  label="Username"
-                  [width]="45"
-                  name="username"
-                  icon="key"
-                  iconTooltip="Change Password"
-                  (onIconClicked)="onKeyClicked($event)"
-                ></dn-textbox
-                >
-                <!-- Maybe need to fix selectbox for reactive forms -->
-                <dn-selectbox
-                  label="User Role"
-                  formControlName="role"
-                  [dataSource]="appRoles"
-                  valueExpr="Id"
-                  displayExpr="Name"
-                  [width]="45"
-                >
-                </dn-selectbox>
+                <div>
+                  <div class="flex">
+                    <div
+                      class="width-45 margin-auto username-container"
+                      [ngClass]="
+                        isTouchedOrInvalid(form, 'UserName') ? '' : 'username'
+                      "
+                    >
+                      <dn-textbox
+                        formControlName="UserName"
+                        label="Username"
+                        name="username"
+                        icon="key"
+                        iconTooltip="Change Password"
+                        (onIconClicked)="onKeyClicked($event)"
+                        (onBlur)="onBlur($event, 'UserName')"
+                      ></dn-textbox>
+                      <div
+                        class="error-message"
+                        *ngIf="isTouchedOrInvalid(form, 'UserName')"
+                      >
+                        <p>
+                          <small
+                            style="color: red"
+                            *ngIf="form.get('UserName')!.hasError('required')"
+                            >Field is required</small
+                          >
+                        </p>
+                      </div>
+                    </div>
+                    <!-- Maybe need to fix selectbox for reactive forms -->
+                    <div class="width-45">
+                      <dn-selectbox
+                        label="User Role"
+                        formControlName="UserRoleId"
+                        [dataSource]="appRoles"
+                        valueExpr="Id"
+                        displayExpr="Name"
+                        [width]="100"
+                      >
+                      </dn-selectbox>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div>
                 <div class="margin-auto width-45">
                   <dn-textbox
-                    formControlName="email"
+                    formControlName="Email"
                     label="Email"
                     [width]="100"
                     name="email"
@@ -154,49 +194,56 @@
               <b>Contact Info</b>
             </div>
             <div class="contact-info flex space-between">
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="address"
-                [width]="100"
-                label="Address"
-                name="address"
-              ></dn-textbox>
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="postalCode"
-                label="Postal Code"
-                name="postalCode"
-              ></dn-textbox>
+              <div class="margin-5 width-45 address">
+                <dn-textbox
+                  formControlName="Address"
+                  [width]="100"
+                  label="Address"
+                  name="address"
+                ></dn-textbox>
+              </div>
+
+              <div class="margin-5 width-45 postal-code">
+                <dn-textbox
+                  formControlName="PostalCode"
+                  label="Postal Code"
+                  name="postalCode"
+                ></dn-textbox>
+              </div>
             </div>
             <div class="flex space-between">
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="city"
-                [width]="100"
-                label="City"
-                name="city"
-              ></dn-textbox>
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="country"
-                label="Country"
-                name="country"
-              ></dn-textbox>
+              <div class="margin-5 width-45 city">
+                <dn-textbox
+                  formControlName="City"
+                  [width]="100"
+                  label="City"
+                  name="city"
+                ></dn-textbox>
+              </div>
+              <div class="margin-5 width-45 country">
+                <dn-textbox
+                  formControlName="Country"
+                  label="Country"
+                  name="country"
+                ></dn-textbox>
+              </div>
             </div>
             <div class="flex space-between">
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="phone1"
-                [width]="100"
-                label="Phone 1"
-                name="phone1"
-              ></dn-textbox>
-              <dn-textbox
-                class="margin-5 width-45"
-                formControlName="phone2"
-                label="Phone 2"
-                name="phone2"
-              ></dn-textbox>
+              <div class="margin-5 width-45 phone1">
+                <dn-textbox
+                  formControlName="Phone1"
+                  [width]="100"
+                  label="Phone 1"
+                  name="phone1"
+                ></dn-textbox>
+              </div>
+              <div class="margin-5 width-45 phone2">
+                <dn-textbox
+                  formControlName="Phone2"
+                  label="Phone 2"
+                  name="phone2"
+                ></dn-textbox>
+              </div>
             </div>
           </div>
           <div class="flex width-50 social-media-container">
@@ -212,12 +259,13 @@
                   <b>Facebook</b>
                 </div>
               </div>
-              <dn-textbox
-                class="margin-5 facebook-url"
-                formControlName="facebookUrl"
-                label="Facebook Url"
-                name="facebook"
-              ></dn-textbox>
+              <div class="margin-5 facebook-url">
+                <dn-textbox
+                  formControlName="FacebookUrl"
+                  label="Facebook Url"
+                  name="facebook"
+                ></dn-textbox>
+              </div>
             </div>
 
             <div class="flex space-between">
@@ -229,12 +277,13 @@
                   <b>Instagram</b>
                 </div>
               </div>
-              <dn-textbox
-                class="margin-5 instagram-url"
-                formControlName="instagramUrl"
-                label="Instagram Url"
-                name="instagram"
-              ></dn-textbox>
+              <div class="margin-5 instagram-url">
+                <dn-textbox
+                  formControlName="InstagramUrl"
+                  label="Instagram Url"
+                  name="instagram"
+                ></dn-textbox>
+              </div>
             </div>
             <div class="flex space-between">
               <div class="social-container">
@@ -245,12 +294,13 @@
                   <b>LinkedIn</b>
                 </div>
               </div>
-              <dn-textbox
-                class="margin-5 linkedIn-url"
-                formControlName="linkedInUrl"
-                label="LinkedIn Url"
-                name="linkedIn"
-              ></dn-textbox>
+              <div class="margin-5 linkedIn-url">
+                <dn-textbox
+                  formControlName="LinkedInUrl"
+                  label="LinkedIn Url"
+                  name="linkedIn"
+                ></dn-textbox>
+              </div>
             </div>
           </div>
         </div>
@@ -271,7 +321,7 @@
               name="notes"
               #autosize
               cdkAutosizeMinRows="5"
-              formControlName="notes"
+              formControlName="Notes"
             ></textarea>
           </mat-form-field>
         </div>

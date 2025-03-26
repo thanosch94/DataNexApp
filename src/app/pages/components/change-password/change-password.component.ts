@@ -28,7 +28,6 @@ import { MatError } from '@angular/material/form-field';
   styleUrl: './change-password.component.css',
 })
 export class ChangePasswordComponent extends GenericFormComponent {
-  newPassword: string;
   confirmPassword: string;
   new_password_text: string;
   user: UserDto;
@@ -50,18 +49,24 @@ export class ChangePasswordComponent extends GenericFormComponent {
 
   initializeForm() {
     this.form = this.fb.group({
-      newPassword: ['', [Validators.required]],
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
       confirmNewPassword: [''],
     });
   }
 
   onCloseClicked(e: any) {
-    this.dialogRef.close();
+    if(this.form.get("newPassword")?.value==this.form.get("confirmNewPassword")?.value){
+      this.dialogRef.close(this.form.get("newPassword")?.value);
+    }
   }
 
   onSubmitPassWordChange(e: any) {
     if (this.form.valid) {
       this.checkPasswordsMatch(this.form.get('confirmNewPassword')?.value);
+      if(!this.displayNotMatchError){
+        debugger
+        this.dialogRef.close(this.form.get("newPassword")?.value);
+      }
     } else {
       this.markAllAsTouched(this.form);
     }

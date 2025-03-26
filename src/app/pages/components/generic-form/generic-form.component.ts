@@ -10,9 +10,14 @@ import { FormGroup } from '@angular/forms';
 export class GenericFormComponent {
 
   markAllAsTouched(form:FormGroup) {
-    Object.keys(form.controls).forEach((key) => {
-      form.controls[key].markAsTouched();
+    Object.keys(form.controls).forEach((field) => {
+      form.controls[field].markAsTouched();
     });
+  }
+
+  markAsTouched(form:FormGroup, field: string){
+    form.controls[field].markAsTouched();
+
   }
 
   isTouchedOrInvalid(form:FormGroup, field: string) {

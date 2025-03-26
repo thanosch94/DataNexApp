@@ -53,22 +53,9 @@
   color: white;
 }
 
-.name{
-  width:90%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.phone1, .email, .vat-number,.city, .country, .username{
-  width:40%;
+ .username-container{
   margin-right: 5%;
-}
-
-.phone2, .region, .postal-code, .tax-office{
-  width:40%;
-  margin-left: 5%;
-}
-
+ }
 
 ::ng-deep .change-password-container .mat-mdc-dialog-surface.mdc-dialog__surface   {
   border-radius: 4%!important;
@@ -93,7 +80,6 @@
 .button-container{
   display: flex;
   align-items: center;
-  margin-bottom: 4%;
 }
 
 .inactive-button{
@@ -108,7 +94,7 @@
   justify-content: space-around;
 }
 
-.user-edit-container ::ng-deep .text-box{
+.name, .birthday, .occupation, .button-container, .username, .address, .postal-code, .country, .city, .phone1, .phone2, .social-container, .facebook-url, .instagram-url, .linkedIn-url{
   margin-bottom: 15px;
 }
 
@@ -160,4 +146,8 @@ cursor: pointer;
   padding: 0; /* Collapse padding to zero */
   transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out, padding 0.5s ease-in-out;
   max-height:0
+}
+
+.error-message{
+  margin-left:3%
 }

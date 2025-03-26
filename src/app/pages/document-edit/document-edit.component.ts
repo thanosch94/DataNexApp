@@ -340,7 +340,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   getDocumentData(documentId: Guid) {
     this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
       this.document = result;
-
+debugger
       this.ref.detectChanges();
       this.document_text = this.document.DocumentCode;
       this.tabsService.setTabName(this.document_text);
@@ -402,6 +402,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     data.TotalVatAmount = data.VatAmount! * data.Quantity!;
   }
 
+  //#region Save Document
   onSaveClicked(e: any) {
     //If the first row is filled in then it passes the validation
     if (!this.document.Id) {
@@ -479,6 +480,8 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
   }
+
+  //#endregion
 
   displayNotification(text: string) {
     this._snackBar.open(text, '', {

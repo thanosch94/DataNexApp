@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { provideNativeDateAdapter } from '@angular/material/core';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
@@ -16,7 +16,12 @@ import { MatInputModule } from '@angular/material/input';
         FormsModule,
         MatDatepickerModule,
     ],
-    providers: [provideNativeDateAdapter()],
+
+    providers: [provideNativeDateAdapter(),{
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => DnDateBoxComponent),
+      multi: true,
+    }],
     templateUrl: './dn-date-box.component.html',
     styleUrl: './dn-date-box.component.css'
 })
@@ -31,5 +36,28 @@ export class DnDateBoxComponent {
 
   onValueChange(value: string) {
     this.valueChange.emit(value);
+    this.onChange(value)
   }
+
+
+//#region  Reactive Forms
+onChange: (value: string) => void = () => {
+};
+onTouched: () => void = () => {
+
+};
+
+writeValue(value: string): void {
+  this.value = value || '';
+}
+registerOnChange(fn: (value: string) => void): void {
+  this.onChange = fn;
+}
+registerOnTouched(fn: any): void {
+  this.onTouched = fn;
+}
+setDisabledState?(isDisabled: boolean): void {}
+
+//#endregion
+
 }

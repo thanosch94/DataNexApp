@@ -11,6 +11,7 @@
       [(ngModel)]="value"
       (ngModelChange)="onValueChange(value)"
       (input)="onValueInput($event)"
+      (blur)="onInputBlur($event)"
     />
     @if(icon){ @if(iconPosition=="end"){<mat-icon
       class="text-box-icon"

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, ContentChild, EventEmitter, Input, Output, TemplateRef, ViewChild } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
 import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,6 +23,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatPrefix,
         MatTooltipModule
     ],
+      providers: [
+        {
+          provide: NG_VALUE_ACCESSOR,
+          useExisting: forwardRef(() => DnSelectboxComponent),
+          multi: true,
+        }
+      ],
     templateUrl: './dn-selectbox.component.html',
     styleUrl: './dn-selectbox.component.css'
 })
@@ -60,6 +67,8 @@ export class DnSelectboxComponent {
     let dto ={value:this.selectedOption[this.valueExpr], previousValue:this.previousValue}
     this.selectionChange.emit(dto);
     this.previousValue =this.selectedOption[this.valueExpr]
+    this.onChange(this.selectedOption[this.valueExpr]);
+
   }
 
 
@@ -110,4 +119,30 @@ export class DnSelectboxComponent {
     this.onIconClicked.emit(e)
   }
 
+//#region  Reactive Forms
+  onChange: (value: string) => void = () => {
+    debugger
+
+  };
+  onTouched: () => void = () => {
+
+  };
+
+  writeValue(value: string): void {
+    debugger
+
+    this.value = value || '';
+  }
+  registerOnChange(fn: (value: string) => void): void {
+    debugger
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    debugger
+
+    this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {}
+
+  //#endregion
 }

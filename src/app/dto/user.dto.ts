@@ -28,4 +28,5 @@ export class UserDto {
   InstagramUrl: string;
   LinkedInUrl: string;
   IsActive: boolean;
+  IsPasswordSet:true;
 }

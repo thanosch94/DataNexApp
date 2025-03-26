@@ -51,6 +51,7 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Input() iconTooltip: string = '';
   @Input() type: string = 'text';
   @Output() onIconClicked = new EventEmitter();
+  @Output() onBlur = new EventEmitter();
   @Output() onInput = new EventEmitter();
 
   onValueChange(value: string) {
@@ -68,9 +69,12 @@ export class DnTextboxComponent implements ControlValueAccessor {
   onValueInput(e: any) {
     this.onInput.emit(e);
   }
+  onInputBlur(e: any) {
+    this.onBlur.emit(e);
+  }
 
 
-  //Using Reactive Forms
+//#region  Reactive Forms
   onChange: (value: string) => void = () => {
   };
   onTouched: () => void = () => {
@@ -88,4 +92,5 @@ export class DnTextboxComponent implements ControlValueAccessor {
   }
   setDisabledState?(isDisabled: boolean): void {}
 
+  //#endregion
 }

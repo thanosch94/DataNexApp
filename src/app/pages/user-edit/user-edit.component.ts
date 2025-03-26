@@ -1,7 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewContainerRef } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -18,7 +24,11 @@ import { UserDto } from '../../dto/user.dto';
 import { UsersViewModel } from '../../view-models/users.viewmodel';
 import { AuthService } from '../../services/auth.service';
 import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.component';
-import { faCamera, faCircleXmark, faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import {
+  faCamera,
+  faCircleXmark,
+  faTriangleExclamation,
+} from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.component';
@@ -33,9 +43,15 @@ import {
 import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { LookupDto } from '../../dto/lookup.dto';
+import {
+  MAT_DATE_LOCALE,
+  provideNativeDateAdapter,
+} from '@angular/material/core';
+import { GenericFormComponent } from '../components/generic-form/generic-form.component';
 
 @Component({
   selector: 'app-user-edit',
+  //#region Imports
   imports: [
     FormsModule,
     MatInputModule,
@@ -53,14 +69,19 @@ import { LookupDto } from '../../dto/lookup.dto';
     MatButtonModule,
     DnSelectboxComponent,
     MatTabsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
   ],
-  providers: [TabsService],
+  //#endregion
+  providers: [
+    TabsService,
+    provideNativeDateAdapter(),
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+  ],
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
 })
-export class UserEditComponent {
-  form:FormGroup
+export class UserEditComponent extends GenericFormComponent {
+  form: FormGroup;
   user_text: string;
   usersViewModel: UsersViewModel;
   user: UserDto;
@@ -73,9 +94,11 @@ export class UserEditComponent {
   faLinkedin = faLinkedin;
   faTriangleExclamation = faTriangleExclamation;
   faCircleXmark = faCircleXmark;
-  displayPasswordSetReminder: boolean =true;
+  displayPasswordSetReminder: boolean;
+  newPassword: any;
+  isComponentReady: boolean;
 
-
+  //#region Constructor
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -84,50 +107,66 @@ export class UserEditComponent {
     public dialog: MatDialog,
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
-    private fb:FormBuilder
+    private fb: FormBuilder
   ) {
+    super();
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
 
     this.appRoles = WebAppBase.AppRoles;
   }
+  //#endregion
 
   ngOnInit() {
-    this.initializeForm()
-    this.setUser()
+    this.initializeForm();
+    this.setUser();
     this.getData();
+    setTimeout(()=>{
+      this.isComponentReady =true
+      //Used because the password error message is displayed once we navigate to the component and instantly disappears
+    },1000)
   }
 
-  initializeForm(){
+  //#region Initialize Form
+  initializeForm() {
     this.form = this.fb.group({
-      name: ['', Validators.required],
-      birthday: [''],
-      occupation:[''],
-      username:['', Validators.required],
-      role:['', Validators.required],
-      email:[''],
-      address:[''],
-      postalCode:[''],
-      city:[''],
-      country:[''],
-      phone1:[''],
-      phone2:[''],
-      facebookUrl:[''],
-      instagramUrl:[''],
-      linkedInUrl:[''],
-      notes:[''],
-    })
+      Name: ['', Validators.required],
+      BirthDay: [null],
+      Occupation: [''],
+      UserName: ['', Validators.required],
+      UserRoleId: ['', Validators.required],
+      Email: [''],
+      Address: [''],
+      PostalCode: [''],
+      City: [''],
+      Country: [''],
+      Phone1: [''],
+      Phone2: [''],
+      FacebookUrl: [''],
+      InstagramUrl: [''],
+      LinkedInUrl: [''],
+      Notes: [''],
+    });
   }
+  //#endregion
 
-  setUser(){
+  //#region Get User
+  setUser() {
     this.user = new UserDto();
     this.userId = WebAppBase.data;
     WebAppBase.data = undefined;
   }
+
   getData() {
     if (this.userId) {
       this.usersViewModel.GetById(this.userId).subscribe((result: any) => {
         result as UserDto;
         this.user = result;
+        if(!this.user.IsPasswordSet){
+          this.displayPasswordSetReminder = true
+        }else{
+          this.displayPasswordSetReminder = false
+        }
+        this.form.patchValue(this.user);
         this.user_text = this.user.Name;
         this.tabsService.setTabName(this.user.Name);
       });
@@ -136,33 +175,48 @@ export class UserEditComponent {
       this.tabsService.setTabName(this.user_text);
 
       this.user = new UserDto();
+      this.user.IsActive = true;
     }
   }
-  onCloseClicked(e: any) {
-    this.router.navigate(['users-list']);
-  }
+  //#endregion
 
+  //#region Save User
   onSaveClicked(e: any) {
-        if (this.user.Id) {
-          this.usersViewModel.UpdateDto(this.user).subscribe((result: any) => {
-            if (result) {
-              this.user_text = this.user.Name;
-              this.displayNotification('Record updated');
-            }
-          });
-        } else {
-          this.usersViewModel.InsertDto(this.user).subscribe((result: any) => {
-            this.user = result;
+    let isActive = this.user.IsActive;
+    this.user = this.form.value;
+    this.user.Id = this.userId;
+    this.user.IsActive = isActive;
+    this.user.Password = this.newPassword;
+    if (this.form.valid) {
+      if (this.user.Id) {
+        this.usersViewModel.UpdateDto(this.user).subscribe((result: any) => {
+          if (result) {
             this.user_text = this.user.Name;
-            this.displayNotification('Record inserted')
+            this.displayNotification('Record updated');
+            debugger
+            if (!this.user.Password && !result.IsPasswordSet) {
+              this.displayPasswordSetReminder = true;
+            }
+          }
+        });
+      } else {
+        this.usersViewModel.InsertDto(this.user).subscribe((result: any) => {
+          this.user = result;
+          this.user_text = this.user.Name;
+          this.displayNotification('Record inserted');
+          if (!this.user.Password && !result.IsPasswordSet) {
+            this.displayPasswordSetReminder = true;
+          }
+        });
+      }
 
-          });
-        }
-    if (this.user.Password) {
-      this.displayPasswordSetReminder = true
-
+    } else {
+      this.markAllAsTouched(this.form);
     }
   }
+  //#endregion
+
+  //#region Delete User
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
@@ -180,9 +234,6 @@ export class UserEditComponent {
       }
     });
   }
-  onRefreshClicked(e: any) {
-    this.getData();
-  }
 
   onDeleteCancelClicked(e: any) {
     this.dialog.closeAll();
@@ -191,7 +242,7 @@ export class UserEditComponent {
   deleteItem(e: any) {
     this.usersViewModel.DeleteById(this.user.Id).subscribe({
       next: (result) => {
-        this.displayNotification('Record deleted')
+        this.displayNotification('Record deleted');
         this.router.navigate(['users-list']);
       },
       error: (err) => {
@@ -205,9 +256,9 @@ export class UserEditComponent {
     });
   }
 
+  //#endregion
 
-
-
+  //#region Password Change
   onKeyClicked(e: any) {
     const dialogRef = this.dialog.open(ChangePasswordComponent, {
       width: '400px',
@@ -218,12 +269,24 @@ export class UserEditComponent {
       },
       viewContainerRef: this.viewContainerRef,
     });
-    dialogRef.afterClosed().subscribe((confirm) => {
-      if (confirm) {
+    dialogRef.afterClosed().subscribe((newPassword) => {
+      if (!newPassword && !this.user.IsPasswordSet) {
+        this.displayPasswordSetReminder = true;
+      } else if (!newPassword && this.user.IsPasswordSet) {
+        this.displayPasswordSetReminder = false;
+      } else {
+        this.newPassword = newPassword;
+        this.displayPasswordSetReminder = false;
       }
     });
   }
 
+  onClosePasswordSetReminder(e: any) {
+    this.displayPasswordSetReminder = false;
+  }
+  //#endregion
+
+  //#region Activate/De.. User
   onUserActiveBtnClicked(e: any) {
     if (!this.user.Id) {
       this.user.IsActive = !this.user.IsActive;
@@ -246,6 +309,9 @@ export class UserEditComponent {
       });
     }
   }
+
+  //#endregion
+
   displayNotification(text: string) {
     this._snackBar.open(text, '', {
       duration: 1000,
@@ -253,9 +319,16 @@ export class UserEditComponent {
     });
   }
 
+  onRefreshClicked(e: any) {
+    this.getData();
+  }
 
-  onClosePasswordSetReminder(e:any){
-    this.displayPasswordSetReminder = false
+  onCloseClicked(e: any) {
+    this.router.navigate(['users-list']);
+  }
+
+  onBlur(e: any, formControl: string) {
+    this.markAsTouched(this.form, formControl);
   }
 
   ngOnDestroy() {
