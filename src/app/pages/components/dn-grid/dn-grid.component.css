@@ -155,6 +155,7 @@ tr{
 .mat-mdc-cell.mat-column-buttons{
   display: flex;
   justify-content: end;
+  align-items: center;
 }
 
 /* Removes the borders from the left and the right of the array */

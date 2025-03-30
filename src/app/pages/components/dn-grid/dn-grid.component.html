@@ -267,6 +267,7 @@
           </p>
           } @if(column.DataType == 'buttons' && canEdit &&
           !hideEditButtonOnEditing){
+            <div>
           <button
             mat-icon-button
             class="iconbutton"
@@ -276,7 +277,9 @@
             @if(!row.IsEditable){<mat-icon>edit</mat-icon>}
             @if(row.IsEditable){<mat-icon>save</mat-icon>}
           </button>
+        </div>
           } @if(column.DataType == 'buttons' && canDelete){
+            <div>
           <button
             mat-icon-button
             class="iconbutton"
@@ -301,6 +304,7 @@
             <!-- row.IsRowFilled is used when you have more than one empty rows to be filled.
              When the row is filled, the button will be visible -->
           </button>
+        </div>
           } @if(column.DataType == 'buttons' && showInfo){
           <button
             mat-icon-button

@@ -1,0 +1,85 @@
+.flex{
+  display: flex;
+}
+.kanban-column{
+  border-radius: 20px;
+  min-height: 65vh;
+  height: auto;
+  overflow: hidden;
+
+  width: 30vh;
+  background-color: #f1f1f1
+}
+
+.tasks{
+  overflow-y:scroll;
+  max-height: 60vh;
+}
+
+.tasks::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
+}
+.tasks {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.mr-2{
+  margin-right:2%;
+}
+
+.center{
+  text-align: center;
+}
+
+.column-header{
+  border-radius: 10px 10px 0 0;
+  padding:3%
+}
+
+.column-list{
+    width: 500px;
+    max-width: 100%;
+    min-height: 60px;
+    display: block;
+    border-radius: 4px;
+  }
+
+.column-item{
+  padding: 5px;
+  margin: 5px;
+  border-radius:15px ;
+  min-height: 70px;
+}
+
+.user-assigned{
+  text-align: right;
+  color:lightgrey;
+  margin-top: auto;
+  align-items:flex-end;
+
+}
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.column-list.cdk-drop-list-dragging .column-item:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.item-left-vertical-line{
+  height: auto;
+  width:4px;
+  border-radius: 10px;
+  margin-right: 4%;
+}
+
+.width-100{
+  width: 100%;
+}
+
+.flex-d-column{
+  flex-direction: column;
+  height: 100%; /* Adjust the height as needed */
+
+}

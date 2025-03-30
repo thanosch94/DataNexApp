@@ -1,0 +1,41 @@
+<div cdkDropListGroup class="flex">
+  @for(column of getColumns();track column.Id){
+  <div class="kanban-column mr-2">
+    <div
+      class="center column-header"
+      [style]="'background-color:'+columnTitleBackgroundColor+';color:'+columnTitleColor"
+    >
+      <b>{{ column.Name }}</b>
+    </div>
+    <div class="tasks" >
+      <div cdkDropList class="column-list" [cdkDropListData]="filterItems(column)" (cdkDropListDropped)="drop($event)">
+        @for(item of filterItems(column);track item.Id){
+        <div cdkDrag [cdkDragData]="item" class="column-item flex" style="background-color: #fafafa">
+          <div
+            class="item-left-vertical-line"
+            [ngStyle]="{
+              'background-color': item.PriorityColor
+                ? item.PriorityColor
+                : 'grey'
+            }"
+            style="width: 5px"
+          ></div>
+          <div class="width-100 flex flex-d-column" style="flex-grow: 1">
+            <div style="flex-grow: 0">
+              <b>{{ item.Title }}</b>
+            </div>
+            <div style="flex-grow: 1">
+              <p>{{ item.Descr }}</p>
+            </div>
+            <div class="user-assigned" style="margin-top: auto; flex-grow: 0">
+              <span>admin</span>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+  }
+</div>
+
