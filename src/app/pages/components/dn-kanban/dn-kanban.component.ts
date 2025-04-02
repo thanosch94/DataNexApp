@@ -8,10 +8,13 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'dn-kanban',
-  imports: [CdkDrag, CdkDropList, CommonModule, CdkDropListGroup],
+  imports: [CdkDrag, CdkDropList, CommonModule, CdkDropListGroup, FaIconComponent, MatButtonModule],
   templateUrl: './dn-kanban.component.html',
   styleUrl: './dn-kanban.component.css',
 })
@@ -22,6 +25,8 @@ export class DnKanbanComponent {
   @Input() columnTitleBackgroundColor: string ="#0b6aa5";
   @Input() columnTitleColor: string="#fafafa";
 
+  faEdit=faEdit
+  faTrash=faTrash
   constructor() {
 
   }

@@ -3,14 +3,29 @@
   <div class="kanban-column mr-2">
     <div
       class="center column-header"
-      [style]="'background-color:'+columnTitleBackgroundColor+';color:'+columnTitleColor"
+      [style]="
+        'background-color:' +
+        columnTitleBackgroundColor +
+        ';color:' +
+        columnTitleColor
+      "
     >
-      <b>{{ column.Name }}</b>
+      <span style="font-size: 14px!important;">{{ column.Name }}</span>
     </div>
-    <div class="tasks" >
-      <div cdkDropList class="column-list" [cdkDropListData]="filterItems(column)" (cdkDropListDropped)="drop($event)">
+    <div class="tasks">
+      <div
+        cdkDropList
+        class="column-list"
+        [cdkDropListData]="filterItems(column)"
+        (cdkDropListDropped)="drop($event)"
+      >
         @for(item of filterItems(column);track item.Id){
-        <div cdkDrag [cdkDragData]="item" class="column-item flex" style="background-color: #fafafa">
+        <div
+          cdkDrag
+          [cdkDragData]="item"
+          class="column-item flex"
+          style="background-color: #fafafa"
+        >
           <div
             class="item-left-vertical-line"
             [ngStyle]="{
@@ -21,8 +36,33 @@
             style="width: 5px"
           ></div>
           <div class="width-100 flex flex-d-column" style="flex-grow: 1">
-            <div style="flex-grow: 0">
-              <b>{{ item.Title }}</b>
+            <div
+              style="
+                display: flex;
+                flex-grow: 0;
+                justify-content: space-between;
+                align-items: center;
+              "
+            >
+              <div>
+                <b>{{ item.Title }}</b>
+              </div>
+              <div>
+                <button
+                mat-button
+                color="primary"
+                style="border: none;min-width: 15px;"
+              >
+                <fa-icon [icon]="faEdit"></fa-icon>
+              </button>
+                <button
+                  mat-button
+                  color="warn"
+                  style="border: none;min-width: 15px;"
+                >
+                  <fa-icon [icon]="faTrash"></fa-icon>
+                </button>
+              </div>
             </div>
             <div style="flex-grow: 1">
               <p>{{ item.Descr }}</p>
@@ -38,4 +78,3 @@
   </div>
   }
 </div>
-

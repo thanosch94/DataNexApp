@@ -25,8 +25,12 @@ import { UsersViewModel } from '../../view-models/users.viewmodel';
 import { AuthService } from '../../services/auth.service';
 import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.component';
 import {
+  faAdd,
   faCamera,
   faCircleXmark,
+  faDeleteLeft,
+  faEdit,
+  faTrash,
   faTriangleExclamation,
 } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -48,6 +52,8 @@ import {
   provideNativeDateAdapter,
 } from '@angular/material/core';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
+import { DnKanbanComponent } from "../components/dn-kanban/dn-kanban.component";
+import { MatListModule } from '@angular/material/list';
 
 @Component({
   selector: 'app-user-edit',
@@ -70,7 +76,9 @@ import { GenericFormComponent } from '../components/generic-form/generic-form.co
     DnSelectboxComponent,
     MatTabsModule,
     ReactiveFormsModule,
-  ],
+    DnKanbanComponent,
+    MatListModule
+],
   //#endregion
   providers: [
     TabsService,
@@ -94,10 +102,14 @@ export class UserEditComponent extends GenericFormComponent {
   faLinkedin = faLinkedin;
   faTriangleExclamation = faTriangleExclamation;
   faCircleXmark = faCircleXmark;
+  faAdd = faAdd
+  faEdit = faEdit
+  faTrash = faTrash
   displayPasswordSetReminder: boolean;
   newPassword: any;
   isComponentReady: boolean;
-
+  columns:any[]
+  items:any[]
   //#region Constructor
   constructor(
     private http: HttpClient,
@@ -113,6 +125,86 @@ export class UserEditComponent extends GenericFormComponent {
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
 
     this.appRoles = WebAppBase.AppRoles;
+
+    this.columns = [
+      { Id: 1, Name: 'To Do' },
+      { Id: 2, Name: 'In Progress' },
+      { Id: 3, Name: 'Done' },
+      { Id: 4, Name: 'Abandoned' },
+    ];
+
+    this.items = [
+      {
+        Id: 1,
+        StatusId: 2,
+        Title: 'Task 1',
+        Descr: 'Testes tet wer wetw etw ttt',
+        PriorityColor: 'red',
+      },
+      {
+        Id: 2,
+        StatusId: 1,
+        Title: 'Task 5',
+        Descr: 'Oiou kkmgfdp fsdf sfsdffs',
+        PriorityColor: 'green',
+      },
+      {
+        Id: 3,
+        StatusId: 1,
+        Title: 'Task 3',
+        Descr: 'Fcxb gsg gsgr e erettt',
+        PriorityColor: 'green',
+      },
+      {
+        Id: 4,
+        StatusId: 1,
+        Title: 'Task 4',
+        Descr: 'Poofgd sdfgsdf fsdf serrd',
+        PriorityColor: 'gold',
+      },
+      {
+        Id: 5,
+        StatusId: 3,
+        Title: 'Task 2',
+        Descr: 'TEst fds rewrfsf fgsg',
+        PriorityColor: 'gold',
+      },
+      {
+        Id: 6,
+        StatusId: 3,
+        Title: 'Task 6',
+        Descr: 'Adgs vdf ggdg gdf gg fd',
+        PriorityColor: 'red',
+      },
+      {
+        Id: 7,
+        StatusId: 1,
+        Title: 'Task 6',
+        Descr: 'Adgs vdf ggdg gdf gg fd',
+        PriorityColor: 'red',
+      },
+      {
+        Id: 8,
+        StatusId: 1,
+        Title: 'Task 6',
+        Descr: 'Adgs vdf ggdg gdf gg fd',
+        PriorityColor: 'red',
+      },
+      {
+        Id: 9,
+        StatusId: 1,
+        Title: 'Task 6',
+        Descr: 'Adgs vdf ggdg gdf gg fd',
+        PriorityColor: 'red',
+      },
+      {
+        Id: 10,
+        StatusId: 1,
+        Title: 'Task 6',
+        Descr: 'Adgs vdf ggdg gdf gg fd',
+        PriorityColor: 'red',
+      },
+    ];
   }
   //#endregion
 

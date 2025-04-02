@@ -151,3 +151,45 @@ cursor: pointer;
 .error-message{
   margin-left:3%
 }
+
+::ng-deep .kanban-container{
+  margin:1% ;
+
+}
+
+.add-new-task{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    align-items: center;
+  justify-content: space-between;
+  padding: 2%;
+}
+
+.add-task-btn{
+  background-color: #f1f1f1;;
+}
+
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+.list-content {
+  display: flex;
+  width: 100%;
+  align-items: center;
+
+}
+
+.list-item-container{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+}
+
+.list-item-container:hover{
+  background-color: lightgray;
+  cursor: pointer;
+}
+
+.mat-mdc-button:hover{
+  cursor: pointer;
+}
