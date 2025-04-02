@@ -1,3 +1,4 @@
+import { Injector } from "@angular/core";
 import { Guid } from "guid-typescript";
 
 export class AppTabDto {
@@ -11,4 +12,6 @@ export class AppTabDto {
   Hint:string;
   Data:Array<Object> =[];
   OriginId: any;
+  Injector:Injector
+  Params: any;
 }

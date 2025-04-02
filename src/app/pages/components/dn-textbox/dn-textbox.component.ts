@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Input, output, Output } from '@angular/core';
 import {
   ControlValueAccessor,
   FormsModule,
@@ -45,7 +45,7 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Input() name: string;
   @Input() value: any;
   @Input() width: number = 100;
-  @Output() valueChange = new EventEmitter();
+  valueChange = output<string>();
   @Input() icon: string | undefined;
   @Input() iconPosition?: string = 'end';
   @Input() iconTooltip: string = '';

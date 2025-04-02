@@ -2,18 +2,10 @@ import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import {
-  ChangeDetectorRef,
-  Component,
-  LOCALE_ID,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
 import { Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
-import {
-  AsyncPipe,
-  CommonModule
-} from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Guid } from 'guid-typescript';
 import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
@@ -24,7 +16,7 @@ import {
   faDoorOpen,
   faFile,
   faHeart,
-  faHeartCirclePlus
+  faHeartCirclePlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -44,36 +36,34 @@ import {
   MatAutocompleteModule,
   MatOptgroup,
 } from '@angular/material/autocomplete';
-import { EffectsModule } from '@ngrx/effects';
-
 
 @Component({
-    selector: 'app-root',
-    imports: [
-        MatIconModule,
-        RouterOutlet,
-        MatSidenavModule,
-        MatListModule,
-        CommonModule,
-        FontAwesomeModule,
-        FontAwesomeModule,
-        MatTabsModule,
-        HttpClientModule,
-        MatDialogModule,
-        MatTooltipModule,
-        SalesReportsComponent,
-        MatMiniFabButton,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatAutocompleteModule,
-        MatOptgroup,
-        FormsModule,
-        ReactiveFormsModule,
-        MatButtonModule
-    ],
-    templateUrl: './app.component.html',
-    styleUrl: './app.component.css'
+  selector: 'app-root',
+  imports: [
+    MatIconModule,
+    RouterOutlet,
+    MatSidenavModule,
+    MatListModule,
+    CommonModule,
+    FontAwesomeModule,
+    FontAwesomeModule,
+    MatTabsModule,
+    HttpClientModule,
+    MatDialogModule,
+    MatTooltipModule,
+    SalesReportsComponent,
+    MatMiniFabButton,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    MatOptgroup,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+  ],
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -107,9 +97,9 @@ export class AppComponent {
     private router: Router,
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
-    private tabsService: TabsService
+    private tabsService: TabsService,
+    private injector: Injector
   ) {
-
     //if(isDevMode()){
     //   this.logoPath = "../assets/images/datanex_logo.png"
     // }else{
@@ -122,8 +112,8 @@ export class AppComponent {
     this.apiVersion = WebAppBase.apiVersion;
     this.faCaretDown = faCaretDown;
     this.faCaretUp = faCaretUp;
-    this.faHeartCirclePlus=faHeartCirclePlus
-    this.faHeart=faHeart
+    this.faHeartCirclePlus = faHeartCirclePlus;
+    this.faHeart = faHeart;
     this.tabs = tabsService.getTabs();
     router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
@@ -190,7 +180,7 @@ export class AppComponent {
     this.tabsService.deactivateTabs();
     if (tab.index >= 0) {
       this.tabs[tab.index].Active = true;
-      //this.router.navigate([this.tabs[tab.index].Route.path]);
+     // this.router.navigate(this.tabs[tab.index].Route, { queryParams: tab.Params });
     } else {
       this.router.navigate(['/']);
       this.isMenuItem = undefined;
@@ -198,8 +188,8 @@ export class AppComponent {
   }
 
   checkAndAddTab(data: RoutesRecognized) {
+    debugger
     let comp = data.state.root.firstChild?.component;
-    let webAppBase = WebAppBase;
 
     if (this.isMenuItem || this.isNavBarItem) {
       let tabItem = this.menuItemsArray.find(
@@ -210,15 +200,25 @@ export class AppComponent {
       let tabItemName = tabItem ? tabItem.Name : '';
 
       this.tabsService.deactivateTabs();
-      if (this.tabs.find((tab) => tab.Name == tabItemName) == null) {
-        let tab = new AppTabDto();
-        tab.Id = Guid.create();
+      let tab = new AppTabDto();
+      tab.Id = Guid.create();
+      if (this.tabs.find((existingTab) => existingTab.Name == tabItemName) == null) {
+        const newInjector = Injector.create({
+          providers: [{ provide: 'tab', useValue: tab }],
+
+          parent: this.injector,
+        });
+
+
         tab.Name = tabItemName;
         tab.PrevName = tabItemName;
-        tab.Component = comp;
+        tab.Component = class  extends (comp as any) {};;
         tab.Key = tabItemName;
         tab.Active = true;
         tab.Hint = tabItemName;
+        tab.Injector = newInjector;
+        debugger
+        tab.Params= tabItem?.Params
         tab.OriginId = this.selectedMenuItem;
         tab.Route = data.state.root.firstChild?.routeConfig;
         this.tabs.push(tab);
@@ -298,20 +298,30 @@ export class AppComponent {
       .filter((category) => category.Children.length > 0); // Remove empty categories
   }
 
-  onAddRemoveToFavoritesMenuItem(e:any, item:any){
-    e.stopPropagation()
-    item.IsFavorite = !item.IsFavorite
+  onAddRemoveToFavoritesMenuItem(e: any, item: any) {
+    e.stopPropagation();
+    item.IsFavorite = !item.IsFavorite;
   }
 
-  onSideMenuFavoritesBtnClicked(e:any){
-    this.menuItems = Navigation.menu.map(item => {
-      const filteredChildren = item.Children ? item.Children.filter(child => child.IsFavorite) : [];
-      return { ...item, Children: filteredChildren.length ? filteredChildren : undefined };
-    }).filter(item => item.IsFavorite || item.Children?.length);
-
+  onSideMenuFavoritesBtnClicked(e: any) {
+    this.menuItems = Navigation.menu
+      .map((item) => {
+        const filteredChildren = item.Children
+          ? item.Children.filter((child) => child.IsFavorite)
+          : [];
+        return {
+          ...item,
+          Children: filteredChildren.length ? filteredChildren : undefined,
+        };
+      })
+      .filter((item) => item.IsFavorite || item.Children?.length);
   }
 
-  onSideMenuBtnClicked(e:any){
-    this.menuItems=Navigation.menu
+  onSideMenuBtnClicked(e: any) {
+    this.menuItems = Navigation.menu;
   }
+
+  // dropTab(event: CdkDragDrop<string[]>) {
+  //   moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
+  // }
 }

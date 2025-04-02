@@ -1,6 +1,7 @@
 import { Guid } from 'guid-typescript';
 import { MenuItemDto } from '../dto/menu-item.dto';
 import { DocumentTypeGroupEnum } from '../enums/document-type-group.enum';
+import { StatusTypeEnum } from '../enums/status-type.enum';
 
 export class Navigation {
   static data: any;
@@ -248,8 +249,27 @@ export class Navigation {
         },
         {
           Id: Guid.parse('9590bf23-d72c-40f0-9df2-18e8f4c27ec8'),
-          Name: 'Statuses',
-          Path: 'statuses-list',
+          Name: 'Document Statuses',
+          Path: 'document-statuses-list',
+          Params: {
+            StatusType: StatusTypeEnum.Document
+          },
+        },
+        {
+          Id: Guid.parse('cc575723-febd-4fa9-b096-aff312719223'),
+          Name: 'Project Statuses',
+          Path: 'project-statuses-list',
+          Params: {
+            StatusType: StatusTypeEnum.Project
+          },
+        },
+        {
+          Id: Guid.parse('2740152d-e086-4a33-8ae9-f0a47738fbe3'),
+          Name: 'Task Statuses',
+          Path: 'task-statuses-list',
+          Params: {
+            StatusType: StatusTypeEnum.Task
+          },
         },
         {
           Id: Guid.parse('0a0dfaf8-9c97-4317-b961-c5954435700b'),

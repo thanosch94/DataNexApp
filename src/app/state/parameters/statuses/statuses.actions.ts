@@ -1,10 +1,15 @@
 import { createAction, props } from "@ngrx/store";
 import { StatusDto } from "../../../dto/status.dto";
 import { Guid } from "guid-typescript";
+import { StatusTypeEnum } from "../../../enums/status-type.enum";
 
 export const GetAllStatuses = createAction('[Statuses List] GetAll')
 export const GetAllStatusesSuccess = createAction('[Statuses List] GetAll Success', props<{data:StatusDto[]}>())
 export const GetAllStatusesFailure = createAction('[Statuses List] GetAll Failure', props<{error:any}>())
+
+export const GetAllStatusesByStatusType = createAction('[Statuses List] GetAllByStatusType', props<{statusType:StatusTypeEnum}>())
+export const GetAllStatusesByStatusTypeSuccess = createAction('[Statuses List] GetAllByStatusType Success', props<{data:StatusDto[], statusType:StatusTypeEnum}>())
+export const GetAllStatusesByStatusTypeFailure = createAction('[Statuses List] GetAllByStatusType Failure', props<{error:any}>())
 
 
 export const InsertStatusDto = createAction('[Statuses List] InsertDto', props<{dto:StatusDto}>())

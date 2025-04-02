@@ -117,7 +117,17 @@ export const routes: Routes = [
     canActivate:[authGuard]
   },
   {
-    path:'statuses-list',
+    path:'document-statuses-list',
+    component:StatusesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'project-statuses-list',
+    component:StatusesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'task-statuses-list',
     component:StatusesListComponent,
     canActivate:[authGuard]
   },

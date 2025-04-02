@@ -6,6 +6,9 @@ import {
   DeleteStatusByIdFailure,
   DeleteStatusByIdSuccess,
   GetAllStatuses,
+  GetAllStatusesByStatusType,
+  GetAllStatusesByStatusTypeFailure,
+  GetAllStatusesByStatusTypeSuccess,
   GetAllStatusesFailure,
   GetAllStatusesSuccess,
   InsertStatusDto,
@@ -32,6 +35,19 @@ export class StatusesEffects {
           map((statuses: any) => GetAllStatusesSuccess({ data: statuses })),
           catchError((error: any) => {
             return of(GetAllStatusesFailure({ error }));
+          })
+        )
+      )
+    )
+  );
+  loadStatusesByStatusType$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(GetAllStatusesByStatusType),
+      mergeMap((action) =>
+        this.statusesService.GetAllStatusesByStatusType(action.statusType).pipe(
+          map((statuses: any) => GetAllStatusesByStatusTypeSuccess({ data: statuses, statusType:action.statusType })),
+          catchError((error: any) => {
+            return of(GetAllStatusesByStatusTypeFailure({ error }));
           })
         )
       )

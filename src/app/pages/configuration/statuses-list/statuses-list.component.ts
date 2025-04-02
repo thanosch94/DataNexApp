@@ -1,11 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { TabsService } from './../../../services/tabs.service';
+import { Component, Inject, OnInit, Optional, ViewChild, signal } from '@angular/core';
 import { StatusDto } from '../../../dto/status.dto';
-import { AuthService } from '../../../services/auth.service';
-import { StatusesViewModel } from '../../../view-models/statuses.viewmodel';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { AsyncPipe } from '@angular/common';
@@ -14,22 +9,24 @@ import {
   DeleteStatusById,
   DeleteStatusByIdFailure,
   DeleteStatusByIdSuccess,
-  GetAllStatuses,
+  GetAllStatusesByStatusType,
   InsertStatusDto,
   InsertStatusDtoSuccess,
   UpdateStatusDto,
   UpdateStatusDtoFailure,
   UpdateStatusDtoSuccess,
 } from '../../../state/parameters/statuses/statuses.actions';
-import { selectAllStatuses } from '../../../state/parameters/statuses/statuses.selectors';
+import { selectAllStatusesByStatusType } from '../../../state/parameters/statuses/statuses.selectors';
 import { BaseComponent } from '../../components/base/base.component';
 import { Actions, ofType } from '@ngrx/effects';
+import { AppTabDto } from '../../../dto/app-tab.dto';
 
 @Component({
   selector: 'app-statuses-list',
   imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',
+  providers:[]
 })
 export class StatusesListComponent extends BaseComponent implements OnInit {
   @ViewChild('statusGrid')
@@ -38,11 +35,16 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
   dataSource: any;
   status: any;
   statuses_list_text: string;
-
-  constructor(private store: Store, private actions$: Actions) {
+  private statusType: any;
+  constructor(
+    private store: Store,
+    private actions$: Actions,
+    @Optional() @Inject('tab') tab:AppTabDto
+  ) {
     super();
-    this.statuses_list_text = 'Statuses List';
-  }
+    this.statuses_list_text = 'Document Statuses List';
+    this.statusType = tab.Params["StatusType"]!
+    }
 
   ngOnInit() {
     this.setActionsResults();
@@ -104,8 +106,13 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
   }
 
   getData() {
-    this.store.dispatch(GetAllStatuses());
-    this.dataSource = this.store.select(selectAllStatuses);
+    this.store.dispatch(
+      GetAllStatusesByStatusType({ statusType: this.statusType })
+    );
+    this.dataSource = this.store.select(
+      selectAllStatusesByStatusType(this.statusType)
+    );
+
   }
 
   getColumns() {
@@ -131,7 +138,7 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
 
   onRowSaving(data: any) {
     let status: StatusDto = { ...data };
-
+    status.StatusType=this.statusType
     if (!status.Id) {
       this.store.dispatch(InsertStatusDto({ dto: status }));
     } else {

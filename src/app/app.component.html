@@ -101,40 +101,43 @@
   <div class="sidenav">
     <mat-sidenav-container #sidenav class="menu-container">
       <mat-sidenav class="menu" #sidenav mode="side" [opened]="true">
-        <div style="background-color: lightgrey;display:flex;justify-content: space-between;">
-          <button
-          mat-button
-
-          style="padding:3%"
-          [ngStyle]="{ transform: 'scale(0.9)' }"
-          class="menu-list-btn"
-          matTooltip="Menu"
-          (click)="onSideMenuBtnClicked($event)"
+        <div
+          style="
+            background-color: lightgrey;
+            display: flex;
+            justify-content: space-between;
+          "
         >
-          <i class="fa fa-bars fa-lg"></i>
-        </button>
           <button
-          mat-button
-          style="padding:3%"
-          [ngStyle]="{ transform: 'scale(0.9)' }"
-          class="menu-list-btn"
-          matTooltip="Favorites"
-          (click)="onSideMenuFavoritesBtnClicked($event)"
-        >
-          <i style="color:red" class="fa fa-heart fa-lg"></i>
-        </button>
-        <button
-        mat-button
-
-        style="padding:3%"
-
-        [ngStyle]="{ transform: 'scale(0.9)' }"
-        class="menu-list-btn"
-        matTooltip="Settings"
-        (click)="onMenuBtnClicked()"
-      >
-        <i style="color:grey" class="fa fa-gear fa-lg"></i>
-      </button>
+            mat-button
+            style="padding: 3%"
+            [ngStyle]="{ transform: 'scale(0.9)' }"
+            class="menu-list-btn"
+            matTooltip="Menu"
+            (click)="onSideMenuBtnClicked($event)"
+          >
+            <i class="fa fa-bars fa-lg"></i>
+          </button>
+          <button
+            mat-button
+            style="padding: 3%"
+            [ngStyle]="{ transform: 'scale(0.9)' }"
+            class="menu-list-btn"
+            matTooltip="Favorites"
+            (click)="onSideMenuFavoritesBtnClicked($event)"
+          >
+            <i style="color: red" class="fa fa-heart fa-lg"></i>
+          </button>
+          <button
+            mat-button
+            style="padding: 3%"
+            [ngStyle]="{ transform: 'scale(0.9)' }"
+            class="menu-list-btn"
+            matTooltip="Settings"
+            (click)="onMenuBtnClicked()"
+          >
+            <i style="color: grey" class="fa fa-gear fa-lg"></i>
+          </button>
         </div>
         <div *ngFor="let menuItem of menuItems">
           <p
@@ -153,21 +156,18 @@
               <mat-list-item class="menu-items" (click)="onMenuItemClick(item)">
                 <span class="menu-item">{{ item.Name }}</span>
                 @if(!item.IsFavorite){
-                  <fa-icon
-                  style="color : white "
+                <fa-icon
+                  style="color: white"
                   [icon]="faHeartCirclePlus"
                   matTooltip="Add to Favorites"
                   (click)="onAddRemoveToFavoritesMenuItem($event, item)"
-
                 ></fa-icon>
-                }
-                @if(item.IsFavorite){
-                  <fa-icon
-                  style="color : red "
+                } @if(item.IsFavorite){
+                <fa-icon
+                  style="color: red"
                   [icon]="faHeart"
                   matTooltip="Remove from Favorites"
                   (click)="onAddRemoveToFavoritesMenuItem($event, item)"
-
                 ></fa-icon>
                 }
               </mat-list-item>
@@ -196,14 +196,15 @@
           (selectedIndexChange)="selectedTab.setValue($event)"
           (selectedTabChange)="onTabChanged($event)"
         >
-          <mat-tab
+          @for(tab of tabs; track tab.Id){
+            <mat-tab
             [ngClass]="tab.Active ? 'active-tab' : ''"
             class="app-tab"
-            *ngFor="let tab of tabs"
           >
-            <div class="tab-header">
-              <ng-template mat-tab-label>
-                <div [matTooltip]="tab.Hint">
+            <div class="tab-header" >
+              <ng-template mat-tab-label  >
+                <div [matTooltip]="tab.Hint "
+                >
                   <span class="tab-header">{{ tab.Name }}</span>
                 </div>
                 @if(tab.Active){
@@ -216,8 +217,9 @@
                 }
               </ng-template>
             </div>
-            <ng-container *ngComponentOutlet="tab.Component"></ng-container>
+            <ng-container *ngComponentOutlet="tab.Component; injector: tab.Injector"></ng-container>
           </mat-tab>
+          }
         </mat-tab-group>
         <div class="footer">
           <div>Copyright © 2024 DataNex. All rights reserved.</div>

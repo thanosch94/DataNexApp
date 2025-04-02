@@ -3,6 +3,7 @@ import { Guid } from 'guid-typescript';
 import { StatusDto } from '../../dto/status.dto';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
+import { StatusTypeEnum } from '../../enums/status-type.enum';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,12 @@ service: string;
 
   public GetAll() {
     return this.http.get(this.service + 'Statuses/getall', {
+      headers: this.auth.headers,
+    });
+  }
+  public GetAllStatusesByStatusType(statusType:StatusTypeEnum) {
+
+    return this.http.get(this.service + 'Statuses/getallByStatusType/'+statusType, {
       headers: this.auth.headers,
     });
   }
