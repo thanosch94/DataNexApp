@@ -1,0 +1,32 @@
+
+<div class="control-section">
+  <ejs-richtexteditor #toolsRTE id='alltoolRTE' [toolbarSettings]='tools' [insertImageSettings]="insertImageSettings"
+      [showCharCount]='true' [enableXhtml]='true' [fileManagerSettings]='fileManagerSettings'
+      [quickToolbarSettings]='quickToolbarSettings' (actionBegin)='actionBeginHandler($event)'
+      (actionComplete)='actionCompleteHandler($event)' [enableTabKey]='true' [placeholder]='placeholder'
+      [slashMenuSettings]="slashMenuSettings" [importWord]="importWord" [exportWord]="exportWord"
+      [exportPdf]="exportPdf">
+      <ng-template #valueTemplate>
+      </ng-template>
+  </ejs-richtexteditor>
+
+  <ejs-mention #editorMention id='editorMention' [dataSource]="usersDatasource" [fields]='fields' [allowSpaces]="true"
+      popupWidth='250px' popupHeight='200px' sortOrder='Ascending' target='#alltoolRTE_rte-edit-view' [suffixText]='&nbsp;'>
+      <ng-template #displayTemplate let-data>
+          <a href=mailto:{{data.email}} title={{data.email}}>&#64;{{data.name}}</a>
+      </ng-template>
+      <ng-template #itemTemplate let-data>
+          <div class="editor-mention-item-template">
+              <div class="em-header">
+                  <div class="em-avatar" [ngStyle]="{ 'background-color': data.bgColor, 'color': data.color} ">
+                      <div class="em-initial">{{data.initial}}</div>
+                  </div>
+              </div>
+              <div class="em-content">
+                  <div class="em-name">{{data.name}}</div>
+                  <div class="em-email">{{data.email}}</div>
+              </div>
+          </div>
+      </ng-template>
+  </ejs-mention>
+</div>
