@@ -8,7 +8,6 @@ import { AuthService } from '../auth.service';
   providedIn: 'root'
 })
 export class AdditionalChargesService {
-
   service: string;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();

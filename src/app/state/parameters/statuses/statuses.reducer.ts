@@ -47,20 +47,20 @@ export const statusesReducer = createReducer(
 
   //Get All By StatusType
   on(GetAllStatusesByStatusType, (state) => ({ ...state })),
-  on(GetAllStatusesByStatusTypeSuccess, (state, { data }) => {
-    if (data[0]?.StatusType == StatusTypeEnum.Document) {
+  on(GetAllStatusesByStatusTypeSuccess, (state, { data,statusType }) => {
+    if (statusType == StatusTypeEnum.Document) {
       return {
         ...state,
         documentStatuses: [...data],
         error: null,
       };
-    } else if (data[0]?.StatusType == StatusTypeEnum.Project) {
+    } else if (statusType == StatusTypeEnum.Project) {
       return {
         ...state,
         projectStatuses: [...data],
         error: null,
       };
-    } else if (data[0]?.StatusType == StatusTypeEnum.Task) {
+    } else if (statusType == StatusTypeEnum.Task) {
       return {
         ...state,
         taskStatuses: [...data],
@@ -161,7 +161,7 @@ export const statusesReducer = createReducer(
     } else if (status?.StatusType == StatusTypeEnum.Task) {
       return {
         ...state,
-        taskStatuses: [...state.taskStatuses.map((x) => (x.Id == status.Id ? status : x))],
+        taskStatuses: [...state.taskStatuses.filter((x) => (x.Id != status.Id))],
         error: null,
       };
     } else {
