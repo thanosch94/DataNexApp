@@ -1,0 +1,21 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="work_item_types_list_title_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-grid
+    #workItemTypesGrid
+    [dataSource]="dataSource | async"
+    [columns]="columns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onWorkItemTypeSaving($event)"
+    (onRowDelete)="onWorkItemTypeDelete($event)"
+    (onRowStopEditing)="onWorkItemTypeStopEditing($event)"
+  >
+  </dn-grid>
+</div>

@@ -21,6 +21,10 @@ import { CompaniesEffects } from './state/parameters/companies/companies.effects
 import { companiesReducer } from './state/parameters/companies/companies.reducer';
 import { documentTypesReducer } from './state/parameters/document-types/document-types.reducer';
 import { DocumentTypesEffects } from './state/parameters/document-types/document-types.effects';
+import { workItemTypesEffects } from './state/parameters/work-item-types/work-item-types.effects';
+import { workItemTypesReducer } from './state/parameters/work-item-types/work-item-types.reducer';
+import { usersReducer } from './state/users/users.reducer';
+import { UsersEffects } from './state/users/users.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,7 +38,9 @@ export const appConfig: ApplicationConfig = {
       additionalCharges: additionalChargesReducer,
       statuses: statusesReducer,
       companies:companiesReducer,
-      documentTypes:documentTypesReducer
+      documentTypes:documentTypesReducer,
+      workItemTypes: workItemTypesReducer,
+      users:usersReducer
     }),
     provideEffects([
       ProductEffects,
@@ -43,7 +49,9 @@ export const appConfig: ApplicationConfig = {
       AdditionalChargesEffects,
       StatusesEffects,
       CompaniesEffects,
-      DocumentTypesEffects
+      DocumentTypesEffects,
+      workItemTypesEffects,
+      UsersEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

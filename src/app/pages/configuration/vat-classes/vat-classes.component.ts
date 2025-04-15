@@ -31,7 +31,6 @@ export class VatClassesComponent extends BaseComponent {
   @ViewChild('vatClassesGrid')
   vatClassesGrid: DnGridComponent;
   dataSource: Observable<VatClassDto[]>;
-  document_types_list_title_text: string;
   columns: DnColumnDto[] = [];
   vat_classes_list_title_text: string;
 
