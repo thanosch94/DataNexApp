@@ -6,6 +6,7 @@ import { MatPseudoCheckboxModule } from '@angular/material/core';
 import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
@@ -21,7 +22,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatIconModule,
         MatSuffix,
         MatPrefix,
-        MatTooltipModule
+        MatTooltipModule,
+        MatSelectModule
     ],
       providers: [
         {
@@ -49,6 +51,8 @@ export class DnSelectboxComponent {
   @Input() iconTooltip: string='';
   @Input() optionsTemplate: boolean;
   @Input() panelWidth: number|string;
+  @Input() useCustomValueTemplate: boolean=false; //Used this to add custom template with icon when option is selected
+  @Input() allowInput: boolean=true;
   @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
@@ -100,6 +104,9 @@ export class DnSelectboxComponent {
   optionsTrackBy(index: number, option: any) {
     return option[this.valueExpr];
   }
+  compareFn (a: any, b: any) {
+    return a.Id == b
+  };
 
   isOptionSelected(e: any) {
     if (this.selectedOption) {
@@ -119,27 +126,24 @@ export class DnSelectboxComponent {
     this.onIconClicked.emit(e)
   }
 
+
+
 //#region  Reactive Forms
   onChange: (value: string) => void = () => {
-    debugger
-
   };
   onTouched: () => void = () => {
 
   };
 
   writeValue(value: string): void {
-    debugger
-
     this.value = value || '';
   }
+
   registerOnChange(fn: (value: string) => void): void {
-    debugger
     this.onChange = fn;
   }
-  registerOnTouched(fn: any): void {
-    debugger
 
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
   setDisabledState?(isDisabled: boolean): void {}

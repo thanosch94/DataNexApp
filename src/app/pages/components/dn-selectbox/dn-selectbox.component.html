@@ -1,7 +1,9 @@
 <mat-form-field class="select-box" [class]="'width-' + width">
   <mat-label>{{ label }}</mat-label>
-  <div class="select-box-flex-row">
+  @if(allowInput){
+    <!-- AutoComplete -->
     <input
+
       matInput
       [type]="inputType"
       [placeholder]="placeholder"
@@ -9,28 +11,26 @@
       [(ngModel)]="value"
       [matAutocomplete]="auto"
       (click)="onInputClick(value)"
+      [ngClass]="useCustomValueTemplate?'transparent-text':''"
 
-    />
-    @if(icon){ @if(iconPosition=="end"){<mat-icon
-      [matTooltip]="iconTooltip"
-      class="select-box-icon"
-      matSuffix
-      (click)="onIconClick($event)"
-      >{{ icon }}</mat-icon
-    >} @if(iconPosition=="start"){<mat-icon
-      [matTooltip]="iconTooltip"
-      class="select-box-icon"
-      matPreffix
-      (click)="onIconClick($event)"
-      >{{ icon }}</mat-icon
-    >} }
-    <mat-autocomplete
-      #matAutoComplete
-      #auto="matAutocomplete"
-      (optionSelected)="onValueChanged($event.option.value)"
-      [displayWith]="display.bind(this)"
-      [panelWidth]="panelWidth"
+
+    />}@else {
+      <!-- Select -->
+      <mat-select
+      class="select-only-box"
+      [placeholder]="placeholder"
+      [name]="name"
+      (selectionChange)="onValueChanged($event.value)"
+      [panelWidth]="'auto'"
+      [(ngModel)]="value"
+      (click)="onInputClick(value)"
+      [compareWith]="compareFn"
+      [ngClass]="useCustomValueTemplate?'transparent-text':''"
+
     >
+    <mat-select-trigger>
+      {{ display(value)}}
+    </mat-select-trigger>
       <ng-container *ngIf="isOptionsPanelEnabled">
         <mat-option
           *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
@@ -45,9 +45,65 @@
               [ngTemplateOutlet]="templateRef"
               [ngTemplateOutletContext]="{ $implicit: option }"
             ></ng-template>
+
+
           </ng-container>
         </mat-option>
       </ng-container>
+
+    </mat-select>
+    }
+
+
+    @if(icon){ @if(iconPosition=="end"){<mat-icon
+      [matTooltip]="iconTooltip"
+      class="select-box-icon"
+      matSuffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} @if(iconPosition=="start"){<mat-icon
+      [matTooltip]="iconTooltip"
+      class="select-box-icon"
+      matPreffix
+      (click)="onIconClick($event)"
+      >{{ icon }}</mat-icon
+    >} }
+
+   <mat-autocomplete
+      #matAutoComplete
+      #auto="matAutocomplete"
+      (optionSelected)="onValueChanged($event.option.value)"
+      [displayWith]="display.bind(this)"
+      [panelWidth]="panelWidth"
+
+    >
+
+      <ng-container *ngIf="isOptionsPanelEnabled">
+        <mat-option
+          *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
+          [value]="option"
+        >
+          <ng-container *ngIf="!optionsTemplate">{{
+            option[displayExpr]
+          }}</ng-container>
+          <ng-container *ngIf="optionsTemplate"
+          ><ng-template
+
+              [ngTemplateOutlet]="templateRef"
+              [ngTemplateOutletContext]="{ $implicit: option }"
+            ></ng-template>
+
+
+          </ng-container>
+        </mat-option>
+      </ng-container>
+
     </mat-autocomplete>
-  </div>
+
+  <!-- Todo replace with ng-content -->
+@if(selectedOption && useCustomValueTemplate){<div class="value-overlay">
+  <i class="icon" [class]="selectedOption.Icon" [style]="'color:'+ selectedOption.IconColor"></i>
+{{ selectedOption[displayExpr] }}
+</div>}
+
 </mat-form-field>
