@@ -129,6 +129,26 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
         Caption: 'Name',
       },
       {
+        DataField: 'Icon',
+        DataType: 'string',
+        Caption: 'Icon',
+      },
+      {
+        DataField: 'IconColor',
+        DataType: 'string',
+        Caption: 'Icon Color',
+      },
+      {
+        DataField: 'Order',
+        DataType: 'number',
+        Caption: 'Order',
+      },
+      {
+        DataField: 'IsDefault',
+        DataType: 'boolean',
+        Caption: 'Is Default',
+      },
+      {
         DataField: 'buttons',
         DataType: 'buttons',
         Caption: '',

@@ -1,0 +1,100 @@
+<dn-toolbar
+  [canDelete]="true"
+  [canExit]="true"
+  [canSave]="true"
+  [canRefresh]="(task()?.Id!=null )? true : false"
+  [isDialog]="false"
+  [title]="(task()?.Id!=null) ? task().Name : new_task_title_text"
+  [entityId]="task()?.Id"
+  (onCloseBtnClicked)="onCloseClicked($event)"
+  (onDeleteBtnClicked)="onDeleteClicked($event)"
+  (onSaveBtnClicked)="onSaveClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+
+<form [formGroup]="form" class="form " >
+  <div class="inline height-100">
+    <div class="form task-edit-container width-45">
+      <div class="marginb-2 width-100">
+        <div class="mb-1">
+          <dn-textbox label="Title" formControlName="Name" name="name">
+          </dn-textbox>
+        </div>
+
+        <div class="inline width-100 mb-1">
+          <div class="mr-auto width-45">
+            <dn-selectbox
+              label="Task Type"
+              [dataSource]="taskTypes | async"
+              [optionsTemplate]="true"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="WorkItemTypeId"
+              name="WorkItemTypeId"
+              [useCustomValueTemplate]="true"
+              [allowInput]="false"
+            >
+            <ng-template let-option>
+              <i [class]="option.Icon" [style]="'margin-right:4px; color:'+option.IconColor"></i>{{option.Name}}
+            </ng-template>
+            </dn-selectbox>
+          </div>
+          <div class="width-45">
+            <dn-selectbox
+              label="Status"
+              [dataSource]="taskStatuses | async"
+              valueExpr="Id"
+              [optionsTemplate]="true"
+              displayExpr="Name"
+              formControlName="StatusId"
+              name="statusId"
+              [useCustomValueTemplate]="true"
+              [allowInput]="false"
+
+            >
+            <ng-template let-option>
+              <i [class]="option.Icon" [style]="'margin-right:4px; color:'+option.IconColor"></i>{{option.Name}}
+            </ng-template>
+            </dn-selectbox>
+          </div>
+        </div>
+
+        <div class="inline width-100 mb-1">
+          <div class="mr-auto width-45">
+            <dn-selectbox
+              label="Project"
+              [dataSource]="projectsDatasourse | async"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="ProjectId"
+              name="ProjectId"
+            >
+            </dn-selectbox>
+          </div>
+          <div class="width-45">
+            <dn-selectbox
+              label="Assignee"
+              [dataSource]="users | async"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="AssigneeId"
+            >
+            </dn-selectbox>
+          </div>
+        </div>
+
+        <div class="">
+          <dn-textbox
+            label="Master Task"
+            formControlName="MasterTaskId"
+            name="masterTaskId"
+          >
+          </dn-textbox>
+        </div>
+      </div>
+    </div>
+    <div class="form width-45">
+      <dn-rich-text-editor formControlName="Description"> </dn-rich-text-editor>
+    </div>
+  </div>
+</form>

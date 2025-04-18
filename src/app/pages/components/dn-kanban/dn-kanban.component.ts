@@ -1,4 +1,17 @@
-import { Component, Input } from '@angular/core';
+import {
+  Component,
+  Input,
+  output,
+  input,
+  ChangeDetectorRef,
+  effect,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  QueryList,
+  ViewChildren,
+  AfterViewChecked,
+} from '@angular/core';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -11,67 +24,116 @@ import { CommonModule } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'dn-kanban',
-  imports: [CdkDrag, CdkDropList, CommonModule, CdkDropListGroup, FaIconComponent, MatButtonModule],
+  imports: [
+    CdkDrag,
+    CdkDropList,
+    CommonModule,
+    CdkDropListGroup,
+    FaIconComponent,
+    MatButtonModule,
+    MatTooltipModule,
+  ],
   templateUrl: './dn-kanban.component.html',
   styleUrl: './dn-kanban.component.css',
 })
-export class DnKanbanComponent {
-  @Input() columns: any[];
+export class DnKanbanComponent implements AfterViewChecked {
+  columns = input<any[]>();
   @Input() itemColumnId: string;
-  @Input() items: any[];
-  @Input() columnTitleBackgroundColor: string ="#0b6aa5";
-  @Input() columnTitleColor: string="#fafafa";
 
-  faEdit=faEdit
-  faTrash=faTrash
-  constructor() {
+  private _items: any[];
+  userInitials: string;
+  isOverflowing: boolean;
+  public get items(): any[] {
+    return this._items;
+  }
+  @Input('items')
+  public set items(v: any[]) {
+    this._items = v;
+    this.updateColumnItemsMap();
+  }
+  @ViewChildren('itemTitle') itemTitles!: QueryList<
+    ElementRef<HTMLSpanElement>
+  >;
+  @ViewChildren('itemDescr') itemDescrs!: QueryList<
+    ElementRef<HTMLSpanElement>
+  >;
 
+  textOverflowMap: { [id: string]: boolean } = {};
+  descrOverflowMap: { [id: string]: boolean } = {};
+
+  @Input() columnTitleBackgroundColor: string = '#0b6aa5';
+  @Input() columnTitleColor: string = '#fafafa';
+  @Input() itemDescriptionExpr: string;
+  titleExpr = input<string>('');
+  onItemEditBtnClicked = output();
+  onItemDeleteBtnClicked = output();
+  itemsChange = output<any>();
+  onItemDrop = output<any>();
+  columnItemsMap: { [columnId: string]: any[] } = {};
+
+  onItemClicked = output();
+  faEdit = faEdit;
+  faTrash = faTrash;
+  constructor(private ref: ChangeDetectorRef, private auth: AuthService) {
+    this.getUserInitials();
+    effect(() => {
+      if (this.columns()) {
+        this.updateColumnItemsMap();
+      }
+    });
   }
 
-  getColumns() {
-    if (this.columns) {
-      for (let i = 0; i < this.columns.length; i++) {
-        Object.defineProperty(this.columns[i], 'Order', {
-          value: i,
-          writable: true,
-          enumerable: true,
-        });
-      }
-    } else {
-      this.columns = [];
-    }
-    return this.columns;
+  ngAfterViewChecked(): void {
+    this.checkTitleOverflow();
+    this.checkDescrOverflow();
+  }
+
+  checkTitleOverflow() {
+    this.itemTitles.toArray().forEach((elRef) => {
+      const el = elRef.nativeElement;
+      this.textOverflowMap[el.id] = el.scrollWidth > el.clientWidth;
+    });
+  }
+
+  isTitleOverflowing(id: string): boolean {
+    return this.textOverflowMap[id] ?? false;
+  }
+
+  checkDescrOverflow() {
+    this.itemTitles.toArray().forEach((elRef) => {
+      const el = elRef.nativeElement;
+      this.descrOverflowMap[el.id] = el.scrollWidth > el.clientWidth;
+    });
+  }
+
+  isDescrOverflowing(id: string): boolean {
+    return this.descrOverflowMap[id] ?? false;
   }
 
   filterItems(column: any) {
-    let data = this.items.filter((x: any) => x[this.itemColumnId] == column.Id);
-    for (let i = 0; i < data.length; i++) {
-      Object.defineProperty(data[i], 'Order', {
-        value: i,
-        writable: true,
-        enumerable: true,
-      });
-    }
-    if (data) {
-      return data;
-    } else {
-      return [];
-    }
+    const data = this.items
+      .filter((x: any) => x[this.itemColumnId] == column.Id)
+      .map((item, i) => ({
+        ...item,
+        Order: i,
+      }));
+
+    return data ?? [];
   }
 
   drop(event: CdkDragDrop<any[]>) {
-    const movedItem = event.item.data;
+    const movedItemId = event.item.data.Id;
+    const movedItem = this.items.find((item) => item.Id === movedItemId);
 
-    let newColumn = Number(event.container.id.replace('cdk-drop-list-', ''));
-    const newColumnId = newColumn;
-
-    // Check if the item was dropped into a different column and update Column
-    let index = this.items.indexOf(movedItem);
-
-    this.items[index][this.itemColumnId] = newColumnId + 1;
+    const updatedItem = { ...movedItem, StatusId: event.container.id };
+    this.items = this.items.map((item) =>
+      item.Id == movedItem.Id ? updatedItem : item
+    );
 
     if (event.previousContainer === event.container) {
       moveItemInArray(
@@ -88,26 +150,45 @@ export class DnKanbanComponent {
       );
     }
 
-    //Update Item Order
-    let currentItem = event.container.data.find(
-      (x) => x.Id == event.item.data.Id
-    );
-    currentItem!.Order = event.currentIndex;
+    this.updateColumnItemsMap();
+    let dataToEmit = { newValue: updatedItem };
+    this.onItemDrop.emit(dataToEmit);
+  }
 
-    for (let i = 0; i < event.container.data.length; i++) {
-      let item = this.items.find((x) => x.Id == event.container.data[i].Id);
-      let index = this.items.indexOf(item!);
+  updateColumnItemsMap() {
+    this.columnItemsMap = {};
 
-      if (
-        event.container.data[i].Order == event.currentIndex &&
-        event.container.data[i].Id == event.item.data.Id
-      ) {
-        continue;
-      } else if (event.container.data[i].Order <= event.currentIndex) {
-        this.items[index].Order = i;
-      }
+    for (let col of this.columns()!) {
+      this.columnItemsMap[col.Id] = this.items.filter(
+        (item) => item[this.itemColumnId] == col.Id
+      );
     }
-    //Sort Items based on the Order Property
-    this.items.sort((a, b) => a.Order - b.Order);
+
+    this._items = Object.values(this.columnItemsMap).flat();
+  }
+
+  onItemClick(item: any) {
+    this.onItemClicked.emit(item);
+  }
+
+  onItemEditBtnClick(item: any) {
+    this.onItemEditBtnClicked.emit(item);
+  }
+
+  onItemDeleteBtnClick(item: any) {
+    this.onItemDeleteBtnClicked.emit(item);
+  }
+
+  stripHtml(html: string): string {
+    const div = document.createElement('span');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+  }
+
+  getUserInitials() {
+    this.userInitials = this.auth.user.Name.split(' ')
+      .map((x) => x[0])
+      .join('')
+      .toUpperCase();
   }
 }

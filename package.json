@@ -32,6 +32,7 @@
     "@ngrx/store-devtools": "^19.0.0",
     "@syncfusion/ej2-angular-dropdowns": "^29.1.37",
     "@syncfusion/ej2-angular-richtexteditor": "^29.1.37",
+    "@syncfusion/ej2-material-theme": "^29.1.37",
     "@types/pdfmake": "^0.2.10",
     "angular-font-awesome": "^3.1.2",
     "codemirror": "^5.65.19",

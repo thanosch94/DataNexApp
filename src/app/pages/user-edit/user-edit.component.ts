@@ -1,6 +1,14 @@
+import { WorkItemsService } from './../../services/work-items.service';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { Component, ViewContainerRef } from '@angular/core';
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewContainerRef,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -8,10 +16,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
@@ -28,7 +36,6 @@ import {
   faAdd,
   faCamera,
   faCircleXmark,
-  faDeleteLeft,
   faEdit,
   faTrash,
   faTriangleExclamation,
@@ -52,8 +59,23 @@ import {
   provideNativeDateAdapter,
 } from '@angular/material/core';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
-import { DnKanbanComponent } from "../components/dn-kanban/dn-kanban.component";
+import { DnKanbanComponent } from '../components/dn-kanban/dn-kanban.component';
 import { MatListModule } from '@angular/material/list';
+import { TaskEditComponent } from '../task-edit/task-edit.component';
+import { Guid } from 'guid-typescript';
+import { Store } from '@ngrx/store';
+import { GetAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.actions';
+import { StatusTypeEnum } from '../../enums/status-type.enum';
+import { selectAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.selectors';
+import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
+import {
+  ClearSelectedWorkItem,
+  DeleteWorkItemById,
+  DeleteWorkItemByIdFailure,
+  DeleteWorkItemByIdSuccess,
+  UpdateWorkItemDto,
+} from '../../state/work-items/work-items.actions';
+import { Actions, ofType } from '@ngrx/effects';
 
 @Component({
   selector: 'app-user-edit',
@@ -77,8 +99,10 @@ import { MatListModule } from '@angular/material/list';
     MatTabsModule,
     ReactiveFormsModule,
     DnKanbanComponent,
-    MatListModule
-],
+    MatListModule,
+    DnPopupComponent,
+    TaskEditComponent,
+  ],
   //#endregion
   providers: [
     TabsService,
@@ -88,7 +112,10 @@ import { MatListModule } from '@angular/material/list';
   templateUrl: './user-edit.component.html',
   styleUrl: './user-edit.component.css',
 })
-export class UserEditComponent extends GenericFormComponent {
+export class UserEditComponent
+  extends GenericFormComponent
+  implements OnInit, OnDestroy
+{
   form: FormGroup;
   user_text: string;
   usersViewModel: UsersViewModel;
@@ -102,120 +129,95 @@ export class UserEditComponent extends GenericFormComponent {
   faLinkedin = faLinkedin;
   faTriangleExclamation = faTriangleExclamation;
   faCircleXmark = faCircleXmark;
-  faAdd = faAdd
-  faEdit = faEdit
-  faTrash = faTrash
+  faAdd = faAdd;
+  faEdit = faEdit;
+  faTrash = faTrash;
   displayPasswordSetReminder: boolean;
   newPassword: any;
   isComponentReady: boolean;
-  columns:any[]
-  items:any[]
+  columns: any[];
+  items = signal<any[]>([]);
+  isPopupVisible: boolean;
+  taskId = signal<Guid | null>(null);
+  private destroy$ = new Subject<void>();
+
   //#region Constructor
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private _snackBar: MatSnackBar,
-    public dialog: MatDialog,
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private store: Store,
+    private workItemsService: WorkItemsService,
+    private actions$: Actions
   ) {
     super();
+
     this.usersViewModel = new UsersViewModel(this.http, this.auth);
 
     this.appRoles = WebAppBase.AppRoles;
 
-    this.columns = [
-      { Id: 1, Name: 'To Do' },
-      { Id: 2, Name: 'In Progress' },
-      { Id: 3, Name: 'Done' },
-      { Id: 4, Name: 'Abandoned' },
-    ];
-
-    this.items = [
-      {
-        Id: 1,
-        StatusId: 2,
-        Title: 'Task 1',
-        Descr: 'Testes tet wer wetw etw ttt',
-        PriorityColor: 'red',
-      },
-      {
-        Id: 2,
-        StatusId: 1,
-        Title: 'Task 5',
-        Descr: 'Oiou kkmgfdp fsdf sfsdffs',
-        PriorityColor: 'green',
-      },
-      {
-        Id: 3,
-        StatusId: 1,
-        Title: 'Task 3',
-        Descr: 'Fcxb gsg gsgr e erettt',
-        PriorityColor: 'green',
-      },
-      {
-        Id: 4,
-        StatusId: 1,
-        Title: 'Task 4',
-        Descr: 'Poofgd sdfgsdf fsdf serrd',
-        PriorityColor: 'gold',
-      },
-      {
-        Id: 5,
-        StatusId: 3,
-        Title: 'Task 2',
-        Descr: 'TEst fds rewrfsf fgsg',
-        PriorityColor: 'gold',
-      },
-      {
-        Id: 6,
-        StatusId: 3,
-        Title: 'Task 6',
-        Descr: 'Adgs vdf ggdg gdf gg fd',
-        PriorityColor: 'red',
-      },
-      {
-        Id: 7,
-        StatusId: 1,
-        Title: 'Task 6',
-        Descr: 'Adgs vdf ggdg gdf gg fd',
-        PriorityColor: 'red',
-      },
-      {
-        Id: 8,
-        StatusId: 1,
-        Title: 'Task 6',
-        Descr: 'Adgs vdf ggdg gdf gg fd',
-        PriorityColor: 'red',
-      },
-      {
-        Id: 9,
-        StatusId: 1,
-        Title: 'Task 6',
-        Descr: 'Adgs vdf ggdg gdf gg fd',
-        PriorityColor: 'red',
-      },
-      {
-        Id: 10,
-        StatusId: 1,
-        Title: 'Task 6',
-        Descr: 'Adgs vdf ggdg gdf gg fd',
-        PriorityColor: 'red',
-      },
-    ];
+    this.getKanbanData();
   }
   //#endregion
 
   ngOnInit() {
     this.initializeForm();
     this.setUser();
+
     this.getData();
-    setTimeout(()=>{
-      this.isComponentReady =true
+    setTimeout(() => {
+      this.isComponentReady = true;
       //Used because the password error message is displayed once we navigate to the component and instantly disappears
-    },1000)
+    }, 1000);
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteWorkItemByIdSuccess), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getKanbanData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteWorkItemByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getKanbanData();
+      });
+  }
+
+  getKanbanData() {
+    this.store.dispatch(
+      GetAllStatusesByStatusType({ statusType: StatusTypeEnum.Task })
+    );
+
+    this.store
+      .select(selectAllStatusesByStatusType(StatusTypeEnum.Task))
+      .subscribe((result: any) => {
+        this.columns = result;
+
+        // this.store.dispatch(
+        //   GetAllWorkItemsByWorkItemCategory({
+        //     workItemCategory: WorkItemCategoryEnum.Task,
+        //   })
+        // );
+        this.workItemsService
+          .GetallByUserId(this.auth.user.Id)
+          .subscribe((result: any) => {
+            debugger;
+            this.items.set(result);
+          });
+        // this.store
+        //   .select(selectAllTaskByUserId(this.auth.user.Id))
+        //   .subscribe((result: any) => {
+        //   });
+      });
   }
 
   //#region Initialize Form
@@ -253,10 +255,10 @@ export class UserEditComponent extends GenericFormComponent {
       this.usersViewModel.GetById(this.userId).subscribe((result: any) => {
         result as UserDto;
         this.user = result;
-        if(!this.user.IsPasswordSet){
-          this.displayPasswordSetReminder = true
-        }else{
-          this.displayPasswordSetReminder = false
+        if (!this.user.IsPasswordSet) {
+          this.displayPasswordSetReminder = true;
+        } else {
+          this.displayPasswordSetReminder = false;
         }
         this.form.patchValue(this.user);
         this.user_text = this.user.Name;
@@ -285,7 +287,7 @@ export class UserEditComponent extends GenericFormComponent {
           if (result) {
             this.user_text = this.user.Name;
             this.displayNotification('Record updated');
-            debugger
+            debugger;
             if (!this.user.Password && !result.IsPasswordSet) {
               this.displayPasswordSetReminder = true;
             }
@@ -301,7 +303,6 @@ export class UserEditComponent extends GenericFormComponent {
           }
         });
       }
-
     } else {
       this.markAllAsTouched(this.form);
     }
@@ -404,15 +405,16 @@ export class UserEditComponent extends GenericFormComponent {
 
   //#endregion
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
+  // displayNotification(text: string) {
+  //   this._snackBar.open(text, '', {
+  //     duration: 1000,
+  //     panelClass: 'green-snackbar',
+  //   });
+  // }
 
   onRefreshClicked(e: any) {
     this.getData();
+    this.getKanbanData();
   }
 
   onCloseClicked(e: any) {
@@ -423,7 +425,76 @@ export class UserEditComponent extends GenericFormComponent {
     this.markAsTouched(this.form, formControl);
   }
 
+  onAddBtnClicked(e: any) {
+    //this.openTaskEditDialog();
+    this.taskId.set(null)
+    this.isPopupVisible = true;
+  }
+
+  openTaskEditDialog(taskId?: Guid) {
+    this.dialog.open(TaskEditComponent, {
+      width: '700px',
+      height: '500px',
+      data: {
+        Title: 'New Task',
+        TaskId: taskId,
+      },
+    });
+  }
+  onHiding() {
+    this.taskId.set(null);
+
+    this.isPopupVisible = false;
+  }
+
+  onTaskPopupClose() {
+    this.isPopupVisible = false;
+
+    this.getKanbanData();
+    this.store.dispatch(ClearSelectedWorkItem())
+  }
+
+  onTaskEditBtnClicked(item: any) {
+    debugger
+    this.taskId.set(item.Id);
+    this.isPopupVisible = true;
+  }
+
+  onItemDeleteBtnClicked(item: any) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.store.dispatch(DeleteWorkItemById({ id: item.Id }));
+        this.getKanbanData();
+      }
+    });
+  }
+
+  onTaskClicked(task: any) {
+    this.taskId.set(task.Id);
+  }
+
+  onTaskDrop(e: any) {
+    this.store.dispatch(UpdateWorkItemDto({ dto: e.newValue }));
+  }
+
+  onTaskDelete(e: any) {
+    this.isPopupVisible = false;
+    this.taskId.set(null);
+    this.getKanbanData();
+  }
+
   ngOnDestroy() {
     WebAppBase.data = undefined;
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

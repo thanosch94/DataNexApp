@@ -6,5 +6,9 @@ export class StatusDto {
   SerialNumber?:number;
   Code?:string;
   Name:string;
+  Icon?:string;
+  IconColor?:string;
+  IsDefault:boolean;
+  Order?:number;
   StatusType:StatusTypeEnum
 }

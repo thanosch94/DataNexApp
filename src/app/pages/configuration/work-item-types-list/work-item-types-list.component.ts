@@ -130,6 +130,21 @@ export class WorkItemTypesListComponent extends BaseComponent {
         Caption: 'Name',
       },
       {
+        DataField: 'Icon',
+        DataType: 'string',
+        Caption: 'Icon',
+      },
+      {
+        DataField: 'IconColor',
+        DataType: 'string',
+        Caption: 'Icon Color',
+      },
+      {
+        DataField: 'IsDefault',
+        DataType: 'boolean',
+        Caption: 'Is Default',
+      },
+      {
         DataField: 'buttons',
         DataType: 'buttons',
         Caption: '',

@@ -34,6 +34,7 @@ import { DocumentTypeEditComponent } from './pages/configuration/document-type-e
 import { GeneralOptionsComponent } from './pages/configuration/general-options/general-options.component';
 import { LotsListComponent } from './pages/configuration/lots/lots-list.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
+import { WorkItemTypesListComponent } from './pages/configuration/work-item-types-list/work-item-types-list.component';
 
 export const routes: Routes = [
   {
@@ -129,6 +130,11 @@ export const routes: Routes = [
   {
     path:'task-statuses-list',
     component:StatusesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'work-item-types-list',
+    component:WorkItemTypesListComponent,
     canActivate:[authGuard]
   },
   {

@@ -15,14 +15,18 @@ import {
 } from './work-item-types.actions';
 import { WorkItemTypeDto } from '../../../dto/work-item-type.dto';
 import { WorkItemCategoryEnum } from '../../../enums/work-item-category.enum';
+import { GetWorkItemById, GetWorkItemByIdFailure, GetWorkItemByIdSuccess } from '../../work-items/work-items.actions';
+import { WorkItemDto } from '../../../dto/work-item.dto';
 
 export interface WorkItemTypesState {
   taskWorkItemTypes: WorkItemTypeDto[];
+  selectedWorkItem?:WorkItemDto;
   error: any;
 }
 
 export const initialWorkItemTypesState: WorkItemTypesState = {
   taskWorkItemTypes: [],
+  selectedWorkItem:new WorkItemDto(),
   error: null,
 };
 
@@ -41,7 +45,8 @@ export const workItemTypesReducer = createReducer(
     error,
   })),
 
-  //Get All By WorkItemTypeType
+
+  //Get All By WorkItem Category
   on(GetAllWorkItemTypesByWorkItemCategory, (state) => ({ ...state })),
   on(
     GetAllWorkItemTypesByWorkItemCategorySuccess,

@@ -10,7 +10,7 @@ export const selectAllWorkItemTypes = createSelector(
   (state) => state.taskWorkItemTypes
 );
 
-export const selectAllWorkItemTypesByWorkItemType = (
+export const selectAllWorkItemTypesByWorkItemCategory = (
   workItemType: WorkItemCategoryEnum
 ) => {
   if (workItemType == WorkItemCategoryEnum.Task) {
@@ -22,3 +22,4 @@ export const selectAllWorkItemTypesByWorkItemType = (
     return createSelector(selectWorkItemTypeState, (state) => []);
   }
 };
+

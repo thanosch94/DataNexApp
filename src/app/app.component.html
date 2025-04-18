@@ -201,9 +201,10 @@
             [ngClass]="tab.Active ? 'active-tab' : ''"
             class="app-tab"
           >
-            <div class="tab-header" >
+            <div class="tab-header"
+            >
               <ng-template mat-tab-label  >
-                <div [matTooltip]="tab.Hint "
+                <div class="tab-header-container" [matTooltip]="tab.Hint "(mousedown)="onTabClicked($event,tab)"
                 >
                   <span class="tab-header">{{ tab.Name }}</span>
                 </div>

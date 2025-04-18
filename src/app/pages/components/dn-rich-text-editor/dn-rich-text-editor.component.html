@@ -1,11 +1,10 @@
 
-<div class="control-section">
-  <ejs-richtexteditor #toolsRTE id='alltoolRTE' [toolbarSettings]='tools' [insertImageSettings]="insertImageSettings"
+  <ejs-richtexteditor height="100%"  [(value)]="value" #toolsRTE id='alltoolRTE' [toolbarSettings]='tools' [insertImageSettings]="insertImageSettings"
       [showCharCount]='true' [enableXhtml]='true' [fileManagerSettings]='fileManagerSettings'
       [quickToolbarSettings]='quickToolbarSettings' (actionBegin)='actionBeginHandler($event)'
       (actionComplete)='actionCompleteHandler($event)' [enableTabKey]='true' [placeholder]='placeholder'
       [slashMenuSettings]="slashMenuSettings" [importWord]="importWord" [exportWord]="exportWord"
-      [exportPdf]="exportPdf">
+      [exportPdf]="exportPdf" (valueChange)="onValueChange($event)">
       <ng-template #valueTemplate>
       </ng-template>
   </ejs-richtexteditor>
@@ -29,4 +28,3 @@
           </div>
       </ng-template>
   </ejs-mention>
-</div>

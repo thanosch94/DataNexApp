@@ -29,6 +29,7 @@ export class WorkItemTypesService {
   }
 
   public InsertDto(workItemType: WorkItemTypeDto) {
+    debugger
     return this.http.post(this.service + 'WorkItemTypes/insertdto', workItemType, {
       headers: this.auth.headers,
     });

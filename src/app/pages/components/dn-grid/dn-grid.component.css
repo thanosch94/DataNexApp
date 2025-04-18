@@ -230,3 +230,12 @@ td , th {
 .table ::ng-deep .number-box  .mdc-text-field {
   border-radius: unset;
 }
+
+
+::ng-deep .td{
+  height: 300px!important;
+}
+
+ ::ng-deep .mat-typography p{
+  margin:0;
+}

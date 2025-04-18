@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-generic-form',
@@ -7,7 +8,7 @@ import { FormGroup } from '@angular/forms';
   templateUrl: './generic-form.component.html',
   styleUrl: './generic-form.component.css'
 })
-export class GenericFormComponent {
+export class GenericFormComponent extends BaseComponent {
 
   markAllAsTouched(form:FormGroup) {
     Object.keys(form.controls).forEach((field) => {

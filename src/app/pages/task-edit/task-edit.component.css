@@ -1,0 +1,25 @@
+.form{
+  margin:1%
+}
+
+.mb-1{
+  margin-bottom: 5%;
+}
+
+.inline{
+  display: inline-flex;
+}
+.mr-auto{
+  margin-right: auto;
+}
+
+.flex{
+  display: flex
+}
+
+.height-100{
+  height: 100%;
+}
+ .task-edit-container{
+  margin-right: auto
+}

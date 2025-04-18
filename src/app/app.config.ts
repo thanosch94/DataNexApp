@@ -1,3 +1,4 @@
+import { workItemsEffects } from './state/work-items/work-items.effects';
 import { ApplicationConfig, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
@@ -25,6 +26,7 @@ import { workItemTypesEffects } from './state/parameters/work-item-types/work-it
 import { workItemTypesReducer } from './state/parameters/work-item-types/work-item-types.reducer';
 import { usersReducer } from './state/users/users.reducer';
 import { UsersEffects } from './state/users/users.effects';
+import { workItemsReducer } from './state/work-items/work-items.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -40,6 +42,7 @@ export const appConfig: ApplicationConfig = {
       companies:companiesReducer,
       documentTypes:documentTypesReducer,
       workItemTypes: workItemTypesReducer,
+      workItems:workItemsReducer,
       users:usersReducer
     }),
     provideEffects([
@@ -51,7 +54,8 @@ export const appConfig: ApplicationConfig = {
       CompaniesEffects,
       DocumentTypesEffects,
       workItemTypesEffects,
-      UsersEffects
+      UsersEffects,
+      workItemsEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

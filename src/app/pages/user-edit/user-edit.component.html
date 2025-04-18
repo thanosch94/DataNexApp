@@ -318,8 +318,12 @@
           "
         >
           <div class="flex add-new-task">
-            <b style="margin-left:2%">Add New Task</b>
-            <button class="add-task-btn" mat-button>
+            <b style="margin-left: 2%">Add New Task</b>
+            <button
+              mat-button
+              class="add-task-btn"
+              (click)="onAddBtnClicked($event)"
+            >
               <fa-icon [icon]="faAdd"></fa-icon>
             </button>
           </div>
@@ -432,10 +436,20 @@
           </mat-list>
         </div>
         <dn-kanban
-        [columns]="columns"
-        [items]="items"
-        itemColumnId="StatusId">
-      </dn-kanban>
+          [columns]="columns"
+          [items]="items()"
+          itemColumnId="StatusId"
+          titleExpr="Name"
+          itemDescriptionExpr="Description"
+          (onItemClicked)="onTaskClicked($event)"
+          (onItemEditBtnClicked)="onTaskEditBtnClicked($event)"
+          (onItemDeleteBtnClicked)="onItemDeleteBtnClicked($event)"
+          (onItemDrop)="onTaskDrop($event)"
+          (onItemDelete)="onTaskDelete($event)"
+
+        >
+        </dn-kanban
+        >
       </div>
     </mat-tab>
     <mat-tab label="Notes">
@@ -459,3 +473,16 @@
     </mat-tab>
   </mat-tab-group>
 </form>
+
+<dn-popup
+  *ngIf="isPopupVisible"
+  [isPopupVisible]="isPopupVisible"
+  [isFullScreen]="false"
+  [hideOnOutsideClick]="false"
+  (onHiding)="onHiding()"
+  width="900px"
+  height="400px"
+>
+  <app-task-edit (onClose)="onTaskPopupClose()" [taskId]="taskId()" >
+  </app-task-edit>
+</dn-popup>

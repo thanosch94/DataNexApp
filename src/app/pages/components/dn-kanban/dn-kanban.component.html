@@ -1,5 +1,6 @@
+@if(items){
 <div cdkDropListGroup class="flex">
-  @for(column of getColumns();track column.Id){
+  @for(column of columns();track column.Id){
   <div class="kanban-column mr-2">
     <div
       class="center column-header"
@@ -10,29 +11,29 @@
         columnTitleColor
       "
     >
-      <span style="font-size: 14px!important;">{{ column.Name }}</span>
+      <span style="font-size: 14px !important">{{ column.Name }}</span>
     </div>
     <div class="tasks">
       <div
+        [id]="column.Id"
         cdkDropList
         class="column-list"
-        [cdkDropListData]="filterItems(column)"
+        [cdkDropListData]="columnItemsMap[column.Id]"
         (cdkDropListDropped)="drop($event)"
       >
-        @for(item of filterItems(column);track item.Id){
+        @for(item of columnItemsMap[column.Id];track item.Id){
         <div
           cdkDrag
           [cdkDragData]="item"
           class="column-item flex"
           style="background-color: #fafafa"
+          (click)="onItemClick(item)"
         >
           <div
             class="item-left-vertical-line"
-            [ngStyle]="{
-              'background-color': item.PriorityColor
-                ? item.PriorityColor
-                : 'grey'
-            }"
+            [ngClass]="
+              item.Priority ? 'priority-' + item.Priority : 'priority-5'
+            "
             style="width: 5px"
           ></div>
           <div class="width-100 flex flex-d-column" style="flex-grow: 1">
@@ -44,31 +45,49 @@
                 align-items: center;
               "
             >
-              <div>
-                <b>{{ item.Title }}</b>
+              <div
+                #itemTitle
+                class="item-title"
+                [id]="item.Id"
+                [matTooltip]="
+                  isTitleOverflowing(item.Id) ? item[titleExpr()] : ''
+                "
+              >
+                {{ item[titleExpr()] }}
               </div>
               <div>
                 <button
-                mat-button
-                color="primary"
-                style="border: none;min-width: 15px;"
-              >
-                <fa-icon [icon]="faEdit"></fa-icon>
-              </button>
+                  mat-button
+                  color="primary"
+                  style="border: none; min-width: 15px"
+                  (click)="onItemEditBtnClick(item)"
+                >
+                  <fa-icon [icon]="faEdit"></fa-icon>
+                </button>
                 <button
                   mat-button
                   color="warn"
-                  style="border: none;min-width: 15px;"
+                  style="border: none; min-width: 15px"
+                  (click)="onItemDeleteBtnClick(item)"
                 >
                   <fa-icon [icon]="faTrash"></fa-icon>
                 </button>
               </div>
             </div>
-            <div style="flex-grow: 1">
-              <p>{{ item.Descr }}</p>
+            <div
+              class="item-descr"
+              [matTooltip]="
+                isDescrOverflowing(item.Id)
+                  ? stripHtml(item[itemDescriptionExpr])
+                  : ''
+              "
+            >
+              <p class="truncate-descr" #itemDecr [id]="item.Id">
+                {{ stripHtml(item[itemDescriptionExpr]) }}
+              </p>
             </div>
-            <div class="user-assigned" style="margin-top: auto; flex-grow: 0">
-              <span>admin</span>
+            <div class="user-assigned">
+              <span class="circle">{{ userInitials }}</span>
             </div>
           </div>
         </div>
@@ -78,3 +97,4 @@
   </div>
   }
 </div>
+}

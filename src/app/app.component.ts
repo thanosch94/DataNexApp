@@ -188,7 +188,6 @@ export class AppComponent {
   }
 
   checkAndAddTab(data: RoutesRecognized) {
-    debugger
     let comp = data.state.root.firstChild?.component;
 
     if (this.isMenuItem || this.isNavBarItem) {
@@ -217,7 +216,6 @@ export class AppComponent {
         tab.Active = true;
         tab.Hint = tabItemName;
         tab.Injector = newInjector;
-        debugger
         tab.Params= tabItem?.Params
         tab.OriginId = this.selectedMenuItem;
         tab.Route = data.state.root.firstChild?.routeConfig;
@@ -324,4 +322,11 @@ export class AppComponent {
   // dropTab(event: CdkDragDrop<string[]>) {
   //   moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
   // }
+
+  onTabClicked(e:any, tab:AppTabDto){
+    if (e.button === 1) {
+      //Close Tab on middle mouse click
+      this.tabsService.closeTab(tab);
+    }
+  }
 }

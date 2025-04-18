@@ -95,6 +95,11 @@ margin-right: auto;
   height: calc(100% - 55px);
 }
 
+/* For popup opening */
+::ng-deep .mat-sidenav{
+  z-index: auto!important;
+
+}
 
 .nav-btns{
   display: inline-flex;
@@ -313,3 +318,8 @@ margin-right: auto;
   /* .mdc-dialog, .mdc-dialog__scrim{
     position: relative;
   } */
+
+  .tab-header-container{
+    width:100%;
+    text-align: left;
+  }

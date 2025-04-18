@@ -2,6 +2,7 @@ import { Guid } from 'guid-typescript';
 import { MenuItemDto } from '../dto/menu-item.dto';
 import { DocumentTypeGroupEnum } from '../enums/document-type-group.enum';
 import { StatusTypeEnum } from '../enums/status-type.enum';
+import { WorkItemCategoryEnum } from '../enums/work-item-category.enum';
 
 export class Navigation {
   static data: any;
@@ -269,6 +270,14 @@ export class Navigation {
           Path: 'task-statuses-list',
           Params: {
             StatusType: StatusTypeEnum.Task
+          },
+        },
+        {
+          Id: Guid.parse('d0160584-6b6f-4269-b0e3-2e3199def3e0'),
+          Name: 'Task Types',
+          Path: 'work-item-types-list',
+          Params: {
+            WorkItemCategory: WorkItemCategoryEnum.Task
           },
         },
         {

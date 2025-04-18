@@ -11,7 +11,7 @@ export const GetAllWorkItemTypesSuccess = createAction('[Work Item Types List] G
 export const GetAllWorkItemTypesFailure = createAction('[Work Item Types List] GetAll Failure', props<{error:string}>())
 
 
-//Get By Work Item Type
+//Get By Work Item Category
 export const GetAllWorkItemTypesByWorkItemCategory = createAction('[workItemTypes List] GetAllByWorkItemCategoy', props<{workItemCategory:WorkItemCategoryEnum}>())
 
 export const GetAllWorkItemTypesByWorkItemCategorySuccess = createAction('[workItemTypes List] GetAllByWorkItemCategory Success', props<{data:WorkItemTypeDto[], workItemCategory:WorkItemCategoryEnum}>())
