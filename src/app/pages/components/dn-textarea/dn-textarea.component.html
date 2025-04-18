@@ -1,4 +1,4 @@
-<mat-form-field class="example-full-width">
-  <mat-label>Leave a comment</mat-label>
-  <textarea matInput placeholder="Ex. It makes me feel..."></textarea>
+<mat-form-field [class]="'width-'+width()">
+  <mat-label>{{label()}}</mat-label>
+  <textarea matInput [placeholder]="placeholder()" [(ngModel)]="value"></textarea>
 </mat-form-field>
