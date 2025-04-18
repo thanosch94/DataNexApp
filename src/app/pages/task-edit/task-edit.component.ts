@@ -99,7 +99,6 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
         .pipe(ofType(InsertWorkItemDtoSuccess), takeUntil(this.destroy$))
         .subscribe((result: any) => {
           this.task.set(result.dto)
-          debugger
           this.displayNotification('Record inserted');
           //this.getData();
         });

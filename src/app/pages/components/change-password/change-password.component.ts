@@ -64,7 +64,6 @@ export class ChangePasswordComponent extends GenericFormComponent {
     if (this.form.valid) {
       this.checkPasswordsMatch(this.form.get('confirmNewPassword')?.value);
       if(!this.displayNotMatchError){
-        debugger
         this.dialogRef.close(this.form.get("newPassword")?.value);
       }
     } else {

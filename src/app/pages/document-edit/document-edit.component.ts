@@ -340,7 +340,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   getDocumentData(documentId: Guid) {
     this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
       this.document = result;
-debugger
       this.ref.detectChanges();
       this.document_text = this.document.DocumentCode;
       this.tabsService.setTabName(this.document_text);
@@ -373,7 +372,6 @@ debugger
   }
 
   async GetProductVatAmount(id: Guid, data: DocumentProductDto) {
-    debugger;
       let obs = this.store.select(selectVatClassById(id));
       let result = (await firstValueFrom(obs)) as VatClassDto;
 
@@ -387,7 +385,6 @@ debugger
   }
 
   calculateProductVatAmount(data: DocumentProductDto, rate: number) {
-    debugger;
     let vatAmount =
       Math.round(
         ((data.ProductRetailPrice as number) -
@@ -836,7 +833,6 @@ debugger
         data.Quantity = 1;
         data.ProductRetailPrice = result.RetailPrice;
         this.productsDataSource = this.productstable.dataSource;
-        debugger;
 
         await this.GetProductVatAmount(result.VatClassId, data);
 
@@ -1092,7 +1088,6 @@ debugger
       let result = (await firstValueFrom(obs)) as VatClassDto;
       product.VatClassRate = result?.Rate;
     }
-    debugger
     if (rate < product.VatClassRate) {
       let priceWithoutVat =
         product.ProductRetailPrice! / (1 + product.VatClassRate / 100);

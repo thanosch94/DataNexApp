@@ -45,7 +45,6 @@ export class WorkItemTypesListComponent extends BaseComponent {
     super();
     this.work_item_types_list_title_text = 'Work Item Types List';
     this.workItemCategory = tab.Params['WorkItemCategory']!;
-    debugger;
   }
 
   ngOnInit() {

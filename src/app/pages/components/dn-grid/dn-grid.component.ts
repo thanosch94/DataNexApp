@@ -188,7 +188,6 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
   // ngOnChanges(changes: SimpleChanges): void {
   //   if (changes['columns']) {
-  //     debugger
 
   //   }
   // }

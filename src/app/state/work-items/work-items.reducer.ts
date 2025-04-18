@@ -122,7 +122,6 @@ on(ClearSelectedWorkItem, (state) => ({
 
   //DeleteById
   on(DeleteWorkItemByIdSuccess, (state, { dto: workItem }) => {
-    debugger
     if (workItem?.WorkItemCategory == WorkItemCategoryEnum.Task) {
       return {
         ...state,

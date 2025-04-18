@@ -15,7 +15,6 @@ export class DnFileUploaderComponent {
   files: FileHandle[] = [];
   faFileCirclePlus =faFileCirclePlus
   filesDropped(files: any): void {
-    debugger
     this.files = files;
   }
 

@@ -210,7 +210,6 @@ export class UserEditComponent
         this.workItemsService
           .GetallByUserId(this.auth.user.Id)
           .subscribe((result: any) => {
-            debugger;
             this.items.set(result);
           });
         // this.store
@@ -287,7 +286,6 @@ export class UserEditComponent
           if (result) {
             this.user_text = this.user.Name;
             this.displayNotification('Record updated');
-            debugger;
             if (!this.user.Password && !result.IsPasswordSet) {
               this.displayPasswordSetReminder = true;
             }
@@ -455,7 +453,6 @@ export class UserEditComponent
   }
 
   onTaskEditBtnClicked(item: any) {
-    debugger;
     this.taskId.set(item.Id);
     this.isPopupVisible = true;
   }

@@ -128,7 +128,6 @@ export class RegisterFormComponent extends GenericFormComponent {
   }
 
   onLoginClicked(e: any) {
-    debugger
     this.router.navigate(
       ['login'],
       this.isRegistrationCompleted

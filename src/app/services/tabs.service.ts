@@ -26,7 +26,6 @@ export class TabsService {
 
   closeTab(tab: AppTabDto) {
     let tabIndex = TabsService.tabs.indexOf(tab);
-debugger
     TabsService.tabs.splice(tabIndex, 1);
   }
 
@@ -81,7 +80,6 @@ debugger
   }
 
   setTabsData(data:Array<Object>){
-debugger
     let activeTab = TabsService.tabs.find(
       (x: AppTabDto) => x.Route.path == this.route && x.Active ==true
     );
