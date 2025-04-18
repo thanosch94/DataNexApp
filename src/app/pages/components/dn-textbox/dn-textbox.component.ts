@@ -55,7 +55,6 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Output() onInput = new EventEmitter();
 
   onValueChange(value: string) {
-    debugger
     this.valueChange.emit(value);
     this.onChange(this.value);
 

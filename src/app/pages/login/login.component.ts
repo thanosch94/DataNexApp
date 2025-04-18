@@ -53,7 +53,6 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
     private auth: AuthService,
     private router: Router,
     private ref: ChangeDetectorRef,
-    public dialog: MatDialog,
     private fb: FormBuilder
   ) {
     super()

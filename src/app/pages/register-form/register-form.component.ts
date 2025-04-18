@@ -44,7 +44,6 @@ export class RegisterFormComponent extends GenericFormComponent {
 
   constructor(
     private auth: AuthService,
-    public dialog: MatDialog,
     private router: Router,
     private fb: FormBuilder
   ) {
@@ -102,8 +101,6 @@ export class RegisterFormComponent extends GenericFormComponent {
       this.registerData.CompanyEmail = this.registerForm.get('CompanyEmail')?.value
       this.registerData.CompanyLoginCode = this.registerForm.get('CompanyLoginCode')?.value
 
-
-debugger
     this.isLoading = true;
     this.auth.register(this.registerData).subscribe({
       next: (result: any) => {

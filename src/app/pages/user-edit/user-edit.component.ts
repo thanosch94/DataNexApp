@@ -427,7 +427,7 @@ export class UserEditComponent
 
   onAddBtnClicked(e: any) {
     //this.openTaskEditDialog();
-    this.taskId.set(null)
+    this.taskId.set(null);
     this.isPopupVisible = true;
   }
 
@@ -451,11 +451,11 @@ export class UserEditComponent
     this.isPopupVisible = false;
 
     this.getKanbanData();
-    this.store.dispatch(ClearSelectedWorkItem())
+    this.store.dispatch(ClearSelectedWorkItem());
   }
 
   onTaskEditBtnClicked(item: any) {
-    debugger
+    debugger;
     this.taskId.set(item.Id);
     this.isPopupVisible = true;
   }
