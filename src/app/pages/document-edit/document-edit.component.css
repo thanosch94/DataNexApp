@@ -368,3 +368,8 @@ width: 100%;
 .tab5{
   height: 25vh;
 }
+
+dn-textbox, dn-number-box, dn-date-box{
+  margin-bottom: 4%;
+
+}

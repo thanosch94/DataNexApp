@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, output, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  forwardRef,
+  Input,
+  output,
+  Output,
+} from '@angular/core';
 import {
   ControlValueAccessor,
   FormsModule,
@@ -33,7 +40,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DnTextboxComponent),
       multi: true,
-    }
+    },
   ],
   templateUrl: './dn-textbox.component.html',
   styleUrl: './dn-textbox.component.css',
@@ -53,11 +60,11 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Output() onIconClicked = new EventEmitter();
   @Output() onBlur = new EventEmitter();
   @Output() onInput = new EventEmitter();
+  @Output() onEnterKeyClicked = new EventEmitter();
 
   onValueChange(value: string) {
     this.valueChange.emit(value);
     this.onChange(this.value);
-
   }
 
   onIconClick(e: any) {
@@ -69,16 +76,19 @@ export class DnTextboxComponent implements ControlValueAccessor {
     this.onInput.emit(e);
   }
   onInputBlur(e: any) {
+    e.value = this.value;
     this.onBlur.emit(e);
   }
+  onEnterClicked(e: any) {
+    e.value = this.value;
+    e.stopPropagation();
+    e.preventDefault();
+    this.onEnterKeyClicked.emit(e);
+  }
 
-
-//#region  Reactive Forms
-  onChange: (value: string) => void = () => {
-  };
-  onTouched: () => void = () => {
-
-  };
+  //#region  Reactive Forms
+  onChange: (value: string) => void = () => {};
+  onTouched: () => void = () => {};
 
   writeValue(value: string): void {
     this.value = value || '';

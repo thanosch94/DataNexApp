@@ -12,6 +12,7 @@
       (ngModelChange)="onValueChange(value)"
       (input)="onValueInput($event)"
       (blur)="onInputBlur($event)"
+      (keydown.enter)="onEnterClicked($event)"
     />
     @if(icon){ @if(iconPosition=="end"){<mat-icon
       class="text-box-icon"
