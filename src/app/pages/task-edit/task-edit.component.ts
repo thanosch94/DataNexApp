@@ -1,5 +1,17 @@
-import { Observable, Subject, combineLatest, firstValueFrom, takeUntil } from 'rxjs';
-import { Component, effect, input, OnDestroy, OnInit, output, signal } from '@angular/core';
+import {
+  Observable,
+  Subject,
+  takeUntil,
+} from 'rxjs';
+import {
+  Component,
+  effect,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { WorkItemDto } from '../../dto/work-item.dto';
 import { Guid } from 'guid-typescript';
@@ -39,6 +51,9 @@ import {
 import { selectTaskById } from '../../state/work-items/work-items.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
+import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
+import { DnDateBoxComponent } from "../components/dn-date-box/dn-date-box.component";
+import { WorkItemPriorityEnumlist } from '../../enumLists/work-item-priority.enumlist';
 
 @Component({
   selector: 'app-task-edit',
@@ -49,13 +64,17 @@ import { GenericFormComponent } from '../components/generic-form/generic-form.co
     DnSelectboxComponent,
     AsyncPipe,
     DnRichTextEditorComponent,
-  ],
+    DnDateBoxComponent
+],
   templateUrl: './task-edit.component.html',
   styleUrl: './task-edit.component.css',
 })
-export class TaskEditComponent extends GenericFormComponent  implements OnInit, OnDestroy {
-  taskId= input<Guid|null>();
-  taskIdChange= output<Guid>();
+export class TaskEditComponent
+  extends GenericFormComponent
+  implements OnInit, OnDestroy
+{
+  taskId = input<Guid | null>();
+  taskIdChange = output<Guid>();
   new_task_title_text: string;
   form: FormGroup;
   task = signal<WorkItemDto>(new WorkItemDto());
@@ -64,82 +83,84 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
   taskStatuses: Observable<StatusDto[]>;
   taskTypes: Observable<WorkItemTypeDto[]>;
   onClose = output();
-  idChange = output<Guid>()
-  onItemDelete = output()
+  idChange = output<Guid>();
+  onItemDelete = output();
   private destroy$ = new Subject<void>();
+  workItemPrioritiesDatasourse: { Id: import("c:/Local Code/DataNexApp/src/app/enums/work-item-priority.enum").WorkItemPriority; Name: string; }[];
 
-  constructor(private fb: FormBuilder, private store: Store,
-      private actions$: Actions
+  constructor(
+    private fb: FormBuilder,
+    private store: Store,
+    private actions$: Actions
   ) {
-    super()
-    effect(()=>{
-      if(this.taskId()){
-        this.getData()
+    super();
+    effect(() => {
+      if (this.taskId()) {
+        this.getData();
       }
-    })
+    });
   }
 
   ngOnInit(): void {
-    this.setActionsResults()
+    this.setActionsResults();
     this.initializeForm();
-    this.getLookups()
+    this.getLookups();
     this.getData();
   }
 
-   setActionsResults() {
-      this.setInsertDtoSuccessActionResult();
-      this.setUpdateDtoSuccessActionResult();
-      this.setUpdateDtoFailureActionResult();
-      this.setDeleteByIdSuccessActionResult();
-      this.setDeleteByIdFailureActionResult();
-    }
+  setActionsResults() {
+    this.setInsertDtoSuccessActionResult();
+    this.setUpdateDtoSuccessActionResult();
+    this.setUpdateDtoFailureActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
+  }
 
-    setInsertDtoSuccessActionResult() {
-      this.actions$
-        .pipe(ofType(InsertWorkItemDtoSuccess), takeUntil(this.destroy$))
-        .subscribe((result: any) => {
-          this.task.set(result.dto)
-          this.displayNotification('Record inserted');
-          //this.getData();
-        });
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertWorkItemDtoSuccess), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.task.set(result.dto);
+        this.displayNotification('Record inserted');
+        //this.getData();
+      });
+  }
 
-    }
+  setUpdateDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateWorkItemDtoSuccess), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.displayNotification('Record updated');
+        this.getData();
+      });
+  }
 
-    setUpdateDtoSuccessActionResult() {
-      this.actions$
-        .pipe(ofType(UpdateWorkItemDtoSuccess), takeUntil(this.destroy$))
-        .subscribe((result: any) => {
-          this.displayNotification('Record updated');
-          this.getData();
-        })
-    }
+  setUpdateDtoFailureActionResult() {
+    this.actions$
+      .pipe(ofType(UpdateWorkItemDtoFailure), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
 
-    setUpdateDtoFailureActionResult() {
-      this.actions$
-        .pipe(ofType(UpdateWorkItemDtoFailure), takeUntil(this.destroy$))
-        .subscribe((result: any) => {
-          this.displayErrorAlert(result.error);
-          this.getData();
-        });
-    }
+  setDeleteByIdSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteWorkItemByIdSuccess), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
 
-    setDeleteByIdSuccessActionResult() {
-      this.actions$
-        .pipe(ofType(DeleteWorkItemByIdSuccess), takeUntil(this.destroy$))
-        .subscribe((result: any) => {
-          this.displayNotification('Record deleted');
-          this.getData();
-        });
-    }
-
-    setDeleteByIdFailureActionResult() {
-      this.actions$
-        .pipe(ofType(DeleteWorkItemByIdFailure))
-        .subscribe((result: any) => {
-          this.displayErrorAlert(result.error);
-          this.getData();
-        });
-    }
+  setDeleteByIdFailureActionResult() {
+    this.actions$
+      .pipe(ofType(DeleteWorkItemByIdFailure))
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
 
   initializeForm() {
     this.form = this.fb.group({
@@ -150,6 +171,8 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
       WorkItemTypeId: [null],
       AssigneeId: [''],
       StatusId: [''],
+      DueDate: [new Date()],
+      WorkItemPriority: [3],
     });
   }
 
@@ -158,6 +181,11 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
     this.getUsers();
 
     this.getTaskStatuses();
+    this.getWorkItemPriorities()
+  }
+
+  getWorkItemPriorities(){
+    this.workItemPrioritiesDatasourse = WorkItemPriorityEnumlist.value
   }
 
   getTaskStatuses() {
@@ -185,21 +213,19 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
     this.users = this.store.select(selectAllUsers);
   }
 
-   getData() {
+  getData() {
     if (this.taskId()) {
-
-        this.store.dispatch(GetWorkItemById({ id: this.taskId()! }));
-        this.store.select(selectTaskById(this.taskId()!)).subscribe((result:any)=>{
-          this.task.set(result)
-          setTimeout(()=>{
-            this.form.patchValue(this.task())
-
-          },10)
-
-        })
-
+      this.store.dispatch(GetWorkItemById({ id: this.taskId()! }));
+      this.store
+        .select(selectTaskById(this.taskId()!))
+        .subscribe((result: any) => {
+          this.task.set(result);
+          setTimeout(() => {
+            this.form.patchValue(this.task());
+          }, 10);
+        });
     } else {
-      this.task.update(task => {
+      this.task.update((task) => {
         task.WorkItemCategory = WorkItemCategoryEnum.Task;
         return { ...task };
       });
@@ -212,29 +238,39 @@ export class TaskEditComponent extends GenericFormComponent  implements OnInit, 
   }
 
   onDeleteClicked(e: any) {
-    this.store.dispatch(DeleteWorkItemById({ id: this.task().Id }));
-    this.onItemDelete.emit()
-
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.store.dispatch(DeleteWorkItemById({ id: this.task().Id }));
+        this.onItemDelete.emit();
+      }
+    });
   }
 
   onSaveClicked(e: any) {
-    this.task.set({...this.task(), ...this.form.value})
+    this.task.set({ ...this.task(), ...this.form.value });
 
     if (this.task().Id != null) {
       this.store.dispatch(UpdateWorkItemDto({ dto: this.task() }));
     } else {
       this.store.dispatch(InsertWorkItemDto({ dto: this.task() }));
     }
-
   }
 
   onRefreshClicked(e: any) {
-    this.getData()
+    this.getData();
   }
 
-
   ngOnDestroy(): void {
-    this.destroy$.next()
-    this.destroy$.complete()
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

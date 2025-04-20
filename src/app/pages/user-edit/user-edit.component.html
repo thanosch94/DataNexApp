@@ -309,147 +309,123 @@
     <mat-tab label="Permissions"></mat-tab>
     <mat-tab label="Tasks">
       <div class="kanban-container flex">
+        <div class="filter-bar">
+          <div
+            [ngClass]="isMenuOpen ? 'opened-icon-group' : 'closed-icon-group'"
+          >
+            <div class="btns-container">
+              <button class="filter-btn" mat-mini-fab matTooltip="Filters" (click)="toggleMenu()">
+                <mat-icon>filter_list</mat-icon>
+              </button>
+
+              <button class="add-btn" mat-mini-fab matTooltip="Add New Task"  (click)="onMenuAddNewTaskBtnClicked()">
+                <mat-icon>add</mat-icon>
+              </button>
+
+              <button class="search-btn" mat-mini-fab matTooltip="Search" >
+                <mat-icon>search</mat-icon>
+              </button>
+            </div>
+
+            <div class="filter-menu" [class.opened]="isMenuOpen">
+              <div class="flex filters-title">
+                <b style="margin-left: 2%">Filters</b>
+              </div>
+
+              <div class="flex add-new-task">
+                <div>
+                  <b style="margin-left: 2%">Tasks</b>
+                </div>
+                <div class="flex">
+                  <div style="padding: 0; min-width: 35px">
+                    <button
+                      class="add-btn"
+                      style="padding: 0; min-width: 35px"
+
+                      mat-button
+                      (click)="onTaskArrowBtnClicked($event)"
+                    >
+                      <fa-icon [icon]="isTaskListOpen?faCaretUp:faCaretDown"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <mat-list class="list-container" [class.opened]="isTaskListOpen">
+                <mat-list-item class="new-item-container" style="padding: 0;" >
+                  <dn-textbox label="Add New Task" placeholder="Type in your new task" [(value)]="this.newTaskNameValue" [width]="100" (onBlur)="onNewTaskFieldBlur($event)" (onEnterKeyClicked)="onNewTaskFieldBlur($event)"></dn-textbox>
+
+                </mat-list-item>
+                @for(item of items(); track item.Id){
+                <mat-list-item class="list-item-container">
+                  <div class="list-content">
+                    <div class="item-name">{{ item.Name }}</div>
+                    <span class="spacer"></span>
+
+                    <button
+                      mat-button
+                      color="primary"
+                      style="padding: 0; min-width: 35px"
+                      (click)="onTaskEditBtnClicked(item)"
+                    >
+                      <fa-icon [icon]="faEdit"></fa-icon>
+                    </button>
+                    <button
+                      mat-button
+                      color="warn"
+                      style="padding: 0; min-width: 35px"
+                      (click)="onTaskDeleteFromList(item)"
+
+                    >
+                      <fa-icon [icon]="faTrash"></fa-icon>
+                    </button>
+                  </div>
+                </mat-list-item>
+                }
+              </mat-list>
+
+              <div class="flex add-new-task">
+                <div>
+                  <b style="margin-left: 2%">Projects</b>
+                </div>
+                <div class="flex">
+                  <div>
+                    <button
+                      class="add-btn"
+                      style="padding: 0; min-width: 35px"
+
+                      mat-button
+                      (click)="onProjectArrowBtnClicked($event)"
+                    >
+                      <fa-icon [icon]="faCaretDown"></fa-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div
           style="
-            width: 25%;
             margin-right: 2%;
             box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
             border-radius: 10px;
           "
-        >
-          <div class="flex add-new-task">
-            <b style="margin-left: 2%">Add New Task</b>
-            <button
-              mat-button
-              class="add-task-btn"
-              (click)="onAddBtnClicked($event)"
-            >
-              <fa-icon [icon]="faAdd"></fa-icon>
-            </button>
-          </div>
-          <mat-list>
-            <mat-list-item class="list-item-container">
-              <div class="list-content">
-                <div>To do dsfsdf ds fd fs</div>
-                <span class="spacer"></span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-                <button
-                  mat-button
-                  color="warn"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </mat-list-item>
-            <mat-list-item class="list-item-container">
-              <div class="list-content">
-                <div>To do dsfsdf ds fd fs</div>
-                <span class="spacer"></span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-                <button
-                  mat-button
-                  color="warn"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </mat-list-item>
-            <mat-list-item class="list-item-container">
-              <div class="list-content">
-                <div>To do dsfsdf ds fd fs</div>
-                <span class="spacer"></span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-                <button
-                  mat-button
-                  color="warn"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </mat-list-item>
-            <mat-list-item class="list-item-container">
-              <div class="list-content">
-                <div>To do dsfsdf ds fd fs</div>
-                <span class="spacer"></span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-                <button
-                  mat-button
-                  color="warn"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </mat-list-item>
-            <mat-list-item class="list-item-container">
-              <div class="list-content">
-                <div>To do dsfsdf ds fd fs</div>
-                <span class="spacer"></span>
-
-                <button
-                  mat-button
-                  color="primary"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faEdit"></fa-icon>
-                </button>
-                <button
-                  mat-button
-                  color="warn"
-                  style="padding: 0; min-width: 35px"
-                >
-                  <fa-icon [icon]="faTrash"></fa-icon>
-                </button>
-              </div>
-            </mat-list-item>
-          </mat-list>
-        </div>
+        ></div>
         <dn-kanban
           [columns]="columns"
           [items]="items()"
           itemColumnId="StatusId"
           titleExpr="Name"
+          colorField="WorkItemPriority"
           itemDescriptionExpr="Description"
           (onItemClicked)="onTaskClicked($event)"
           (onItemEditBtnClicked)="onTaskEditBtnClicked($event)"
           (onItemDeleteBtnClicked)="onItemDeleteBtnClicked($event)"
           (onItemDrop)="onTaskDrop($event)"
-          (onItemDelete)="onTaskDelete($event)"
-
+          (onItemDelete)="onTaskDeleteFromKanban($event)"
         >
-        </dn-kanban
-        >
+        </dn-kanban>
       </div>
     </mat-tab>
     <mat-tab label="Notes">
@@ -480,9 +456,10 @@
   [isFullScreen]="false"
   [hideOnOutsideClick]="false"
   (onHiding)="onHiding()"
+
   width="900px"
   height="400px"
 >
-  <app-task-edit (onClose)="onTaskPopupClose()" [taskId]="taskId()" >
+  <app-task-edit (onClose)="onTaskPopupClose()" (onItemDelete)="onTaskPopupDelete()" [taskId]="taskId()">
   </app-task-edit>
 </dn-popup>

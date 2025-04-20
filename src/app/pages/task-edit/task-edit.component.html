@@ -83,6 +83,29 @@
           </div>
         </div>
 
+        <div class="inline width-100 mb-1">
+          <div class="mr-auto width-45">
+            <dn-selectbox
+              label="Priority"
+              [dataSource]="workItemPrioritiesDatasourse"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="WorkItemPriority"
+              name="WorkItemPriority"
+            >
+            </dn-selectbox>
+          </div>
+          <div class="width-45">
+            <dn-date-box
+              label="DueDate"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="DueDate"
+            >
+            </dn-date-box>
+          </div>
+        </div>
+
         <div class="">
           <dn-textbox
             label="Master Task"

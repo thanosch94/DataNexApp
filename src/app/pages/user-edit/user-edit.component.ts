@@ -37,8 +37,11 @@ import {
   faCamera,
   faCircleXmark,
   faEdit,
+  faFilter,
   faTrash,
+  faCaretDown,
   faTriangleExclamation,
+  faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -73,9 +76,15 @@ import {
   DeleteWorkItemById,
   DeleteWorkItemByIdFailure,
   DeleteWorkItemByIdSuccess,
+  InsertWorkItemDto,
+  InsertWorkItemDtoSuccess,
   UpdateWorkItemDto,
 } from '../../state/work-items/work-items.actions';
 import { Actions, ofType } from '@ngrx/effects';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSelectModule } from '@angular/material/select';
+import { WorkItemDto } from '../../dto/work-item.dto';
+import { WorkItemCategoryEnum } from '../../enums/work-item-category.enum';
 
 @Component({
   selector: 'app-user-edit',
@@ -102,6 +111,8 @@ import { Actions, ofType } from '@ngrx/effects';
     MatListModule,
     DnPopupComponent,
     TaskEditComponent,
+    MatSidenavModule,
+    MatSelectModule,
   ],
   //#endregion
   providers: [
@@ -130,8 +141,11 @@ export class UserEditComponent
   faTriangleExclamation = faTriangleExclamation;
   faCircleXmark = faCircleXmark;
   faAdd = faAdd;
+  faFilter = faFilter;
   faEdit = faEdit;
   faTrash = faTrash;
+  faCaretDown = faCaretDown;
+  faCaretUp = faCaretUp;
   displayPasswordSetReminder: boolean;
   newPassword: any;
   isComponentReady: boolean;
@@ -140,6 +154,9 @@ export class UserEditComponent
   isPopupVisible: boolean;
   taskId = signal<Guid | null>(null);
   private destroy$ = new Subject<void>();
+  isMenuOpen = false;
+  newTaskNameValue: any;
+  isTaskListOpen: any = true;
 
   //#region Constructor
   constructor(
@@ -164,6 +181,8 @@ export class UserEditComponent
   //#endregion
 
   ngOnInit() {
+    this.setActionsResults();
+
     this.initializeForm();
     this.setUser();
 
@@ -172,6 +191,22 @@ export class UserEditComponent
       this.isComponentReady = true;
       //Used because the password error message is displayed once we navigate to the component and instantly disappears
     }, 1000);
+  }
+
+  setActionsResults() {
+    this.setInsertDtoSuccessActionResult();
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
+  }
+
+  setInsertDtoSuccessActionResult() {
+    this.actions$
+      .pipe(ofType(InsertWorkItemDtoSuccess), takeUntil(this.destroy$))
+      .subscribe((result: any) => {
+        this.displayNotification('Record inserted');
+        this.getKanbanData();
+        this.newTaskNameValue = null;
+      });
   }
 
   setDeleteByIdSuccessActionResult() {
@@ -403,13 +438,6 @@ export class UserEditComponent
 
   //#endregion
 
-  // displayNotification(text: string) {
-  //   this._snackBar.open(text, '', {
-  //     duration: 1000,
-  //     panelClass: 'green-snackbar',
-  //   });
-  // }
-
   onRefreshClicked(e: any) {
     this.getData();
     this.getKanbanData();
@@ -452,6 +480,13 @@ export class UserEditComponent
     this.store.dispatch(ClearSelectedWorkItem());
   }
 
+  onTaskPopupDelete() {
+    this.isPopupVisible = false;
+
+    this.getKanbanData();
+    this.store.dispatch(ClearSelectedWorkItem());
+  }
+
   onTaskEditBtnClicked(item: any) {
     this.taskId.set(item.Id);
     this.isPopupVisible = true;
@@ -483,10 +518,55 @@ export class UserEditComponent
     this.store.dispatch(UpdateWorkItemDto({ dto: e.newValue }));
   }
 
-  onTaskDelete(e: any) {
+  onTaskDeleteFromKanban(e: any) {
     this.isPopupVisible = false;
     this.taskId.set(null);
     this.getKanbanData();
+  }
+
+  onTaskDeleteFromList(item: WorkItemDto) {
+    const dialogRef = this.dialog.open(DeleteConfirmComponent, {
+      width: '320px',
+      data: {
+        title: 'Title',
+        message: 'message',
+        confirmText: 'Yes',
+        cancelText: 'No',
+      },
+    });
+    dialogRef.afterClosed().subscribe((confirm) => {
+      if (confirm) {
+        this.store.dispatch(DeleteWorkItemById({ id: item.Id }));
+      }
+    });
+
+    this.isPopupVisible = false;
+    this.taskId.set(null);
+    this.getKanbanData();
+  }
+  onProjectArrowBtnClicked(e: any) {}
+
+  onTaskArrowBtnClicked(e: any) {
+    this.isTaskListOpen = !this.isTaskListOpen;
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
+
+  onNewTaskFieldBlur(e: any) {
+    if (this.newTaskNameValue) {
+      let newTask = new WorkItemDto();
+      newTask.WorkItemCategory = WorkItemCategoryEnum.Task;
+      newTask.Name = this.newTaskNameValue;
+      newTask.Description = this.newTaskNameValue;
+      newTask.AssigneeId = this.auth.user.Id;
+      this.store.dispatch(InsertWorkItemDto({ dto: newTask }));
+    }
+  }
+  onMenuAddNewTaskBtnClicked() {
+    this.isPopupVisible = true;
+    this.taskId.set(null);
   }
 
   ngOnDestroy() {

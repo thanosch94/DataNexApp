@@ -11,6 +11,7 @@ import {
   QueryList,
   ViewChildren,
   AfterViewChecked,
+  NgZone,
 } from '@angular/core';
 import {
   CdkDrag,
@@ -26,6 +27,7 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../services/auth.service';
+import { WorkItemPriority as WorkItemPriorityEnum } from '../../../enums/work-item-priority.enum';
 
 @Component({
   selector: 'dn-kanban',
@@ -41,7 +43,7 @@ import { AuthService } from '../../../services/auth.service';
   templateUrl: './dn-kanban.component.html',
   styleUrl: './dn-kanban.component.css',
 })
-export class DnKanbanComponent implements AfterViewChecked {
+export class DnKanbanComponent implements AfterViewInit {
   columns = input<any[]>();
   @Input() itemColumnId: string;
 
@@ -68,8 +70,9 @@ export class DnKanbanComponent implements AfterViewChecked {
 
   @Input() columnTitleBackgroundColor: string = '#0b6aa5';
   @Input() columnTitleColor: string = '#fafafa';
-  @Input() itemDescriptionExpr: string;
+  itemDescriptionExpr=  input<string>('');
   titleExpr = input<string>('');
+  colorField = input<string>('Priority');
   onItemEditBtnClicked = output();
   onItemDeleteBtnClicked = output();
   itemsChange = output<any>();
@@ -79,7 +82,7 @@ export class DnKanbanComponent implements AfterViewChecked {
   onItemClicked = output();
   faEdit = faEdit;
   faTrash = faTrash;
-  constructor(private ref: ChangeDetectorRef, private auth: AuthService) {
+  constructor(private ref: ChangeDetectorRef, private auth: AuthService, private ngZone:NgZone) {
     this.getUserInitials();
     effect(() => {
       if (this.columns()) {
@@ -88,11 +91,17 @@ export class DnKanbanComponent implements AfterViewChecked {
     });
   }
 
-  ngAfterViewChecked(): void {
+
+  ngAfterViewInit() {
+
+setTimeout(()=>{
+  this.ngZone.onStable.subscribe(() => {
     this.checkTitleOverflow();
     this.checkDescrOverflow();
-  }
+  });
+},1000)
 
+  }
   checkTitleOverflow() {
     this.itemTitles.toArray().forEach((elRef) => {
       const el = elRef.nativeElement;
@@ -105,10 +114,21 @@ export class DnKanbanComponent implements AfterViewChecked {
   }
 
   checkDescrOverflow() {
-    this.itemTitles.toArray().forEach((elRef) => {
+    this.itemDescrs.forEach((elRef) => {
       const el = elRef.nativeElement;
-      this.descrOverflowMap[el.id] = el.scrollWidth > el.clientWidth;
+
+      const computedStyle = window.getComputedStyle(el);
+      const lineHeight = parseFloat(computedStyle.lineHeight);
+      const maxLines = 2;
+      const maxHeight = lineHeight * maxLines;
+
+      const isOverflowing = el.scrollHeight > maxHeight;
+
+      this.descrOverflowMap[el.id] = isOverflowing;
     });
+
+
+
   }
 
   isDescrOverflowing(id: string): boolean {
