@@ -29,3 +29,8 @@ export const selectAllStatusesByStatusType = (statusType: StatusTypeEnum) =>
       (state) => []
     );
   }}
+
+  export const selectDefaultTaskStatus = createSelector(
+    selectStatusState,
+    (state) => state.taskStatuses.find(x=>x.IsDefault==true)
+  );

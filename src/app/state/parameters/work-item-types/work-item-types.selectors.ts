@@ -23,3 +23,7 @@ export const selectAllWorkItemTypesByWorkItemCategory = (
   }
 };
 
+  export const selectDefaultTaskType = createSelector(
+    selectWorkItemTypeState,
+    (state) => state.taskWorkItemTypes.find(x=>x.IsDefault==true)
+  );

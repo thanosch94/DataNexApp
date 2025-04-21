@@ -314,15 +314,25 @@
             [ngClass]="isMenuOpen ? 'opened-icon-group' : 'closed-icon-group'"
           >
             <div class="btns-container">
-              <button class="filter-btn" mat-mini-fab matTooltip="Filters" (click)="toggleMenu()">
+              <button
+                class="filter-btn"
+                mat-mini-fab
+                matTooltip="Filters"
+                (click)="toggleMenu()"
+              >
                 <mat-icon>filter_list</mat-icon>
               </button>
 
-              <button class="add-btn" mat-mini-fab matTooltip="Add New Task"  (click)="onMenuAddNewTaskBtnClicked()">
+              <button
+                class="add-btn"
+                mat-mini-fab
+                matTooltip="Add New Task"
+                (click)="onMenuAddNewTaskBtnClicked()"
+              >
                 <mat-icon>add</mat-icon>
               </button>
 
-              <button class="search-btn" mat-mini-fab matTooltip="Search" >
+              <button class="search-btn" mat-mini-fab matTooltip="Search">
                 <mat-icon>search</mat-icon>
               </button>
             </div>
@@ -341,19 +351,26 @@
                     <button
                       class="add-btn"
                       style="padding: 0; min-width: 35px"
-
                       mat-button
                       (click)="onTaskArrowBtnClicked($event)"
                     >
-                      <fa-icon [icon]="isTaskListOpen?faCaretUp:faCaretDown"></fa-icon>
+                      <fa-icon
+                        [icon]="isTaskListOpen ? faCaretUp : faCaretDown"
+                      ></fa-icon>
                     </button>
                   </div>
                 </div>
               </div>
               <mat-list class="list-container" [class.opened]="isTaskListOpen">
-                <mat-list-item class="new-item-container" style="padding: 0;" >
-                  <dn-textbox label="Add New Task" placeholder="Type in your new task" [(value)]="this.newTaskNameValue" [width]="100" (onBlur)="onNewTaskFieldBlur($event)" (onEnterKeyClicked)="onNewTaskFieldBlur($event)"></dn-textbox>
-
+                <mat-list-item class="new-item-container" style="padding: 0">
+                  <dn-textbox
+                    label="Add New Task"
+                    placeholder="Type in your new task"
+                    [(value)]="this.newTaskNameValue"
+                    [width]="100"
+                    (onBlur)="onNewTaskFieldBlur($event)"
+                    (onEnterKeyClicked)="onNewTaskFieldBlur($event)"
+                  ></dn-textbox>
                 </mat-list-item>
                 @for(item of items(); track item.Id){
                 <mat-list-item class="list-item-container">
@@ -374,7 +391,6 @@
                       color="warn"
                       style="padding: 0; min-width: 35px"
                       (click)="onTaskDeleteFromList(item)"
-
                     >
                       <fa-icon [icon]="faTrash"></fa-icon>
                     </button>
@@ -392,7 +408,6 @@
                     <button
                       class="add-btn"
                       style="padding: 0; min-width: 35px"
-
                       mat-button
                       (click)="onProjectArrowBtnClicked($event)"
                     >
@@ -456,10 +471,14 @@
   [isFullScreen]="false"
   [hideOnOutsideClick]="false"
   (onHiding)="onHiding()"
-
   width="900px"
   height="400px"
 >
-  <app-task-edit (onClose)="onTaskPopupClose()" (onItemDelete)="onTaskPopupDelete()" [taskId]="taskId()">
+  <app-task-edit
+    (onClose)="onTaskPopupClose()"
+    (onItemDelete)="onTaskPopupDelete()"
+    [taskId]="taskId()"
+    (taskIdChange)="onTaskIdFromChildChange($event)"
+  >
   </app-task-edit>
 </dn-popup>

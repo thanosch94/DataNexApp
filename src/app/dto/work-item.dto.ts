@@ -3,12 +3,13 @@ import { WorkItemCategoryEnum } from "../enums/work-item-category.enum";
 
 export class WorkItemDto {
   Id:Guid
+  SerialNumber:number;
   Name:string;
   Description: string;
   MasterTaskId: string;
-  StatusId: Guid;
+  StatusId?: Guid;
   AssigneeId: Guid; //UserId
-  WorkItemTypeId:Guid;
+  WorkItemTypeId?:Guid;
   WorkItemCategory:WorkItemCategoryEnum;
   SprintId:Guid;
 }

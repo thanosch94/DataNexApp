@@ -101,9 +101,12 @@
     </mat-autocomplete>
 
   <!-- Todo replace with ng-content -->
-@if(selectedOption && useCustomValueTemplate){<div class="value-overlay">
-  <i class="icon" [class]="selectedOption.Icon" [style]="'color:'+ selectedOption.IconColor"></i>
-{{ selectedOption[displayExpr] }}
-</div>}
+@if(useCustomValueTemplate){
+  <div class="value-overlay">
+  <i class="icon" [class]="selectedOption?.Icon" [style]="'color:'+ selectedOption?.IconColor"></i>
+{{ selectedOption?.[displayExpr] }}
+</div>
+
+}
 
 </mat-form-field>

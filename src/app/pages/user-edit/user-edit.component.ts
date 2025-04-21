@@ -85,6 +85,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
 import { WorkItemDto } from '../../dto/work-item.dto';
 import { WorkItemCategoryEnum } from '../../enums/work-item-category.enum';
+import { GetAllUsers } from '../../state/users/users.actions';
 
 @Component({
   selector: 'app-user-edit',
@@ -153,7 +154,7 @@ export class UserEditComponent
   items = signal<any[]>([]);
   isPopupVisible: boolean;
   taskId = signal<Guid | null>(null);
-  private destroy$ = new Subject<void>();
+  destroy$ = new Subject<void>();
   isMenuOpen = false;
   newTaskNameValue: any;
   isTaskListOpen: any = true;
@@ -185,7 +186,7 @@ export class UserEditComponent
 
     this.initializeForm();
     this.setUser();
-
+    this.getLookups()
     this.getData();
     setTimeout(() => {
       this.isComponentReady = true;
@@ -197,6 +198,10 @@ export class UserEditComponent
     this.setInsertDtoSuccessActionResult();
     this.setDeleteByIdSuccessActionResult();
     this.setDeleteByIdFailureActionResult();
+  }
+
+  getLookups(){
+    this.store.dispatch(GetAllUsers())  //Get Users
   }
 
   setInsertDtoSuccessActionResult() {
@@ -567,6 +572,11 @@ export class UserEditComponent
   onMenuAddNewTaskBtnClicked() {
     this.isPopupVisible = true;
     this.taskId.set(null);
+  }
+
+  onTaskIdFromChildChange(id:Guid){
+    debugger
+    this.taskId.set(id)
   }
 
   ngOnDestroy() {

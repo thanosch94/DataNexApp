@@ -1,7 +1,7 @@
 import {
+  firstValueFrom,
   Observable,
   Subject,
-  takeUntil,
 } from 'rxjs';
 import {
   Component,
@@ -26,16 +26,24 @@ import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.co
 import { UserDto } from '../../dto/user.dto';
 import { StatusDto } from '../../dto/status.dto';
 import { Store } from '@ngrx/store';
-import { GetAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.actions';
-import { selectAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.selectors';
+import {
+  selectAllStatusesByStatusType,
+  selectDefaultTaskStatus,
+} from '../../state/parameters/statuses/statuses.selectors';
 import { StatusTypeEnum } from '../../enums/status-type.enum';
 import { AsyncPipe } from '@angular/common';
 import { DnRichTextEditorComponent } from '../components/dn-rich-text-editor/dn-rich-text-editor.component';
 import { WorkItemTypeDto } from '../../dto/work-item-type.dto';
-import { selectAllWorkItemTypesByWorkItemCategory } from '../../state/parameters/work-item-types/work-item-types.selectors';
+import {
+  selectAllWorkItemTypesByWorkItemCategory,
+  selectDefaultTaskType,
+} from '../../state/parameters/work-item-types/work-item-types.selectors';
 import { WorkItemCategoryEnum } from '../../enums/work-item-category.enum';
-import { GetAllWorkItemTypesByWorkItemCategory } from '../../state/parameters/work-item-types/work-item-types.actions';
-import { GetAllUsers } from '../../state/users/users.actions';
+import {
+  GetAllWorkItemTypes,
+  GetAllWorkItemTypesByWorkItemCategory,
+  GetAllWorkItemTypesByWorkItemCategorySuccess,
+} from '../../state/parameters/work-item-types/work-item-types.actions';
 import { selectAllUsers } from '../../state/users/users.selectors';
 import {
   DeleteWorkItemById,
@@ -52,8 +60,11 @@ import { selectTaskById } from '../../state/work-items/work-items.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { DnDateBoxComponent } from "../components/dn-date-box/dn-date-box.component";
+import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.component';
 import { WorkItemPriorityEnumlist } from '../../enumLists/work-item-priority.enumlist';
+import { AuthService } from '../../services/auth.service';
+import { StateHelperService } from '../../services/state-helper.service';
+import { WorkItemPriority } from '../../enums/work-item-priority.enum';
 
 @Component({
   selector: 'app-task-edit',
@@ -64,8 +75,8 @@ import { WorkItemPriorityEnumlist } from '../../enumLists/work-item-priority.enu
     DnSelectboxComponent,
     AsyncPipe,
     DnRichTextEditorComponent,
-    DnDateBoxComponent
-],
+    DnDateBoxComponent,
+  ],
   templateUrl: './task-edit.component.html',
   styleUrl: './task-edit.component.css',
 })
@@ -86,12 +97,17 @@ export class TaskEditComponent
   idChange = output<Guid>();
   onItemDelete = output();
   private destroy$ = new Subject<void>();
-  workItemPrioritiesDatasourse: { Id: import("c:/Local Code/DataNexApp/src/app/enums/work-item-priority.enum").WorkItemPriority; Name: string; }[];
+  workItemPrioritiesDatasourse: {
+    Id: WorkItemPriority;
+    Name: string;
+  }[];
 
   constructor(
     private fb: FormBuilder,
     private store: Store,
-    private actions$: Actions
+    private actions$: Actions,
+    private auth: AuthService,
+    private stateHelperService: StateHelperService
   ) {
     super();
     effect(() => {
@@ -108,27 +124,28 @@ export class TaskEditComponent
     this.getData();
   }
 
-  setActionsResults() {
+  async setActionsResults() {
     this.setInsertDtoSuccessActionResult();
     this.setUpdateDtoSuccessActionResult();
     this.setUpdateDtoFailureActionResult();
     this.setDeleteByIdSuccessActionResult();
     this.setDeleteByIdFailureActionResult();
+    await this.setGetAllWorkItemTypesByWorkItemCategorySuccessActionResult();
   }
 
   setInsertDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(InsertWorkItemDtoSuccess), takeUntil(this.destroy$))
+    this.stateHelperService
+      .setActionResult(InsertWorkItemDtoSuccess, this.destroy$)
       .subscribe((result: any) => {
         this.task.set(result.dto);
-        this.displayNotification('Record inserted');
-        //this.getData();
+        //this.displayNotification('Record inserted'); It is on the parent component
+        this.taskIdChange.emit(result.dto.Id);
       });
   }
 
   setUpdateDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateWorkItemDtoSuccess), takeUntil(this.destroy$))
+    this.stateHelperService
+      .setActionResult(UpdateWorkItemDtoSuccess, this.destroy$)
       .subscribe((result: any) => {
         this.displayNotification('Record updated');
         this.getData();
@@ -136,8 +153,8 @@ export class TaskEditComponent
   }
 
   setUpdateDtoFailureActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateWorkItemDtoFailure), takeUntil(this.destroy$))
+    this.stateHelperService
+      .setActionResult(UpdateWorkItemDtoFailure, this.destroy$)
       .subscribe((result: any) => {
         this.displayErrorAlert(result.error);
         this.getData();
@@ -145,17 +162,42 @@ export class TaskEditComponent
   }
 
   setDeleteByIdSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteWorkItemByIdSuccess), takeUntil(this.destroy$))
+    this.stateHelperService
+      .setActionResult(DeleteWorkItemByIdSuccess, this.destroy$)
       .subscribe((result: any) => {
         this.displayNotification('Record deleted');
         this.getData();
       });
   }
 
+  async setGetAllWorkItemTypesByWorkItemCategorySuccessActionResult() {
+    this.stateHelperService
+      .setActionResult(
+        GetAllWorkItemTypesByWorkItemCategorySuccess,
+        this.destroy$
+      )
+      .subscribe(async () => {
+        this.taskTypes = this.store.select(
+          selectAllWorkItemTypesByWorkItemCategory(WorkItemCategoryEnum.Task)
+        );
+
+        const result = await firstValueFrom(
+          this.store.select(selectDefaultTaskType)
+        );
+
+        this.task.update((task) => ({
+          ...task,
+          WorkItemTypeId: result?.Id ?? undefined,
+        }));
+        this.form.patchValue(this.task());
+      });
+  }
+
+
+
   setDeleteByIdFailureActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteWorkItemByIdFailure))
+    this.stateHelperService
+      .setActionResult(DeleteWorkItemByIdFailure, this.destroy$)
       .subscribe((result: any) => {
         this.displayErrorAlert(result.error);
         this.getData();
@@ -181,20 +223,26 @@ export class TaskEditComponent
     this.getUsers();
 
     this.getTaskStatuses();
-    this.getWorkItemPriorities()
+    this.getWorkItemPriorities();
   }
 
-  getWorkItemPriorities(){
-    this.workItemPrioritiesDatasourse = WorkItemPriorityEnumlist.value
+  getWorkItemPriorities() {
+    this.workItemPrioritiesDatasourse = WorkItemPriorityEnumlist.value;
   }
 
-  getTaskStatuses() {
-    this.store.dispatch(
-      GetAllStatusesByStatusType({ statusType: StatusTypeEnum.Task })
-    );
+  async getTaskStatuses() {
     this.taskStatuses = this.store.select(
       selectAllStatusesByStatusType(StatusTypeEnum.Task)
     );
+
+    const result = await firstValueFrom(
+      this.store.select(selectDefaultTaskStatus)
+    );
+
+    this.task.update((task) => ({
+      ...task,
+      StatusId: result?.Id ?? undefined,
+    }));
   }
 
   getTaskTypes() {
@@ -203,15 +251,18 @@ export class TaskEditComponent
         workItemCategory: WorkItemCategoryEnum.Task,
       })
     );
-    this.taskTypes = this.store.select(
-      selectAllWorkItemTypesByWorkItemCategory(WorkItemCategoryEnum.Task)
-    );
   }
 
   getUsers() {
-    this.store.dispatch(GetAllUsers());
     this.users = this.store.select(selectAllUsers);
-  }
+
+    this.task.update((task) => ({
+      ...task,
+      AssigneeId: this.auth.user.Id,
+    }));
+
+    this.form.patchValue(this.task());
+    }
 
   getData() {
     if (this.taskId()) {
@@ -225,10 +276,12 @@ export class TaskEditComponent
           }, 10);
         });
     } else {
-      this.task.update((task) => {
-        task.WorkItemCategory = WorkItemCategoryEnum.Task;
-        return { ...task };
-      });
+      this.task.update((task) => ({
+        ...task,
+        WorkItemCategory: WorkItemCategoryEnum.Task,
+      }));
+
+      this.form.patchValue(this.task());
       this.new_task_title_text = 'New Task';
     }
   }

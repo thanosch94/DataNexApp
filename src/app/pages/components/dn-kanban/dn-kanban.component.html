@@ -48,7 +48,7 @@
                   isTitleOverflowing(item.Id) ? item[titleExpr()] : ''
                 "
               >
-                {{ item[titleExpr()] }}
+                {{ item.SerialNumber + ' - ' + item[titleExpr()] }}
               </div>
               <div>
                 <button

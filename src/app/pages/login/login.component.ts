@@ -1,16 +1,13 @@
 import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
-import { CompaniesViewModel } from './../../view-models/companies.viewmodel';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   ChangeDetectorRef,
-  Component,
-  isDevMode,
+  Component
 } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
-  FormsModule,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
@@ -20,7 +17,6 @@ import { AuthService } from '../../services/auth.service';
 import { LoginDto } from '../../dto/login.dto';
 import { Router } from '@angular/router';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { MatDialog } from '@angular/material/dialog';
 import { WebAppBase } from '../../base/web-app-base';
 import { ApiResponseDto } from '../../dto/api-response.dto';
 import { UserDto } from '../../dto/user.dto';
@@ -143,5 +139,8 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
     }
   }
 
-
+  onRegisterClicked(e:any){
+    e.preventDefault()
+    this.router.navigate(['register-form']);
+  }
 }
