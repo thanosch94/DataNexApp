@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, ContentChild, EventEmitter, forwardRef, Input, Output, TemplateRef, ViewChild } from '@angular/core';
+import { AsyncPipe, CommonModule } from '@angular/common';
+import { Component, ContentChild, EventEmitter, forwardRef, input, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
@@ -23,7 +23,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatSuffix,
         MatPrefix,
         MatTooltipModule,
-        MatSelectModule
+        MatSelectModule,
     ],
       providers: [
         {
@@ -53,6 +53,7 @@ export class DnSelectboxComponent {
   @Input() panelWidth: number|string;
   @Input() useCustomValueTemplate: boolean=false; //Used this to add custom template with icon when option is selected
   @Input() allowInput: boolean=true;
+  disabled = input<boolean>(false);
   @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
   @Output() selectionChange = new EventEmitter();

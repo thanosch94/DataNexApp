@@ -12,8 +12,7 @@
       [matAutocomplete]="auto"
       (click)="onInputClick(value)"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
-
-
+      [disabled]="disabled()"
     />}@else {
       <!-- Select -->
       <mat-select
@@ -26,7 +25,7 @@
       (click)="onInputClick(value)"
       [compareWith]="compareFn"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
-
+      [disabled]="disabled()"
     >
     <mat-select-trigger>
       {{ display(value)}}
@@ -69,12 +68,14 @@
       >{{ icon }}</mat-icon
     >} }
 
+
    <mat-autocomplete
       #matAutoComplete
       #auto="matAutocomplete"
       (optionSelected)="onValueChanged($event.option.value)"
       [displayWith]="display.bind(this)"
       [panelWidth]="panelWidth"
+
 
     >
 
