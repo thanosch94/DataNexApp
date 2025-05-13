@@ -1,0 +1,41 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [title]="tasks_list_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+
+<div class="margin">
+  <dn-grid
+    #taskGrid
+    [dataSource]="dataSource | async"
+    [columns]="columns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    [canDelete]="true"
+    (onRowEditing)="editTask($event)"
+    (onRowDelete)="deleteTask($event)"
+  >
+  </dn-grid>
+</div>
+<dn-popup
+  *ngIf="isPopupVisible"
+  [isPopupVisible]="isPopupVisible"
+  [isFullScreen]="false"
+  [hideOnOutsideClick]="false"
+  (onHiding)="onHiding()"
+  width="900px"
+  height="400px"
+>
+  <!-- Use of #nested in order to include its values in the dev tools -->
+  <app-task-edit
+    #nested
+    (onClose)="onTaskPopupClose()"
+    (onItemDelete)="onTaskPopupDelete($event)"
+    [taskId]="taskId()"
+    (taskIdChange)="onTaskIdFromChildChange($event)"
+  >
+  </app-task-edit>
+</dn-popup>

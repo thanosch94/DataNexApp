@@ -215,6 +215,11 @@ export class Navigation {
           Name: 'Logs',
           Path: 'logs-list',
         },
+        {
+          Id: Guid.parse('9d3704cd-83a0-4341-ba65-0921e7f870bb'),
+          Name: 'Tasks List',
+          Path: 'task-list',
+        },
       ],
     },
     {

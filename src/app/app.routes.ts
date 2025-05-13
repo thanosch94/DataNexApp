@@ -35,6 +35,7 @@ import { GeneralOptionsComponent } from './pages/configuration/general-options/g
 import { LotsListComponent } from './pages/configuration/lots/lots-list.component';
 import { RegisterFormComponent } from './pages/register-form/register-form.component';
 import { WorkItemTypesListComponent } from './pages/configuration/work-item-types-list/work-item-types-list.component';
+import { TaskListComponent } from './pages/task-list/task-list.component';
 
 export const routes: Routes = [
   {
@@ -230,6 +231,11 @@ export const routes: Routes = [
   {
     path:'lots-list',
     component:LotsListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'task-list',
+    component:TaskListComponent,
     canActivate:[authGuard]
   }
 
