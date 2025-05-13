@@ -152,12 +152,9 @@ tr{
 
 }
 
-.mat-mdc-cell.mat-column-buttons{
-  display: flex;
-  justify-content: end;
-  align-items: center;
+.inline{
+  display: inline-flex;
 }
-
 /* Removes the borders from the left and the right of the array */
 ::ng-deep tr td:first-child {
   border-left: none !important;
