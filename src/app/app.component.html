@@ -176,6 +176,7 @@
           }
         </div>
       </mat-sidenav>
+
       <mat-sidenav-content
         [ngClass]="
           sidenavIsOpen
@@ -183,23 +184,29 @@
             : 'main-content-with-closed-sidenav'
         "
       >
+
+
         @if(tabs.length == 0){
         <div>
           <app-sales-reports [displayToolbar]="false"></app-sales-reports>
         </div>
         }
+          <!-- Add the DEV Tools Popup -->
+          <app-dev-tools></app-dev-tools>
         <mat-tab-group
           [ngClass]="tabs.length > 0 ? 'display-tab-group' : 'hide-tab-group'"
           class="tab-group"
           [color]="'primary'"
           [selectedIndex]="selectedTab.value"
           (selectedIndexChange)="selectedTab.setValue($event)"
-          (selectedTabChange)="onTabChanged($event)"
+          (selectedTabChange)="onTabChanged($event,selectedTab.value)"
         >
-          @for(tab of tabs; track tab.Id){
+
+          @for(tab of tabs; track tab.Id; let i = $index){
             <mat-tab
             [ngClass]="tab.Active ? 'active-tab' : ''"
             class="app-tab"
+            [id]="i.toString()"
           >
             <div class="tab-header"
             >
@@ -218,17 +225,24 @@
                 }
               </ng-template>
             </div>
-            <ng-container *ngComponentOutlet="tab.Component; injector: tab.Injector"></ng-container>
+            <ng-template #container></ng-template>
+
           </mat-tab>
           }
+
         </mat-tab-group>
+
+
         <div class="footer">
           <div>Copyright © 2024 DataNex. All rights reserved.</div>
           <div>
             App Version: {{ appVersion }} / Api Version: {{ apiVersion }}
           </div>
         </div>
+
+
       </mat-sidenav-content>
+
     </mat-sidenav-container>
   </div>
 </div>

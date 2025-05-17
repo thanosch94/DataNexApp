@@ -42,13 +42,6 @@ import { AsyncPipe } from '@angular/common';
 export class UsersListComponent implements OnInit {
   @ViewChild('usersGrid') usersGrid: DnGridComponent;
 
-  displayedColumns: string[] = [
-    'Name',
-    'Email',
-    'Username',
-    'UserRole',
-    'buttons',
-  ];
   dataSource: any;
   users_list_text: string;
   usersViewModel: UsersViewModel;

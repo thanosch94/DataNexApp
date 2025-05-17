@@ -27,7 +27,7 @@ import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuthService } from '../../../services/auth.service';
-import { WorkItemPriority as WorkItemPriorityEnum } from '../../../enums/work-item-priority.enum';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'dn-kanban',
@@ -43,7 +43,7 @@ import { WorkItemPriority as WorkItemPriorityEnum } from '../../../enums/work-it
   templateUrl: './dn-kanban.component.html',
   styleUrl: './dn-kanban.component.css',
 })
-export class DnKanbanComponent implements AfterViewInit {
+export class DnKanbanComponent extends BaseComponent implements AfterViewInit {
   columns = input<any[]>();
   @Input() itemColumnId: string;
 
@@ -70,7 +70,7 @@ export class DnKanbanComponent implements AfterViewInit {
 
   @Input() columnTitleBackgroundColor: string = '#0b6aa5';
   @Input() columnTitleColor: string = '#fafafa';
-  itemDescriptionExpr=  input<string>('');
+  itemDescriptionExpr = input<string>('');
   titleExpr = input<string>('');
   colorField = input<string>('Priority');
   onItemEditBtnClicked = output();
@@ -82,7 +82,12 @@ export class DnKanbanComponent implements AfterViewInit {
   onItemClicked = output();
   faEdit = faEdit;
   faTrash = faTrash;
-  constructor(private ref: ChangeDetectorRef, private auth: AuthService, private ngZone:NgZone) {
+  constructor(
+    private ref: ChangeDetectorRef,
+    private auth: AuthService,
+    private ngZone: NgZone
+  ) {
+    super()
     this.getUserInitials();
     effect(() => {
       if (this.columns()) {
@@ -91,16 +96,13 @@ export class DnKanbanComponent implements AfterViewInit {
     });
   }
 
-
   ngAfterViewInit() {
-
-setTimeout(()=>{
-  this.ngZone.onStable.subscribe(() => {
-    this.checkTitleOverflow();
-    this.checkDescrOverflow();
-  });
-},1000)
-
+    setTimeout(() => {
+      this.ngZone.onStable.subscribe(() => {
+        this.checkTitleOverflow();
+        this.checkDescrOverflow();
+      });
+    }, 1000);
   }
   checkTitleOverflow() {
     this.itemTitles.toArray().forEach((elRef) => {
@@ -126,9 +128,6 @@ setTimeout(()=>{
 
       this.descrOverflowMap[el.id] = isOverflowing;
     });
-
-
-
   }
 
   isDescrOverflowing(id: string): boolean {
@@ -199,11 +198,6 @@ setTimeout(()=>{
     this.onItemDeleteBtnClicked.emit(item);
   }
 
-  stripHtml(html: string): string {
-    const div = document.createElement('span');
-    div.innerHTML = html;
-    return div.textContent || div.innerText || '';
-  }
 
   getUserInitials() {
     this.userInitials = this.auth.user.Name.split(' ')

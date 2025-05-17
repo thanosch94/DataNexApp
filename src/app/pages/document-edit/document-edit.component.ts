@@ -195,6 +195,39 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     private productsService: ProductsService,
     private store: Store
   ) {
+    this.initializeViewModels();
+
+    this.documentId = WebAppBase.data;
+    WebAppBase.data = undefined;
+    this.currency = WebAppBase.currency;
+    let activeTab = TabsService.tabs.find((x) => x.Active == true);
+    activeTab!.Data.forEach((row: any) => {
+      if (row['Group']) {
+        this.documentGroup = row['Group'];
+      }
+
+      if (row['Type']) {
+        this.documentType = row['Type'];
+      }
+    });
+
+    this.pdfGeneratorComponent = new PdfGeneratorComponent();
+  }
+
+  async ngOnInit() {
+    await this.getLookups();
+    this.getColumns();
+    this.getData();
+
+    this.document_must_be_saved_in_order_to_add_charges_text =
+      'Document must be saved first in order to add extra charges';
+  }
+
+  ngAfterViewInit(): void {
+    this.calculateDocumentTotal();
+  }
+
+  initializeViewModels() {
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
       this.http,
       this.auth
@@ -219,9 +252,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       this.auth
     );
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
-    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
-      this.lotStrategyEnum = result.LotStrategy;
-    });
     this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
     this.warehousesViewModel = new WarehousesViewModel(this.http, this.auth);
 
@@ -229,47 +259,23 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.documentAdditionalChargesViewModel =
       new DocumentAdditionalChargesViewModel(this.http, this.auth);
-    this.documentId = WebAppBase.data;
-    WebAppBase.data = undefined;
-    this.currency = WebAppBase.currency;
-    let activeTab = TabsService.tabs.find((x) => x.Active == true);
-    activeTab!.Data.forEach((row: any) => {
-      if (row['Group']) {
-        this.documentGroup = row['Group'];
-      }
-
-      if (row['Type']) {
-        this.documentType = row['Type'];
-      }
-    });
-    this.generalOptionsViewModel
-      .GetAll()
-      .subscribe((result: GeneralOptionsDto) => {
-        this.generalOptions = result;
-      });
-    this.pdfGeneratorComponent = new PdfGeneratorComponent();
-  }
-
-  ngOnInit() {
-    this.getLookups();
-
-    this.document_must_be_saved_in_order_to_add_charges_text =
-      'Document must be saved first in order to add extra charges';
-
-    this.customersViewModel.GetAll().subscribe((result: any) => {
-      this.customers = result;
-    });
-
-    this.suppliersViewModel.GetAll().subscribe((result: any) => {
-      this.suppliers = result;
-    });
-  }
-
-  ngAfterViewInit(): void {
-    this.calculateDocumentTotal();
   }
 
   async getLookups() {
+    this.generalOptions =
+      (await firstValueFrom(this.generalOptionsViewModel.GetAll())) ??
+      new GeneralOptionsDto();
+
+    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
+      this.lotStrategyEnum = result.LotStrategy;
+    });
+
+    let customersObs$ = this.customersViewModel.GetAll();
+    this.customers = await firstValueFrom(customersObs$);
+
+    let suppliersObs$ = this.suppliersViewModel.GetAll();
+    this.suppliers = await firstValueFrom(suppliersObs$);
+
     let wareHousesObs = this.warehousesViewModel.GetAll();
     this.warehousesList = await firstValueFrom(wareHousesObs);
 
@@ -304,9 +310,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       let lotsObs = this.lotsViewModel.GetLookup();
       this.lotsDataSource = await firstValueFrom(lotsObs);
     }
-
-    this.getColumns();
-    this.getData();
   }
 
   getData() {
@@ -372,16 +375,15 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async GetProductVatAmount(id: Guid, data: DocumentProductDto) {
-      let obs = this.store.select(selectVatClassById(id));
-      let result = (await firstValueFrom(obs)) as VatClassDto;
+    let obs = this.store.select(selectVatClassById(id));
+    let result = (await firstValueFrom(obs)) as VatClassDto;
 
-      let vatClass = { ...result } as VatClassDto;
-      data.VatAmount = this.calculateProductVatAmount(data, vatClass.Rate);
+    let vatClass = { ...result } as VatClassDto;
+    data.VatAmount = this.calculateProductVatAmount(data, vatClass.Rate);
 
-      data.VatClassRate = vatClass.Rate;
-      data.VatClassId = vatClass.Id;
-      this.GetTotalVatAmount(data);
-
+    data.VatClassRate = vatClass.Rate;
+    data.VatClassId = vatClass.Id;
+    this.GetTotalVatAmount(data);
   }
 
   calculateProductVatAmount(data: DocumentProductDto, rate: number) {
@@ -1095,7 +1097,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       product.ProductRetailPrice = price;
       product.TotalPrice = product.ProductRetailPrice! * product.Quantity!;
       this.GetProductVatAmount(this.document.VatClassId, product);
-
     } else {
       //Get Price From state
       let obs = this.productsViewModel.GetBySku(product.Sku!);

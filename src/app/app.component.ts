@@ -2,10 +2,24 @@ import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
-import { ChangeDetectorRef, Component, Injector, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ComponentFactoryResolver,
+  ComponentRef,
+  HostListener,
+  Injector,
+  QueryList,
+  signal,
+  ViewChild,
+  ViewChildren,
+  ViewContainerRef,
+} from '@angular/core';
 import { Router, RouterOutlet, RoutesRecognized } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { Guid } from 'guid-typescript';
 import { WebAppBase } from './base/web-app-base';
 import { MenuItemDto } from './dto/menu-item.dto';
@@ -36,6 +50,9 @@ import {
   MatAutocompleteModule,
   MatOptgroup,
 } from '@angular/material/autocomplete';
+import { DevToolsComponent } from './pages/configuration/dev-tools/dev-tools.component';
+import { DevToolsService } from './services/dev-tools.service';
+import { debug } from 'console';
 
 @Component({
   selector: 'app-root',
@@ -48,7 +65,6 @@ import {
     FontAwesomeModule,
     FontAwesomeModule,
     MatTabsModule,
-    HttpClientModule,
     MatDialogModule,
     MatTooltipModule,
     SalesReportsComponent,
@@ -61,12 +77,20 @@ import {
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
+    DevToolsComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent {
+export class AppComponent implements AfterViewChecked {
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild(DevToolsComponent) devTools!: DevToolsComponent;
+  @ViewChild(NgComponentOutlet) ng = signal<NgComponentOutlet | null>(null);
+  @ViewChildren('container', { read: ViewContainerRef })
+  containers!: QueryList<ViewContainerRef>;
+
+  componentRefs: ComponentRef<any>[] = [];
+
   title = 'DataNexApp';
   sidenavIsOpen: boolean = true;
   tabs: any[];
@@ -91,6 +115,7 @@ export class AppComponent {
   searchItems: MenuItemDto[];
   faHeartCirclePlus: any;
   faHeart: any;
+  selectedTabIndex: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
@@ -98,7 +123,9 @@ export class AppComponent {
     private dialog: MatDialog,
     private ref: ChangeDetectorRef,
     private tabsService: TabsService,
-    private injector: Injector
+    private injector: Injector,
+    private devToolsService: DevToolsService,
+    private resolver: ComponentFactoryResolver
   ) {
     //if(isDevMode()){
     //   this.logoPath = "../assets/images/datanex_logo.png"
@@ -115,9 +142,18 @@ export class AppComponent {
     this.faHeartCirclePlus = faHeartCirclePlus;
     this.faHeart = faHeart;
     this.tabs = tabsService.getTabs();
-    router.events.subscribe((result: any) => {
+
+    this.getMenuItemsForTabs();
+    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth);
+  }
+  menuItems: MenuItemDto[] = Navigation.menu;
+  selectedTab = new FormControl(0);
+
+  ngAfterViewInit() {
+    this.router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
         if (result.url != '/' && result.url != '/login') {
+          debugger;
           this.checkAndAddTab(result);
         }
       }
@@ -127,13 +163,10 @@ export class AppComponent {
       this.today = new Date();
       //this.ref.detectChanges()
     });
-
-    this.getMenuItemsForTabs();
-    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth);
   }
-  menuItems: MenuItemDto[] = Navigation.menu;
-  selectedTab = new FormControl(0);
-
+  ngAfterViewChecked(): void {
+    this.devToolsService.register(this.devTools);
+  }
   getMenuItemsForTabs() {
     this.menuItems.forEach((menuItem) => {
       this.menuItemsArray.push(menuItem);
@@ -176,11 +209,14 @@ export class AppComponent {
       this.sidenavIsOpen = true;
     }
   }
-  onTabChanged(tab: any) {
+  onTabChanged(tab: any, index: any) {
+    debugger;
     this.tabsService.deactivateTabs();
+    this.selectedTabIndex = index;
+
     if (tab.index >= 0) {
       this.tabs[tab.index].Active = true;
-     // this.router.navigate(this.tabs[tab.index].Route, { queryParams: tab.Params });
+      // this.router.navigate(this.tabs[tab.index].Route, { queryParams: tab.Params });
     } else {
       this.router.navigate(['/']);
       this.isMenuItem = undefined;
@@ -201,26 +237,42 @@ export class AppComponent {
       this.tabsService.deactivateTabs();
       let tab = new AppTabDto();
       tab.Id = Guid.create();
-      if (this.tabs.find((existingTab) => existingTab.Name == tabItemName) == null) {
+      debugger;
+      if (
+        this.tabs.find((existingTab) => existingTab.Name == tabItemName) == null
+      ) {
+        tab.Name = tabItemName;
+        tab.PrevName = tabItemName;
+        tab.Component = class extends (comp as any) {};
+        //tab.Component = comp;
+        tab.Key = tabItemName;
+        tab.Active = true;
+        tab.Hint = tabItemName;
+        tab.Params = tabItem?.Params;
+        tab.OriginId = this.selectedMenuItem;
+        tab.Route = data.state.root.firstChild?.routeConfig;
         const newInjector = Injector.create({
           providers: [{ provide: 'tab', useValue: tab }],
 
           parent: this.injector,
         });
-
-
-        tab.Name = tabItemName;
-        tab.PrevName = tabItemName;
-        tab.Component = class  extends (comp as any) {};;
-        tab.Key = tabItemName;
-        tab.Active = true;
-        tab.Hint = tabItemName;
         tab.Injector = newInjector;
-        tab.Params= tabItem?.Params
-        tab.OriginId = this.selectedMenuItem;
-        tab.Route = data.state.root.firstChild?.routeConfig;
+
         this.tabs.push(tab);
+        this.devToolsService.register(this.devTools);
+
         this.selectedTab.setValue(this.tabs.length - 1);
+
+        let index = this.tabs.length - 1;
+        setTimeout(() => {
+          this.containers.get(index)!.clear(); // Clear previous component
+
+          const factory = this.resolver.resolveComponentFactory(tab.Component);
+          const ref = this.containers
+            .get(index)!
+            .createComponent(factory, undefined, tab.Injector);
+          this.componentRefs.push(ref);
+        }, 200);
       } else {
         let tabToAcivate = this.tabs.find((tab) => tab.Name == tabItemName);
         let index = 0;
@@ -234,14 +286,29 @@ export class AppComponent {
       this.isNavBarItem = false;
     } else if (!this.isMenuItem && !this.isNavBarItem) {
       let tab = this.tabs.find((tab) => tab.Active == true);
+
+      let index = this.tabs.indexOf(tab!);
+
       if (tab) {
         tab!.Component = comp;
         tab!.Route = data.state.root.firstChild?.routeConfig;
+        setTimeout(() => {
+          this.containers.get(index)!.clear(); // Clear previous component
+          this.componentRefs.splice(index, 1);
+
+          const factory = this.resolver.resolveComponentFactory(tab.Component);
+          const ref = this.containers
+            .get(index)!
+            .createComponent(factory, undefined, tab.Injector);
+          this.componentRefs.push(ref);
+        }, 0);
       }
     }
   }
 
   onTabCloseClicked(e: any, tab: AppTabDto) {
+    let index = this.tabs.indexOf(tab);
+    this.componentRefs.splice(index, 1);
     this.tabsService.closeTab(tab);
     this.selectedTab.setValue(this.tabs.length - 1);
     this.router.navigate(['/']);
@@ -323,10 +390,22 @@ export class AppComponent {
   //   moveItemInArray(this.tabs, event.previousIndex, event.currentIndex);
   // }
 
-  onTabClicked(e:any, tab:AppTabDto){
+  onTabClicked(e: any, tab: AppTabDto) {
     if (e.button === 1) {
       //Close Tab on middle mouse click
       this.tabsService.closeTab(tab);
     }
+  }
+
+  @HostListener('window:keydown.control.alt.a', ['$event'])
+  onKeyDown(e: KeyboardEvent) {
+    //TODO Add check if user role is admin
+    let nested =
+      this.componentRefs[this.selectedTabIndex].instance?.nested?.toArray();
+    this.devToolsService.open(
+      this.componentRefs[this.selectedTabIndex].instance?.getExportedData(
+        nested
+      )
+    );
   }
 }
