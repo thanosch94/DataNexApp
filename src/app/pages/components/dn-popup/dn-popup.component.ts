@@ -18,13 +18,12 @@ export class DnPopupComponent {
   isReady: boolean;
   data = input<any[]>();
   title = input<string>();
-  @Input() isPopupVisible: boolean;
-
   width = input<string>('600px');
   height = input<string>('600px');
   isFullScreen = input<boolean>(false);
-  onHiding = output();
   hideOnOutsideClick = input<boolean>();
+  onHiding = output();
+  isPopupVisible= input<boolean>(false);
 
   constructor(private elementRef: ElementRef) {
     setTimeout(()=>{
@@ -32,12 +31,8 @@ export class DnPopupComponent {
     },10)
   }
 
-  displayPopup() {
-    this.isPopupVisible = true;
-  }
 
   hidePopup() {
-    this.isPopupVisible = false;
     this.onHiding.emit();
   }
 

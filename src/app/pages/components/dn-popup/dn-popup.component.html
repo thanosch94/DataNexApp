@@ -1,9 +1,7 @@
-<div class="overlay" #overlay *ngIf="isPopupVisible" (click)="onClickOutside($event)">
+<div class="overlay" #overlay *ngIf="isPopupVisible()" (click)="onClickOutside($event)">
   <div class="popup" [ngStyle]="{ width: isFullScreen()?'100%':width(), height:isFullScreen()?'100%':height()}">
-    <div class="height-100">
-
+    <div class="content">
     <ng-content></ng-content>
-
   </div>
   </div>
 </div>
