@@ -1,0 +1,81 @@
+@if(displayDevToolsPopup()){
+<dn-popup
+  width="1100px"
+  height="600px"
+  [isPopupVisible]="displayDevToolsPopup()"
+>
+  <div class="toolbar-container">
+    <dn-toolbar
+      [canExit]="true"
+      [canRefresh]="true"
+      [canSave]="true"
+      [isDialog]="false"
+      [title]="dev_tools_title_text"
+      (onCloseBtnClicked)="close($event)"
+      (onRefreshBtnClicked)="refresh($event)"
+    ></dn-toolbar>
+  </div>
+  <div class="tabs">
+    <mat-tab-group>
+      <mat-tab label="Page Info">
+        <div class="tab-1">
+          <div class="margin-1">
+            @for(item of data().ComponentData; track item){
+            <div>
+              <pre>{{ item | json }}</pre>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-tab>
+      <mat-tab label="Permissions">
+        <div class="tab-2">
+          @for(item of data().Permissions; track item){
+          <fieldset class="margin-1">
+            <b>{{ item.screen }}</b>
+            <hr />
+            <div>
+              @for(perm of item.entities; track perm){
+              <b>{{ perm.appEntity }}</b>
+              <div
+                style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-between;
+                "
+              >
+                @for(permItem of perm.permissions; track permItem){
+
+                <div class="margin-1 mb-2 perm-container">
+                  <div class="flex permission-place-name"  style="
+                  display: flex;
+                  flex-wrap: wrap;
+                  justify-content: space-between;
+                ">
+                <div class="flex permission-place-name" >
+                    <mat-icon class="mr-10" color="blue">info</mat-icon>
+
+                    <p class="mr-10">{{ permItem.Key }}</p>
+                  </div>
+                    <button class="flex" mat-stroked-button>
+                      <p class="flex" style="align-items: center">
+                        <span class="mr-10">Add Permission</span>
+                        <mat-icon>add</mat-icon>
+                      </p>
+                    </button>
+                  </div>
+                  <!-- <dn-textbox label="Permission Name"> </dn-textbox> -->
+                </div>
+                }
+              </div>
+              }
+            </div>
+          </fieldset>
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</dn-popup>
+
+}

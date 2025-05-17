@@ -28,6 +28,7 @@ import { WorkItemTypeDto } from '../../dto/work-item-type.dto';
 import { Guid } from 'guid-typescript';
 import { StateHelperService } from '../../services/state-helper.service';
 import { DevToolsAdd } from '../../decorators/dev-tools-add';
+import { taskListComponentId, TaskListPermissionsList } from './task-list-permissions';
 
 @Component({
   selector: 'app-task-list',
@@ -56,6 +57,7 @@ export class TaskListComponent
   @DevToolsAdd() isPopupVisible: boolean = false;
   @DevToolsAdd() taskId = signal<Guid | null>(null);
   destroy$ = new Subject<void>();
+  componentId: any;
 
   constructor(
     private store: Store,
@@ -63,10 +65,12 @@ export class TaskListComponent
     private stateHelperService: StateHelperService
   ) {
     super();
+      this.componentId = taskListComponentId
+
   }
 
   ngOnInit(): void {
-    //this.getComponentPermissions(this.entityId)
+    this.getComponentPermissions(TaskListPermissionsList, this.componentId);
     this.setActionsResults();
     this.getLookups();
     this.getData();

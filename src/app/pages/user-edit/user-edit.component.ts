@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   Component,
+  HostListener,
   OnDestroy,
   OnInit,
   signal,
@@ -180,7 +181,6 @@ export class UserEditComponent
     this.getKanbanData();
   }
   //#endregion
-
   ngOnInit() {
     this.setActionsResults();
 
@@ -456,22 +456,6 @@ export class UserEditComponent
     this.markAsTouched(this.form, formControl);
   }
 
-  onAddBtnClicked(e: any) {
-    //this.openTaskEditDialog();
-    this.taskId.set(null);
-    this.isPopupVisible = true;
-  }
-
-  openTaskEditDialog(taskId?: Guid) {
-    this.dialog.open(TaskEditComponent, {
-      width: '700px',
-      height: '500px',
-      data: {
-        Title: 'New Task',
-        TaskId: taskId,
-      },
-    });
-  }
   onHiding() {
     this.taskId.set(null);
 

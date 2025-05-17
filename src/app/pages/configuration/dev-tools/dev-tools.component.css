@@ -1,0 +1,32 @@
+.margin-1{
+  margin:1%
+}
+
+.flex{
+  display: flex;
+}
+
+.mr-10{
+  margin-right: 10px;
+}
+
+.mb-2{
+  margin-bottom: 2%;
+}
+.permission-place-name{
+  margin-right: 30px;
+  margin-bottom: 5px;
+  align-items: center;
+
+}
+
+/* Make toolbar sticky in popup */
+::ng-deep .toolbar-container{
+  position: sticky!important;
+  top:0;
+  }
+
+
+  .perm-container{
+    width: 45%;
+  }

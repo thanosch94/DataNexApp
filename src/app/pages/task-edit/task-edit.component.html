@@ -1,7 +1,7 @@
 <dn-toolbar
-  [canDelete]="true"
+  [canDelete]="hasPermission('Toolbar_CanDelete') ?? true"
   [canExit]="true"
-  [canSave]="true"
+  [canSave]="hasPermission('Toolbar_CanSave') ?? true"
   [canRefresh]="(task()?.Id!=null )? true : false"
   [isDialog]="false"
   [title]="(task()?.Id!=null) ? task().Name : new_task_title_text"
@@ -33,6 +33,7 @@
               name="WorkItemTypeId"
               [useCustomValueTemplate]="true"
               [allowInput]="false"
+              [disabled]="hasPermission('EnableTaskTypeId_Field')??false"
             >
             <ng-template let-option>
               <i [class]="option.Icon" [style]="'margin-right:4px; color:'+option.IconColor"></i>{{option.Name}}
@@ -50,6 +51,7 @@
               name="statusId"
               [useCustomValueTemplate]="true"
               [allowInput]="false"
+              [disabled]="hasPermission('EnableStatusId_Field')??false"
 
             >
             <ng-template let-option>
@@ -68,6 +70,7 @@
               displayExpr="Name"
               formControlName="ProjectId"
               name="ProjectId"
+              [disabled]="hasPermission('EnableProjectId_Field')??false"
             >
             </dn-selectbox>
           </div>
@@ -78,6 +81,8 @@
               valueExpr="Id"
               displayExpr="Name"
               formControlName="AssigneeId"
+              [disabled]="hasPermission('EnableAssigneeId_Field')??false"
+
             >
             </dn-selectbox>
           </div>
@@ -92,6 +97,8 @@
               displayExpr="Name"
               formControlName="WorkItemPriority"
               name="WorkItemPriority"
+              [disabled]="hasPermission('EnableWorkItemPriority_Field')??false"
+
             >
             </dn-selectbox>
           </div>
@@ -101,6 +108,8 @@
               valueExpr="Id"
               displayExpr="Name"
               formControlName="DueDate"
+              [disabled]="hasPermission('EnableDueDate_Field')??false"
+
             >
             </dn-date-box>
           </div>
@@ -111,6 +120,7 @@
             label="Master Task"
             formControlName="MasterTaskId"
             name="masterTaskId"
+
           >
           </dn-textbox>
         </div>

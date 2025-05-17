@@ -1,8 +1,4 @@
-import {
-  firstValueFrom,
-  Observable,
-  Subject,
-} from 'rxjs';
+import { firstValueFrom, Observable, Subject } from 'rxjs';
 import {
   Component,
   effect,
@@ -50,6 +46,7 @@ import {
   DeleteWorkItemByIdFailure,
   DeleteWorkItemByIdSuccess,
   GetWorkItemById,
+  GetWorkItemByIdSuccess,
   InsertWorkItemDto,
   InsertWorkItemDtoSuccess,
   UpdateWorkItemDto,
@@ -65,6 +62,8 @@ import { WorkItemPriorityEnumlist } from '../../enumLists/work-item-priority.enu
 import { AuthService } from '../../services/auth.service';
 import { StateHelperService } from '../../services/state-helper.service';
 import { WorkItemPriority } from '../../enums/work-item-priority.enum';
+import { DevToolsAdd } from '../../decorators/dev-tools-add';
+import { taskEditComponentId, TaskEditPermissionsList } from './task-edit-permissions';
 
 @Component({
   selector: 'app-task-edit',
@@ -84,18 +83,19 @@ export class TaskEditComponent
   extends GenericFormComponent
   implements OnInit, OnDestroy
 {
+  componentId:Guid|string;
   taskId = input<Guid | null>();
   taskIdChange = output<Guid>();
   new_task_title_text: string;
   form: FormGroup;
-  task = signal<WorkItemDto>(new WorkItemDto());
+  @DevToolsAdd() task = signal<WorkItemDto>(new WorkItemDto());
   users: Observable<UserDto[]>;
   projectsDatasourse: Observable<any[]>;
   taskStatuses: Observable<StatusDto[]>;
   taskTypes: Observable<WorkItemTypeDto[]>;
   onClose = output();
   idChange = output<Guid>();
-  onItemDelete = output();
+  onItemDelete = output<Guid>();
   private destroy$ = new Subject<void>();
   workItemPrioritiesDatasourse: {
     Id: WorkItemPriority;
@@ -104,12 +104,12 @@ export class TaskEditComponent
 
   constructor(
     private fb: FormBuilder,
-    private store: Store,
-    private actions$: Actions,
     private auth: AuthService,
-    private stateHelperService: StateHelperService
+    private stateHelperService: StateHelperService,
+    private store:Store
   ) {
     super();
+    this.componentId = taskEditComponentId
     effect(() => {
       if (this.taskId()) {
         this.getData();
@@ -118,6 +118,7 @@ export class TaskEditComponent
   }
 
   ngOnInit(): void {
+    this.getComponentPermissions(TaskEditPermissionsList, this.componentId);
     this.setActionsResults();
     this.initializeForm();
     this.getLookups();
@@ -131,6 +132,7 @@ export class TaskEditComponent
     this.setDeleteByIdSuccessActionResult();
     this.setDeleteByIdFailureActionResult();
     await this.setGetAllWorkItemTypesByWorkItemCategorySuccessActionResult();
+    this.setGetWorkItemByIdSuccessActionResult();
   }
 
   setInsertDtoSuccessActionResult() {
@@ -165,8 +167,31 @@ export class TaskEditComponent
     this.stateHelperService
       .setActionResult(DeleteWorkItemByIdSuccess, this.destroy$)
       .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
         this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.stateHelperService
+      .setActionResult(DeleteWorkItemByIdFailure, this.destroy$)
+      .subscribe((result: any) => {
+        this.getData();
+      });
+  }
+
+  setGetWorkItemByIdSuccessActionResult() {
+    this.stateHelperService
+      .setActionResult(GetWorkItemByIdSuccess, this.destroy$)
+      .subscribe((result: any) => {
+        this.store
+          .select(selectTaskById(this.taskId()!))
+          .subscribe((result: any) => {
+            this.task.set(result);
+            setTimeout(() => {
+              debugger;
+              this.form.patchValue(this.task());
+            }, 10);
+          });
       });
   }
 
@@ -181,38 +206,29 @@ export class TaskEditComponent
           selectAllWorkItemTypesByWorkItemCategory(WorkItemCategoryEnum.Task)
         );
 
-        const result = await firstValueFrom(
-          this.store.select(selectDefaultTaskType)
-        );
+        if (!this.taskId()) {
+          const result = await firstValueFrom(
+            this.store.select(selectDefaultTaskType)
+          );
 
-        this.task.update((task) => ({
-          ...task,
-          WorkItemTypeId: result?.Id ?? undefined,
-        }));
-        this.form.patchValue(this.task());
-      });
-  }
-
-
-
-  setDeleteByIdFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteWorkItemByIdFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
+          this.task.update((task) => ({
+            ...task,
+            WorkItemTypeId: result?.Id ?? undefined,
+          }));
+          this.form.patchValue(this.task());
+        }
       });
   }
 
   initializeForm() {
     this.form = this.fb.group({
-      Name: ['', Validators.required],
+      Name: ['', Validators.required], //TODO Add Validator maxlength and messages
       Description: [''],
       MasterTaskId: [null],
       ProjectId: [null],
       WorkItemTypeId: [null],
-      AssigneeId: [''],
-      StatusId: [''],
+      AssigneeId: [null],
+      StatusId: [null],
       DueDate: [new Date()],
       WorkItemPriority: [3],
     });
@@ -234,15 +250,16 @@ export class TaskEditComponent
     this.taskStatuses = this.store.select(
       selectAllStatusesByStatusType(StatusTypeEnum.Task)
     );
+    if (!this.taskId()) {
+      const result = await firstValueFrom(
+        this.store.select(selectDefaultTaskStatus)
+      );
 
-    const result = await firstValueFrom(
-      this.store.select(selectDefaultTaskStatus)
-    );
-
-    this.task.update((task) => ({
-      ...task,
-      StatusId: result?.Id ?? undefined,
-    }));
+      this.task.update((task) => ({
+        ...task,
+        StatusId: result?.Id ?? undefined,
+      }));
+    }
   }
 
   getTaskTypes() {
@@ -256,25 +273,19 @@ export class TaskEditComponent
   getUsers() {
     this.users = this.store.select(selectAllUsers);
 
-    this.task.update((task) => ({
-      ...task,
-      AssigneeId: this.auth.user.Id,
-    }));
+    if (this.taskId()) {
+      this.task.update((task) => ({
+        ...task,
+        AssigneeId: this.auth.user.Id,
+      }));
 
-    this.form.patchValue(this.task());
+      this.form.patchValue(this.task());
     }
+  }
 
   getData() {
     if (this.taskId()) {
       this.store.dispatch(GetWorkItemById({ id: this.taskId()! }));
-      this.store
-        .select(selectTaskById(this.taskId()!))
-        .subscribe((result: any) => {
-          this.task.set(result);
-          setTimeout(() => {
-            this.form.patchValue(this.task());
-          }, 10);
-        });
     } else {
       this.task.update((task) => ({
         ...task,
@@ -303,18 +314,20 @@ export class TaskEditComponent
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
         this.store.dispatch(DeleteWorkItemById({ id: this.task().Id }));
-        this.onItemDelete.emit();
+        this.onItemDelete.emit(this.task().Id);
       }
     });
   }
 
   onSaveClicked(e: any) {
-    this.task.set({ ...this.task(), ...this.form.value });
+    if (this.form.valid) {
+      this.task.set({ ...this.task(), ...this.form.value });
 
-    if (this.task().Id != null) {
-      this.store.dispatch(UpdateWorkItemDto({ dto: this.task() }));
-    } else {
-      this.store.dispatch(InsertWorkItemDto({ dto: this.task() }));
+      if (this.task().Id != null) {
+        this.store.dispatch(UpdateWorkItemDto({ dto: this.task() }));
+      } else {
+        this.store.dispatch(InsertWorkItemDto({ dto: this.task() }));
+      }
     }
   }
 

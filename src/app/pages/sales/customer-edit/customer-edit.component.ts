@@ -22,6 +22,8 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnCheckboxComponent } from "../../components/dn-checkbox/dn-checkbox.component";
 import { DnTextboxComponent } from "../../components/dn-textbox/dn-textbox.component";
+import { DevToolsAdd } from '../../../decorators/dev-tools-add';
+import { BaseComponent } from '../../components/base/base.component';
 
 
 @Component({
@@ -44,11 +46,11 @@ import { DnTextboxComponent } from "../../components/dn-textbox/dn-textbox.compo
     styleUrl: './customer-edit.component.css'
 })
 
-export class CustomerEditComponent implements OnInit, OnDestroy {
-  customer_text: string;
+export class CustomerEditComponent extends BaseComponent implements OnInit, OnDestroy {
+  @DevToolsAdd() customer_text: string;
   customersViewModel: CustomersViewModel;
-  customer: CustomerDto;
-  customerId: any;
+  @DevToolsAdd() customer: CustomerDto;
+  @DevToolsAdd() customerId: any;
   previousTabName: string;
 
   constructor(
@@ -56,9 +58,9 @@ export class CustomerEditComponent implements OnInit, OnDestroy {
     private auth: AuthService,
     private router: Router,
     private _snackBar: MatSnackBar,
-    public dialog: MatDialog,
     private tabsService: TabsService
   ) {
+    super()
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer = new CustomerDto();
     this.customerId = WebAppBase.data;
