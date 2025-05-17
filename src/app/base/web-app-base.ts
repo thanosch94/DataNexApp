@@ -2,7 +2,7 @@ import { Guid } from 'guid-typescript';
 import { LookupDto } from '../dto/lookup.dto';
 
 export class WebAppBase {
-  static version = '1.0.12';
+  static version = '1.0.13';
   static apiVersion= '1.0.13';
 
   static data: any;

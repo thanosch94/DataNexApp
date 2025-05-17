@@ -23,6 +23,8 @@ import { UserDto } from '../../dto/user.dto';
 import { HttpClient } from '@angular/common/http';
 import { GeneralOptionsDto } from '../../dto/configuration/general-options.dto';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
+import { Store } from '@ngrx/store';
+import { GetAllAppPermissions } from '../../state/app-permissions/app-permissions.actions';
 
 @Component({
   selector: 'app-login',
@@ -49,7 +51,8 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
     private auth: AuthService,
     private router: Router,
     private ref: ChangeDetectorRef,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private store:Store
   ) {
     super()
     //When someone navigates from register to login
@@ -107,6 +110,7 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
             WebAppBase.isLoggedIn = true;
             this.auth.user = user;
             this.ref.detectChanges();
+            this.store.dispatch(GetAllAppPermissions())
             this.router.navigate(['/']);
             this.generalOptionsViewModel = new GeneralOptionsViewModel(
               this.http,
