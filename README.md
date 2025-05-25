@@ -50,6 +50,8 @@ The application can be accessed at http://2.56.212.112/DataNexApp.
 
 <b>Password:</b> P@ssw0rd
 
+<b>Company:</b> demo
+
 
 ## Development server
 
