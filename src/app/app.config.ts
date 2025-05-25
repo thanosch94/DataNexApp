@@ -29,6 +29,8 @@ import { UsersEffects } from './state/users/users.effects';
 import { workItemsReducer } from './state/work-items/work-items.reducer';
 import { appPermissionsReducer } from './state/app-permissions/app-permissions.reducer';
 import { AppPermissionsEffects } from './state/app-permissions/app-permissions.effects';
+import { UserAppPermissionsEffects } from './state/user-app-permissions/user-app-permissions.effects';
+import { userAppPermissionsReducer } from './state/user-app-permissions/user-app-permissions.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -46,7 +48,8 @@ export const appConfig: ApplicationConfig = {
       workItemTypes: workItemTypesReducer,
       workItems:workItemsReducer,
       users:usersReducer,
-      appPermissions:appPermissionsReducer
+      appPermissions:appPermissionsReducer,
+      userAppPermissions:userAppPermissionsReducer
     }),
     provideEffects([
       ProductEffects,
@@ -59,7 +62,8 @@ export const appConfig: ApplicationConfig = {
       workItemTypesEffects,
       UsersEffects,
       workItemsEffects,
-      AppPermissionsEffects
+      AppPermissionsEffects,
+      UserAppPermissionsEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

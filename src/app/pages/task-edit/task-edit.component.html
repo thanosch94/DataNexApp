@@ -1,7 +1,7 @@
 <dn-toolbar
-  [canDelete]="hasPermission('Toolbar_CanDelete') ?? true"
+  [(canDelete)]="perm_CanDelete"
   [canExit]="true"
-  [canSave]="hasPermission('Toolbar_CanSave') ?? true"
+  [(canSave)]="perm_CanSave"
   [canRefresh]="(task()?.Id!=null )? true : false"
   [isDialog]="false"
   [title]="(task()?.Id!=null) ? task().Name : new_task_title_text"
@@ -33,7 +33,7 @@
               name="WorkItemTypeId"
               [useCustomValueTemplate]="true"
               [allowInput]="false"
-              [disabled]="hasPermission('EnableTaskTypeId_Field')??false"
+              [disabled]="!perm_EnableTaskTypeId"
             >
             <ng-template let-option>
               <i [class]="option.Icon" [style]="'margin-right:4px; color:'+option.IconColor"></i>{{option.Name}}
@@ -51,7 +51,7 @@
               name="statusId"
               [useCustomValueTemplate]="true"
               [allowInput]="false"
-              [disabled]="hasPermission('EnableStatusId_Field')??false"
+              [disabled]="!perm_EnableStatusId"
 
             >
             <ng-template let-option>
@@ -70,7 +70,7 @@
               displayExpr="Name"
               formControlName="ProjectId"
               name="ProjectId"
-              [disabled]="hasPermission('EnableProjectId_Field')??false"
+              [disabled]="!perm_EnableProjectId"
             >
             </dn-selectbox>
           </div>
@@ -81,7 +81,7 @@
               valueExpr="Id"
               displayExpr="Name"
               formControlName="AssigneeId"
-              [disabled]="hasPermission('EnableAssigneeId_Field')??false"
+              [disabled]="!perm_EnableAssigneeId"
 
             >
             </dn-selectbox>
@@ -97,7 +97,7 @@
               displayExpr="Name"
               formControlName="WorkItemPriority"
               name="WorkItemPriority"
-              [disabled]="hasPermission('EnableWorkItemPriority_Field')??false"
+              [disabled]="!perm_EnableWorkItemPriority"
 
             >
             </dn-selectbox>
@@ -108,7 +108,7 @@
               valueExpr="Id"
               displayExpr="Name"
               formControlName="DueDate"
-              [disabled]="hasPermission('EnableDueDate_Field')??false"
+              [disabled]="!perm_EnableDueDate"
 
             >
             </dn-date-box>

@@ -41,4 +41,5 @@ export class WebAppBase {
     {Id: "b9d63f45-c0b7-4dd2-94d3-13173ddd8ff3", Name:"Admin"},
     {Id: "2aa7696b-012a-4a0e-b7e7-09e07025c05a", Name:"Supervisor"}
   ]
+  static UserId: Guid;
 }

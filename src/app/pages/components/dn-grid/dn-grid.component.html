@@ -220,6 +220,9 @@
           } @if( !row.IsEditable && !column.Lookup && (column.DataType ==
           'string' || column.DataType == 'number')){
           <p>
+            @if(column.WrapText){
+              {{row[column.DataField]}}
+            }@else {
             <dn-textbox
               [readOnly]="true"
               [value]="row[column.DataField]"
@@ -228,6 +231,7 @@
               (onIconClicked)="onIconClicked($event, column, row)"
               [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
             ></dn-textbox>
+          }
           </p>
           } @if(!row.IsEditable && !column.Lookup && (column.DataType ==
           'datetime' || column.DataType == 'date')){

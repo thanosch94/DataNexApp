@@ -8,7 +8,6 @@
     <dn-toolbar
       [canExit]="true"
       [canRefresh]="true"
-      [canSave]="true"
       [isDialog]="false"
       [title]="dev_tools_title_text"
       (onCloseBtnClicked)="close($event)"
@@ -31,46 +30,140 @@
       <mat-tab label="Permissions">
         <div class="tab-2">
           @for(item of data().Permissions; track item){
-          <fieldset class="margin-1">
-            <b>{{ item.screen }}</b>
-            <hr />
+
+          <mat-expansion-panel class="margin-1" [expanded]="true">
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <b>{{ item.masterEntityDescr }}</b>
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+
             <div>
               @for(perm of item.entities; track perm){
               <b>{{ perm.appEntity }}</b>
-              <div
-                style="
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: space-between;
-                "
+              <div class="app-entity-place"
               >
                 @for(permItem of perm.permissions; track permItem){
 
                 <div class="margin-1 mb-2 perm-container">
-                  <div class="flex permission-place-name"  style="
-                  display: flex;
-                  flex-wrap: wrap;
-                  justify-content: space-between;
-                ">
-                <div class="flex permission-place-name" >
-                    <mat-icon class="mr-10" color="blue">info</mat-icon>
+                  <div
+                    class="flex permission-place-name"
+                  >
+                    <div class="flex">
+                      <mat-icon class="mr-10" color="blue">info</mat-icon>
 
-                    <p class="mr-10">{{ permItem.Key }}</p>
-                  </div>
-                    <button class="flex" mat-stroked-button>
-                      <p class="flex" style="align-items: center">
-                        <span class="mr-10">Add Permission</span>
-                        <mat-icon>add</mat-icon>
+                      <p class="mr-10">
+                        <span class="mr-10">{{ permItem.Key }}</span>
+                        <span
+                          *ngIf="permItem.IsNewPermission"
+                          style="color: red"
+                          >(Unsaved)</span
+                        >
+                      </p>
+                    </div>
+                    @if(!permItem.IsNewPermission){ @if(!permItem.Name){
+
+                    <button
+                      class="flex"
+                      mat-stroked-button
+                      (click)="onAddPermissionBtnClicked(permItem)"
+                    >
+                      <p class="flex center">
+                        <mat-icon class="mr-10">add</mat-icon>
+                        <span>Add Permission</span>
                       </p>
                     </button>
+                    } @else{
+                    <button
+                      class="flex"
+                      mat-stroked-button
+                      (click)="onRemovePermissionBtnClicked(permItem)"
+                    >
+                      <p class="flex center">
+                        <mat-icon class="mr-10">remove</mat-icon>
+
+                        <span>Remove Permission</span>
+                      </p>
+                    </button>
+
+                    } }@else{
+                    <div class="save-permission-btn">
+                      <button
+                        class="flex"
+                        mat-stroked-button
+                        (click)="onSavePermissionBtnClicked(permItem)"
+                      >
+                        <p class="flex center">
+                          <mat-icon class="mr-10">save</mat-icon>
+
+                          <span>Save</span>
+                        </p>
+                      </button>
+                      <button
+                        class="flex"
+                        mat-stroked-button
+                        (click)="onCancelPermissionBtnClicked(permItem)"
+                      >
+                        <p class="flex center">
+                          <mat-icon class="mr-10">cancel</mat-icon>
+
+                          <span>Cancel</span>
+                        </p>
+                      </button>
+                    </div>
+                    }
                   </div>
-                  <!-- <dn-textbox label="Permission Name"> </dn-textbox> -->
+                  <div *ngIf="permItem.Display || permItem.Name">
+                    <dn-textbox
+                      label="Permission Name"
+                      [(value)]="permItem.Name"
+                    >
+                    </dn-textbox>
+                    @if(permItem.Id){
+                    <mat-form-field class="chip-grid-field width-100">
+                      <mat-label>Users</mat-label>
+                      <mat-chip-grid #chipGrid aria-label="Enter User">
+                        @for (user of permItem.UserAppPermissions; track user) {
+                        <mat-chip-row (removed)="onUserChipRemoveClicked(user)">
+                          {{ user?.UserName }}
+                          <button
+                            matChipRemove
+                            [attr.aria-label]="'remove ' + user?.UserName"
+                          >
+                            <mat-icon>cancel</mat-icon>
+                          </button>
+                        </mat-chip-row>
+                        }
+                      </mat-chip-grid>
+
+                      <input
+                        #user
+                        placeholder="New User..."
+                        [matChipInputFor]="chipGrid"
+                        [matAutocomplete]="auto"
+                        [matChipInputAddOnBlur]="true"
+                      />
+
+                      <mat-autocomplete
+                        #auto="matAutocomplete"
+                        (optionSelected)="
+                          onUserSelected($event, permItem); user.value = ''
+                        "
+                      >
+                        @for (user of users|async; track user) {
+                        <mat-option [value]="user">{{ user.Name }}</mat-option>
+                        }
+                      </mat-autocomplete>
+                    </mat-form-field>
+                    }
+                  </div>
                 </div>
                 }
               </div>
               }
             </div>
-          </fieldset>
+          </mat-expansion-panel>
+
           }
         </div>
       </mat-tab>

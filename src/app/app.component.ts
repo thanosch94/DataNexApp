@@ -397,13 +397,13 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-  @HostListener('window:keydown.control.alt.a', ['$event'])
-  onKeyDown(e: KeyboardEvent) {
+  @HostListener('window:keydown.control.alt.d', ['$event'])
+  async onKeyDown(e: KeyboardEvent) {
     //TODO Add check if user role is admin
     let nested =
       this.componentRefs[this.selectedTabIndex].instance?.nested?.toArray();
     this.devToolsService.open(
-      this.componentRefs[this.selectedTabIndex].instance?.getExportedData(
+      await this.componentRefs[this.selectedTabIndex].instance?.getExportedData(
         nested
       )
     );

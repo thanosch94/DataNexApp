@@ -57,20 +57,17 @@ export class TaskListComponent
   @DevToolsAdd() isPopupVisible: boolean = false;
   @DevToolsAdd() taskId = signal<Guid | null>(null);
   destroy$ = new Subject<void>();
-  componentId: any;
 
   constructor(
-    private store: Store,
     private auth: AuthService,
     private stateHelperService: StateHelperService
   ) {
     super();
-      this.componentId = taskListComponentId
-
+     taskListComponentId
   }
 
   ngOnInit(): void {
-    this.getComponentPermissions(TaskListPermissionsList, this.componentId);
+    this.getComponentPermissions(structuredClone(TaskListPermissionsList), taskListComponentId); //Deep clone array of objects
     this.setActionsResults();
     this.getLookups();
     this.getData();

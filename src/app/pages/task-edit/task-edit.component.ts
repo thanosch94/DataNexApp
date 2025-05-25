@@ -1,5 +1,6 @@
 import { firstValueFrom, Observable, Subject } from 'rxjs';
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   input,
@@ -78,12 +79,12 @@ import { taskEditComponentId, TaskEditPermissionsList } from './task-edit-permis
   ],
   templateUrl: './task-edit.component.html',
   styleUrl: './task-edit.component.css',
+  changeDetection:ChangeDetectionStrategy.OnPush
 })
 export class TaskEditComponent
   extends GenericFormComponent
   implements OnInit, OnDestroy
 {
-  componentId:Guid|string;
   taskId = input<Guid | null>();
   taskIdChange = output<Guid>();
   new_task_title_text: string;
@@ -101,15 +102,21 @@ export class TaskEditComponent
     Id: WorkItemPriority;
     Name: string;
   }[];
+  perm_CanDelete: boolean;
+  perm_CanSave: boolean;
+  perm_EnableTaskTypeId: boolean;
+  perm_EnableStatusId: boolean;
+  perm_EnableProjectId: boolean;
+  perm_EnableAssigneeId: boolean;
+  perm_EnableWorkItemPriority: boolean;
+  perm_EnableDueDate: boolean;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private stateHelperService: StateHelperService,
-    private store:Store
   ) {
     super();
-    this.componentId = taskEditComponentId
     effect(() => {
       if (this.taskId()) {
         this.getData();
@@ -118,7 +125,8 @@ export class TaskEditComponent
   }
 
   ngOnInit(): void {
-    this.getComponentPermissions(TaskEditPermissionsList, this.componentId);
+    this.getComponentPermissions(structuredClone(TaskEditPermissionsList), taskEditComponentId);
+    this.getUserPermission()
     this.setActionsResults();
     this.initializeForm();
     this.getLookups();
@@ -193,6 +201,17 @@ export class TaskEditComponent
             }, 10);
           });
       });
+  }
+
+  async getUserPermission(){
+    this.perm_CanDelete = await this.hasPermission('CanDelete_Toolbar')??true
+    this.perm_CanSave = await this.hasPermission('CanSave_Toolbar')??true
+    this.perm_EnableTaskTypeId = await this.hasPermission('EnableTaskTypeId_Field')??true
+    this.perm_EnableStatusId = await this.hasPermission('EnableStatusId_Field')??true
+    this.perm_EnableProjectId = await this.hasPermission('EnableProjectId_Field')??true
+    this.perm_EnableAssigneeId = await this.hasPermission('EnableAssigneeId_Field')??true
+    this.perm_EnableWorkItemPriority = await this.hasPermission('EnableWorkItemPriority_Field')??true
+    this.perm_EnableDueDate = await this.hasPermission('EnableDueDate_Field')??true
   }
 
   async setGetAllWorkItemTypesByWorkItemCategorySuccessActionResult() {

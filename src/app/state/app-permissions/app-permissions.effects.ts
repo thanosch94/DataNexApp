@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core"
 import { Actions, createEffect, ofType } from "@ngrx/effects"
 import { AppPermissionsService } from "../../services/app-permissions.service"
 import { catchError, map, mergeMap, of } from "rxjs"
-import { DeleteAppPermissionById, DeleteAppPermissionByIdFailure, DeleteAppPermissionByIdSuccess, GetAllAppPermissions, GetAllAppPermissionsFailure, GetAllAppPermissionsSuccess, GetAppPermissionsByEntityId, GetAppPermissionsByEntityIdFailure, GetAppPermissionsByEntityIdSuccess, InsertAppPermissionDto, InsertAppPermissionDtoFailure, InsertAppPermissionDtoSuccess, UpdateAppPermissionDto, UpdateAppPermissionDtoSuccess } from "./app-permissions.actions"
+import { DeleteAppPermissionById, DeleteAppPermissionByIdFailure, DeleteAppPermissionByIdSuccess, GetAllAppPermissions, GetAllAppPermissionsFailure, GetAllAppPermissionsSuccess, GetAppPermissionsByEntityId, GetAppPermissionsByEntityIdFailure, GetAppPermissionsByEntityIdSuccess, InsertAppPermissionDto, InsertAppPermissionDtoFailure, InsertAppPermissionDtoSuccess, UpdateAppPermissionDto, UpdateAppPermissionDtoFailure, UpdateAppPermissionDtoSuccess } from "./app-permissions.actions"
 
 @Injectable()
 export class AppPermissionsEffects {
@@ -54,7 +54,7 @@ export class AppPermissionsEffects {
     this.appPermissionsService.UpdateDto(action.dto).pipe(
       map((updatedAppPermission:any)=>UpdateAppPermissionDtoSuccess({dto:updatedAppPermission})),
       catchError((error)=>{
-        return of(DeleteAppPermissionByIdFailure({error}))
+        return of(UpdateAppPermissionDtoFailure({error}))
       })
     ))
   ))
