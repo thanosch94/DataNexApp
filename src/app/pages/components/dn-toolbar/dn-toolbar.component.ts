@@ -37,6 +37,9 @@ export class DnToolbarComponent {
 @Output()onSettingsBtnClicked = new EventEmitter()
 @Output()onPrintBtnClicked = new EventEmitter()
 
+@Output()canDeleteChange = new EventEmitter()
+@Output()canSaveChange = new EventEmitter()
+
 onDeleteClicked(e:any){
   this.onDeleteBtnClicked.emit(e)
 }

@@ -37,7 +37,6 @@ export class DocumentTypesListComponent
 
   constructor(
     private router: Router,
-    private store: Store,
     private actions$: Actions,
     private tabsService:TabsService
   ) {

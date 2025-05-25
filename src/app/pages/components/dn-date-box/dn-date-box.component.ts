@@ -33,6 +33,9 @@ export class DnDateBoxComponent {
   @Input() value: any;
   @Input() width: number;
   @Output() valueChange = new EventEmitter();
+  @Input() disabled: boolean;
+
+  @Output() disabledChange = new EventEmitter();
 
   onValueChange(value: string) {
     this.valueChange.emit(value);

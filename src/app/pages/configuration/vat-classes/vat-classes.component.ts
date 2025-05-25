@@ -35,7 +35,6 @@ export class VatClassesComponent extends BaseComponent {
   vat_classes_list_title_text: string;
 
   constructor(
-    private store: Store,
     private actions$: Actions
   ) {
     super();

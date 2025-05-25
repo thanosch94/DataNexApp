@@ -38,7 +38,6 @@ export class WorkItemTypesListComponent extends BaseComponent {
   workItemCategory: any;
 
   constructor(
-    private store: Store,
     private actions$: Actions,
     @Optional() @Inject('tab') tab: AppTabDto
   ) {

@@ -168,7 +168,6 @@ export class UserEditComponent
     private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
     private fb: FormBuilder,
-    private store: Store,
     private workItemsService: WorkItemsService,
     private actions$: Actions
   ) {

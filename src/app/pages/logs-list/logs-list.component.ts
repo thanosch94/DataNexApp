@@ -12,6 +12,7 @@ import { AuthService } from '../../services/auth.service';
 import { LogDto } from '../../dto/log.dto';
 import { LogsViewModel } from '../../view-models/logs.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
+import { DnColumnDto } from '../../dto/dn-column.dto';
 
 @Component({
     selector: 'app-logs-list',
@@ -31,7 +32,7 @@ import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
     styleUrl: './logs-list.component.css'
 })
 export class LogsListComponent {
-  columns:any[]
+  columns:DnColumnDto[]
   dataSource: LogDto[];
   logsViewModel: LogsViewModel;
   logs_list_text: string;
@@ -71,6 +72,7 @@ export class LogsListComponent {
         DataField:'LogName',
         DataType:'string',
         Caption:'Name',
+        WrapText:true
       },
       {
         DataField:'LogTypeName',

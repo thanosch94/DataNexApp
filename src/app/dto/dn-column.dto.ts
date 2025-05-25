@@ -11,6 +11,7 @@ export class DnColumnDto {
   OnClick?: any;
   ReadOnly?: boolean = false;
   Format?:string //Date Format eg dd/MM/yyyy
+  WrapText?:boolean // Using this plain value is displayed and not dn-textbox -- Only for readonly columns
   //Number Inputs
   Min?:number
   Max?:number

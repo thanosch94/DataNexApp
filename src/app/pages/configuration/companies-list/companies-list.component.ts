@@ -46,7 +46,7 @@ export class CompaniesListComponent extends BaseComponent {
   columns: DnColumnDto[] = [];
   chartOptions: any;
 
-  constructor(private store: Store, private actions$: Actions) {
+  constructor(private actions$: Actions) {
     super();
     this.companies_list_title_text = 'Document Types List';
   }

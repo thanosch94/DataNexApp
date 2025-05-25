@@ -8,6 +8,7 @@
     [name]="name"
     [(ngModel)]="value"
     (ngModelChange)="onValueChange(value)"
+    [disabled]="disabled"
   />
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>

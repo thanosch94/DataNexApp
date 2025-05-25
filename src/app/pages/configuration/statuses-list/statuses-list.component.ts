@@ -37,7 +37,6 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
   statuses_list_text: string;
   private statusType: any;
   constructor(
-    private store: Store,
     private actions$: Actions,
     @Optional() @Inject('tab') tab:AppTabDto
   ) {

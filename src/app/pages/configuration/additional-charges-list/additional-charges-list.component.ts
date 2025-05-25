@@ -39,7 +39,7 @@ export class AdditionalChargesListComponent
   dataSource: Observable<AdditionalChargeDto[]>;
   columns: any[] = [];
 
-  constructor(private store: Store, private actions$: Actions) {
+  constructor(private actions$: Actions) {
     super();
     this.additionl_charges_text = 'Additional Charges List';
   }

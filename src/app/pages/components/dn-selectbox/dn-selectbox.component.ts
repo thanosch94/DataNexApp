@@ -53,11 +53,13 @@ export class DnSelectboxComponent {
   @Input() panelWidth: number|string;
   @Input() useCustomValueTemplate: boolean=false; //Used this to add custom template with icon when option is selected
   @Input() allowInput: boolean=true;
-  disabled = input<boolean>(false);
+  @Input() disabled: boolean=false;
   @Output() onIconClicked = new EventEmitter();
   @Output() valueChange = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
   @Output() onClick = new EventEmitter();
+
+  @Output() disabledChange = new EventEmitter();
 
   previousValue:any
   selectedOption: any;

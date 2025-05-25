@@ -81,7 +81,6 @@ documentTypesTransformationsColumns: DnColumnDto[];
     private auth: AuthService,
     private router: Router,
     private tabsService: TabsService,
-    private store: Store,
     private actions$: Actions
   ) {
     super();

@@ -18,26 +18,35 @@
       <b>Contact Info</b>
     </div>
     <div class="basic-info-contact-container">
-
       <br />
-      <div>
-        <div>
-          <dn-textbox [(value)]="customer.Name" [width]="100" label="Name" name="name"></dn-textbox>
+      <dn-textbox
+        [(value)]="customer.Name"
+        [width]="100"
+        label="Name"
+        name="name"
+      ></dn-textbox>
 
-        </div>
+      <dn-textbox
+        class="phone1"
+        [(value)]="customer.Phone1"
+        [width]="45"
+        label="Phone 1"
+        name="phone1"
+      ></dn-textbox>
 
-        <div>
-          <dn-textbox class="phone1" [(value)]="customer.Phone1" [width]="45" label="Phone 1" name="phone1"></dn-textbox>
+      <dn-textbox
+        [(value)]="customer.Phone2"
+        [width]="45"
+        label="Phone 2"
+        name="phone2"
+      ></dn-textbox>
 
-          <dn-textbox [(value)]="customer.Phone2" [width]="45" label="Phone 2" name="phone2"></dn-textbox>
-
-        </div>
-
-        <div>
-          <dn-textbox [(value)]="customer.Email" [width]="100" label="Email" name="email"></dn-textbox>
-
-        </div>
-      </div>
+      <dn-textbox
+        [(value)]="customer.Email"
+        [width]="100"
+        label="Email"
+        name="email"
+      ></dn-textbox>
     </div>
   </div>
   <div class="addresses">
@@ -45,39 +54,69 @@
       <b>Addresses</b>
     </div>
     <div class="addresses-container">
-
       <br />
-      <div>
-        <dn-textbox class="address" [(value)]="customer.Address" [width]="45" label="Address" name="address"></dn-textbox>
-        <dn-textbox [(value)]="customer.Region" [width]="45" label="Region" name="region"></dn-textbox>
+      <dn-textbox
+        class="address"
+        [(value)]="customer.Address"
+        [width]="45"
+        label="Address"
+        name="address"
+      ></dn-textbox>
+      <dn-textbox
+        [(value)]="customer.Region"
+        [width]="45"
+        label="Region"
+        name="region"
+      ></dn-textbox>
 
-        <dn-textbox class="city" [(value)]="customer.City" [width]="45" label="City" name="city"></dn-textbox>
-        <dn-textbox  [(value)]="customer.PostalCode" [width]="45" label="Postal Code" name="postalcode"></dn-textbox>
+      <dn-textbox
+        class="city"
+        [(value)]="customer.City"
+        [width]="45"
+        label="City"
+        name="city"
+      ></dn-textbox>
+      <dn-textbox
+        [(value)]="customer.PostalCode"
+        [width]="45"
+        label="Postal Code"
+        name="postalcode"
+      ></dn-textbox>
 
-        <dn-textbox  [(value)]="customer.Country" [width]="45" label="country" name="country"></dn-textbox>
-
-      </div>
+      <dn-textbox
+        [(value)]="customer.Country"
+        [width]="45"
+        label="country"
+        name="country"
+      ></dn-textbox>
     </div>
   </div>
-
-
 
   <br /><br /><br /><br />
 </div>
 
 <div class="form">
+  <div class="invoice-info">
+    <div class="info-title">
+      <b>Invoice Info</b>
+    </div>
+    <div class="invoice-info-container">
+      <br />
+      <dn-textbox
+        class="vat-number"
+        [(value)]="customer.VatNumber"
+        [width]="45"
+        label="Vat Number"
+        name="vatnumber"
+        (onInput)="onVatIdValueChanged($event)"
+      ></dn-textbox>
 
-<div class="invoice-info">
-  <div class="info-title">
-    <b>Invoice Info</b>
-  </div>
-  <div class="invoice-info-container">
-
-    <br />
-    <div>
-      <dn-textbox class="vat-number" [(value)]="customer.VatNumber" [width]="45" label="Vat Number" name="vatnumber" (onInput)="onVatIdValueChanged($event)"></dn-textbox>
-
-      <dn-textbox  [(value)]="customer.TaxOffice" [width]="45" label="Tax Office" name="taxoffice"></dn-textbox>
+      <dn-textbox
+        [(value)]="customer.TaxOffice"
+        [width]="45"
+        label="Tax Office"
+        name="taxoffice"
+      ></dn-textbox>
     </div>
   </div>
 </div>
