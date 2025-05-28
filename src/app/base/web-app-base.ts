@@ -2,8 +2,8 @@ import { Guid } from 'guid-typescript';
 import { LookupDto } from '../dto/lookup.dto';
 
 export class WebAppBase {
-  static version = '1.0.13';
-  static apiVersion= '1.0.13';
+  static version = '1.0.14';
+  static apiVersion= '1.0.14';
 
   static data: any;
   static isLoggedIn: boolean;

@@ -1,7 +1,7 @@
 Δομή των Permissions στην εφαρμογή
 
-1) Κάθε component θα περιλαμβάνει ένα αρχείο με κατάληξη .permissions.ts
-2) Το αρχείο αυτό θα περιλαμβάνει ένα const με δομή enum με τα σημεία της εφαρμογής όπου μπορούν να περαστούν permissions.
+1) Κάθε component περιλαμβάνει ένα αρχείο με κατάληξη .permissions.ts
+2) Το αρχείο αυτό περιλαμβάνει ένα const με δομή enum με τα σημεία της εφαρμογής όπου μπορούν να περαστούν permissions.
 3) Επίσης θα υπάρχει το componentEntityId (πχ taskEditComponentId)
 4) Τέλος θα υπάρχει μία λίστα που θα ξεχωρίζει τα πεδία με βάση το AppEntityType (πχ αν είναι στοιχείο Toolbar, αν είναι api call κτλ)
 Δείγμα:
@@ -32,8 +32,37 @@ export const TaskEditPermissionsList: Array<AppPermissionDto> = Object.entries(
   }
 });
 
-5)Σε κάθε component στο ngOnInit θα καλείται η μέθοδος GetComponentPermissions (πχ this.getComponentPermissions(TaskEditPermissionsList, this.componentId);)
-  Η μέθοδος αυτή υπάρχει στο BaseComponent που κάνουν extend όλα τα components της εφαρμογής
-  Θα επιστρέφει μία λίστα και με τα permissions που έχουν οριστεί και με αυτά που δεν έχουν οριστεί για το compoenent
-  (Θυμίζω παραπάνω είναι οι θέσεις που μπορούν να εφαρμοστούν permissions)
+5)Κατά το login καλούνται τα παρακάτω
+            this.store.dispatch(GetAllAppPermissions())
+            this.store.dispatch(GetUserAppPermissionsByUserId({id:user.Id}))
+και ενημερώνεται το state στα AppPermissions και UserAppPermissions
+Τα AppPermissions κρατάνε τα permissions που έχει περάσει κάποιος admin στην εφαρμογή.
+Τα UserAppPermission κρατάνε τα permissions που έχει ο χρήστης όταν κάνει login.
+
+
+6)Σε κάθε component στο ngOnInit θα καλείται η μέθοδος getComponentPermissions και η getUserPermission
+    a) this.getComponentPermissions(structuredClone(TaskEditPermissionsList), taskEditComponentId);
+    b) this.getUserPermission()
+
+
+  Η μέθοδος (a) υπάρχει στο BaseComponent που κάνουν extend όλα τα components της εφαρμογής
+  Ορίζει τα παρακάτω ώστε να ειναι προσβάσιμα από το BaseComponent:
+     this.componentPermissions = permissionsList;
+     this.componentId = entityId;
+
+  Η (b) χρησιμοποιείται εντος του component για να δημιουργηθούν οι μεταβλητές που θα χρησιμοποιηθούν στην html:
+      this.perm_CanDelete = await this.hasPermission('CanDelete_Toolbar')??true
+
+      Η μέθοδος hasPermission υπάρχει στο BaseComponent και κάνει ένα select από το state τα AppPermissions και τα UserAppPermissions
+      Χρησιμοποιώντας το componentId που έχει αποθηκεύσει από την προηούμενη και το Key που του στέλνουμε σαν παράμετρο, βρίσκει αν
+      υπάρχει permission στα AppPermissions.
+      Περίπτωση 1
+      Αν δεν υπάρχει στη λίστα επιστρέφει null οπότε αυτόματα και το permission γίνεται true. (Αν δεν έχει περαστεί permission από
+      κάποιον admin όλα είναι ανοιχτά για όλους)
+
+      Περίπτωση 2
+      Αν υπάρχει το permission ελέγχει στο UserAppPermissions αν υπάρχει εγγραφή με AppPermissionId το παραπάνω και UserId το Id του
+      user που είναι συνδεδεμένος. Αν υπάρχει επιστρέφει true αλλιώς επιστρέφει false.
+
+
 
