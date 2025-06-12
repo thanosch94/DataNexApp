@@ -41,7 +41,7 @@ import { AuthService } from './services/auth.service';
 import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
-import { DnIconList } from './enumLists/dn-icon.list';
+import { dnIcons } from './enumLists/dn-icon.list';
 import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -100,7 +100,6 @@ export class AppComponent implements AfterViewChecked {
   faFile: any;
   faDoorOpen: any;
   isNavBarItem: boolean | undefined;
-  faIcons = DnIconList.icons;
   logoPath: string;
   faCaretDown: any;
   faCaretUp: any;
@@ -153,7 +152,6 @@ export class AppComponent implements AfterViewChecked {
     this.router.events.subscribe((result: any) => {
       if (result instanceof RoutesRecognized) {
         if (result.url != '/' && result.url != '/login') {
-          debugger;
           this.checkAndAddTab(result);
         }
       }
@@ -192,12 +190,12 @@ export class AppComponent implements AfterViewChecked {
   }
 
   getMenuIcon(menuItem: MenuItemDto) {
-    let icon = DnIconList.icons.find((x) => x.Name == menuItem.Icon);
+    let icon = dnIcons[menuItem.Icon as keyof typeof dnIcons];
     if (icon) {
-      return icon.Icon;
+      return icon;
     } else {
-      icon = DnIconList.icons.find((x) => x.Name == 'faCircle');
-      return icon!.Icon;
+      icon = dnIcons.faCircle;
+      return icon;
     }
   }
   onMenuBtnClicked() {
@@ -210,7 +208,6 @@ export class AppComponent implements AfterViewChecked {
     }
   }
   onTabChanged(tab: any, index: any) {
-    debugger;
     this.tabsService.deactivateTabs();
     this.selectedTabIndex = index;
 
@@ -237,7 +234,6 @@ export class AppComponent implements AfterViewChecked {
       this.tabsService.deactivateTabs();
       let tab = new AppTabDto();
       tab.Id = Guid.create();
-      debugger;
       if (
         this.tabs.find((existingTab) => existingTab.Name == tabItemName) == null
       ) {

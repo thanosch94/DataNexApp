@@ -159,7 +159,14 @@
             >
             </mat-checkbox>
           </div>
-          } @if(row.IsEditable && column.Lookup){
+
+          }
+          @if(column.DataType == "image"){
+            <div style="width: 100%" class="white-input center">
+              <img [src]="row[column.DataField]" width="80" height="80" />
+            </div>
+            }
+          @if(row.IsEditable && column.Lookup){
           <dn-selectbox
             #selectBox
             [name]="column.Caption"

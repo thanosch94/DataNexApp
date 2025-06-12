@@ -1,28 +1,22 @@
-import { Observable, take } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
 import { BrandDto } from '../../../dto/brand.dto';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthService } from '../../../services/auth.service';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { Store } from '@ngrx/store';
 import {
-  DeleteBrandById,
-  DeleteBrandByIdFailure,
-  DeleteBrandByIdSuccess,
+  DeleteBrand,
   GetAllBrands,
-  InsertBrandDto,
-  InsertBrandDtoSuccess,
-  UpdateBrandDto,
-  UpdateBrandDtoSuccess,
+  InsertBrand,
+  UpdateBrand,
 } from '../../../state/parameters/brands/brands.actions';
 import { selectAllBrands } from '../../../state/parameters/brands/brands.selectors';
 import { AsyncPipe } from '@angular/common';
 import { Actions, ofType } from '@ngrx/effects';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
   selector: 'app-brands-list',
@@ -30,18 +24,16 @@ import { Actions, ofType } from '@ngrx/effects';
   templateUrl: './brands-list.component.html',
   styleUrl: './brands-list.component.css',
 })
-export class BrandsListComponent implements OnInit {
+export class BrandsListComponent extends BaseComponent implements OnInit {
   @ViewChild('brandsGrid') brandsGrid: DnGridComponent;
   columns: any[];
   dataSource: Observable<BrandDto[]>;
   product_brands_list_text: string;
 
   constructor(
-    public dialog: MatDialog,
-    private _snackBar: MatSnackBar,
-    private store: Store,
     private actions$: Actions
   ) {
+    super()
     this.product_brands_list_text = 'Product Brands List';
   }
   ngOnInit() {
@@ -59,44 +51,34 @@ export class BrandsListComponent implements OnInit {
 
   setInsertDtoSuccessActionResult() {
     this.actions$
-      .pipe(ofType(InsertBrandDtoSuccess))
+      .pipe(ofType(InsertBrand.actionSuccess))
       .subscribe((result: any) => {
-        this._snackBar.open('Record inserted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+        this.displayNotification('Record inserted')
         this.getData();
       });
   }
 
   setUpdateDtoSuccessActionResult() {
     this.actions$
-      .pipe(ofType(UpdateBrandDtoSuccess))
+      .pipe(ofType(UpdateBrand.actionSuccess))
       .subscribe((result: any) => {
         this.getData();
-        this._snackBar.open('Record updated', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+        this.displayNotification('Record updated')
       });
   }
 
   setDeleteByIdSuccessActionResult() {
     this.actions$
-      .pipe(ofType(DeleteBrandByIdSuccess))
+      .pipe(ofType(DeleteBrand.actionSuccess))
       .subscribe((result: any) => {
         this.getData();
-
-        this._snackBar.open('Record deleted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
+        this.displayNotification('Record deleted')
       });
   }
 
   setDeleteByIdFailureActionResult() {
     this.actions$
-      .pipe(ofType(DeleteBrandByIdFailure))
+      .pipe(ofType(DeleteBrand.actionFailure))
       .subscribe((result: any) => {
         const dialog = this.dialog.open(DnAlertComponent, {
           data: {
@@ -108,7 +90,7 @@ export class BrandsListComponent implements OnInit {
   }
 
   getData() {
-    this.store.dispatch(GetAllBrands());
+    this.store.dispatch(GetAllBrands.action());
     this.dataSource = this.store.select(selectAllBrands);
   }
 
@@ -134,7 +116,7 @@ export class BrandsListComponent implements OnInit {
   }
 
   onRowDelete(data: any) {
-    this.store.dispatch(DeleteBrandById({ id: data.Id }));
+    this.store.dispatch(DeleteBrand.action({ id: data.Id }));
   }
 
   onInsertClicked(e: any) {
@@ -149,9 +131,9 @@ export class BrandsListComponent implements OnInit {
     brand.Name = data.Name;
 
     if (!brand.Id) {
-      this.store.dispatch(InsertBrandDto({ dto: brand }));
+      this.store.dispatch(InsertBrand.action({ dto: brand }));
     } else {
-      this.store.dispatch(UpdateBrandDto({ dto: brand }));
+      this.store.dispatch(UpdateBrand.action({ dto: brand }));
     }
   }
 

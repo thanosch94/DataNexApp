@@ -10,9 +10,7 @@ import { AppEntityEnum } from '../../../enums/app-entity.enum';
 import { selectAppPermissionsByEntityId } from '../../../state/app-permissions/app-permissions.selectors';
 import {
   selectUserAppPermissionsByUserId,
-  selectUserAppPermissionsState,
 } from '../../../state/user-app-permissions/user-app-permissions.selectors';
-import { AuthService } from '../../../services/auth.service';
 import { UserAppPermissionDto } from '../../../dto/configuration/user-app-permission.dto';
 import { WebAppBase } from '../../../base/web-app-base';
 
@@ -59,7 +57,7 @@ export class BaseComponent {
   }
 
   //It is called in App Component uses its data to display them in the DevTools
-  async getExportedData(nested: any[]) {
+  async getExportedData(nested?: any[]) {
     const data: { ComponentData: Array<any>; Permissions?: Array<any> } = {
       //Add To DEV Tools Component Id
       ComponentData: [],
@@ -90,7 +88,6 @@ export class BaseComponent {
 
       data.ComponentData.push(obj);
     }
-    debugger;
 
     // //Based on the Key we merge the initial empty array of permissions and the one received from the api
     let permissions$ = this.store.select(
@@ -116,10 +113,10 @@ export class BaseComponent {
   //Get Component's Permisions by Entity Id (Enum and UserSet Permission Code And Name)
   async getComponentPermissions(
     permissionsList: Array<AppPermissionDto>,
-    entityId: Guid | string
+    masterEntityId: Guid | string
   ) {
     this.componentPermissions = permissionsList;
-    this.componentId = entityId;
+    this.componentId = masterEntityId;
 
     return this.componentPermissions;
   }
@@ -211,6 +208,7 @@ export class BaseComponent {
     let permissionToCheck = appPermissionsList.find(
       (x: any) => x.Key == value && x.MasterEntityId == this.componentId
     );
+
 
     if (permissionToCheck?.Id) {
       if (

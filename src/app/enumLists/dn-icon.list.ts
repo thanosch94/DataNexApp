@@ -6,20 +6,28 @@ import {
   faUserTie,
   faCogs,
   faCircle,
-  faGear
+  faGear,
+  faListCheck,
+  faAddressBook,
+  faBox,
+  faPalette,
+  faTags
 } from '@fortawesome/free-solid-svg-icons';
 
-export class DnIconList {
-  static icons = [
-    {  Name: 'faShopingCart',  Icon: faShoppingCart },
-    {  Name: 'faReceipt',  Icon: faReceipt },
-    {  Name: 'faBoxes',  Icon: faBoxes },
-    {  Name: 'faDollarSign',  Icon: faDollarSign },
-    {  Name: 'faUserTie',  Icon: faUserTie },
-    {  Name: 'faCogs',  Icon: faCogs },
-    {  Name: 'faCircle',  Icon: faCircle },
-    {  Name: 'faGear',  Icon: faGear },
+  export const dnIcons = {
+    faShopingCart:faShoppingCart,
+    faReceipt:faReceipt,
+    faBoxes:faBoxes,
+    faDollarSign:faDollarSign,
+    faUserTie:faUserTie,
+    faCogs:faCogs,
+    faCircle:faCircle,
+    faGear:faGear,
+    faListCheck:faListCheck,
+    faAddressBook:faAddressBook,
+    faBox:faBox,
+    faPalette:faPalette,
+    faTags:faTags
+  } as const
 
 
-  ];
-}

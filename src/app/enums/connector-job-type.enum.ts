@@ -1,4 +1,5 @@
 export enum ConnectorJobTypeEnum {
-  Receive = 0,
-  Transfer = 1
+  None = 0,
+  Receive = 1,
+  Transfer = 2
 }
