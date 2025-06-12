@@ -2,18 +2,10 @@ import { Injectable } from '@angular/core';
 import { BrandsService } from '../../../services/parameters/brands.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import {
-  DeleteBrandById,
-  DeleteBrandByIdFailure,
-  DeleteBrandByIdSuccess,
+  DeleteBrand,
   GetAllBrands,
-  GetAllBrandsFailure,
-  GetAllBrandsSuccess,
-  InsertBrandDto,
-  InsertBrandDtoFailure,
-  InsertBrandDtoSuccess,
-  UpdateBrandDto,
-  UpdateBrandDtoFailure,
-  UpdateBrandDtoSuccess,
+  InsertBrand,
+  UpdateBrand,
 } from './brands.actions';
 import { catchError, map, mergeMap, of } from 'rxjs';
 
@@ -26,12 +18,12 @@ export class BrandsEffects {
 
   loadBrands$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GetAllBrands),
+      ofType(GetAllBrands.action),
       mergeMap(() =>
         this.brandsService.GetAll().pipe(
-          map((brands: any) => GetAllBrandsSuccess({ data: brands })),
+          map((brands: any) => GetAllBrands.actionSuccess({ data: brands })),
           catchError((error: any) => {
-            return of(GetAllBrandsFailure({ error }));
+            return of(GetAllBrands.actionFailure({ error }));
           })
         )
       )
@@ -40,14 +32,14 @@ export class BrandsEffects {
 
   insertBrand$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(InsertBrandDto),
+      ofType(InsertBrand.action),
       mergeMap((action: any) =>
         this.brandsService.InsertDto(action.dto).pipe(
           map((insertedBrand: any) =>
-            InsertBrandDtoSuccess({ dto: insertedBrand })
+            InsertBrand.actionSuccess({ dto: insertedBrand })
           ),
           catchError((error: any) => {
-            return of(InsertBrandDtoFailure({ error }));
+            return of(InsertBrand.actionFailure({ error }));
           })
         )
       )
@@ -56,14 +48,14 @@ export class BrandsEffects {
 
   updateBrand$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(UpdateBrandDto),
+      ofType(UpdateBrand.action),
       mergeMap((action: any) =>
         this.brandsService.UpdateDto(action.dto).pipe(
           map((updatedBrand: any) =>
-            UpdateBrandDtoSuccess({ dto: updatedBrand })
+            UpdateBrand.actionSuccess({ dto: updatedBrand })
           ),
           catchError((error: any) => {
-            return of(UpdateBrandDtoFailure({ error }));
+            return of(UpdateBrand.actionFailure({ error }));
           })
         )
       )
@@ -72,15 +64,15 @@ export class BrandsEffects {
 
   deleteById$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(DeleteBrandById),
+      ofType(DeleteBrand.action),
       mergeMap((action: any) =>
         this.brandsService
           .DeleteById(action.id)
           .pipe(
             map((brand: any) =>
-              DeleteBrandByIdSuccess({ dto:brand })),
+              DeleteBrand.actionSuccess({ dto:brand })),
             catchError((error:any)=>{
-              return of(DeleteBrandByIdFailure({error}))
+              return of(DeleteBrand.actionFailure({error}))
             })
           )
       )

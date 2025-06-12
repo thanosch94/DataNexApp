@@ -1,35 +1,14 @@
-import { createAction, props } from "@ngrx/store";
 import { BrandDto } from "../../../dto/brand.dto";
-import { Guid } from "guid-typescript";
-
-//Get All
-export const GetAllBrands = createAction('[Brands List] GetAll')
-
-export const GetAllBrandsSuccess = createAction('[Brands List] GetAll Success', props<{data:BrandDto[]}>())
-
-export const GetAllBrandsFailure = createAction('[Brands List] GetAll Failure', props<{error:string}>())
+import { addGetAction, addInsertAction, addUpdateAction, addDeleteAction } from "../../shared/actions.factory";
 
 
-//InsertDto
-export const InsertBrandDto = createAction('[Brands List] InsertDto', props<{dto:BrandDto}>())
+export const GetAllBrands = addGetAction<BrandDto>("[Brands] Get All ");
 
-export const InsertBrandDtoSuccess = createAction('[Brands List] InsertDto Success', props<{dto:BrandDto}>())
+export const InsertBrand = addInsertAction<BrandDto>("[Brands] Insert Dto")
 
-export const InsertBrandDtoFailure = createAction('[Brands List] InsertDto Failure', props<{error:string}>())
+export const UpdateBrand = addUpdateAction<BrandDto>("[Brands] Update Dto")
+
+export const DeleteBrand = addDeleteAction<BrandDto>("[Brands] Delete By Id")
 
 
-//UpdateDto
-export const UpdateBrandDto = createAction('[Brands List] UpdateDto', props<{dto:BrandDto}>())
-
-export const UpdateBrandDtoSuccess = createAction('[Brands List] UpdateDto Success', props<{dto:BrandDto}>())
-
-export const UpdateBrandDtoFailure = createAction('[Brands List] UpdateDto Failure', props<{error:string}>())
-
-//DeleteById
-
-export const DeleteBrandById = createAction('[Brands List] DeleteById', props<{id:Guid}>())
-
-export const DeleteBrandByIdSuccess = createAction('[Brands List] DeleteById Success', props<{dto:BrandDto}>())
-
-export const DeleteBrandByIdFailure = createAction('[Brands List] DeleteById Failure ', props<{error:string}>())
 

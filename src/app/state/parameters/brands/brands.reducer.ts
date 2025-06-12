@@ -1,15 +1,10 @@
 import { createReducer, on } from '@ngrx/store';
 import { BrandDto } from '../../../dto/brand.dto';
 import {
-  DeleteBrandByIdFailure,
-  DeleteBrandByIdSuccess,
+  DeleteBrand,
   GetAllBrands,
-  GetAllBrandsFailure,
-  GetAllBrandsSuccess,
-  InsertBrandDtoFailure,
-  InsertBrandDtoSuccess,
-  UpdateBrandDtoFailure,
-  UpdateBrandDtoSuccess,
+  InsertBrand,
+  UpdateBrand,
 } from './brands.actions';
 
 export interface BrandsState {
@@ -26,40 +21,44 @@ export const brandsReducer = createReducer(
   initialBrandsState,
 
   //GeAll
-  on(GetAllBrands, (state) => ({ ...state })),
-  on(GetAllBrandsSuccess, (state, { data }) => ({ ...state, data, error:null })),
-  on(GetAllBrandsFailure, (state, { error }) => ({ ...state, error })),
+  on(GetAllBrands.action, (state) => ({ ...state })),
+  on(GetAllBrands.actionSuccess, (state, { data }) => ({
+    ...state,
+    data: data ?? [],
+    error: null,
+  })),
+  on(GetAllBrands.actionFailure, (state, { error }) => ({ ...state, error })),
 
   //InsertDto
-  on(InsertBrandDtoSuccess, (state,{dto:brand})=>({
+  on(InsertBrand.actionSuccess, (state, { dto: brand }) => ({
     ...state,
-    data:[...state.data, brand],
-    error:null
+    data: [...state.data, brand],
+    error: null,
   })),
-  on(InsertBrandDtoFailure, (state, {error})=>({
+  on(InsertBrand.actionFailure, (state, { error }) => ({
     ...state,
-    error
+    error,
   })),
 
   //UpdateDto
-  on(UpdateBrandDtoSuccess, (state,{dto:brand})=>({
+  on(UpdateBrand.actionSuccess, (state, { dto: brand }) => ({
     ...state,
-    data:[...state.data.map(x=>x.Id==brand.Id?brand:x)],
-    error:null
+    data: [...state.data.map((x) => (x.Id == brand.Id ? brand : x))],
+    error: null,
   })),
-  on(UpdateBrandDtoFailure, (state, {error})=>({
+  on(UpdateBrand.actionFailure, (state, { error }) => ({
     ...state,
-    error
+    error,
   })),
 
   //DeleteById
-  on(DeleteBrandByIdSuccess, (state, {dto:brand})=>({
+  on(DeleteBrand.actionSuccess, (state, { dto: brand }) => ({
     ...state,
-    data:[...(state.data.filter(x=>x.Id!==brand.Id))],
-    error:null
+    data: [...state.data.filter((x) => x.Id !== brand.Id)],
+    error: null,
   })),
-  on(DeleteBrandByIdFailure, (state, {error})=>({
+  on(DeleteBrand.actionFailure, (state, { error }) => ({
     ...state,
-    error
+    error,
   }))
 );
