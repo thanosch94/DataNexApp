@@ -1,4 +1,7 @@
 .margin{
+  margin:1%;
+}
+.margin-2{
   margin:2%;
 }
 
@@ -40,8 +43,126 @@
   padding: 2%!important;
 }
 
+.entities-list-container{
+  width: 18%;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  border-radius: 10px;
+  padding: 2px;
+}
+.properties-container{
+  width: 85%;
+  margin-left: 3%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1rem; /* adjust spacing */
+}
+.flex{
+  display: flex;
+}
+.entities-list-item, .entities-list-header{
+  padding: 3%;
+  font-weight: bold;
+}
 
-::ng-deep .green-snackbar .mdc-snackbar__surface {
-  background-color:#1b9e1b!important;
-  color: white;
+.entities-list-header{
+font-size: 15px;
+}
+
+.entities-list-item:hover{
+  cursor: pointer;
+  background: lightgray;
+  border-radius: 10px;
+}
+
+.target-container{
+  margin-bottom: 2%;
+}
+
+.inline{
+  display: inline-block;
+}
+
+.prop{
+  margin-bottom: 2%;
+  display: flex;
+  align-items: end;
+}
+
+.property-name{
+  margin-right:3% ;
+}
+
+/* Overview */
+.last-job-status{
+  margin-top:1%;
+  padding: 5px;
+  border: 1px rgb(187 247 208) solid;
+  background: rgb(240 253 244);
+  border-radius: 5px;
+  color:rgb(22 101 52 );
+  display: inline-flex;
+  width: 97%;
+}
+
+.icon-success{
+  margin-right:1%;
+}
+
+.datasource-data-cards{
+  display: inline-flex;
+  gap:2rem
+}
+
+.data-flow-datasources{
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  gap:3%
+}
+
+.box-customers, .box-orders, .box-revenue, .box-products{
+  width: 15rem;
+  height:7rem;
+  border: 1px lightgray solid;
+  border-radius: 10px;
+}
+
+.box-customers:hover, .box-orders:hover, .box-revenue:hover, .box-products:hover{
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px;
+}
+
+.box-customers-title, .box-orders-title, .box-revenue-title, .box-products-title{
+  padding-top: 4%;
+  padding-bottom: 4%;
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-around;
+}
+
+.customers-title, .orders-title, .revenue-title, .products-title{
+  font-size: 14px;
+}
+
+.customers-descr1, .orders-descr1, .revenue-descr1, .products-descr1{
+  padding: 4%;
+  font-size: 20px;
+  margin-left:9%
+}
+
+.customers-number-container, .orders-number-container, .revenue-number-container, .products-number-container{
+  display: inline-flex;
+  gap:20%;
+}
+
+.customers-descr2, .orders-descr2, .revenue-descr2, .products-descr2{
+  padding: 1%;
+  margin-left:12%;
+  color:rgb(22 101 52 );
+}
+
+.sync-btn{
+  color:rgb(22 101 52 )
+}
+.sync-btn:hover{
+  cursor: pointer;
 }

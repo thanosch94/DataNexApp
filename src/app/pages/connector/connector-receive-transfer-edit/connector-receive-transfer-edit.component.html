@@ -8,134 +8,98 @@
 ></dn-toolbar>
 
 @if(connectorJob){
-<div class="margin">
-  <mat-stepper [linear]="true">
-    <mat-step [stepControl]="dataSourceFormGroup">
+<div class="connector-job-stepper">
+  <mat-stepper [linear]="true" #stepper>
+    <mat-step [stepControl]="firstStepForm">
       <ng-template matStepLabel>Set DataSource</ng-template>
       <br />
-      <form [formGroup]="dataSourceFormGroup">
-        <div>
+      <form [formGroup]="firstStepForm">
+        <div class="icon-name-fields">
           <div class="inline icon">
-            <mat-form-field class="width-100">
-              <mat-label>Icon</mat-label>
-              <input
-                matInput
-                name="Icon"
-                [(ngModel)]="connectorJob.Icon"
-                [ngModelOptions]="{ standalone: true }"
-              />
-            </mat-form-field>
+            <dn-textbox label="Icon" formControlName="Icon"> </dn-textbox>
           </div>
           <div class="inline name">
-            <mat-form-field class="width-100">
-              <mat-label>Name</mat-label>
-              <input
-                matInput
-                formControlName="nameCtrl"
-                [(ngModel)]="connectorJob.Name"
-              />
-            </mat-form-field>
+            <dn-textbox label="Name" formControlName="Name"> </dn-textbox>
           </div>
         </div>
-        <div>
-          <mat-form-field class="description">
-            <mat-label>Description</mat-label>
-            <textarea
-              matInput
-              cdkTextareaAutosize
-              #autosize="cdkTextareaAutosize"
-              cdkAutosizeMinRows="1"
-              cdkAutosizeMaxRows="4"
-              formControlName="descrCtrl"
-              [(ngModel)]="connectorJob.Description"
-              required
-            ></textarea>
-          </mat-form-field>
+        <div class="descr-field">
+          <dn-textbox label="Description" formControlName="Description">
+          </dn-textbox>
         </div>
-        <div>
+        <div class="jobtype-datasource-fields">
           <div class="inline jobtype">
-            <mat-form-field>
-              <mat-label>Job Type</mat-label>
-              <mat-select
-                formControlName="jobTypeFormControl"
-                (selectionChange)="onJobTypeSelection($event)"
-              >
-                <mat-option
-                  *ngFor="let connectorJobType of connectorJobTypeList"
-                  [value]="connectorJobType.Id"
-                >
-                  {{ connectorJobType.Name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <dn-selectbox
+              label="Job Type"
+              [dataSource]="connectorJobTypeList"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="JobType"
+            >
+            </dn-selectbox>
           </div>
           <div class="inline datasource">
-            <mat-form-field class="width-100">
-              <mat-label>Datasource</mat-label>
-              <mat-select
-                formControlName="jobDataSourceFormControl"
-                (selectionChange)="onJobDataSourceSelection($event)"
-              >
-                <mat-option
-                  *ngFor="let dataSource of dataSourcesList"
-                  [value]="dataSource.Id"
-                >
-                  {{ dataSource.Name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+            <dn-selectbox
+              label="Datasource"
+              [dataSource]="dataSourcesList"
+              valueExpr="Id"
+              displayExpr="Name"
+              formControlName="DataSourceId"
+            >
+            </dn-selectbox>
           </div>
         </div>
 
-        @if(connectorJob.DataSourceId == wordpressDataSourceId){
-        <div class="width-100">
-          <mat-form-field class="width-100">
-            <mat-label>wooConnectionsDataSource</mat-label>
-            <mat-select
-              formControlName="wooConnectionFormControl"
-              (selectionChange)="onWooConnectionSelection($event)"
-            >
-              <mat-option
-                *ngFor="let wooConnection of wooConnectionsDataSource"
-                [value]="wooConnection.Id"
-              >
-                {{ wooConnection.Name }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        @if(firstStepForm.get('DataSourceId').value == wordpressDataSourceId){
+        <div class="width-100 woo-connections-field">
+          <dn-selectbox
+            label="Woo Connections DataSource"
+            [dataSource]="wooConnectionsDataSource"
+            valueExpr="Id"
+            displayExpr="Name"
+            formControlName="WooConnectionDataSourceId"
+            (valueChange)="onWooConnectionSelection($event)"
+          >
+          </dn-selectbox>
         </div>
         } @if( connectorJob.DataSourceId == wordpressDataSourceId &&
         connectorJob.WooConnectionDataSourceId){
         <div>
           <div class="inline request-type">
-            <mat-form-field class="width-100">
-              <mat-label>Request Type</mat-label>
-              <input
-                [readonly]="true"
-                matInput
-                name="RequestType"
-                [(ngModel)]="requestTypeName"
-                [ngModelOptions]="{ standalone: true }"
-              />
-            </mat-form-field>
+            <dn-textbox
+              label="Request Type"
+              formControlName="RequestType"
+              [disabled]="true"
+            >
+            </dn-textbox>
           </div>
           <div class="inline endpoint">
-            <mat-form-field class="width-100">
-              <mat-label>Endpoint</mat-label>
-              <input
-                [readonly]="true"
-                matInput
-                name="Endpoint"
-                [(ngModel)]="wooConnectionRow.Endpoint"
-                [ngModelOptions]="{ standalone: true }"
-              />
-            </mat-form-field>
+            <dn-textbox
+              label="Endpoint"
+              formControlName="Endpoint"
+              [disabled]="true"
+            >
+            </dn-textbox>
           </div>
         </div>
         }
       </form>
+      <!-- <div class="job-footer">
+        <div></div>
+        <div></div>
+        <div>
+          <button
+            class="btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperNext
+          >
+            Next
+          </button>
+        </div>
+      </div> -->
     </mat-step>
-    <mat-step>
+    <mat-step [stepControl]="secondStepForm">
       <ng-template matStepLabel>Execute</ng-template>
       <br />
       <div class="execute-step">
@@ -158,10 +122,33 @@
           }
         </div>
       </div>
+      <!-- <div class="job-footer">
+        <div></div>
+        <div></div>
+        <div class="btns-container">
+          <button
+            class="btn-previous btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperPrevious
+          >
+            Previous
+          </button>
+          <button
+            class="btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperNext
+          >
+            Next
+          </button>
+        </div>
+      </div> -->
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Results</ng-template>
-      <br />
       @if(connectorJobResponse?.Success){
       <div class="grid-container">
         @if(wooItemsData && wooItemsData.length == 0){
@@ -170,8 +157,7 @@
           <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
           <p><b>Message: </b>No data found in the website</p>
         </div>
-      }
-      @if(wooItemsData && wooItemsData.length > 0){
+        } @if(wooItemsData && wooItemsData.length > 0){
         <dn-grid
           #wooResultsGrid
           [dataSource]="wooItemsData"
@@ -180,10 +166,10 @@
           [enableAddButton]="false"
         >
         </dn-grid>
-      }
+
+        }
       </div>
-    }
-    @if(!connectorJobResponse?.Success){
+      } @if(!connectorJobResponse?.Success){
       <div>
         <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
         <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
@@ -191,8 +177,83 @@
         <p><b>Result: </b>{{ connectorJobResponse?.Result }}</p>
         <p>{{ connectorJobResponse?.ExceptionMessage }}</p>
       </div>
-    }
+      }
+      <!-- <div class="job-footer">
+        <div></div>
+        <div></div>
+        <div class="btns-container">
+          <button
+            class="btn-previous btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperPrevious
+          >
+            Previous
+          </button>
+          <button
+            class="btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperNext
+          >
+            Import
+          </button>
+        </div>
+      </div> -->
+    </mat-step>
+    <mat-step>
+      <ng-template matStepLabel>Import</ng-template>
+      <br />
+      <div class="import-step"></div>
+      <!-- <div class="job-footer">
+        <div></div>
+        <div></div>
+        <div class="btns-container">
+          <button
+            class="btn-previous btns-next-previous"
+            mat-raised-button
+            color="primary"
+            matButton
+            matStepperPrevious
+          >
+            Previous
+          </button>
+        </div>
+      </div> -->
     </mat-step>
   </mat-stepper>
+  <div class="job-footer">
+    <div></div>
+    <div></div>
+    <div class="btns-container">
+    <button
+        class="btn-previous btns-next-previous"
+        mat-raised-button
+        color="primary"
+        matButton
+        [style.visibility]="stepper.selectedIndex > 0 ? 'visible' : 'hidden'"
+        (click)="stepper.previous()"
+      >
+        Previous
+      </button>
+
+     @if(stepper.selectedIndex < stepper.steps.length-1){ <button
+        class="btns-next-previous"
+        mat-raised-button
+        color="primary"
+        matButton
+        [disabled]="stepper.selected?.stepControl?.invalid"
+        (click)="stepper.next()"
+      >
+        Next
+      </button>
+    }
+    </div>
+  </div>
+
 </div>
 }
+
+

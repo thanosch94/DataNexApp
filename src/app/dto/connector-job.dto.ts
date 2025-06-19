@@ -13,4 +13,5 @@ export class ConnectorJobDto {
   JobType:ConnectorJobTypeEnum
   DataSourceId: Guid
   WooConnectionDataSourceId:Guid
+JobTypeId: any;
 }

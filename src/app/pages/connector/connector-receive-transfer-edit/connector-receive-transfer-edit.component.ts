@@ -1,9 +1,9 @@
+import { BaseComponent } from './../../components/base/base.component';
 import { ConnectorJobDto } from './../../../dto/connector-job.dto';
 import { RequestTypeEnum } from './../../../enums/request-type.enum';
 import { WooConnectionsDataDto } from './../../../dto/woo-connections-data.dto';
 import { WooConnectionsViewModel } from './../../../view-models/woo-connections.viewmodel';
 import {
-  ChangeDetectorRef,
   Component,
   Inject,
   OnInit,
@@ -14,8 +14,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
   FormBuilder,
-  FormControl,
-  FormGroup,
   FormsModule,
   ReactiveFormsModule,
   Validators,
@@ -24,41 +22,41 @@ import { ConnectorJobsViewModel } from '../../../view-models/connector-jobs.view
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { Guid } from 'guid-typescript';
-import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { MatSelectModule } from '@angular/material/select';
 import { WebAppBase } from '../../../base/web-app-base';
 import { CommonModule } from '@angular/common';
 import { ConnectorJobTypeEnumList } from '../../../enumLists/connector-job-type.enumlist';
 import { ConnectorJobTypeEnum } from '../../../enums/connector-job-type.enum';
 import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button';
 import { ApiResponseDto } from '../../../dto/api-response.dto';
-import { Observable } from 'rxjs';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
+import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
+import { DnSelectboxComponent } from "../../components/dn-selectbox/dn-selectbox.component";
 
 @Component({
     selector: 'app-connector-receive-transfer-edit',
     imports: [
-        DnToolbarComponent,
-        MatFormFieldModule,
-        MatInputModule,
-        FormsModule,
-        CdkTextareaAutosize,
-        MatSelectModule,
-        CommonModule,
-        ReactiveFormsModule,
-        MatStepperModule,
-        MatButtonModule,
-        DnGridComponent
-    ],
+    DnToolbarComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    FormsModule,
+    MatSelectModule,
+    CommonModule,
+    ReactiveFormsModule,
+    MatStepperModule,
+    MatButtonModule,
+    DnGridComponent,
+    DnTextboxComponent,
+    DnSelectboxComponent
+],
     templateUrl: './connector-receive-transfer-edit.component.html',
     styleUrl: './connector-receive-transfer-edit.component.css'
 })
-export class ConnectorReceiveTransferEditComponent implements OnInit {
+export class ConnectorReceiveTransferEditComponent extends BaseComponent implements OnInit {
   jobId: Guid;
   dataSourcesList: any;
   dataSourceName: any;
@@ -71,19 +69,19 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
   wooConnectionsDataSource: WooConnectionsDataDto[];
   wooConnectionRow: WooConnectionsDataDto = new WooConnectionsDataDto();
   requestTypes: { Id: RequestTypeEnum; Name: string }[];
-  requestTypeName: string;
-  dataSourceFormGroup: any;
+  firstStepForm: any;
   connectorJobResponse: ApiResponseDto;
   wooItemsData: any;
   wooItemsColumns: any[] =new Array<any>;
   isLoading: boolean;
+  secondStepForm: any;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private snackBar: MatSnackBar,
     private formBuilder: FormBuilder,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any
   ) {
+    super()
     this.connector_receive_transfer_edit_text = 'New Job';
     this.connectorJobsViewModel = new ConnectorJobsViewModel(
       this.http,
@@ -94,51 +92,59 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
       this.auth
     );
 
-    this.dataSourceFormGroup = new FormGroup({
-      jobTypeFormControl: new FormControl('', Validators.required),
-      jobDataSourceFormControl: new FormControl('', Validators.required),
-      wooConnectionFormControl: new FormControl(''),
-      nameCtrl: new FormControl('', Validators.required),
-      descrCtrl: new FormControl('', Validators.required),
-    });
-
     if (this.dialogData) {
       this.jobId = dialogData?.Job?.Id;
     }
   }
 
   ngOnInit() {
+    this.initializeForms()
     this.dataSourcesList = WebAppBase.connectorDataSourcesList;
     this.connectorJobTypeList = ConnectorJobTypeEnumList.value;
     this.requestTypes = RequestTypeEnumList.value;
+    this.wordpressDataSourceId = WebAppBase.wordpressDataSource;
+
     this.wooConnectionsViewModel.GetAll().subscribe((result: any) => {
       this.wooConnectionsDataSource = result;
+      this.getData();
     });
-    this.wordpressDataSourceId = WebAppBase.wordpressDataSource;
-    this.getData();
+
   }
 
+  initializeForms(){
+    this.firstStepForm = this.formBuilder.group({
+      Icon: ['', null],
+      Name: ['', Validators.required],
+      Description: ['', Validators.required],
+      JobType: ['', Validators.required],
+      DataSourceId: ['', Validators.required],
+      WooConnectionDataSourceId: ['', null],
+      RequestType: ['', null],
+      Endpoint: ['', null],
+
+    });
+
+    this.secondStepForm = this.formBuilder.group({
+      IsExecuted: [false, Validators.requiredTrue],
+
+
+    });
+
+  }
   getData() {
     if (this.jobId) {
       this.connectorJobsViewModel
         .GetById(this.jobId)
         .subscribe((result: any) => {
           this.connectorJob = result as ConnectorJobDto;
-          this.dataSourceFormGroup.controls.jobTypeFormControl.setValue(
-            result.JobType
-          );
-          this.dataSourceFormGroup.controls.jobDataSourceFormControl.setValue(
-            result.DataSourceId
-          );
+
           if (
             this.connectorJob.DataSourceId.toString() ==
             WebAppBase.wordpressDataSource
           ) {
-            this.dataSourceFormGroup.controls.wooConnectionFormControl.setValue(
-              result.WooConnectionDataSourceId
-            );
             this.getWooConnectionRow(result.WooConnectionDataSourceId);
           }
+          this.firstStepForm.patchValue(this.connectorJob)
         });
     } else {
       this.connectorJob = new ConnectorJobDto();
@@ -165,32 +171,20 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
     }
   }
 
-  onJobDataSourceSelection(data: any) {
-    this.connectorJob.DataSourceId = data.value;
-    if (
-      this.connectorJob.DataSourceId.toString() ==
-      WebAppBase.wordpressDataSource
-    ) {
-      this.dataSourceFormGroup.controls.wooConnectionFormControl =
-        new FormControl('', Validators.required);
-    }
-  }
-
-  onJobTypeSelection(data: any) {
-    this.connectorJob.JobType = data.value;
-  }
 
   onWooConnectionSelection(data: any) {
-    this.connectorJob.WooConnectionDataSourceId = data.value;
     this.getWooConnectionRow(data.value);
   }
 
   getWooConnectionRow(id: any) {
+
     let wooConnectionDataSource = this.wooConnectionsDataSource.find(
       (x: any) => x.Id == id
     );
     if (wooConnectionDataSource) {
       this.wooConnectionRow = wooConnectionDataSource;
+      this.firstStepForm.get('Endpoint').setValue(this.wooConnectionRow.Endpoint);
+
       this.getRequestType();
     }
   }
@@ -200,14 +194,8 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
       (x) => x.Id == this.wooConnectionRow.RequestType
     );
     if (requestType) {
-      this.requestTypeName = requestType.Name;
+      this.firstStepForm.get('RequestType').setValue(requestType.Name);
     }
-  }
-  displayNotification(text: string) {
-    this.snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
   }
 
   onJobExecuteButtonClicked(e:any){
@@ -226,10 +214,20 @@ export class ConnectorReceiveTransferEditComponent implements OnInit {
               column.DataType='date'
               column.Format ='dd/MM/yyyy HH:mm:ss'
           }
+          if(key=='id'){
+            column.Width=100
+          }else if(key=='name'){
+            column.Width=450
+          }else if(key=='description'){
+            column.WrapText=true
+          }else if(key=='feature_image'){
+            column.DataType="image"
+          }
 
           this.wooItemsColumns.push(column)
         }
         //this.wooItemsColumns
+        this.secondStepForm.get('IsExecuted').setValue(true);
 
      }
   })

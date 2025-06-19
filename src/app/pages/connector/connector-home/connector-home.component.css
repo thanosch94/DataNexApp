@@ -6,7 +6,8 @@
   display: grid;
   grid-template-areas:
   "a b c d"
-  "e f g h";
+  "e f g h"
+  "i j k l";
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-row-gap: 7%;
 
@@ -91,11 +92,16 @@
   grid-area: g;
 }
 
+.receive-transfer-grid-i{
+  grid-area: i;
+}
+
 .connector-parameters{
   margin-bottom:4%;
 }
 .connector-grid-v{
   grid-area: v;
+  height:40rem
 }
 .connector-grid-z{
   grid-area: z;
@@ -114,6 +120,9 @@
   grid-area: za;
 }
 
-.img{
+.img-mysql{
   width: 120px; /* Default width for small screens */
+}
+.img-datanex{
+  width: 175px; /* Default width for small screens */
 }

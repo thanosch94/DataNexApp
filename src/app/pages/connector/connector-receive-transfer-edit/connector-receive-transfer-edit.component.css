@@ -1,9 +1,5 @@
-.margin{
-  margin: 2%;
-}
-.description{
-  width: 100%;
-}
+
+
 .icon{
   width: 30%;
   margin-right: 5%;
@@ -12,7 +8,10 @@
   width: 60%;
   margin-left: 5%;
 }
-
+/* width */
+::-webkit-scrollbar {
+  height: 7px!important;
+}
 .inline{
   display: inline-block;
 }
@@ -49,16 +48,59 @@
   margin-top: 20%;
 }
 
-::ng-deep  td,  ::ng-deep .mat-cell{
+/* ::ng-deep  td,  ::ng-deep .mat-cell{
   white-space: nowrap !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   width:200px!important
-}
+} */
 .grid-container{
   width: 100%;
   overflow-x: auto;
+  margin-bottom: 5%;
 }
+
 .grid-container ::ng-deep .table-container{
   width:max-content;
 }
+
+.job-footer{
+  position:fixed;
+  bottom:0;
+  height:70px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+}
+
+.icon-name-fields, .descr-field, .jobtype-datasource-fields,.woo-connections-field{
+  margin-bottom: 2% ;
+
+}
+
+.btns-next-previous{
+  width: 150px;
+  height: 30px;
+}
+
+.btn-previous{
+  margin-right: 2%;
+}
+
+.btns-container{
+  width: 350px;
+}
+
+::ng-deep .mat-step-content {
+  margin-top: 15%;
+  min-height: 100vh!important /* or whatever fits your needs */
+}
+
+.connector-job-stepper ::ng-deep .mat-horizontal-content-container{
+  margin-top: 1%;
+
+}
+

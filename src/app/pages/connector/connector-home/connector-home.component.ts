@@ -46,6 +46,9 @@ export class ConnectorHomeComponent {
   onDataSourcesConfigurationClick(e:any){
     this.router.navigate(["/connector-datasources-options"])
   }
+  onDataNexReceiveTransferClicked(e:any){
+    this.router.navigate(["/connector-receive-transfer"])
+  }
   onWooCommerceReceiveTransferClicked(e:any){
     this.router.navigate(["/connector-receive-transfer"])
   }

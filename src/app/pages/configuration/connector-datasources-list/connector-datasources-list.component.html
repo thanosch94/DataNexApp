@@ -1,0 +1,22 @@
+<dn-toolbar
+  [canInsert]="true"
+  [isDialog]="false"
+  [canRefresh]="true"
+  [title]="connector_datasources_list_text"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-grid  #cntorDatasourcesGrid
+  [dataSource]="dataSource |async"
+  [columns]="columns"
+  [canDisplaySearch]="true"
+  [enableAddButton]="false"
+  [canDelete]="true"
+  (onRowSaving)="onRowSaving($event)"
+  (onRowDelete)="onRowDelete($event)"
+  (onRowStopEditing)="onRowStopEditing($event)"
+  >
+
+  </dn-grid>
+</div>

@@ -195,6 +195,19 @@ export class Navigation {
       ],
     },
     {
+      Id: Guid.parse('ce5b4ec3-185a-417d-ae04-feceea6ca413'),
+      Name: 'Task Management',
+      Path: 'task-management',
+      Icon: 'faListCheck',
+      Children: [
+        {
+          Id: Guid.parse('9d3704cd-83a0-4341-ba65-0921e7f870bb'),
+          Name: 'Tasks List',
+          Path: 'task-list',
+        },
+      ],
+    },
+    {
       Id: Guid.parse('453007a8-bb78-4f1b-9b88-5b6176ecf7fb'),
       Name: 'Administration',
       Path: 'administration',
@@ -207,19 +220,15 @@ export class Navigation {
         },
         {
           Id: Guid.parse('99e1425f-94eb-40e9-9673-19590a2bc582'),
-          Name: 'Permissions',
-          Path: 'permissions',
+          Name: 'App Permissions',
+          Path: 'app-permissions',
         },
         {
           Id: Guid.parse('3019b36c-4858-41f5-84f2-c5268ae64833'),
           Name: 'Logs',
           Path: 'logs-list',
         },
-        {
-          Id: Guid.parse('9d3704cd-83a0-4341-ba65-0921e7f870bb'),
-          Name: 'Tasks List',
-          Path: 'task-list',
-        },
+
       ],
     },
     {
@@ -299,6 +308,16 @@ export class Navigation {
           Id: Guid.parse('a7fc9e35-0321-4742-837b-e49d262307c7'),
           Name: 'Vat Classes',
           Path: 'vat-classes-list',
+        },
+        {
+          Id: Guid.parse('3ae1d555-105e-4cd6-8a40-d1b0a5a46481'),
+          Name: 'Connector Datasources',
+          Path: 'connector-datasources-list',
+        },
+        {
+          Id: Guid.parse('ce5f144c-7479-4261-9263-03e1f2477be8'),
+          Name: 'Connector Datasource Entities',
+          Path: 'connector-datasource-entities-list',
         },
       ],
     },

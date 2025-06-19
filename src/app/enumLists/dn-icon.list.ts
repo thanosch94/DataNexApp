@@ -11,7 +11,9 @@ import {
   faAddressBook,
   faBox,
   faPalette,
-  faTags
+  faTags,
+  faCircleCheck,
+  faSync
 } from '@fortawesome/free-solid-svg-icons';
 
   export const dnIcons = {
@@ -27,7 +29,9 @@ import {
     faAddressBook:faAddressBook,
     faBox:faBox,
     faPalette:faPalette,
-    faTags:faTags
+    faTags:faTags,
+    faCircleCheck:faCircleCheck,
+    faSync:faSync
   } as const
 
 

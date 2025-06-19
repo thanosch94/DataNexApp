@@ -31,6 +31,10 @@ import { appPermissionsReducer } from './state/app-permissions/app-permissions.r
 import { AppPermissionsEffects } from './state/app-permissions/app-permissions.effects';
 import { UserAppPermissionsEffects } from './state/user-app-permissions/user-app-permissions.effects';
 import { userAppPermissionsReducer } from './state/user-app-permissions/user-app-permissions.reducer';
+import { CntorDatasourcesEffects } from './state/parameters/connector-datasources/cntor-datasources.effects';
+import { connectorDatasourcesReducer } from './state/parameters/connector-datasources/cntor-datasources.reducer';
+import { CntorDatasourceEntitiesEffects } from './state/parameters/cntor-datasource-entities/cntor-datasource-entities.effects';
+import { cntorDatasourceEntitiesReducer } from './state/parameters/cntor-datasource-entities/cntor-datasource-erntities.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -49,7 +53,9 @@ export const appConfig: ApplicationConfig = {
       workItems:workItemsReducer,
       users:usersReducer,
       appPermissions:appPermissionsReducer,
-      userAppPermissions:userAppPermissionsReducer
+      userAppPermissions:userAppPermissionsReducer,
+      connectorDatasources:connectorDatasourcesReducer,
+      connectorDatasourceEntities:cntorDatasourceEntitiesReducer
     }),
     provideEffects([
       ProductEffects,
@@ -63,7 +69,9 @@ export const appConfig: ApplicationConfig = {
       UsersEffects,
       workItemsEffects,
       AppPermissionsEffects,
-      UserAppPermissionsEffects
+      UserAppPermissionsEffects,
+      CntorDatasourcesEffects,
+      CntorDatasourceEntitiesEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

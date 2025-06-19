@@ -9,52 +9,396 @@
   (onInsertBtnClicked)="onInsertBtnClicked($event)"
   (onRefreshBtnClicked)="onRefreshBtnClicked($event)"
 ></dn-toolbar>
-
-<div class="grid margin">
-<div class="grid-a-receive">
-  <h1>Receive</h1>
-<mat-card *ngFor="let receiveJob of receiveConnectorJobs let i = index"  class="card" appearance="outlined"(click)="onJobClick(receiveJob)">
-  <mat-card-header>
-    <div class="icon-margin">
-      @if(receiveJob.Icon){
-      <fa-icon
-        [icon]="receiveJob.Icon=='wordpress'?faWordpress:faWordpress"
-        style="color: #21759b"
-        size="5x"
-      ></fa-icon>
-    }
-    </div>
-    <mat-card-title-group>
-      <mat-card-title>
-        {{i+1}}. {{receiveJob.Name}}</mat-card-title>
-      <mat-card-subtitle>{{receiveJob.Description}}</mat-card-subtitle>
-    </mat-card-title-group>
-  </mat-card-header>
-
-</mat-card>
-
-</div>
-
-<div class="grid-b-transfer">
-  <h1>Transfer</h1>
-  <mat-card *ngFor="let transferJob of transferConnectorJobs let i = index"  class="card" appearance="outlined" (click)="onJobClick(transferJob)">
-    <mat-card-header>
-      <div class="icon-margin">
-        <fa-icon
-          [icon]="transferJob.Icon=='wordpress'?faWordpress:faWordpress"
-          style="color: #21759b"
-          size="5x"
-        ></fa-icon>
+<mat-tab-group class="margin">
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Overview</span></div>
+    </ng-template>
+    <div class="last-job-status margin">
+      <div class="icon-success">
+        <fa-icon [icon]="faIcons.faCircleCheck"> </fa-icon>
       </div>
-      <mat-card-title-group>
-        <mat-card-title>
-          {{i+1}}. {{transferJob.Name}}</mat-card-title>
-        <mat-card-subtitle>{{transferJob.Description}}</mat-card-subtitle>
-      </mat-card-title-group>
-    </mat-card-header>
+      <div>
+        <p>Operation Status: Success</p>
+        <p>
+          Last sync completed successfully at 12/6/2025, 11:11:30 μ.μ.. All
+          systems running normally.
+        </p>
+      </div>
+    </div>
 
-  </mat-card>
 
-</div>
+    <div class="margin datasource-data-cards">
+      <div class="box-customers">
+        <div class="box-customers-title">
+          <b class="customers-title">Total Customers</b>
+          <fa-icon [icon]="faIcons.faUserTie"></fa-icon>
+        </div>
+        <div class="customers-descr1">
+          <div class="customers-number-container">
+            <b>{{ 1525 | number : "0.0-2" }}</b>
+            <fa-icon
+              class="sync-btn"
+              [icon]="faIcons.faSync"
+              color="green"
+            ></fa-icon>
+          </div>
+          <div></div>
+        </div>
+        <div class="customers-descr2">
+          <p>Synced 14/6/2025 12:06</p>
+        </div>
+      </div>
 
-</div>
+      <div class="box-orders">
+        <div class="box-orders-title">
+          <b class="orders-title">Total Orders</b>
+          <fa-icon [icon]="faIcons.faListCheck"></fa-icon>
+        </div>
+        <div class="orders-descr1">
+          <div class="orders-number-container">
+            <b>{{ 1739 | number : "0.0-2" }}</b>
+            <fa-icon
+              class="sync-btn"
+              [icon]="faIcons.faSync"
+              color="green"
+            ></fa-icon>
+          </div>
+          <div></div>
+        </div>
+        <div class="orders-descr2">
+          <p>Synced 14/6/2025 12:06</p>
+        </div>
+      </div>
+      <div class="box-revenue">
+        <div class="box-revenue-title">
+          <b class="revenue-title">Total Revenue</b>
+          <fa-icon [icon]="faIcons.faDollarSign"></fa-icon>
+        </div>
+        <div class="revenue-descr1">
+          <div class="revenue-number-container">
+            <b>€{{ 5839 | number : "0.2-2" }}</b>
+            <fa-icon
+              class="sync-btn"
+              [icon]="faIcons.faSync"
+              color="green"
+            ></fa-icon>
+          </div>
+          <div></div>
+        </div>
+        <div class="revenue-descr2">
+          <p>Synced 14/6/2025 12:06</p>
+        </div>
+      </div>
+
+      <div class="box-products">
+        <div class="box-products-title">
+          <b class="products-title">Total Products</b>
+          <fa-icon [icon]="faIcons.faBoxes"></fa-icon>
+        </div>
+        <div class="products-descr1">
+          <div class="products-number-container">
+            <b>€{{ 3627 | number : "0.0-2" }}</b>
+            <fa-icon
+              class="sync-btn"
+              [icon]="faIcons.faSync"
+              color="green"
+            ></fa-icon>
+          </div>
+          <div></div>
+        </div>
+        <div class="products-descr2">
+          <p>Synced 14/6/2025 12:06</p>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="margin">
+      <dn-grid
+        #lastExecutedJobsGrid
+        [dataSource]="wooConnectionsDataSource"
+        [columns]="wooConnectionsColumns"
+        [canDisplaySearch]="false"
+        [enableAddButton]="true"
+        (onRowSaving)="onWooConnectionSaving($event)"
+        (onRowDelete)="onWooConnectionDelete($event)"
+        (onRowStopEditing)="onWooConnectionStopEditing($event)"
+        (onRowAdding)="onWooConnectionAdding($event)"
+      >
+      </dn-grid>
+    </div> -->
+        <div class="margin">
+      <p>Data Flow</p>
+      <div class="data-flow-datasources">
+        <div>
+          <dn-selectbox
+            [dataSource]="cntor_datasources | async"
+            valueExpr="Id"
+            displayExpr="Name"
+            (selectionChange)="onDataSourceSelectionChanged($event)"
+          >
+          </dn-selectbox>
+        </div>
+        <div>
+          <b>==></b>
+        </div>
+        <div>
+          <dn-selectbox
+            [dataSource]="cntor_target_datasources | async"
+            valueExpr="Id"
+            displayExpr="Name"
+          >
+          </dn-selectbox>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Jobs</span></div>
+    </ng-template>
+
+    <div class="grid margin">
+      <div class="grid-a-receive">
+        <h1>Receive</h1>
+        <mat-card
+          *ngFor="let receiveJob of receiveConnectorJobs; let i = index"
+          class="card"
+          appearance="outlined"
+          (click)="onJobClick(receiveJob)"
+        >
+          <mat-card-header>
+            <div class="icon-margin">
+              @if(receiveJob.Icon){
+              <fa-icon
+                [icon]="
+                  receiveJob.Icon == 'wordpress' ? faWordpress : faWordpress
+                "
+                style="color: #21759b"
+                size="5x"
+              ></fa-icon>
+              }
+            </div>
+            <mat-card-title-group>
+              <mat-card-title>
+                {{ i + 1 }}. {{ receiveJob.Name }}</mat-card-title
+              >
+              <mat-card-subtitle>{{
+                receiveJob.Description
+              }}</mat-card-subtitle>
+            </mat-card-title-group>
+          </mat-card-header>
+        </mat-card>
+      </div>
+
+      <div class="grid-b-transfer">
+        <h1>Transfer</h1>
+        <mat-card
+          *ngFor="let transferJob of transferConnectorJobs; let i = index"
+          class="card"
+          appearance="outlined"
+          (click)="onJobClick(transferJob)"
+        >
+          <mat-card-header>
+            <div class="icon-margin">
+              <fa-icon
+                [icon]="
+                  transferJob.Icon == 'wordpress' ? faWordpress : faWordpress
+                "
+                style="color: #21759b"
+                size="5x"
+              ></fa-icon>
+            </div>
+            <mat-card-title-group>
+              <mat-card-title>
+                {{ i + 1 }}. {{ transferJob.Name }}</mat-card-title
+              >
+              <mat-card-subtitle>{{
+                transferJob.Description
+              }}</mat-card-subtitle>
+            </mat-card-title-group>
+          </mat-card-header>
+        </mat-card>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Endpoints</span></div>
+    </ng-template>
+    <div class="margin">
+      <dn-grid
+        #wooConnectionGrid
+        [dataSource]="wooConnectionsDataSource"
+        [columns]="wooConnectionsColumns"
+        [canDisplaySearch]="false"
+        [enableAddButton]="true"
+        (onRowSaving)="onWooConnectionSaving($event)"
+        (onRowDelete)="onWooConnectionDelete($event)"
+        (onRowStopEditing)="onWooConnectionStopEditing($event)"
+        (onRowAdding)="onWooConnectionAdding($event)"
+      >
+      </dn-grid>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <form [formGroup]="credentialsForm" class="margin">
+      <ng-template mat-tab-label>
+        <div>
+          <fa-icon [icon]="faWordpress"></fa-icon><span> Credentials</span>
+        </div>
+      </ng-template>
+
+      <div class="margin-2">
+        <dn-textbox label="Base Url" [width]="30" formControlName="WooBaseUrl">
+        </dn-textbox>
+      </div>
+      <div class="margin-2">
+        <dn-textbox
+          [width]="30"
+          label="Consumer Key"
+          formControlName="WooConsumerKey"
+          [type]="consumerKeyHide ? 'password' : 'text'"
+          [icon]="consumerKeyHide ? 'visibility_off' : 'visibility'"
+          (onIconClicked)="onConsumerKeyHideClick($event)"
+        >
+        </dn-textbox>
+      </div>
+      <div class="margin-2">
+        <dn-textbox
+          [width]="30"
+          label="Consumer Secret"
+          formControlName="WooConsumerSecret"
+          [type]="consumerSecretHide ? 'password' : 'text'"
+          [icon]="consumerSecretHide ? 'visibility_off' : 'visibility'"
+          (onIconClicked)="onConsumerSecretHideClick($event)"
+        >
+        </dn-textbox>
+      </div>
+    </form>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div><fa-icon [icon]="faWordpress"></fa-icon><span> Mappings</span></div>
+    </ng-template>
+    <div class="margin">
+      <div class="target-container">
+        <dn-selectbox
+          [width]="25"
+          label="Target"
+          [dataSource]="cntor_datasources | async"
+          valueExpr="Id"
+          displayExpr="Name"
+          [allowInput]="false"
+        >
+        </dn-selectbox>
+      </div>
+      <div style="display: flex">
+        <div class="entities-list-container">
+          <p class="entities-list-header">Target Entities</p>
+          <p class="entities-list-item">
+            <fa-icon style="margin-right: 5px" [icon]="faIcons.faBox"></fa-icon
+            >Product
+          </p>
+          <p class="entities-list-item">
+            <fa-icon
+              style="margin-right: 5px"
+              [icon]="faIcons.faShopingCart"
+            ></fa-icon
+            >Order
+          </p>
+          <p class="entities-list-item">
+            <fa-icon
+              style="margin-right: 5px"
+              [icon]="faIcons.faUserTie"
+            ></fa-icon
+            >Customer
+          </p>
+          <p class="entities-list-item">
+            <fa-icon style="margin-right: 5px" [icon]="faIcons.faTags"></fa-icon
+            >Category
+          </p>
+          <p class="entities-list-item">
+            <fa-icon
+              style="margin-right: 5px"
+              [icon]="faIcons.faPalette"
+            ></fa-icon
+            >Attribute
+          </p>
+          <p class="entities-list-item">
+            <fa-icon
+              style="margin-right: 5px"
+              [icon]="faIcons.faCircle"
+            ></fa-icon
+            >Term
+          </p>
+        </div>
+        <div class="properties-container margin">
+          <div class="prop">
+            <div class="inline property-name"><p>Property 1</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 2</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 4</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 5</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 6</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 7</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 8</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 9</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 10</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 11</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 12</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 13</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 13</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+          <div class="prop">
+            <div class="inline property-name"><p>Property 13</p></div>
+            <div class="inline"><dn-textbox></dn-textbox></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div>
+        <fa-icon [icon]="faWordpress"></fa-icon><span> Scheduling</span>
+      </div>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
