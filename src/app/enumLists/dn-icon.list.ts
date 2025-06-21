@@ -13,7 +13,8 @@ import {
   faPalette,
   faTags,
   faCircleCheck,
-  faSync
+  faSync,
+  faCamera
 } from '@fortawesome/free-solid-svg-icons';
 
   export const dnIcons = {
@@ -31,7 +32,8 @@ import {
     faPalette:faPalette,
     faTags:faTags,
     faCircleCheck:faCircleCheck,
-    faSync:faSync
+    faSync:faSync,
+    faCamera:faCamera
   } as const
 
 

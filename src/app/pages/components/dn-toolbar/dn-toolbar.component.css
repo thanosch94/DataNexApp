@@ -1,8 +1,8 @@
 ::ng-deep .toolbar{
   background: #0B6AA5!important;
   color:white!important;
-  height:auto!important;
-  border-radius: 10px;
+  height:2.2rem!important;
+  border-radius: 7px;
 }
 
 .dialog-toolbar{
@@ -37,7 +37,7 @@ cursor: pointer!important;;
 }
 
 .toolbar-title, .button-title, .icons{
-  font-size: small!important
+  font-size: 12px!important
 }
 
 ::ng-deep .toolbar-container{

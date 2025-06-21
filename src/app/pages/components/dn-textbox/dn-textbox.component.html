@@ -13,6 +13,7 @@
       (input)="onValueInput($event)"
       (blur)="onInputBlur($event)"
       (keydown.enter)="onEnterClicked($event)"
+      (keyup)="onKeyUp($event)"
     />
     @if(icon){ @if(iconPosition=="end"){<mat-icon
       class="text-box-icon"

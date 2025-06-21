@@ -66,10 +66,7 @@ export class DevToolsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(GetAllUsers());
     this.users = this.store.select(selectAllUsers);
-    this.setInsertUserAppPermissionDtoSuccessActionResult();
-    this.setDeleteUserAppPermissionByIdSuccessActionResult();
-    this.setDeleteAppPermissionByIdSuccessActionResult();
-    this.setInsertAppPermissionDtoSuccessActionResult();
+
   }
 
   setInsertAppPermissionDtoSuccessActionResult() {

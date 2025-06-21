@@ -61,6 +61,7 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Output() onBlur = new EventEmitter();
   @Output() onInput = new EventEmitter();
   @Output() onEnterKeyClicked = new EventEmitter();
+  @Output() keyUp = new EventEmitter();
 
   onValueChange(value: string) {
     this.valueChange.emit(value);
@@ -101,5 +102,8 @@ export class DnTextboxComponent implements ControlValueAccessor {
   }
   setDisabledState?(isDisabled: boolean): void {}
 
+  onKeyUp(e:any){
+    this.keyUp.emit(e)
+  }
   //#endregion
 }

@@ -1,15 +1,9 @@
 <div class="dn-grid-container">
   @if(canDisplaySearch){
-  <mat-form-field class="search-input" style="height: 45px; width: 35%">
-    <mat-label>Search</mat-label>
-    <input
-      class="search-input-text"
-      matInput
-      (keyup)="applyFilter($event)"
-      placeholder="Ex. Maria"
-      #input
-    />
-  </mat-form-field>
+  <div class="search-input">
+    <dn-textbox label="Search" [width]="50" (keyUp)="applyFilter($event)">
+    </dn-textbox>
+  </div>
   } @if(enableAddButton){
   <article class="add-button example-form">
     <button mat-button class="button-add-row" (click)="add($event)">
@@ -160,13 +154,11 @@
             </mat-checkbox>
           </div>
 
-          }
-          @if(column.DataType == "image"){
-            <div style="width: 100%" class="white-input center">
-              <img [src]="row[column.DataField]" width="80" height="80" />
-            </div>
-            }
-          @if(row.IsEditable && column.Lookup){
+          } @if(column.DataType == "image"){
+          <div style="width: 100%" class="white-input center">
+            <img [src]="row[column.DataField]" width="80" height="80" />
+          </div>
+          } @if(row.IsEditable && column.Lookup){
           <dn-selectbox
             #selectBox
             [name]="column.Caption"
@@ -228,7 +220,7 @@
           'string' || column.DataType == 'number')){
           <p>
             @if(column.WrapText){
-              {{row[column.DataField]}}
+            {{ row[column.DataField] }}
             }@else {
             <dn-textbox
               [readOnly]="true"
@@ -238,7 +230,7 @@
               (onIconClicked)="onIconClicked($event, column, row)"
               [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
             ></dn-textbox>
-          }
+            }
           </p>
           } @if(!row.IsEditable && !column.Lookup && (column.DataType ==
           'datetime' || column.DataType == 'date')){

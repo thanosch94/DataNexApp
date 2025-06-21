@@ -84,13 +84,6 @@
   display: none
 }
 
-/*To change the height of the search input  */
-.search-input ::ng-deep .mat-mdc-text-field-wrapper {
-  height: 40px !important;
-}
-.search-input ::ng-deep .mat-mdc-form-field-flex {
-  margin-top: -7px !important;
-}
 
 /* Table cell elements font size */
 .table ::ng-deep p{
@@ -103,7 +96,7 @@
   width: 30px;
   height: 30px;
 }
-.column-title, .search-input-text{
+.column-title{
   font-size: 12px!important;
 }
 .string-input-text, .autocomplete-input-text, .autocomplete-options, .no-data-text{
@@ -214,7 +207,11 @@ td , th {
 
 ::ng-deep .table-container {
   border-radius: 10px;
+  border-top: 10px solid #0B6AA5;
 }
+/* ::ng-deep .mat-mdc-tab-body-content.mat-tab-body-content-can-animate{
+padding-bottom: 5px;
+} */
 .table ::ng-deep .select-box  .mdc-text-field {
   border-radius: unset;
 }

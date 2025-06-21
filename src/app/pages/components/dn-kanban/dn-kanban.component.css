@@ -7,7 +7,7 @@
   height: auto;
   overflow: hidden;
 
-  width: 30vh;
+  width: 35vh;
   background-color: #f1f1f1
 }
 
@@ -33,7 +33,7 @@
 
 .column-header{
   border-radius: 10px 10px 0 0;
-  padding:3%
+  padding:1%
 }
 
 .column-list{
@@ -48,8 +48,8 @@
   padding: 5px;
   margin: 5px;
   border-radius:15px ;
-  height: 7rem;
-  max-height: 7rem;
+  height: 6rem;
+  max-height: 6rem;
   overflow-x: hidden;
   overflow-y: hidden;
 
