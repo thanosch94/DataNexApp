@@ -207,7 +207,6 @@ td , th {
 
 ::ng-deep .table-container {
   border-radius: 10px;
-  border-top: 10px solid #0B6AA5;
 }
 /* ::ng-deep .mat-mdc-tab-body-content.mat-tab-body-content-can-animate{
 padding-bottom: 5px;
@@ -232,4 +231,8 @@ padding-bottom: 5px;
 
  ::ng-deep .mat-typography p{
   margin:0;
+}
+
+.grid-paginator{
+  border-radius: 10px;
 }

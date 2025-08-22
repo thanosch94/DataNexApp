@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -20,6 +20,13 @@ import { NumberFormatPipe } from '../../../pipes/number-format.pipe';
         MatTooltipModule,
         NumberFormatPipe
     ],
+    providers: [
+        {
+          provide: NG_VALUE_ACCESSOR,
+          useExisting: forwardRef(() => DnNumberBoxComponent),
+          multi: true,
+        },
+      ],
     templateUrl: './dn-number-box.component.html',
     styleUrl: './dn-number-box.component.css'
 })
@@ -61,5 +68,19 @@ export class DnNumberBoxComponent {
   onBlur(){
     this.onFocusOut.emit(this.value)
   }
+//#region  Reactive Forms
+  onChange: (value: string) => void = () => {};
+  onTouched: () => void = () => {};
+
+  writeValue(value: string): void {
+    this.value = value || '';
+  }
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+  setDisabledState?(isDisabled: boolean): void {}
 
 }

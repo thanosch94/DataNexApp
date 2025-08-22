@@ -11,7 +11,7 @@
     </button>
   </article>
   }
-  <div class="mat-elevation-z8 table-container">
+  <div class="mat-elevation-z8 table-container" [style]="'border-top: 10px solid ' + borderTopColor">
     <table
       class="table"
       #matTable
@@ -355,6 +355,7 @@
     </table>
     @if(displayPaginator){
     <mat-paginator
+    class="grid-paginator"
       #paginator
       [length]="matDataSource.data.length"
       [pageSize]="pageSize"

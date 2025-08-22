@@ -126,11 +126,12 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() displayTableBorder = false;
   @Input() tableHeaderBackgroundColor: string;
   @Input() tableHeaderFontColor: string;
+  @Input() borderTopColor: string ="#0B6AA5";
   selection = new SelectionModel<any>(true, []);
   private _columns: DnColumnDto[] = [];
   zeroMin: number;
   pageIndex: number = 0;
-  pageSize: number = 10; //Check to keep user defined settings
+  @Input() pageSize: number = 10; //Check to keep user defined settings
   hasAnyColumnDisplayTotalEnabled: boolean = false;
 
   @Input('columns') public get columns(): DnColumnDto[] {

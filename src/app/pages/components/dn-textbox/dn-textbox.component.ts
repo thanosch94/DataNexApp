@@ -57,6 +57,7 @@ export class DnTextboxComponent implements ControlValueAccessor {
   @Input() iconPosition?: string = 'end';
   @Input() iconTooltip: string = '';
   @Input() type: string = 'text';
+  @Input() disabled: boolean = false;
   @Output() onIconClicked = new EventEmitter();
   @Output() onBlur = new EventEmitter();
   @Output() onInput = new EventEmitter();

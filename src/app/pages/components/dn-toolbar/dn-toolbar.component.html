@@ -18,7 +18,7 @@
       <mat-icon class="icons">refresh</mat-icon>
       <span class="button-title">Refresh</span>
     </button>
-    } @if(canDelete && !isDialog && entityId){
+    } @if(canDelete && !isDialog){
     <button class="button" mat-button (click)="onDeleteClicked($event)">
       <mat-icon class="icons">delete</mat-icon>
       <span class="button-title">Delete</span>
@@ -37,6 +37,16 @@
     <button class="button" mat-button (click)="onSaveClicked($event)">
       <mat-icon class="icons">save</mat-icon>
       <span class="button-title">Save</span>
+    </button>
+    } @if(canEdit){
+    <button class="button" mat-button (click)="onEditClicked($event)">
+      <mat-icon class="icons">edit</mat-icon>
+      <span class="button-title">Edit</span>
+    </button>
+    } @if(canCancel){
+    <button class="button" mat-button (click)="onCancelClicked($event)">
+      <mat-icon class="icons">cancel</mat-icon>
+      <span class="button-title">Cancel</span>
     </button>
     } @if(isDialog){
     <mat-dialog-actions>
