@@ -25,6 +25,14 @@ export function addGetByDatasourceIdAction<T>(datasourceName: string) {
   };
 }
 
+export function addGetByIdAction<T>(entityName: string) {
+  return {
+    action: createAction(`${entityName}`, props<{id:Guid}>()),
+    actionSuccess: createAction(`${entityName} Success`, props<{ dto: T }>()),
+    actionFailure: createAction(`${entityName} Failure`, props<{ error: any }>()),
+  };
+}
+
 export function addInsertAction<T>(entityName: string) {
   return {
     action: createAction(`${entityName}`, props<{dto:T}>()),

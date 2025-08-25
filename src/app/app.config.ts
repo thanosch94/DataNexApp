@@ -35,6 +35,9 @@ import { CntorDatasourcesEffects } from './state/parameters/connector-datasource
 import { connectorDatasourcesReducer } from './state/parameters/connector-datasources/cntor-datasources.reducer';
 import { CntorDatasourceEntitiesEffects } from './state/parameters/cntor-datasource-entities/cntor-datasource-entities.effects';
 import { cntorDatasourceEntitiesReducer } from './state/parameters/cntor-datasource-entities/cntor-datasource-erntities.reducer';
+import { CustomersEffects } from './state/parameters/customers/customers.effects';
+import { customersReducer } from './state/parameters/customers/customers.reducer';
+import { AddressesEffects } from './state/addresses/addresses.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -55,7 +58,8 @@ export const appConfig: ApplicationConfig = {
       appPermissions:appPermissionsReducer,
       userAppPermissions:userAppPermissionsReducer,
       connectorDatasources:connectorDatasourcesReducer,
-      connectorDatasourceEntities:cntorDatasourceEntitiesReducer
+      connectorDatasourceEntities:cntorDatasourceEntitiesReducer,
+      customers:customersReducer
     }),
     provideEffects([
       ProductEffects,
@@ -71,7 +75,9 @@ export const appConfig: ApplicationConfig = {
       AppPermissionsEffects,
       UserAppPermissionsEffects,
       CntorDatasourcesEffects,
-      CntorDatasourceEntitiesEffects
+      CntorDatasourceEntitiesEffects,
+      CustomersEffects,
+      AddressesEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

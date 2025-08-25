@@ -274,7 +274,7 @@
                 mat-icon-button
                 class="iconbutton"
                 color="primary"
-                (click)="row.IsEditable ? save(row, index) : edit(row, index)"
+                (click)="row.IsEditable ? save(row, index) : edit(row)"
               >
                 @if(!row.IsEditable){<mat-icon>edit</mat-icon>}
                 @if(row.IsEditable){<mat-icon>save</mat-icon>}
@@ -360,7 +360,7 @@
       [length]="matDataSource.data.length"
       [pageSize]="pageSize"
       (page)="onPaginatorValueChange($event)"
-      [pageSizeOptions]="[5, 10, 25, 100]"
+      [pageSizeOptions]="pageSizeOptions"
       aria-label="Select page"
     >
     </mat-paginator>

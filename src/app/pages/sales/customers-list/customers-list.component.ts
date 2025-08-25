@@ -1,3 +1,6 @@
+import { TabsService } from './../../../services/tabs.service';
+import { Observable } from 'rxjs';
+import { selectAllCustomers, selectCustomerById } from './../../../state/parameters/customers/customers.selectors';
 import {
   Component,
   OnInit,
@@ -28,6 +31,10 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
+import { BaseComponent } from '../../components/base/base.component';
+import { GetAllCustomers } from '../../../state/parameters/customers/customers.actions';
+import { threadId } from 'worker_threads';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
     selector: 'app-customers-list',
@@ -39,7 +46,7 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
         MatInputModule,
         MatFormFieldModule,
         MatTableModule,
-        HttpClientModule,
+        AsyncPipe,
         DnToolbarComponent,
         MatTooltipModule,
         DnGridComponent
@@ -48,8 +55,8 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
     styleUrl: './customers-list.component.css'
 })
 
-export class CustomersListComponent implements OnInit {
-  dataSource: CustomerDto[];
+export class CustomersListComponent extends BaseComponent implements OnInit {
+  dataSource: Observable<CustomerDto[]>;
   customersViewModel: CustomersViewModel;
   customer_list_text: string;
   columns:DnColumnDto[]
@@ -58,11 +65,13 @@ export class CustomersListComponent implements OnInit {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private tabsService:TabsService
   ) {
+    super();
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.customer_list_text = 'Customer List';
+    this.tabsService.setActiveTabName(this.customer_list_text)
   }
 
   ngOnInit() {
@@ -71,10 +80,8 @@ export class CustomersListComponent implements OnInit {
   }
 
   getData() {
-    this.customersViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = result;
-
-    });
+    this.store.dispatch(GetAllCustomers.action())
+    this.dataSource = this.store.select(selectAllCustomers)
   }
 
   getColumns(){
@@ -146,7 +153,8 @@ export class CustomersListComponent implements OnInit {
     this.getData();
   }
 
-  onRowEditing(e:any){
+  onRowEditingg(e:any){
+    e.preve
     WebAppBase.data = e.Id;
     this.router.navigate(['customer-edit']);
   }

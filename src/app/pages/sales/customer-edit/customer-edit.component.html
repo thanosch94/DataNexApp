@@ -1,122 +1,688 @@
 <dn-toolbar
-  [canDelete]="true"
+  [canDelete]="this.customer().Id?true:false"
   [canRefresh]="customerId ? true : false"
   [canExit]="true"
   [canSave]="true"
   [isDialog]="false"
   [title]="customer_text"
-  [entityId]="customer.Id"
+  [entityId]="customerId"
   (onCloseBtnClicked)="onCloseClicked($event)"
   (onDeleteBtnClicked)="onDeleteClicked($event)"
   (onSaveBtnClicked)="onSaveClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 
-<div class="form" (submit)="onSaveClicked($event)">
-  <div class="basic-info-contact">
-    <div class="contact-info-title">
-      <b>Contact Info</b>
-    </div>
-    <div class="basic-info-contact-container">
-      <br />
-      <dn-textbox
-        [(value)]="customer.Name"
-        [width]="100"
-        label="Name"
-        name="name"
-      ></dn-textbox>
+<form [formGroup]="form">
+  <mat-tab-group class="user-tabs">
+    <mat-tab label="General Info">
+      <div class="form user-edit-container">
+        <div class="flex marginb-2">
+          <div class="flex basic-info-container">
+            <div>
+              <b>Basic Info</b>
+            </div>
+            <div class="flex">
+              <div matTooltip="Add New Photo" class="avatar">
+                <fa-icon [icon]="faIcons.faCamera" size="3x"></fa-icon>
+              </div>
+              <div class="basic-info">
+                <div>
+                  <div class="flex">
+                    <div class="code">
+                      <dn-textbox
+                        formControlName="Code"
+                        label="Code"
+                        name="code"
+                        [readOnly]="true"
+                      ></dn-textbox>
+                    </div>
+                    <div class="margin-auto name">
+                      <dn-textbox
+                        formControlName="Name"
+                        label="Full Name"
+                        name="name"
+                        (onBlur)="onNameBlur($event)"
+                      ></dn-textbox>
+                      @if(isTouchedOrInvalid(form, 'Name')){
+                      <div class="error-message">
+                        <p>
+                          <small
+                            style="color: red"
+                            *ngIf="form.get('Name')!.hasError('required')"
+                            >Field is required</small
+                          >
+                        </p>
+                      </div>
+                      }
+                    </div>
+                  </div>
 
-      <dn-textbox
-        class="phone1"
-        [(value)]="customer.Phone1"
-        [width]="45"
-        label="Phone 1"
-        name="phone1"
-      ></dn-textbox>
+                  <div class="flex">
+                    <div class="margin-5 customer-type">
+                      <dn-selectbox
+                        formControlName="CustomerTypeId"
+                        label="Customer Type"
+                        [width]="100"
+                        name="customerType"
+                      ></dn-selectbox>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <div class="width-45 margin-auto email">
+                      <dn-textbox
+                        formControlName="Email"
+                        label="Email"
+                        [width]="100"
+                        name="email"
+                      ></dn-textbox>
+                    </div>
+                    <div class="width-45 margin-auto phone">
+                      <dn-textbox
+                        formControlName="Phone1"
+                        label="Phone"
+                        [width]="100"
+                        name="phone"
+                      ></dn-textbox>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <div class="margin-5 width-45 vat-class">
+                      <dn-selectbox
+                        [dataSource]="vatClassesDataSource | async"
+                        valueExpr="Id"
+                        displayExpr="Name"
+                        formControlName="VatClassId"
+                        label="Vat Class"
+                        [width]="100"
+                        name="vatClassId"
+                        (onBlur)="onVatClassIdBlur($event)"
+                      ></dn-selectbox>
+                      <div
+                        class="error-message"
+                        *ngIf="isTouchedOrInvalid(form, 'VatClassId')"
+                      >
+                        <p>
+                          <small
+                            style="color: red"
+                            *ngIf="form.get('VatClassId')!.hasError('required')"
+                            >Field is required</small
+                          >
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex" style="width: 100%">
+            <div class="flex company-info-container">
+              <div>
+                <b>Company Info</b>
+              </div>
+              <div class="company-info">
+                <div>
+                  <div class="flex">
+                    <div class="company-name">
+                      <dn-textbox
+                        formControlName="CompanyName"
+                        label="Company Name"
+                        name="companyName"
+                      ></dn-textbox>
+                    </div>
+                  </div>
+                  <div class="flex">
+                    <div class="width-45 margin-auto vat-number">
+                      <dn-textbox
+                        formControlName="VatNumber"
+                        label="Vat Number"
+                        name="vatNumber"
+                      ></dn-textbox>
+                    </div>
+                    <!-- Maybe need to fix selectbox for reactive forms -->
+                    <div class="margin-auto width-45 tax-office">
+                      <dn-textbox
+                        formControlName="TaxOffice"
+                        label="Tax Office"
+                        [width]="100"
+                        name="taxOffice"
+                      ></dn-textbox>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex">
+                <div class="margin-5 width-45 occupation">
+                  <dn-textbox
+                    formControlName="Occupation"
+                    label="Occupation"
+                    [width]="100"
+                    name="occupation"
+                  ></dn-textbox>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex marginb-2">
+          <div class="flex width-100 notes-container">
+            <div>
+              <b>Notes</b>
+            </div>
+            <div class="notes">
+              <dn-rich-text-editor formControlName="Notes">
+              </dn-rich-text-editor>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-tab>
+    <mat-tab label="Billing - Shipping">
+      <div class="margin flex">
+        <div class="billing-info-container width-45 mr-auto">
+          <div class="billing-header mb-3">
+            <div>
+              <b>Billing Info</b>
+            </div>
+            <div
+              class="add-button example-form"
+              (click)="addBillingAddress($event)"
+            >
+              <button
+                mat-button
+                [disabled]="isAddAddressBtnDisabled(1)"
+                [ngClass]="addAddressBtnClass(1)"
+              >
+                Add
+              </button>
+            </div>
+          </div>
 
-      <dn-textbox
-        [(value)]="customer.Phone2"
-        [width]="45"
-        label="Phone 2"
-        name="phone2"
-      ></dn-textbox>
+          <cdk-accordion class="example-accordion">
+            <!-- Billing -->
+            @for (item of customerAddresses|addressType:1; track item; let index
+            = $index) {
+            <cdk-accordion-item
+              #accordionItem="cdkAccordionItem"
+              class="example-accordion-item"
+              [expanded]="item.IsDefault || item.IsInEditMode"
+            >
+              <button
+                class="example-accordion-item-header"
+                (click)="accordionItem.toggle()"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + index"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + index"
+              >
+                <i
+                  ><span> {{ item.Address.Street }}</span>
+                  @if(item.Address.StreetNumber){<span>
+                    {{ item.Address.StreetNumber }}
+                  </span>
+                  } @if(item.Address.PostalCode){<span
+                    >, {{ item.Address.PostalCode }}</span
+                  >} @if(item.Address.City){<span
+                    >, {{ item.Address.City }} </span
+                  >} @if(item.IsDefault){
+                  <fa-icon
+                    style="color: green"
+                    [icon]="faIcons.faCircleCheck"
+                  ></fa-icon>
+                  }
+                </i>
+                <span class="example-accordion-item-description">
+                  Click to {{ accordionItem.expanded ? "close" : "open" }}
+                </span>
+              </button>
+              @if(accordionItem.expanded) {
+              <div
+                class="example-accordion-item-body"
+                role="region"
+                [style.display]="accordionItem.expanded ? '' : 'none'"
+                [attr.id]="'accordion-body-' + index"
+                [attr.aria-labelledby]="'accordion-header-' + index"
+              >
+                <div class="mb-3">
+                  <dn-toolbar
+                    [title]="item?.Id ? 'Edit Address' : 'New Address'"
+                    [canDelete]="!item.IsInEditMode"
+                    [canEdit]="!item.IsInEditMode"
+                    [canSave]="item.IsInEditMode"
+                    [canCancel]="item.IsInEditMode"
+                    (onSaveBtnClicked)="
+                      onSaveAddressBtnClicked($event, 1, item)
+                    "
+                    (onEditBtnClicked)="onAddressEditBtnClicked($event, item)"
+                    (onCancelBtnClicked)="
+                      onAddressCancelBtnClicked($event, item)
+                    "
+                    (onDeleteBtnClicked)="
+                      onAddressDeleteBtnClicked($event, item)
+                    "
+                  ></dn-toolbar>
+                </div>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    class="mr-10"
+                    label="Street*"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.Street"
+                  >
+                  </dn-textbox>
+                  <dn-textbox
+                    label="Street Number"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.StreetNumber"
+                  >
+                  </dn-textbox>
+                </div>
 
-      <dn-textbox
-        [(value)]="customer.Email"
-        [width]="100"
-        label="Email"
-        name="email"
-      ></dn-textbox>
-    </div>
-  </div>
-  <div class="addresses">
-    <div class="addresses-title">
-      <b>Addresses</b>
-    </div>
-    <div class="addresses-container">
-      <br />
-      <dn-textbox
-        class="address"
-        [(value)]="customer.Address"
-        [width]="45"
-        label="Address"
-        name="address"
-      ></dn-textbox>
-      <dn-textbox
-        [(value)]="customer.Region"
-        [width]="45"
-        label="Region"
-        name="region"
-      ></dn-textbox>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    class="mr-10"
+                    label="Postal Code"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.PostalCode"
+                  >
+                  </dn-textbox>
+                  <dn-textbox
+                    label="City*"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.City"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    label="Country"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.Country"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="margin mb-3">
+                  <dn-textbox
+                    label="Address Notes"
+                    [width]="100"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Notes"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="mt-2">
+                  <dn-checkbox
+                    label="Set as default"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.IsDefault"
+                  ></dn-checkbox>
+                </div>
+              </div>
+              }
+            </cdk-accordion-item>
+            }
+          </cdk-accordion>
+        </div>
+        <div class="shipping-info-container width-45">
+          <div class="shipping-header mb-3">
+            <div>
+              <b>Shipping Info</b>
+            </div>
+            <div
+              class="add-button example-form"
+              (click)="addShippingAddress($event)"
+            >
+              <button
+                mat-button
+                [disabled]="isAddAddressBtnDisabled(2)"
+                [ngClass]="addAddressBtnClass(2)"
+              >
+                Add
+              </button>
+            </div>
+          </div>
+          <cdk-accordion class="example-accordion">
+            <!-- Shipping -->
+            @for (item of customerAddresses|addressType:2; track item; let index
+            = $index) {
+            <cdk-accordion-item
+              #accordionItem="cdkAccordionItem"
+              class="example-accordion-item"
+              [expanded]="item.IsDefault || item.IsInEditMode"
+            >
+              <button
+                class="example-accordion-item-header"
+                (click)="accordionItem.toggle()"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + index"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + index"
+              >
+                <i
+                  ><span> {{ item.Address.Street }}</span>
+                  @if(item.Address.StreetNumber){<span>
+                    {{ item.Address.StreetNumber }}
+                  </span>
+                  }@if(item.Address.PostalCode){<span
+                    >, {{ item.Address.PostalCode }}</span
+                  >}@if(item.Address.City){<span
+                    >, {{ item.Address.City }} </span
+                  >} @if(item.IsDefault){
+                  <fa-icon
+                    style="color: green"
+                    [icon]="faIcons.faCircleCheck"
+                  ></fa-icon>
+                  }
+                </i>
+                <span class="example-accordion-item-description">
+                  Click to {{ accordionItem.expanded ? "close" : "open" }}
+                </span>
+              </button>
+              @if(accordionItem.expanded) {
+              <div
+                class="example-accordion-item-body"
+                role="region"
+                [style.display]="accordionItem.expanded ? '' : 'none'"
+                [attr.id]="'accordion-body-' + index"
+                [attr.aria-labelledby]="'accordion-header-' + index"
+              >
+                <div class="mb-3">
+                  <dn-toolbar
+                    [title]="item?.Id ? 'Edit Address' : 'New Address'"
+                    [canDelete]="!item.IsInEditMode"
+                    [canEdit]="!item.IsInEditMode"
+                    [canSave]="item.IsInEditMode"
+                    [canCancel]="item.IsInEditMode"
+                    (onSaveBtnClicked)="
+                      onSaveAddressBtnClicked($event, 2, item)
+                    "
+                    (onEditBtnClicked)="onAddressEditBtnClicked($event, item)"
+                    (onCancelBtnClicked)="
+                      onAddressCancelBtnClicked($event, item)
+                    "
+                    (onDeleteBtnClicked)="
+                      onAddressDeleteBtnClicked($event, item)
+                    "
+                  ></dn-toolbar>
+                </div>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    class="mr-10"
+                    label="Street*"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.Street"
+                  >
+                  </dn-textbox>
+                  <dn-textbox
+                    label="Street Number"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.StreetNumber"
+                  >
+                  </dn-textbox>
+                </div>
 
-      <dn-textbox
-        class="city"
-        [(value)]="customer.City"
-        [width]="45"
-        label="City"
-        name="city"
-      ></dn-textbox>
-      <dn-textbox
-        [(value)]="customer.PostalCode"
-        [width]="45"
-        label="Postal Code"
-        name="postalcode"
-      ></dn-textbox>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    class="mr-10"
+                    label="Postal Code"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.PostalCode"
+                  >
+                  </dn-textbox>
+                  <dn-textbox
+                    label="City*"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.City"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="margin inline mb-3">
+                  <dn-textbox
+                    label="Country"
+                    [width]="45"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Address.Country"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="margin mb-3">
+                  <dn-textbox
+                    label="Address Notes"
+                    [width]="100"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.Notes"
+                  >
+                  </dn-textbox>
+                </div>
+                <div class="mt-2">
+                  <dn-checkbox
+                    label="Set as default"
+                    [ngClass]="!item.IsInEditMode ? 'disabled-input' : ''"
+                    [disabled]="!item.IsInEditMode"
+                    [(value)]="item.IsDefault"
+                  ></dn-checkbox>
+                </div>
+              </div>
+              }
+            </cdk-accordion-item>
+            }
+          </cdk-accordion>
+        </div>
+        <!-- <div class="flex width-50 social-media-container">
+            <div>
+              <b>Social Media</b>
+            </div>
+            <div class="personal-info flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faFacebook" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>Facebook</b>
+                </div>
+              </div>
+              <div class="margin-5 facebook-url">
+                <dn-textbox
+                  formControlName="FacebookUrl"
+                  label="Facebook Url"
+                  name="facebook"
+                ></dn-textbox>
+              </div>
+            </div>
 
-      <dn-textbox
-        [(value)]="customer.Country"
-        [width]="45"
-        label="country"
-        name="country"
-      ></dn-textbox>
-    </div>
-  </div>
+            <div class="flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faInstagram" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>Instagram</b>
+                </div>
+              </div>
+              <div class="margin-5 instagram-url">
+                <dn-textbox
+                  formControlName="InstagramUrl"
+                  label="Instagram Url"
+                  name="instagram"
+                ></dn-textbox>
+              </div>
+            </div>
+            <div class="flex space-between">
+              <div class="social-container">
+                <div class="social-icon">
+                  <fa-icon [icon]="faLinkedin" size="2x"></fa-icon>
+                </div>
+                <div>
+                  <b>LinkedIn</b>
+                </div>
+              </div>
+              <div class="margin-5 linkedIn-url">
+                <dn-textbox
+                  formControlName="LinkedInUrl"
+                  label="LinkedIn Url"
+                  name="linkedIn"
+                ></dn-textbox>
+              </div>
+            </div>
+          </div> -->
+      </div>
+    </mat-tab>
+    <mat-tab label="User Inputs">
+      <div class="tab-4 margin">
+        <div class="mb-1">
+          <b>Custom Fields</b>
+        </div>
+        <div class="tab3-grid">
+          <dn-textbox
+            class="tab3-grid-a-user-text1"
+            name="user-text-1"
+            formControlName="UserText1"
+            label="User Text 1"
+            [width]="100"
+          >
+          </dn-textbox>
 
-  <br /><br /><br /><br />
-</div>
+          <dn-textbox
+            class="tab3-grid-b-user-text2"
+            name="user-text-2"
+            formControlName="UserText2"
+            label="User Text 2"
+            [width]="100"
+          >
+          </dn-textbox>
 
-<div class="form">
-  <div class="invoice-info">
-    <div class="info-title">
-      <b>Invoice Info</b>
-    </div>
-    <div class="invoice-info-container">
-      <br />
-      <dn-textbox
-        class="vat-number"
-        [(value)]="customer.VatNumber"
-        [width]="45"
-        label="Vat Number"
-        name="vatnumber"
-        (onInput)="onVatIdValueChanged($event)"
-      ></dn-textbox>
+          <dn-textbox
+            class="tab3-grid-c-user-text3"
+            name="user-text-3"
+            formControlName="UserText3"
+            label="User Text 3"
+            [width]="100"
+          >
+          </dn-textbox>
+          <dn-textbox
+            class="tab3-grid-d-user-text4"
+            name="user-text-4"
+            formControlName="UserText4"
+            label="User Text 4"
+            [width]="100"
+          >
+          </dn-textbox>
 
-      <dn-textbox
-        [(value)]="customer.TaxOffice"
-        [width]="45"
-        label="Tax Office"
-        name="taxoffice"
-      ></dn-textbox>
-    </div>
-  </div>
-</div>
+          <dn-number-box
+            class="tab3-grid-e-user-number1"
+            name="user-number-1"
+            formControlName="UserNumber1"
+            label="User Number 1"
+            [width]="100"
+          >
+          </dn-number-box>
+
+          <dn-number-box
+            class="tab3-grid-f-user-number2"
+            name="user-number-2"
+            formControlName="UserNumber2"
+            label="User Number 2"
+            [width]="100"
+          >
+          </dn-number-box>
+
+          <dn-number-box
+            class="tab3-grid-g-user-number3"
+            name="user-number-3"
+            formControlName="UserNumber3"
+            label="User Number 3"
+            [width]="100"
+          >
+          </dn-number-box>
+
+          <dn-number-box
+            class="tab3-grid-h-user-number4"
+            name="user-number-4"
+            formControlName="UserNumber4"
+            label="User Number 4"
+            [width]="100"
+          >
+          </dn-number-box>
+
+          <dn-date-box
+            class="tab3-grid-i-user-date1"
+            name="user-date-1"
+            formControlName="UserDate1"
+            label="User Date 1"
+            [width]="100"
+          >
+          </dn-date-box>
+
+          <dn-date-box
+            class="tab3-grid-j-user-date2"
+            name="user-date-2"
+            formControlName="UserDate2"
+            label="User Date 2"
+            [width]="100"
+          >
+          </dn-date-box>
+
+          <dn-date-box
+            class="tab3-grid-k-user-date3"
+            name="user-date-3"
+            formControlName="UserDate3"
+            label="User Date 3"
+            [width]="100"
+          >
+          </dn-date-box>
+
+          <dn-date-box
+            class="tab3-grid-l-user-date4"
+            name="user-date-4"
+            formControlName="UserDate4"
+            label="User Date 4"
+            [width]="100"
+          >
+          </dn-date-box>
+        </div>
+      </div>
+    </mat-tab>
+    @if(this.customer().Id){<mat-tab label="Attachments">
+      <div class="margin documents-container">
+        <div class="mb-1">
+          <b>Attachments</b>
+        </div>
+        <div class="tab4 mb-1">
+          <dn-file-uploader></dn-file-uploader>
+        </div>
+
+        <div>
+          <dn-grid
+            [canDisplaySearch]="false"
+            [enableAddButton]="false"
+            [dataSource]="[]"
+          >
+          </dn-grid>
+        </div>
+      </div>
+    </mat-tab>
+    }
+  </mat-tab-group>
+</form>

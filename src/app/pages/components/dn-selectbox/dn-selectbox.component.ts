@@ -58,6 +58,7 @@ export class DnSelectboxComponent {
   @Output() valueChange = new EventEmitter();
   @Output() selectionChange = new EventEmitter();
   @Output() onClick = new EventEmitter();
+  @Output() onBlur = new EventEmitter();
 
   @Output() disabledChange = new EventEmitter();
 
@@ -82,6 +83,9 @@ export class DnSelectboxComponent {
   onInputClick(e:any){
     this.isOptionsPanelEnabled=true;
     this.onClick.emit(e)
+  }
+  onInputBlur(e:any){
+    this.onBlur.emit(e)
   }
 
   display(data: any) {

@@ -127,6 +127,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() tableHeaderBackgroundColor: string;
   @Input() tableHeaderFontColor: string;
   @Input() borderTopColor: string ="#0B6AA5";
+  @Input() pageSizeOptions:number[]= [5, 10, 25, 100];
   selection = new SelectionModel<any>(true, []);
   private _columns: DnColumnDto[] = [];
   zeroMin: number;
@@ -257,7 +258,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
     this.isEditable = false;
   }
 
-  edit(data: any, index: number) {
+  edit(data: any) {
     //User can set disableLineEditing = true in order to disable the line editing and execute his own code (e.g. open a dialog)
     if (!this.disableLineEditing) {
       let isAnyRowItemInEditingMode = this.matDataSource.data.some(

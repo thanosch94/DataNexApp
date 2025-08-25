@@ -13,6 +13,7 @@
       (click)="onInputClick(value)"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
       [disabled]="disabled"
+      (blur)="onInputBlur($event)"
     />}@else {
       <!-- Select -->
       <mat-select
@@ -26,6 +27,8 @@
       [compareWith]="compareFn"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
       [disabled]="disabled"
+      (blur)="onInputBlur($event)"
+
     >
     <mat-select-trigger>
       {{ display(value)}}

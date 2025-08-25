@@ -1,79 +1,315 @@
-.form{
-  margin:2%;
-  display:flex;
+.form, .margin{
+  margin:1%;
 }
 
-.info{
+.mb-1{
+  margin-bottom: 1%;
+}
+.flex{
+  display: flex;
+}
+
+
+.avatar{
+  width:200px;
+  height: 150px;
+  background-color: lightgray;
+  clip-path: circle(45%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 3%;
+}
+
+.avatar:hover{
+  background-color: gray;
+  cursor: pointer;
+
+}
+
+.basic-info, .company-info, .personal-info, .contact-info{
+  margin-top: 25px;
+  width:100%
+}
+
+.margin-5{
+  margin-right:5% ;
+}
+.margin-auto{
+  margin-right:auto ;
+}
+
+.space-between{
+  justify-content: space-between;
+}
+.space-around{
+  justify-content: space-around;
+}
+
+.addresses{
+  width:50%;
+}
+
+ .vat-number, .code, .name, .vat-class, .email{
+  margin-right: 5%;
+ }
+
+ .notes{
+    margin-right: 2.5%;
+
+ }
+.basic-info-container, .company-info-container{
+  flex-direction: column;
+  width: 100%
+}
+
+.contact-info-container, .social-media-container,.notes-container{
+  flex-direction: column;
+  gap:1rem
+}
+
+
+.code, .customer-type, .vat-class, .name, .email, .phone, .occupation, .username, .address, .postal-code, .country, .city, .social-container, .facebook-url, .instagram-url, .linkedIn-url, .company-name, .vat-number, .tax-office{
+  margin-bottom: 2%;
+}
+
+.code{
+  width:33%;
+}
+
+.name{
+  width:66%;
+}
+
+.customer-type{
   width: 100%;
 }
 
-.basic-info-contact{
-  width:50%;
+.company-name{
+  width: 95%;
 }
 
-.addresses, .invoice-info{
-  width:50%;
+.social-container{
+  display: flex;
+  align-items: center;
 }
 
-::ng-deep .green-snackbar .mdc-snackbar__surface {
-  background-color:#1b9e1b!important;
-  color: white;
+.social-icon{
+  margin-right:10%
+}
+.facebook-url, .instagram-url, .linkedIn-url{
+  width: 70%;
 }
 
-.address, .city{
+.user-tabs{
+  margin-top: 1%;
+  margin-left:1%
+}
+
+
+.error-message{
+  margin-left:3%;
+}
+
+.error-message p {
+  margin-bottom:0;
+}
+
+.mat-mdc-button:hover{
+  cursor: pointer;
+}
+
+
+.billing-info-container{
+  margin-bottom:2%;
+}
+
+
+.general-grid{
+  display: grid;
+  grid-template-areas:
+   "a b"
+   "c c";
+  gap: 2rem;
+}
+
+.grid-a{
+  grid-area: a;
+}
+.grid-b{
+  grid-area: b;
+}
+.grid-c{
+  grid-area: c;
+}
+
+.tab3-grid{
+  display: grid;
+  grid-template-areas:
+  "a b c d"
+  "e f g h"
+  "i j k l";
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap:2 rem;
+}
+
+.tab3-grid-a-user-text1{
+  grid-area: a;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-b-user-text2{
+  grid-area: b;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-c-user-text3{
+  grid-area: c;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-d-user-text4{
+  grid-area: d;
+  gap:2rem;
+  width:100%;
+}
+
+.tab3-grid-e-user-number1{
+  grid-area: e;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-f-user-number2{
+  grid-area: f;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-g-user-number3{
+  grid-area: g;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-h-user-number4{
+  grid-area: h;
+  gap:2rem;
+  width:100%;
+}
+
+.tab3-grid-i-user-date1{
+  grid-area: i;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-j-user-date2{
+  grid-area: j;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-k-user-date3{
+  grid-area: k;
+  gap:2rem;
+  width:90%;
+}
+
+.tab3-grid-l-user-date4{
+  grid-area: l;
+  gap:2rem;
+  width:100%;
+}
+
+dn-textbox, dn-number-box, dn-date-box{
+  margin-bottom: 4%;
+
+}
+
+
+
+.mr-auto{
+   margin-right: auto;
+}
+.mb-3{
+  margin-bottom: 3%;
+}
+.mr-10{
   margin-right: 10%;
 }
 
-
-/* Titles */
-.contact-info-title, .addresses-title, .info-title{
-padding: 1%;
-background: lightgray;
-border-radius: 10px 10px 0% 0%;
+.mt-2{
+  margin-top: 2%;
+}
+.billing-header, .shipping-header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.contact-info-title, .addresses-title, .info-title{
-  width: 92%;
+.button-add-row {
+  background: #0B6AA5!important;
+  color: #ffffff!important;
+}
+.button-add-row-disabled {
+  background: #5e849c!important;
+  color: #ffffff!important;
 }
 
-/* Change the height of inputs */
-.basic-info-contact ::ng-deep  .mat-mdc-form-field-infix{
-  padding: 0!important;
+/* Accordion */
+.example-accordion {
+  display: block;
 }
 
-.addresses ::ng-deep  .mat-mdc-form-field-infix{
-  padding: 0!important;
+.example-accordion-item {
+  display: block;
+  border: solid 1px #ccc;
 }
 
-.invoice-info ::ng-deep  .mat-mdc-form-field-infix{
-  padding: 0!important;
+.example-accordion-item + .example-accordion-item {
+  border-top: none;
 }
 
+.example-accordion-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 16px;
+  text-align: left;
 
-
-
-/* .basic-info-contact input{
-  margin-top:25px;
-}
-.addresses input{
-  margin-top:25px;
-}
-.invoice-info input{
-  margin-top:25px;
-
-} */
-
-.basic-info-contact-container, .addresses-container, .invoice-info-container{
-  width:90%;
-  padding: 2%;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 }
 
-
-.phone1, .vat-number{
-  margin-right:10%
+.example-accordion-item-description {
+  font-size: 0.85em;
+  color: #999;
 }
-dn-textbox ::ng-deep .mat-mdc-form-field, dn-number-box ::ng-deep  .mat-mdc-form-field, dn-date-box ::ng-deep .mat-mdc-form-field{
-  margin-bottom: 4%!important;
 
+.example-accordion-item-body {
+  padding: 16px;
+}
+
+.example-accordion-item-header:hover {
+  cursor: pointer;
+  background-color: #eee;
+}
+
+.example-accordion-item:first-child {
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+}
+
+.example-accordion-item:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px;
+}
+
+::ng-deep .disabled-input input{
+  color: black!important;;
 }

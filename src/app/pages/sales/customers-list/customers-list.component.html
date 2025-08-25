@@ -11,12 +11,13 @@
 <div class="customer-list">
 
   <dn-grid  #customersGrid
-  [dataSource]="dataSource"
+  [dataSource]="dataSource |async"
   [columns]="columns"
   [canDisplaySearch]="true"
   [enableAddButton]="false"
+  [disableLineEditing]="true"
   (onRowDelete)="onRowDelete($event)"
-  (onRowEditing)="onRowEditing($event)"
+  (onRowEditing)="onRowEditingg($event)"
   >
 
   </dn-grid>
