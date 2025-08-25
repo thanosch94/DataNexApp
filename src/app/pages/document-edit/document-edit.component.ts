@@ -14,8 +14,11 @@ import {
   ChangeDetectorRef,
   Component,
   ElementRef,
+  EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
   ViewChild,
   ViewChildren,
@@ -91,6 +94,8 @@ import {
   selectVatClassById,
 } from '../../state/parameters/vat-classes/vat-classes.selectors';
 import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-uploader.component';
+import { GetAllCustomers } from '../../state/parameters/customers/customers.actions';
+import { selectAllCustomers } from '../../state/parameters/customers/customers.selectors';
 
 @Component({
   selector: 'app-document-edit',
@@ -117,7 +122,7 @@ import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-
     DnTextboxComponent,
     DnNumberBoxComponent,
     DnDateBoxComponent,
-    DnFileUploaderComponent
+    DnFileUploaderComponent,
   ],
   providers: [
     provideNativeDateAdapter(),
@@ -129,9 +134,13 @@ import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-
 })
 export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('productstable') productstable: DnGridComponent;
+  documentType: any;
+  @Input() documentGroup: any;
+  @Input() documentId: any;
+  @Input() isInPopup: boolean;
+  @Output() onClose = new EventEmitter();
 
   documentsViewModel: DocumentsViewModel;
-  documentId: any;
   statusesList: any;
   currency: string;
   total: number = 0;
@@ -141,8 +150,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   previousTabName: string;
   documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
   document_must_be_saved_in_order_to_add_charges_text: string;
-  documentGroup: any;
-  documentType: any;
 
   vatClassesViewModel: VatClassesViewModel;
   suppliersViewModel: SuppliersViewModel;
@@ -200,16 +207,18 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.documentId = WebAppBase.data;
     WebAppBase.data = undefined;
     this.currency = WebAppBase.currency;
-    let activeTab = TabsService.tabs.find((x) => x.Active == true);
-    activeTab!.Data.forEach((row: any) => {
-      if (row['Group']) {
-        this.documentGroup = row['Group'];
-      }
 
-      if (row['Type']) {
-        this.documentType = row['Type'];
-      }
-    });
+      let activeTab = TabsService.tabs.find((x) => x.Active == true);
+      activeTab?.Data.forEach((row: any) => {
+        if (row['Group']) {
+          this.documentGroup = row['Group'];
+        }
+
+        if (row['Type']) {
+          this.documentType = row['Type'];
+        }
+      });
+
 
     this.pdfGeneratorComponent = new PdfGeneratorComponent();
   }
@@ -270,9 +279,8 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       this.lotStrategyEnum = result.LotStrategy;
     });
 
-    let customersObs$ = this.customersViewModel.GetAll();
-    this.customers = await firstValueFrom(customersObs$);
-
+    this.store.dispatch(GetAllCustomers.action());
+this.customers = this.store.select(selectAllCustomers)
     let suppliersObs$ = this.suppliersViewModel.GetAll();
     this.suppliers = await firstValueFrom(suppliersObs$);
 
@@ -490,6 +498,8 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onCloseClicked(e: any) {
+    if(!this.isInPopup){
+
     let activeTab = this.tabsService.getActiveTab();
     activeTab!.Data.forEach((row: any) => {
       if (row['Group']) {
@@ -505,6 +515,9 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.tabsService.setActiveTabPreviousName();
+    }else{
+      this.onClose.emit(e)
+    }
   }
 
   onProductInfoClicked(e: any, index: number) {

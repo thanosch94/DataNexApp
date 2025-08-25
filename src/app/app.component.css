@@ -60,6 +60,9 @@ margin-left:5%;
   width: 100% !important;;
 }
 
+.margin{
+  margin:1%;
+}
 .inline{
 display: inline-block;
 margin-left: auto;
@@ -75,7 +78,7 @@ margin-right: auto;
 }
 
 .screen{
-  height:calc(100% - 40px);
+  height:calc(100% - 30px);
 }
 
 
@@ -85,7 +88,7 @@ margin-right: auto;
   /* box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-bottom: 1px grey solid; */
   align-items:center;
-  height: fit-content;
+  height: 60px;
   padding-bottom:5px;
 }
 

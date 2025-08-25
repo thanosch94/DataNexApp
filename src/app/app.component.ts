@@ -53,6 +53,7 @@ import {
 import { DevToolsComponent } from './pages/configuration/dev-tools/dev-tools.component';
 import { DevToolsService } from './services/dev-tools.service';
 import { debug } from 'console';
+import { HomeComponent } from "./pages/home/home.component";
 
 @Component({
   selector: 'app-root',
@@ -78,7 +79,8 @@ import { debug } from 'console';
     ReactiveFormsModule,
     MatButtonModule,
     DevToolsComponent,
-  ],
+    HomeComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
@@ -393,7 +395,7 @@ export class AppComponent implements AfterViewChecked {
     }
   }
 
-  @HostListener('window:keydown.control.alt.d', ['$event'])
+  @HostListener('window:keydown.control.alt.a', ['$event'])
   async onKeyDown(e: KeyboardEvent) {
     //TODO Add check if user role is admin
     let nested =

@@ -1,0 +1,68 @@
+<div>
+  <div class="home-row1">
+    <div class="last-sales-grid">
+      <div class="title">
+        <b>New Orders</b>
+      </div>
+      <div>
+        <dn-grid
+          [dataSource]="documents"
+          [columns]="avgSalescolumns"
+          [pageSize]="4"
+                    [pageSizeOptions]="[4]"
+
+          [canDisplaySearch]="false"
+          [canDelete]="false"
+          [disableLineEditing]="true"
+          (onRowEditing)="onOrderRowEditing($event)"
+          borderTopColor="darkgreen"
+        >
+        </dn-grid>
+      </div>
+    </div>
+    <div class="chart-1">
+      <div echarts [options]="avgSalePerMonth" style="height: 310px"></div>
+    </div>
+    <div class="sales-per-month-chart">
+      <div echarts [options]="salesPerMonthOptions" style="height: 310px"></div>
+    </div>
+  </div>
+  <div class="home-row2">
+    <!--
+    <div class="sales-by-location-chart">
+        <div echarts [options]="salesByLocationOptions" style="height: 310px;"></div>
+    </div> -->
+
+    <div class="order-status-chart">
+      <div echarts [options]="orderStatusOptions" style="height: 310px"></div>
+    </div>
+    <div class="order-status-chart-2">
+      <div echarts [options]="orderStatusOptions" style="height: 310px"></div>
+    </div>
+    <div class="grid-2">
+      <div class="title">
+        <b>Pending Payments</b>
+      </div>
+      <div>
+        <dn-grid
+          [dataSource]="documents"
+          [columns]="avgSalescolumns"
+          [pageSize]="4"
+          [canDisplaySearch]="false"
+          [canDelete]="false"
+          [pageSizeOptions]="[4]"
+        >
+        </dn-grid>
+      </div>
+    </div>
+  </div>
+</div>
+@if(isOrderPopupVisible){<dn-popup
+  [isPopupVisible]="isOrderPopupVisible"
+  [isFullScreen]="true"
+  [hideOnOutsideClick]="false"
+  (onHiding)="onOrderPopupHiding($event)"
+>
+<app-document-edit [isInPopup]="true" [documentGroup]="1" (onClose)="onOrderPopupHiding($event)"></app-document-edit>
+</dn-popup>
+}

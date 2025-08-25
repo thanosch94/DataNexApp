@@ -59,7 +59,7 @@
             name="Customer"
             placeholder="Select a Customer"
             [(value)]="document.CustomerId"
-            [dataSource]="customers"
+            [dataSource]="customers | async"
             valueExpr="Id"
             displayExpr="Name"
           ></dn-selectbox>
@@ -333,7 +333,7 @@
 <div class="margin">
   <div>
     @if(productsDataSource && columns){
-    <dn-grid class="table"
+    <dn-grid class="products-grid"
       #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"

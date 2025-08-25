@@ -1,0 +1,56 @@
+.margin{
+  margin:2%;
+}
+.margin-1{
+  margin:1%
+}
+.flex{
+  display: flex;
+}
+
+.mr-10{
+  margin-right: 10px;
+}
+
+.mb-2{
+  margin-bottom: 2%;
+}
+.permission-place-name{
+  margin-bottom: 5px;
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+/* Make toolbar sticky in popup */
+::ng-deep .toolbar-container{
+  position: sticky!important;
+  top:0;
+  }
+
+
+  .perm-container{
+    width: 45%;
+  }
+
+
+
+  .chip-grid-field ::ng-deep .mat-mdc-text-field-wrapper, .mdc-text-field{
+    border-radius: 10px;
+    background: beige;
+  }
+
+  .center{
+    align-items: center"
+  }
+
+  .save-permission-btn{
+    display: inline-flex
+  }
+
+  .app-entity-place{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }

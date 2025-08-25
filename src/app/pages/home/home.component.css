@@ -1,0 +1,44 @@
+.home-row1,.home-row2{
+  display: flex;
+}
+.title{
+  font-size: 18px;
+  margin-bottom: 1%;
+}
+.last-sales-grid{
+  flex: 2;
+  margin-right: 2%;
+}
+.chart-1{
+  flex: 1;
+}
+.order-status-chart, .sales-per-month-chart, .sales-by-location-chart, .order-status-chart-2{
+  flex:1
+}
+
+.grid-2{
+  flex:2;
+
+
+}
+
+.order-status-chart-2{
+margin-right: 2%
+}
+
+/*
+Css for hiding elements in grid paginators
+.grid-2 ::ng-deep .mat-mdc-paginator-page-size, .grid-2 ::ng-deep .mat-mdc-paginator-range-actions{
+  display:none;
+}
+
+.grid-2 ::ng-deep .mat-mdc-paginator-container{
+  min-height: 12px;
+}
+.last-sales-grid ::ng-deep .mat-mdc-paginator-page-size, .last-sales-grid ::ng-deep .mat-mdc-paginator-range-actions{
+  display:none;
+}
+
+.last-sales-grid ::ng-deep .mat-mdc-paginator-container{
+  min-height: 12px;
+} */
