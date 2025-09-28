@@ -1,10 +1,8 @@
-import { AdditionalChargeDto } from './../../../dto/additional-charge.dto';
-import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { CommonModule, AsyncPipe } from '@angular/common';
+import { TextFieldModule } from '@angular/cdk/text-field';
+import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {
   AfterViewInit,
-  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
   EventEmitter,
@@ -17,10 +15,10 @@ import {
   ViewChild,
   computed,
 } from '@angular/core';
-import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -39,8 +37,6 @@ import {
 } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { DnPopupComponent } from '../dn-popup/dn-popup.component';
-import { DnToolbarComponent } from '../dn-toolbar/dn-toolbar.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { VisbleGridColumnsPipe } from '../../../pipes/visble-grid-columns.pipe';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -68,7 +64,6 @@ import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.compone
         MatIconModule,
         CommonModule,
         MatSelectModule,
-        CdkTextareaAutosize,
         TextFieldModule,
         MatButtonModule,
         MatPaginator,
@@ -77,13 +72,9 @@ import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.compone
         MatSortModule,
         MatTableModule,
         MatSortHeader,
-        DnPopupComponent,
         MatTabsModule,
-        MatDialogActions,
         MatButtonModule,
         MatDialogModule,
-        DnToolbarComponent,
-        AsyncPipe,
         VisbleGridColumnsPipe,
         MatCheckboxModule,
         LookupNamePipe,
@@ -252,7 +243,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
       this.table.renderRows();
     }
   }
-  save(data: any, index: number) {
+  save(data: any) {
     this.onRowSaving.emit(data);
     data.IsEditable = false;
     this.isEditable = false;

@@ -93,6 +93,11 @@ export class CustomersListComponent extends BaseComponent implements OnInit {
         Visible: false,
       },
       {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
         DataField: 'Name',
         DataType: 'string',
         Caption: 'Name',

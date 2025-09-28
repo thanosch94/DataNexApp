@@ -3,12 +3,9 @@ import { dnIcons } from './../../../enumLists/dn-icon.list';
 import { HttpClient } from '@angular/common/http';
 
 import {
-  ChangeDetectorRef,
   Component,
   OnDestroy,
   OnInit,
-  ViewChild,
-  model,
   signal,
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,9 +21,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatSortModule } from '@angular/material/sort';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { CommonModule } from '@angular/common';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { WebAppBase } from '../../../base/web-app-base';
 import { CustomerDto } from '../../../dto/customer.dto';
 import { AuthService } from '../../../services/auth.service';
@@ -38,7 +35,6 @@ import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.compo
 import { DnCheckboxComponent } from '../../components/dn-checkbox/dn-checkbox.component';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { DevToolsAdd } from '../../../decorators/dev-tools-add';
-import { BaseComponent } from '../../components/base/base.component';
 import { GenericFormComponent } from '../../components/generic-form/generic-form.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
@@ -62,8 +58,7 @@ import { DnDateBoxComponent } from '../../components/dn-date-box/dn-date-box.com
 import { DnNumberBoxComponent } from '../../components/dn-number-box/dn-number-box.component';
 import { DnFileUploaderComponent } from '../../components/dn-file-uploader/dn-file-uploader.component';
 import { CdkAccordionModule } from '@angular/cdk/accordion';
-import { DnTextareaComponent } from '../../components/dn-textarea/dn-textarea.component';
-import { MatButtonModule, MatFabButton } from '@angular/material/button';
+import { MatButtonModule } from '@angular/material/button';
 import { AddressTypePipe } from '../../../pipes/address-type.pipe';
 import {
   DeleteCustomerAddress,
@@ -98,7 +93,6 @@ import { CustomerAddressDto } from '../../../dto/customer-address.dto';
     DnFileUploaderComponent,
     CdkAccordionModule,
     MatButtonModule,
-    DnTextareaComponent,
     DnCheckboxComponent,
     AddressTypePipe,
   ],

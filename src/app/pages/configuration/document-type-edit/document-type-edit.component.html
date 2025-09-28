@@ -143,11 +143,14 @@
         <dn-grid
           class="margin"
           #documentTypesGrid
-          [dataSource]="documentTypeSeriesDataSource"
+          [dataSource]="documentTypeSeriesDataSource|async"
           [columns]="documentTypeSeriesColumns"
           [canDisplaySearch]="false"
           [enableAddButton]="true"
-
+          (onRowAdding)="onDocumentSeriesRowAdding($event)"
+          (onRowSaving)="onDocumentSeriesRowSaving($event)"
+          (onRowDelete)="onDocumentSeriesDelete($event)"
+          (onRowStopEditing)="onDocumentSeriesStopEditing($event)"
         >
         </dn-grid>
       </div>

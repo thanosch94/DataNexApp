@@ -10,7 +10,6 @@ import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 })
 export class DocumentTypesService {
 
-
   service: string;
   constructor(private http: HttpClient, private auth:AuthService) {
     this.service = this.auth.getApiService();

@@ -1,7 +1,8 @@
-import { createAction, props } from "@ngrx/store";
+import { ActionCreator, createAction, props } from "@ngrx/store";
 import { Guid } from "guid-typescript";
 
-export function addGetAction<T>(entityName: string) {
+
+export function addGetAction<T>(entityName: string){
   return {
     action: createAction(`${entityName}`),
     actionSuccess: createAction(`${entityName} Success`, props<{ data: T[] }>()),

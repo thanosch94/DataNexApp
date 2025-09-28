@@ -28,12 +28,14 @@
   grid-area: a;
   display: flex;
   gap:1rem;
+  margin-bottom: 4%;
 
 }
 .abbreviation-description{
   grid-area: b;
   display: flex;
   gap:1rem;
+  margin-bottom: 4%;
 
 }
 .active{
@@ -41,6 +43,7 @@
   display: flex;
   justify-content: center;
   gap:1rem;
+  margin-bottom: 4%;
 
 }
 
@@ -78,4 +81,9 @@
 }
 .basic-info-tab-i{
   grid-area: i;
+}
+
+dn-textbox, dn-number-box, dn-date-box{
+  margin-bottom: 4%;
+
 }

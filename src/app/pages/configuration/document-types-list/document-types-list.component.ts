@@ -1,5 +1,5 @@
 import { TabsService } from './../../../services/tabs.service';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
@@ -20,6 +20,10 @@ import { selectAllDocumentTypes } from '../../../state/parameters/document-types
 import { AsyncPipe } from '@angular/common';
 import { Actions, ofType } from '@ngrx/effects';
 import { BaseComponent } from '../../components/base/base.component';
+import { ColumnsService } from '../../../services/columns.service';
+import { GridColumns } from '../../../base/grid-columns';
+import { StateHelperService } from '../../../services/state-helper.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-document-types',
@@ -29,49 +33,29 @@ import { BaseComponent } from '../../components/base/base.component';
 })
 export class DocumentTypesListComponent
   extends BaseComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   dataSource: any;
   document_types_list_title_text: string;
   columns: DnColumnDto[] = [];
+  private destroy$ = new Subject<void>();
 
   constructor(
     private router: Router,
     private actions$: Actions,
-    private tabsService:TabsService
+    private tabsService: TabsService,
+    private colsService: ColumnsService,
+    private stateHelperService: StateHelperService
   ) {
     super();
     this.document_types_list_title_text = 'Document Types List';
-    this.tabsService.setActiveTabName(this.document_types_list_title_text)
+    this.tabsService.setActiveTabName(this.document_types_list_title_text);
   }
 
   ngOnInit() {
     this.setActionsResults();
-    this.getData();
     this.getColumns();
-  }
-
-  setActionsResults() {
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteDocumentTypeByIdSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.getData();
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteDocumentTypeByIdFailure))
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
-      });
+    this.getData();
   }
 
   getData() {
@@ -80,73 +64,7 @@ export class DocumentTypesListComponent
   }
 
   getColumns() {
-    this.columns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'Abbreviation',
-        DataType: 'string',
-        Caption: 'Abbreviation',
-      },
-      {
-        DataField: 'DocumentTypeGroup',
-        DataType: 'number',
-        Caption: 'Document Type Group',
-        Lookup: {
-          DataSource: DocumentTypeGroupEnumList.value,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
-      {
-        DataField: 'Decription',
-        DataType: 'string',
-        Caption: 'Decription',
-        Visible: false,
-      },
-      {
-        DataField: 'PersonBalanceAffectBehavior',
-        DataType: 'string',
-        Caption: 'Affects Balance',
-        Visible: true,
-        Lookup: {
-          DataSource: DocTypeAffectBehaviorEnumList.value,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
-      {
-        DataField: 'WareHouseAffectBehavior',
-        DataType: 'string',
-        Caption: 'Affects Warehouse',
-        Visible: true,
-        Lookup: {
-          DataSource: DocTypeAffectBehaviorEnumList.value,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
-      {
-        DataField: 'IsActive',
-        DataType: 'boolean',
-        Caption: 'Is Active',
-        Visible: true,
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
+    this.columns = this.colsService.getColumns(GridColumns.DocumentTypes);
   }
 
   onInsertClicked(e: any) {
@@ -166,6 +84,36 @@ export class DocumentTypesListComponent
   }
 
   onRowEditing(e: any) {
-    this.router.navigate(['document-type-edit'], { state: { id: e.Id }});
+    this.router.navigate(['document-type-edit'], { state: { id: e.Id } });
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setDeleteByIdSuccessActionResult();
+    this.setDeleteByIdFailureActionResult();
+  }
+
+  setDeleteByIdSuccessActionResult() {
+    this.stateHelperService
+      .setActionResult(DeleteDocumentTypeByIdSuccess, this.destroy$)
+      .subscribe((result: any) => {
+        this.displayNotification('Record deleted');
+        this.getData();
+      });
+  }
+
+  setDeleteByIdFailureActionResult() {
+    this.stateHelperService
+      .setActionResult(DeleteDocumentTypeByIdFailure, this.destroy$)
+      .subscribe((result: any) => {
+        this.displayErrorAlert(result.error);
+        this.getData();
+      });
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

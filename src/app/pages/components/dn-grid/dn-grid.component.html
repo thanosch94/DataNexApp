@@ -274,7 +274,7 @@
                 mat-icon-button
                 class="iconbutton"
                 color="primary"
-                (click)="row.IsEditable ? save(row, index) : edit(row)"
+                (click)="row.IsEditable ? save(row) : edit(row)"
               >
                 @if(!row.IsEditable){<mat-icon>edit</mat-icon>}
                 @if(row.IsEditable){<mat-icon>save</mat-icon>}
