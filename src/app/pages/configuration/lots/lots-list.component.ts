@@ -9,14 +9,12 @@ import { LotsViewModel } from '../../../view-models/lots.viewmodel';
 import { LotDto } from '../../../dto/configuration/lot.dto';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { LotsSettingsComponent } from '../lots-settings/lots-settings.component';
 import { SupplierDto } from '../../../dto/supplier.dto';
 import { ProductsViewModel } from '../../../view-models/products.viewmodel';
 import { ProductDto } from '../../../dto/product.dto';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
-import { ListWithFiltersComponent } from '../../list-with-filters/list-with-filters.component';
 import { ProductsService } from '../../../services/products.service';
 
 @Component({
@@ -80,76 +78,6 @@ export class LotsListComponent implements OnInit {
         this.dataSource = result;
       }
     });
-  }
-
-  getLotDocumentsColumns() {
-    this.lotDocumentsColumns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'DocumentDateTime',
-        DataType: 'datetime',
-        Caption: 'Date',
-        Visible: true,
-        Format:"dd/MM/yyyy"
-      },
-      {
-        DataField: 'DocumentCode',
-        DataType: 'string',
-        Caption: 'Code',
-      },
-      // {
-      //   DataField: 'DocumentTypeId',
-      //   DataType: 'string',
-      //   Caption: 'Type',
-      //   Lookup: {
-      //     DataSource: this.documentTypesDataSource,
-      //     ValueExpr: 'Id',
-      //     DisplayExpr: 'Name',
-      //   },
-      //   Visible:false
-      // },
-
-      {
-        DataField: 'SupplierId',
-        DataType: 'string',
-        Caption: 'Supplier',
-        Lookup: {
-          DataSource: this.suppliersDataSource,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-
-
-      },
-      // {
-      //   DataField: 'DocumentStatusId',
-      //   DataType: 'string',
-      //   Caption: 'Status',
-      //   Lookup: {
-      //     DataSource: this.documentStatusesDataSource,
-      //     ValueExpr: 'Id',
-      //     DisplayExpr: 'Name',
-      //   },
-      // },
-
-
-      {
-        DataField: 'DocumentTotal',
-        DataType: 'number',
-        Caption: 'Total',
-        DisplayColumnTotal:true
-      },
-      // {
-      //   DataField: 'buttons',
-      //   DataType: 'buttons',
-      //   Caption: '',
-      // }
-    ];
   }
 
   getColumns() {

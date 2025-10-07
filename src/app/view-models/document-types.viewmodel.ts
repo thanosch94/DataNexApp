@@ -29,7 +29,7 @@ export class DocumentTypesViewModel {
   }
   public GetActiveDocumentTypesLookupByDocumentTypeGroup(documentTypeGroup: DocumentTypeGroupEnum) {
 
-    return this.http.get(this.service + 'DocumentTypes/getactivedocumenttypeslookupbydocumententity/' + documentTypeGroup, {
+    return this.http.get<DocumentTypeDto[]>(this.service + 'DocumentTypes/getactivedocumenttypeslookupbydocumententity/' + documentTypeGroup, {
       headers: this.headers,
     });
   }

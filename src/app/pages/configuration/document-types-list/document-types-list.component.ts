@@ -42,10 +42,7 @@ export class DocumentTypesListComponent
 
   constructor(
     private router: Router,
-    private actions$: Actions,
-    private tabsService: TabsService,
     private colsService: ColumnsService,
-    private stateHelperService: StateHelperService
   ) {
     super();
     this.document_types_list_title_text = 'Document Types List';

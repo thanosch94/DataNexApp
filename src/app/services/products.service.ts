@@ -15,7 +15,7 @@ export class ProductsService {
   }
 
   public GetAll() {
-    return this.http.get(this.service + 'Products/getall', {
+    return this.http.get<ProductDto[]>(this.service + 'Products/getall', {
       headers: this.auth.headers,
     });
   }
@@ -27,7 +27,7 @@ export class ProductsService {
   }
 
   public GetById(id: Guid) {
-    return this.http.get(this.service + 'Products/getbyid/' + id, {
+    return this.http.get<ProductDto>(this.service + 'Products/getbyid/' + id, {
       headers: this.auth.headers,
     });
   }
@@ -38,19 +38,19 @@ export class ProductsService {
   }
 
   public InsertDto(product: ProductDto) {
-    return this.http.post(this.service + 'Products/insertdto', product, {
+    return this.http.post<ProductDto>(this.service + 'Products/insertdto', product, {
       headers: this.auth.headers,
     });
   }
 
   public UpdateDto(product: ProductDto) {
-    return this.http.put(this.service + 'Products/updatedto', product, {
+    return this.http.put<ProductDto>(this.service + 'Products/updatedto', product, {
       headers: this.auth.headers,
     });
 
   }
   public DeleteById(id: Guid) {
-    return this.http.delete(this.service + 'Products/deletebyid/' + id, {
+    return this.http.delete<ProductDto>(this.service + 'Products/deletebyid/' + id, {
       headers: this.auth.headers,
     });
   }

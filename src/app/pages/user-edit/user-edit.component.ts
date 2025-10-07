@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import {
   Component,
-  HostListener,
   OnDestroy,
   OnInit,
   signal,
@@ -67,7 +66,6 @@ import { DnKanbanComponent } from '../components/dn-kanban/dn-kanban.component';
 import { MatListModule } from '@angular/material/list';
 import { TaskEditComponent } from '../task-edit/task-edit.component';
 import { Guid } from 'guid-typescript';
-import { Store } from '@ngrx/store';
 import { GetAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.actions';
 import { StatusTypeEnum } from '../../enums/status-type.enum';
 import { selectAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.selectors';
@@ -165,7 +163,6 @@ export class UserEditComponent
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
     private fb: FormBuilder,
     private workItemsService: WorkItemsService,
@@ -376,12 +373,7 @@ export class UserEditComponent
         this.router.navigate(['users-list']);
       },
       error: (err) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error.innerExceptionMessage,
-          },
-        });
+        this.displayErrorAlert(err)
       },
     });
   }
@@ -457,7 +449,6 @@ export class UserEditComponent
 
   onHiding() {
     this.taskId.set(null);
-
     this.isPopupVisible = false;
   }
 
@@ -470,7 +461,6 @@ export class UserEditComponent
 
   onTaskPopupDelete() {
     this.isPopupVisible = false;
-
     this.getKanbanData();
     this.store.dispatch(ClearSelectedWorkItem());
   }
@@ -558,7 +548,6 @@ export class UserEditComponent
   }
 
   onTaskIdFromChildChange(id:Guid){
-    debugger
     this.taskId.set(id)
   }
 

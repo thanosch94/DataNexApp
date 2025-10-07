@@ -44,51 +44,51 @@ import { LookupNamePipe } from '../../../pipes/lookup-name.pipe';
 import { ColumnDisplayTotalPipe } from '../../../pipes/column-display-total.pipe';
 import { DnTextboxComponent } from '../dn-textbox/dn-textbox.component';
 import { DnNumberBoxComponent } from '../dn-number-box/dn-number-box.component';
-import { DnDateBoxComponent } from "../dn-date-box/dn-date-box.component";
-import { DnSelectboxComponent } from "../dn-selectbox/dn-selectbox.component";
+import { DnDateBoxComponent } from '../dn-date-box/dn-date-box.component';
+import { DnSelectboxComponent } from '../dn-selectbox/dn-selectbox.component';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 
 @Component({
-    selector: 'dn-grid',
-    templateUrl: './dn-grid.component.html',
-    styleUrl: './dn-grid.component.css',
-    imports: [
-        FormsModule,
-        MatFormFieldModule,
-        HttpClientModule,
-        MatInputModule,
-        MatAutocompleteModule,
-        ReactiveFormsModule,
-        MatToolbarModule,
-        MatIconModule,
-        CommonModule,
-        MatSelectModule,
-        TextFieldModule,
-        MatButtonModule,
-        MatPaginator,
-        MatPaginatorModule,
-        MatSort,
-        MatSortModule,
-        MatTableModule,
-        MatSortHeader,
-        MatTabsModule,
-        MatButtonModule,
-        MatDialogModule,
-        VisbleGridColumnsPipe,
-        MatCheckboxModule,
-        LookupNamePipe,
-        MatFooterRow,
-        MatFooterRowDef,
-        MatFooterCell,
-        MatCellDef,
-        ColumnDisplayTotalPipe,
-        DnTextboxComponent,
-        DnNumberBoxComponent,
-        DnDateBoxComponent,
-        DnSelectboxComponent,
-        MatHeaderCellDef
-    ]
+  selector: 'dn-grid',
+  templateUrl: './dn-grid.component.html',
+  styleUrl: './dn-grid.component.css',
+  imports: [
+    FormsModule,
+    MatFormFieldModule,
+    HttpClientModule,
+    MatInputModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    MatToolbarModule,
+    MatIconModule,
+    CommonModule,
+    MatSelectModule,
+    TextFieldModule,
+    MatButtonModule,
+    MatPaginator,
+    MatPaginatorModule,
+    MatSort,
+    MatSortModule,
+    MatTableModule,
+    MatSortHeader,
+    MatTabsModule,
+    MatButtonModule,
+    MatDialogModule,
+    VisbleGridColumnsPipe,
+    MatCheckboxModule,
+    LookupNamePipe,
+    MatFooterRow,
+    MatFooterRowDef,
+    MatFooterCell,
+    MatCellDef,
+    ColumnDisplayTotalPipe,
+    DnTextboxComponent,
+    DnNumberBoxComponent,
+    DnDateBoxComponent,
+    DnSelectboxComponent,
+    MatHeaderCellDef,
+  ],
 })
 export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('matTable') table: MatTable<any>;
@@ -105,7 +105,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Output() onRowSelectionChanged = new EventEmitter();
   matColumns: string[] = [];
   @Input() enableAddButton = false;
-  @Input() addButtonText:string ='Add'
+  @Input() addButtonText: string = 'Add';
   @Input() canDisplaySearch = true;
   @Input() canEdit = true;
   @Input() hideEditButtonOnEditing = false;
@@ -117,8 +117,8 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() displayTableBorder = false;
   @Input() tableHeaderBackgroundColor: string;
   @Input() tableHeaderFontColor: string;
-  @Input() borderTopColor: string ="#0B6AA5";
-  @Input() pageSizeOptions:number[]= [5, 10, 25, 100];
+  @Input() borderTopColor: string = '#0B6AA5';
+  @Input() pageSizeOptions: number[] = [5, 10, 25, 100];
   selection = new SelectionModel<any>(true, []);
   private _columns: DnColumnDto[] = [];
   zeroMin: number;
@@ -151,16 +151,15 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   public set dataSource(v: any) {
     this._dataSource = v;
     if (this._dataSource?.length > 0) {
-      this._dataSource = this._dataSource.map((item:any) => {
+      this._dataSource = this._dataSource.map((item: any) => {
         return {
           ...item,
-          DataSource: []
+          DataSource: [],
         };
       });
     }
-    if(this._dataSource){
-          this._dataSource= [...this._dataSource]
-
+    if (this._dataSource) {
+      this._dataSource = [...this._dataSource];
     }
     this.matDataSource = new MatTableDataSource(this._dataSource);
     this.matDataSource.paginator = this.paginator;
@@ -174,7 +173,10 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   matDataSource: MatTableDataSource<any>;
   isEditable: boolean = false;
 
-  constructor(private ref: ChangeDetectorRef, private ngZone: NgZone, private dialog: MatDialog
+  constructor(
+    private ref: ChangeDetectorRef,
+    private ngZone: NgZone,
+    private dialog: MatDialog
   ) {
     this.matDataSource = new MatTableDataSource(this.dataSource);
     this.zeroMin = 0;
@@ -187,14 +189,11 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
 
   ngOnInit(): void {}
 
-
   ngOnChanges(changes: SimpleChanges) {
     if (changes['dataSource']) {
-
-      this.dataSourceChange.emit(changes['dataSource'].currentValue)
+      this.dataSourceChange.emit(changes['dataSource'].currentValue);
     }
-    this.renderRows()
-
+    this.renderRows();
   }
 
   ngAfterViewInit() {
@@ -222,7 +221,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
         Object.defineProperty(newRow, column.DataField, {
           value: column.DefaultValue,
           writable: true,
-          enumerable: true
+          enumerable: true,
         });
       });
       Object.defineProperty(newRow, 'IsEditable', {
@@ -239,7 +238,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   renderRows() {
-    if(this.table){
+    if (this.table) {
       this.table.renderRows();
     }
   }
@@ -276,7 +275,7 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   deleteRow(data: any, index: number) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
-      maxHeight:'300px',
+      maxHeight: '300px',
       data: {
         title: 'Title',
         message: 'message',
@@ -297,7 +296,6 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   selectHandler(row: any) {
     this.selection.toggle(row);
   }
-
 
   onDataLookupSelectionChanged(column: DnColumnDto, data: any, e: any) {
     data[column.DataField] = e;
@@ -326,9 +324,9 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   onClick(row: any, column: DnColumnDto) {
     //column.Lookup!.DataSource = col.Lookup!.DataSource
 
-  if(column.OnClick){
-    column.OnClick(row, column)
-  }
+    if (column.OnClick) {
+      column.OnClick(row, column);
+    }
   }
 
   getLookupOptions(column: DnColumnDto, row: any, index: number) {
@@ -351,10 +349,12 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   getTotal(column: any) {
     if (column.DataType == 'number') {
       let data = [];
-      for (let i = this.pageIndex; i < this.pageSize; i++) {
-        if (this.dataSource[i]) {
-          let row = this.dataSource[i];
-          data.push(row);
+      if (this.dataSource) {
+        for (let i = this.pageIndex; i < this.pageSize; i++) {
+          if (this.dataSource[i]) {
+            let row = this.dataSource[i];
+            data.push(row);
+          }
         }
       }
       return data
@@ -386,16 +386,15 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
     this.onInfoButtonClicked.emit(row);
   }
 
-  onIconClicked(e:any, column:DnColumnDto, row:any){
-    if(column.OnIconClicked){
+  onIconClicked(e: any, column: DnColumnDto, row: any) {
+    if (column.OnIconClicked) {
       column.OnIconClicked(row);
     }
   }
 
-  onFocusOut(e:any, column:DnColumnDto, row:any){
-    if(column.OnFocusOut){
-      column.OnFocusOut(row,column);
-
+  onFocusOut(e: any, column: DnColumnDto, row: any) {
+    if (column.OnFocusOut) {
+      column.OnFocusOut(row, column);
     }
   }
 
@@ -406,15 +405,13 @@ export class DnGridComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.dataSource.forEach((row:any) => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.forEach((row: any) => this.selection.select(row));
   }
 
-  onRowSelectionChange(e:any, row:any) {
+  onRowSelectionChange(e: any, row: any) {
     this.selection.toggle(row);
-    this.onRowSelectionChanged.emit(this.selection.selected)
+    this.onRowSelectionChanged.emit(this.selection.selected);
   }
-
-
 }

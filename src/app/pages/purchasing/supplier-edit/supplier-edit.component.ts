@@ -1,6 +1,5 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { WebAppBase } from '../../../base/web-app-base';
@@ -9,7 +8,6 @@ import { AuthService } from '../../../services/auth.service';
 import { TabsService } from '../../../services/tabs.service';
 import { SuppliersViewModel } from '../../../view-models/suppliers.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -17,23 +15,24 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
-    selector: 'app-supplier-edit',
-    imports: [FormsModule,
-        MatInputModule,
-        MatToolbarModule,
-        MatIconModule,
-        HttpClientModule,
-        MatSortModule,
-        MatSnackBarModule,
-        CommonModule,
-        MatDialogModule,
-        DnToolbarComponent],
-    templateUrl: './supplier-edit.component.html',
-    styleUrl: './supplier-edit.component.css'
+  selector: 'app-supplier-edit',
+  imports: [
+    FormsModule,
+    MatInputModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatSortModule,
+    MatSnackBarModule,
+    CommonModule,
+    DnToolbarComponent,
+  ],
+  templateUrl: './supplier-edit.component.html',
+  styleUrl: './supplier-edit.component.css',
 })
-export class SupplierEditComponent {
+export class SupplierEditComponent extends BaseComponent {
   supplier_text: string;
   suppliersViewModel: SuppliersViewModel;
   supplier: SupplierDto;
@@ -44,10 +43,8 @@ export class SupplierEditComponent {
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private _snackBar: MatSnackBar,
-    public dialog: MatDialog,
-    private tabsService: TabsService
   ) {
+    super()
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
     this.supplier = new SupplierDto();
     this.supplierId = WebAppBase.data;
@@ -77,7 +74,7 @@ export class SupplierEditComponent {
 
   onCloseClicked(e: any) {
     this.router.navigate(['suppliers-list']);
-    this.tabsService.setActiveTabPreviousName()
+    this.tabsService.setActiveTabPreviousName();
   }
 
   onSaveClicked(e: any) {
@@ -86,30 +83,22 @@ export class SupplierEditComponent {
         .UpdateDto(this.supplier)
         .subscribe((result: any) => {
           if (result) {
-            this.supplier =result;
-            this.previousTabName = this.supplier_text.toString()
+            this.supplier = result;
+            this.previousTabName = this.supplier_text.toString();
             this.supplier_text = this.supplier.Name;
-            this.tabsService.setActiveTabName(this.supplier_text)
-
-            this._snackBar.open('Record updated', '', {
-              duration: 1000,
-              panelClass: 'green-snackbar',
-            });
+            this.tabsService.setActiveTabName(this.supplier_text);
+            this.displayNotification('Record updated')
           }
         });
     } else {
       this.suppliersViewModel
         .InsertDto(this.supplier)
         .subscribe((result: any) => {
-          this.supplier =result;
-          this.previousTabName = this.supplier_text.toString()
+          this.supplier = result;
+          this.previousTabName = this.supplier_text.toString();
           this.supplier_text = this.supplier.Name;
-          this.tabsService.setActiveTabName(this.supplier_text)
-
-          this._snackBar.open('Record inserted', '', {
-            duration: 1000,
-            panelClass: 'green-snackbar',
-          });
+          this.tabsService.setActiveTabName(this.supplier_text);
+          this.displayNotification('Record inserted')
         });
     }
   }
@@ -139,21 +128,12 @@ export class SupplierEditComponent {
   deleteItem(e: any) {
     this.suppliersViewModel.DeleteById(this.supplier.Id).subscribe({
       next: (result) => {
-        this._snackBar.open('Record deleted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-        this.router.navigate(['suppliers-list'])
-
+        this.displayNotification('Record deleted')
+        this.router.navigate(['suppliers-list']);
         this.tabsService.setActiveTabPreviousName();
       },
       error: (err) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error.innerExceptionMessage,
-          },
-        });
+        this.displayErrorAlert(err)
       },
     });
   }

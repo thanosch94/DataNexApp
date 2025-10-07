@@ -2,12 +2,7 @@ import { dnIcons } from './../../../enumLists/dn-icon.list';
 
 import { HttpClient } from '@angular/common/http';
 
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -53,7 +48,6 @@ import { GetAllVatClasses } from '../../../state/parameters/vat-classes/vat-clas
 import { selectAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.selectors';
 import { Observable, Subject } from 'rxjs';
 import { VatClassDto } from '../../../dto/vat-class.dto';
-import { StateHelperService } from '../../../services/state-helper.service';
 import { DnDateBoxComponent } from '../../components/dn-date-box/dn-date-box.component';
 import { DnNumberBoxComponent } from '../../components/dn-number-box/dn-number-box.component';
 import { DnFileUploaderComponent } from '../../components/dn-file-uploader/dn-file-uploader.component';
@@ -119,9 +113,7 @@ export class CustomerEditComponent
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private tabsService: TabsService,
     private fb: FormBuilder,
-    private stateHelperService: StateHelperService
   ) {
     super();
     this.customersViewModel = new CustomersViewModel(this.http, this.auth);
@@ -171,93 +163,6 @@ export class CustomerEditComponent
   }
   //#endregion
 
-  setActionsResults() {
-    this.setInsertDtoSuccessActionResult();
-    this.setInsertCustomerAddressDtoSuccessActionResult();
-    this.setUpdateDtoSuccessActionResult();
-    this.setUpdateCustomerAddressDtoSuccessActionResult();
-    this.setUpdateDtoFailureActionResult();
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
-    this.setDeleteCustomerAddressByIdSuccessActionResult();
-  }
-
-  setInsertDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertCustomer.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.customerId = result.dto.Id;
-        this.customer.set(result.dto);
-        this.displayNotification('Record inserted');
-        this.getData();
-      });
-  }
-
-  setInsertCustomerAddressDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertCustomerAddress.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record inserted');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateCustomer.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.customer.set(result.dto);
-        this.displayNotification('Record updated');
-        this.getData();
-      });
-  }
-
-  setUpdateCustomerAddressDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateCustomerAddress.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record updated');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateCustomer.actionFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error.error.innerExceptionMessage);
-        //this.getData();
-      });
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteCustomer.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.tabsService.setActiveTabPreviousName();
-        this.router.navigate(['customers-list']);
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteCustomer.actionFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        //this.getData();
-      });
-  }
-
-  setDeleteCustomerAddressByIdSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteCustomerAddress.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.getData();
-      });
-  }
-
   ngAfterViewInit() {
     this.getLookups();
     // this.form.patchValue(this.customer())
@@ -301,14 +206,12 @@ export class CustomerEditComponent
 
       if (this.customerId) {
         this.store.dispatch(UpdateCustomer.action({ dto: this.customer() }));
-
       } else {
         this.customer.update((c) => ({
           ...c,
           CustomerAddresses: this.customerAddresses,
         }));
         this.store.dispatch(InsertCustomer.action({ dto: this.customer() }));
-
       }
     } else {
       this.markAllAsTouched(this.form);
@@ -318,9 +221,11 @@ export class CustomerEditComponent
   onNameBlur(e: any) {
     this.markAsTouched(this.form, 'Name');
   }
+
   onVatClassIdBlur(e: any) {
     this.markAsTouched(this.form, 'VatClassId');
   }
+
   onDeleteClicked(e: any) {
     const dialogRef = this.dialog.open(DeleteConfirmComponent, {
       width: '320px',
@@ -392,43 +297,42 @@ export class CustomerEditComponent
     item: CustomerAddressDto
   ) {
     if (item.Address.Street?.trim() && item.Address.City?.trim()) {
-      let customerAddress = new CustomerAddressDto();
-      customerAddress = { ...item };
-      customerAddress.CustomerId = this.customer().Id;
-      customerAddress.AddressType = type;
+      let dto = new CustomerAddressDto();
+      dto = { ...item };
+      dto.CustomerId = this.customer().Id;
+      dto.AddressType = type;
 
       if (this.customer().Id) {
         if (!item.Id) {
           this.store.dispatch(
-            InsertCustomerAddress.action({ dto: customerAddress })
+            InsertCustomerAddress.action({ dto })
           );
         } else {
           this.store.dispatch(
-            UpdateCustomerAddress.action({ dto: customerAddress })
+            UpdateCustomerAddress.action({ dto })
           );
         }
         item.IsInEditMode = false;
       } else {
-        customerAddress.IsInEditMode = false;
+        dto.IsInEditMode = false;
 
         this.customer.update((c) => {
           // check if an address with the same TempId exists
           const index = c.CustomerAddresses.findIndex(
             (x) => x.TempId === item.TempId
           );
-          debugger;
           let updatedAddresses;
 
           if (index > -1) {
             // update existing
             updatedAddresses = c.CustomerAddresses.map((addr) =>
               addr.TempId === item.TempId
-                ? { ...addr, ...customerAddress }
+                ? { ...addr, ...dto }
                 : addr
             );
           } else {
             // add new
-            updatedAddresses = [...c.CustomerAddresses, customerAddress];
+            updatedAddresses = [...c.CustomerAddresses, dto];
           }
 
           return {
@@ -539,6 +443,85 @@ export class CustomerEditComponent
       return true;
     }
   }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertCustomerSuccess: InsertCustomer.actionSuccess,
+        insertCustomerFailure: InsertCustomer.actionFailure,
+        updateCustomerSuccess: UpdateCustomer.actionSuccess,
+        updateCustomerFailure: UpdateCustomer.actionFailure,
+        deleteCustomerSuccess: DeleteCustomer.actionSuccess,
+        deleteCustomerFailure: DeleteCustomer.actionFailure,
+      },
+      {
+        insertCustomerSuccess: (result: any) => {
+          this.customerId = result.dto.Id;
+          this.customer.set(result.dto);
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertCustomerFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateCustomerSuccess: (result: any) => {
+          this.customer.set(result.dto);
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateCustomerFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteCustomerSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.tabsService.setActiveTabPreviousName();
+          this.router.navigate(['customers-list']);
+        },
+        deleteCustomerFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+
+    this.setPostActionsResults(
+      {
+        insertCustomerAddressSuccess: InsertCustomer.actionSuccess,
+        insertCustomerAddressFailure: InsertCustomer.actionFailure,
+        updateCustomerAddressSuccess: UpdateCustomer.actionSuccess,
+        updateCustomerAddressFailure: UpdateCustomer.actionFailure,
+        deleteCustomerAddressSuccess: DeleteCustomer.actionSuccess,
+        deleteCustomerAddressFailure: DeleteCustomer.actionFailure,
+      },
+      {
+        insertCustomerAddressSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertCustomerAddressFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateCustomerAddressSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateCustomerAddressFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteCustomerAddressSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteCustomerAddressFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
   ngOnDestroy() {
     WebAppBase.data = undefined;
     this.destroy$.next();

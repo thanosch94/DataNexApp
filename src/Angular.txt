@@ -1,2 +1,11 @@
 Build
 ng build --configuration production --base-href
+
+
+############################################
+### Columns Service ###
+1) Περνάμε στο columns.service.ts τις στήλες από τα grid και στον constructor την αντιστόχιση.
+2) Στο grid-columns.ts περνάμε το λεκτικό με το οποίο θα ζητάμε τις στήλες σε μια static μεταβλητή.
+3) Στο component αφού έχουμε περάσει στον constructor το columns service καλούμε από αυτό την getColumns
+με την static μεταβλητή που αντιστοιχεί στις στήλες που θέλουμε
+#############################################

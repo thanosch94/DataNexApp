@@ -6,17 +6,15 @@
   (onInsertBtnClicked)="onInsertBtnClicked($event)"
 ></dn-toolbar>
 <div class="warehouses-list">
-
-    <dn-grid  #warehousesGrid
-    [dataSource]="dataSource"
+  <dn-grid
+    #warehousesGrid
+    [dataSource]="dataSource$|async"
     [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowSaving)="onWareHouseSaving($event)"
     (onRowDelete)="onWareHouseDelete($event)"
     (onRowStopEditing)="onWareHouseStopEditing($event)"
-    >
-
-    </dn-grid>
-  </div>
-
+  >
+  </dn-grid>
+</div>

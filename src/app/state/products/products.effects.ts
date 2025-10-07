@@ -1,103 +1,48 @@
 import { Injectable } from '@angular/core';
 import { ProductsService } from '../../services/products.service';
-import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, map, mergeMap, of, take } from 'rxjs';
-import {
-  getAllProducts,
-  insertProduct,
-  insertProductFailure,
-  insertProductSuccess,
-  loadProductById,
-  loadProductByIdFailure,
-  loadProductByIdSuccess,
-  loadProductsFailure,
-  loadProductsSuccess,
-  updateProduct,
-  updateProductFailure,
-  updateProductSuccess,
-} from './products.actions';
-import { Store } from '@ngrx/store';
-import { selectProductById } from './products.selectors';
+import { Actions } from '@ngrx/effects';
+import { createDeleteByIdEffect, createGetAllEffect, createGetByIdEffect, createInsertUpdateEffect } from '../shared/effects.factory';
+import { ProductDto } from '../../dto/product.dto';
+import { DeleteProduct, GetAllProducts, GetProductById, InsertProduct, UpdateProduct } from './products.actions';
+import { Guid } from 'guid-typescript';
 
+type EffectType = ProductDto;
 @Injectable()
 export class ProductEffects {
+
   constructor(
-    private actions$: Actions,
-    private productsService: ProductsService,
-    private store: Store
+    private service: ProductsService,
+    private actions$: Actions
   ) {}
 
-  loadProducts$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(getAllProducts),
-      mergeMap(() =>
-        this.productsService.GetAll().pipe(
-          map((products: any) => loadProductsSuccess({ products })),
-          catchError((error) => {
-            console.error('Error fetching products:', error);
-            return of(loadProductsFailure({ error: error.message }));
-          })
-        )
-      )
-    )
+  getAll$ = createGetAllEffect<EffectType>(
+    this.actions$,
+    GetAllProducts,
+    () => this.service.GetAll()
   );
 
-  loadProductById$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(loadProductById),
-      mergeMap((action) => {
-        const productId = action.id; // Get the product ID from the action
-
-        return this.store.select(selectProductById(productId)).pipe(
-          take(1),
-          mergeMap((product) => {
-            if (product) {
-              // If the product exists in the store, return the success action
-              return of(loadProductByIdSuccess({ product }));
-            } else {
-              // If the product is not in the store, make the API call
-              return this.productsService.GetById(productId).pipe(
-                map((product: any) => loadProductByIdSuccess({ product })),
-                catchError((error) =>
-                  of(loadProductByIdFailure({ error: error.message }))
-                )
-              );
-            }
-          })
-        );
-      })
-    )
+  getById$ = createGetByIdEffect<EffectType>(
+    this.actions$,
+    GetProductById,
+    (id: Guid) => this.service.GetById(id)
   );
 
-  updateProduct$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(updateProduct),
-      mergeMap((action: any) => {
-        return this.productsService.UpdateDto(action.dto).pipe(
-          map((updatedProduct: any) =>
-            updateProductSuccess({ product: updatedProduct })
-          ),
-          catchError((error) =>
-            of(updateProductFailure({ error: error.message }))
-          )
-        );
-      })
-    )
+  insert$ = createInsertUpdateEffect<EffectType>(
+    this.actions$,
+    InsertProduct,
+    (dto: ProductDto) => this.service.InsertDto(dto)
   );
 
-  insertProduct$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(insertProduct),
-      mergeMap((action: any) => {
-        return this.productsService.InsertDto(action.dto).pipe(
-          map((insertedProduct: any) =>
-            insertProductSuccess({ product: insertedProduct })
-          ),
-          catchError((error) =>
-            of(insertProductFailure({ error: error.message }))
-          )
-        );
-      })
-    )
+  update$ = createInsertUpdateEffect<EffectType>(
+    this.actions$,
+    UpdateProduct,
+    (dto: ProductDto) => this.service.UpdateDto(dto)
   );
+
+  deleteById$ = createDeleteByIdEffect<EffectType>(
+    this.actions$,
+    DeleteProduct,
+    (id: Guid) => this.service.DeleteById(id)
+  );
+
 }

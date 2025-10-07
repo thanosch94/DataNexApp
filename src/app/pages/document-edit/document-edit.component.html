@@ -22,7 +22,7 @@
           <div class="grid-a-doctype-series">
             <dn-selectbox
               class="doc-type"
-              [dataSource]="docTypes"
+              [dataSource]="docTypes$ | async"
               valueExpr="Id"
               displayExpr="Abbreviation"
               label="Doc. Type"
@@ -33,7 +33,7 @@
 
             <dn-selectbox
               class="doc-series"
-              [dataSource]="docTypes"
+              [dataSource]="docTypes$ |async "
               valueExpr="Id"
               displayExpr="Abbreviation"
               label="Doc. Series"
@@ -81,7 +81,7 @@
           <dn-selectbox
           class="grid-d-warehouse"
           name="warehouse"
-          [dataSource]="warehousesList"
+          [dataSource]="warehouses$ |async"
           valueExpr="Id"
           displayExpr="Name"
           [(value)]="document.WarehouseId"
@@ -111,7 +111,7 @@
           </dn-selectbox>
           <dn-selectbox
             class="grid-f-docstatus"
-            [dataSource]="statusesList"
+            [dataSource]="statusesList$|async"
             valueExpr="Id"
             displayExpr="Name"
             label="Status"

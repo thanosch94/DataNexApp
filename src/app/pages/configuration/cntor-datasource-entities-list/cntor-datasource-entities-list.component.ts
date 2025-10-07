@@ -5,10 +5,16 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { AsyncPipe } from '@angular/common';
 import { CntorDatasourceEntityDto } from '../../../dto/configuration/cntor-datasource-entity.dto';
 import { BaseComponent } from '../../components/base/base.component';
-import { DeleteCntorDatasourceEntity, GetAllCntorDatasourceEntities, InsertCntorDatasourceEntity, UpdateCntorDatasourceEntity } from '../../../state/parameters/cntor-datasource-entities/cntor-datasource-entities.actions';
+import {
+  DeleteCntorDatasourceEntity,
+  GetAllCntorDatasourceEntities,
+  InsertCntorDatasourceEntity,
+  UpdateCntorDatasourceEntity,
+} from '../../../state/parameters/cntor-datasource-entities/cntor-datasource-entities.actions';
 import { selectAllCntorDatasourceEntities } from '../../../state/parameters/cntor-datasource-entities/cntor-datasource-entities.selectors';
-import { GetAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
-import { selectAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.selectors';
+import { ColumnsService } from '../../../services/columns.service';
+import { GridColumns } from '../../../base/grid-columns';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-cntor-datasource-entities-list',
@@ -16,24 +22,29 @@ import { selectAllCntorDatasources } from '../../../state/parameters/connector-d
   templateUrl: './cntor-datasource-entities-list.component.html',
   styleUrl: './cntor-datasource-entities-list.component.css',
 })
-export class CntorDatasourceEntitiesListComponent extends BaseComponent implements OnInit{
+export class CntorDatasourceEntitiesListComponent
+  extends BaseComponent
+  implements OnInit
+{
   @ViewChild('cntorDatasourceEntitiesGrid')
   cntorDatasourceEntitiesGrid: DnGridComponent;
 
   connector_datasource_entities_list_text: string;
   columns: DnColumnDto[];
-  dataSource:any;
-  cntorDatasources:any;
-  constructor() {
-    super()
+  dataSource: any;
+  cntorDatasources: any;
+  private destroy$ = new Subject<void>();
+
+  constructor(private columnsService: ColumnsService) {
+    super();
     this.connector_datasource_entities_list_text =
       'Connector Datasource Entities List';
   }
 
-   ngOnInit() {
-    this.getColumns()
-    this.getData()
-
+  ngOnInit() {
+    this.setActionsResults();
+    this.getColumns();
+    this.getData();
   }
 
   getData() {
@@ -42,63 +53,9 @@ export class CntorDatasourceEntitiesListComponent extends BaseComponent implemen
   }
 
   getColumns() {
-    this.store.dispatch(GetAllCntorDatasources.action());
-    let cntorDatasources$ = this.store.select(selectAllCntorDatasources);
-
-    cntorDatasources$.subscribe((result:any)=>{
-      this.cntorDatasources=result;
-    this.columns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'CntorDatasourceId',
-        DataType: 'string',
-        Caption: 'Datasource',
-        Lookup:{
-          DataSource:this.cntorDatasources,
-          ValueExpr:'Id',
-          DisplayExpr:'Name'
-        }
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'Description',
-        DataType: 'string',
-        Caption: 'Description',
-      },
-      {
-        DataField: 'Icon',
-        DataType: 'string',
-        Caption: 'Icon',
-      },
-      {
-        DataField: 'IconColor',
-        DataType: 'string',
-        Caption: 'IconColor',
-      },
-      {
-        DataField: 'CompanyId',
-        Visible: false,
-        DataType: 'string',
-        Caption: 'CompanyId',
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
-    })
-
-
+    this.columns = this.columnsService.getColumns(
+      GridColumns.CntorDatasourceEntities
+    );
   }
 
   onInsertClicked(e: any) {
@@ -107,9 +64,6 @@ export class CntorDatasourceEntitiesListComponent extends BaseComponent implemen
 
   onRowSaving(data: any) {
     let dto: CntorDatasourceEntityDto = { ...data };
-    if (data.Id) {
-      dto.Id = data.Id;
-    }
 
     if (!dto.Id) {
       this.store.dispatch(InsertCntorDatasourceEntity.action({ dto }));
@@ -128,5 +82,50 @@ export class CntorDatasourceEntitiesListComponent extends BaseComponent implemen
 
   onRowDelete(data: any) {
     this.store.dispatch(DeleteCntorDatasourceEntity.action({ id: data.Id }));
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertCntorDatasourceEntity.actionSuccess,
+        insertFailure: InsertCntorDatasourceEntity.actionFailure,
+        updateSuccess: UpdateCntorDatasourceEntity.actionSuccess,
+        updateFailure: UpdateCntorDatasourceEntity.actionFailure,
+        deleteSuccess: DeleteCntorDatasourceEntity.actionSuccess,
+        deleteFailure: DeleteCntorDatasourceEntity.actionFailure,
+      },
+      {
+        insertSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

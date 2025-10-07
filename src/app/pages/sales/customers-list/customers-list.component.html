@@ -7,9 +7,7 @@
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 
-
 <div class="customer-list">
-
   <dn-grid  #customersGrid
   [dataSource]="dataSource |async"
   [columns]="columns"
@@ -17,9 +15,8 @@
   [enableAddButton]="false"
   [disableLineEditing]="true"
   (onRowDelete)="onRowDelete($event)"
-  (onRowEditing)="onRowEditingg($event)"
+  (onRowEditing)="onRowEditing($event)"
   >
-
   </dn-grid>
 </div>
 

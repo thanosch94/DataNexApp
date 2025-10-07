@@ -1,4 +1,22 @@
 export class GridColumns {
-  static DocumentSeries ="DocumentSeries"
-  static DocumentTypes ="DocumentTypes"
+  static DocumentSeries = 'DocumentSeries';
+  static DocumentTypes = 'DocumentTypes';
+  static AdditionalCharges = 'AdditionalCharges';
+  static Brands = 'Brands';
+  static CntorDatasourceEntities = 'CntorDatasourceEntities';
+  static Companies = 'Companies';
+  static Statuses = 'Statuses';
+  static VatClasses = 'VatClasses';
+  static WorkItemTypes = 'WorkItemTypes';
+  static CntorDatasources = "ConnectorDatasources";
+  static CntorDatasourcesOptions = "CntorDatasourcesOptions";
+  static WooConnections = "WooConnections";
+  static DocumentsList = "DocumentsList";
+  static ProductsList = "ProductsList";
+  static LogsList = "LogsList";
+  static CustomerList = "CustomerList";
+  static TasksList = "TasksList";
+  static UsersList = "UsersList";
+  static WarehousesList = "WarehousesList";
+  static DocumentAdditionalCharges = "DocumentAdditionalCharges";
 }

@@ -1,51 +1,12 @@
-import { createAction, props } from "@ngrx/store";
-import { Guid } from "guid-typescript";
 import { ProductDto } from "../../dto/product.dto";
+import { addDeleteAction, addGetAction, addGetByIdAction, addUpdateAction } from "../shared/actions.factory";
 
-//Get All Products
-export const getAllProducts = createAction('[Products List] GetAll')
+export const GetAllProducts = addGetAction<ProductDto>("[Product Edit] Get All ");
 
-export const loadProductsSuccess = createAction(
-  '[Products List] Load Products Success',
-  props<{ products: ProductDto[] }>()
-);
-export const loadProductsFailure = createAction(
-  '[Products List] Load Products Failure',
-  props<{ error: string }>()
-);
+export const GetProductById = addGetByIdAction<ProductDto>('[Product Edit] GetById')
 
-//Get Product By Id
-export const loadProductById = createAction('[Product Edit] GetById', props<{id:Guid}>())
+export const InsertProduct = addUpdateAction<ProductDto>('[Product Edit] InsertDto')
 
-export const loadProductByIdSuccess = createAction(
-  '[Product Edit] Load Product By Id Success',
-  props<{ product: ProductDto }>()
-);
-export const loadProductByIdFailure = createAction(
-  '[Product Edit] Load Product By Id Failure',
-  props<{ error: string }>()
-);
+export const UpdateProduct = addUpdateAction<ProductDto>('[Product Edit] UpdateDto')
 
-//Update Product
-export const updateProduct = createAction('[Product Edit] UpdateDto', props<{dto:ProductDto}>())
-
-export const updateProductSuccess = createAction(
-  '[Product Edit] Update Product Success',
-  props<{ product: ProductDto }>()
-);
-export const updateProductFailure = createAction(
-  '[Product Edit] Update Product Failure',
-  props<{ error: string }>()
-);
-
-//Insert Product
-export const insertProduct = createAction('[Product Edit] InsertDto', props<{dto:ProductDto}>())
-
-export const insertProductSuccess = createAction(
-  '[Product Edit] Insert Product Success',
-  props<{ product: ProductDto }>()
-);
-export const insertProductFailure = createAction(
-  '[Product Edit] Insert Product Failure',
-  props<{ error: string }>()
-);
+export const DeleteProduct = addDeleteAction<ProductDto>('[Product Edit] DeleteById')

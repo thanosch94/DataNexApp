@@ -1,27 +1,21 @@
 import { createReducer, on } from '@ngrx/store';
 import { ProductDto } from '../../dto/product.dto';
 import {
-  getAllProducts,
-  insertProductFailure,
-  insertProductSuccess,
-  loadProductById,
-  loadProductByIdFailure,
-  loadProductByIdSuccess,
-  loadProductsFailure,
-  loadProductsSuccess,
-  updateProduct,
-  updateProductFailure,
-  updateProductSuccess,
+  DeleteProduct,
+  GetAllProducts,
+  GetProductById,
+  InsertProduct,
+  UpdateProduct,
 } from './products.actions';
 
 export interface ProductsState {
-  products: ProductDto[];
+  data: ProductDto[];
   selectedProducts: ProductDto[];
   error: string | null;
 }
 
 export const initialProductsState: ProductsState = {
-  products: [],
+  data: [],
   selectedProducts: [],
   error: null,
 };
@@ -29,57 +23,64 @@ export const initialProductsState: ProductsState = {
 export const productsReducer = createReducer(
   initialProductsState,
   //GetAll
-  on(getAllProducts, (state) => ({ ...state })),
-  on(loadProductsSuccess, (state, { products }) => ({
+  on(GetAllProducts.action, (state) => ({ ...state })),
+  on(GetAllProducts.actionSuccess, (state, { data }) => ({
     ...state,
-    products,
+    data,
   })),
-  on(loadProductsFailure, (state, { error }) => ({
+  on(GetAllProducts.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
   //GetById
-  on(loadProductById, (state) => ({ ...state })),
-  on(loadProductByIdSuccess, (state, { product }) => {
-    const productExists = state.selectedProducts.some(
-      (p) => p.Id === product.Id
-    );
+  on(GetProductById.action, (state) => ({ ...state })),
+  on(GetProductById.actionSuccess, (state, { dto }) => {
+    const productExists = state.selectedProducts.some((p) => p.Id === dto.Id);
     return {
       ...state,
-      products: [...state.products], // Add product to the array
+      data: [...state.data], // Add product to the array
       selectedProducts: productExists
         ? state.selectedProducts // Don't add if it already exists
-        : [...state.selectedProducts, product], // Add product if it doesn't exist
+        : [...state.selectedProducts, dto], // Add product if it doesn't exist
     };
   }),
-  on(loadProductByIdFailure, (state, { error }) => ({
+  on(GetProductById.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //UpdateDto
-  on(updateProductSuccess, (state, { product }) => ({
+  on(UpdateProduct.actionSuccess, (state, { dto }) => ({
     ...state,
-    products: state.products.map((p: ProductDto) =>
-      p.Id == product.Id ? product : p
-    ),
+    data: state.data.map((p: ProductDto) => (p.Id == dto.Id ? dto : p)),
     selectedProducts: state.selectedProducts.map((p: ProductDto) =>
-      p.Id == product.Id ? product : p
+      p.Id == dto.Id ? dto : p
     ),
   })),
-  on(updateProductFailure, (state, { error }) => ({
+  on(UpdateProduct.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //InsertDto
-  on(insertProductSuccess,(state,{product})=>({
+  on(InsertProduct.actionSuccess, (state, { dto }) => ({
     ...state,
-    products:[...state.products, product],
-    selectedProducts:[...state.selectedProducts, product]
+    data: [...state.data, dto],
+    selectedProducts: [...state.selectedProducts, dto],
   })),
-  on(insertProductFailure, (state, {error})=>({
+  on(InsertProduct.actionFailure, (state, { error }) => ({
     ...state,
-    error
+    error,
+  })),
+
+  //DeleteById
+  on(DeleteProduct.actionSuccess, (state, { dto }) => ({
+    ...state,
+    data: [...state.data.filter((x) => x.Id != dto.Id)],
+    error: null,
+  })),
+  on(DeleteProduct.actionFailure, (state, { error }) => ({
+    ...state,
+    error,
   }))
 );

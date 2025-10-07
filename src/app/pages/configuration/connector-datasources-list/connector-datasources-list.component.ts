@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { BaseComponent } from '../../components/base/base.component';
@@ -11,9 +11,11 @@ import {
   InsertCntorDatasource,
   UpdateCntorDatasource,
 } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
-import { Actions, ofType } from '@ngrx/effects';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { CntorDatasourceDto } from '../../../dto/configuration/cntor-datasource.dto';
+import { StateHelperService } from '../../../services/state-helper.service';
+import { ColumnsService } from '../../../services/columns.service';
+import { Subject } from 'rxjs';
+import { GridColumns } from '../../../base/grid-columns';
 
 @Component({
   selector: 'app-connector-datasources-list',
@@ -23,7 +25,7 @@ import { CntorDatasourceDto } from '../../../dto/configuration/cntor-datasource.
 })
 export class ConnectorDatasourcesListComponent
   extends BaseComponent
-  implements OnInit
+  implements OnInit, OnDestroy
 {
   @ViewChild('cntorDatasourcesGrid')
   cntorDatasourcesGrid: DnGridComponent;
@@ -31,8 +33,11 @@ export class ConnectorDatasourcesListComponent
   connector_datasources_list_text: string;
   dataSource: any;
   columns: DnColumnDto[];
+  private destroy$ = new Subject<void>();
 
-  constructor(private actions$: Actions) {
+  constructor(
+    private columnsService: ColumnsService,
+  ) {
     super();
     this.connector_datasources_list_text = 'Connector Datasources';
   }
@@ -42,52 +47,6 @@ export class ConnectorDatasourcesListComponent
     this.getColumns();
     this.getData();
   }
-  setActionsResults() {
-    this.setInsertDtoSuccessActionResult();
-    this.setUpdateDtoSuccessActionResult();
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
-  }
-
-  setInsertDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(InsertCntorDatasource.actionSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record inserted');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateCntorDatasource.actionSuccess))
-      .subscribe((result: any) => {
-        this.getData();
-        this.displayNotification('Record updated');
-      });
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteCntorDatasource.actionSuccess))
-      .subscribe((result: any) => {
-        this.getData();
-        this.displayNotification('Record deleted');
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteCntorDatasource.actionFailure))
-      .subscribe((result: any) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: result.error.error.innerExceptionMessage,
-          },
-        });
-      });
-  }
 
   getData() {
     this.store.dispatch(GetAllCntorDatasources.action());
@@ -95,60 +54,7 @@ export class ConnectorDatasourcesListComponent
   }
 
   getColumns() {
-    this.columns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'Description',
-        DataType: 'string',
-        Caption: 'Description',
-      },
-      {
-        DataField: 'Icon',
-        DataType: 'string',
-        Caption: 'Icon',
-      },
-      {
-        DataField: 'IconColor',
-        DataType: 'string',
-        Caption: 'IconColor',
-      },
-      {
-        DataField: 'HasCustomImage',
-        DataType: 'boolean',
-        Caption: 'HasCustomImage',
-      },
-      {
-        DataField: 'CustomImagePath',
-        DataType: 'string',
-        Caption: 'CustomImagePath',
-      },
-      {
-        DataField: 'CustomImageWidth',
-        DataType: 'number',
-        Caption: 'CustomImageWidth',
-      },
-      {
-        DataField: 'CompanyId',
-        Visible: false,
-        DataType: 'string',
-        Caption: 'CompanyId',
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
+    this.columns = this.columnsService.getColumns(GridColumns.CntorDatasources);
   }
 
   onInsertClicked(e: any) {
@@ -156,10 +62,7 @@ export class ConnectorDatasourcesListComponent
   }
 
   onRowSaving(data: any) {
-    let dto:CntorDatasourceDto={...data};
-    if (data.Id) {
-      dto.Id = data.Id;
-    }
+    let dto: CntorDatasourceDto = { ...data };
 
     if (!dto.Id) {
       this.store.dispatch(InsertCntorDatasource.action({ dto }));
@@ -178,5 +81,49 @@ export class ConnectorDatasourcesListComponent
 
   onRowDelete(data: any) {
     this.store.dispatch(DeleteCntorDatasource.action({ id: data.Id }));
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertCntorDatasource.actionSuccess,
+        insertFailure: InsertCntorDatasource.actionFailure,
+        updateSuccess: UpdateCntorDatasource.actionSuccess,
+        updateFailure: UpdateCntorDatasource.actionFailure,
+        deleteSuccess: DeleteCntorDatasource.actionSuccess,
+        deleteFailure: DeleteCntorDatasource.actionFailure,
+      },
+      {
+        insertSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

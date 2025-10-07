@@ -17,6 +17,7 @@
           [(value)]="documentType.Code"
           label="Code"
           [width]="100"
+          [readOnly]="true"
         ></dn-textbox>
       </div>
       <div class="name">
@@ -106,8 +107,20 @@
           >
           </dn-selectbox>
         </div>
+        <div class="basic-info-tab-g flex-row">
+          <b>{{ affects_warehouse_stock_text }}</b>
+          <dn-selectbox
+            class=""
+            [dataSource]="docTypeAffectBehaviorDataSource"
+            valueExpr="Id"
+            displayExpr="Name"
+            [(value)]="documentType.WareHouseAffectBehavior"
+            [width]="100"
+          >
+          </dn-selectbox>
+        </div>
         @if(lotsEnabled){
-          <div class="basic-info-tab-g flex-row">
+          <div class="basic-info-tab-k flex-row">
           <b>{{ affects_lot_text }}</b>
           <dn-selectbox
             class=""

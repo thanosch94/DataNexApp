@@ -165,10 +165,10 @@
             [optionsTemplate]="
               column.Lookup.DisplayMultExpr != null ? true : false
             "
-            [dataSource]="column.Lookup.DataSource"
+            [dataSource]="column.Lookup.DataSource?column.Lookup.DataSource:column.Lookup.DataSource$|async"
             [valueExpr]="column.Lookup.ValueExpr"
             [displayExpr]="column.Lookup.DisplayExpr ?? ''"
-            [value]="row[column.DataField] | lookupName : row : column"
+            [value]="row[column.DataField] | lookupName : row : column|async"
             [icon]="column.Icon"
             [iconPosition]="column.IconPosition ? column.IconPosition : 'end'"
             [iconTooltip]="column.IconTooltip ? column.IconTooltip : ''"
@@ -263,7 +263,7 @@
           <p>
             <dn-textbox
               [readOnly]="true"
-              [value]="row[column.DataField] | lookupName : row : column"
+              [value]="row[column.DataField] | lookupName : row : column|async"
             ></dn-textbox>
           </p>
           } @if(column.DataType == 'buttons' && canEdit &&

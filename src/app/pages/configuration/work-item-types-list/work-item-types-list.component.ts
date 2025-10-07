@@ -1,11 +1,9 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, Inject, Optional, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, Optional, ViewChild } from '@angular/core';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
-import { Store } from '@ngrx/store';
-import { Actions, ofType } from '@ngrx/effects';
 import { BaseComponent } from '../../components/base/base.component';
 import { WorkItemTypeDto } from '../../../dto/work-item-type.dto';
 import {
@@ -14,6 +12,7 @@ import {
   DeleteWorkItemTypeByIdSuccess,
   GetAllWorkItemTypesByWorkItemCategory as GetAllWorkItemTypesByWorkItemCategory,
   InsertWorkItemTypeDto,
+  InsertWorkItemTypeDtoFailure,
   InsertWorkItemTypeDtoSuccess,
   UpdateWorkItemTypeDto,
   UpdateWorkItemTypeDtoFailure,
@@ -21,6 +20,8 @@ import {
 } from '../../../state/parameters/work-item-types/work-item-types.actions';
 import { selectAllWorkItemTypes } from '../../../state/parameters/work-item-types/work-item-types.selectors';
 import { AppTabDto } from '../../../dto/app-tab.dto';
+import { ColumnsService } from '../../../services/columns.service';
+import { GridColumns } from '../../../base/grid-columns';
 
 @Component({
   selector: 'app-work-item-types-list',
@@ -28,7 +29,7 @@ import { AppTabDto } from '../../../dto/app-tab.dto';
   templateUrl: './work-item-types-list.component.html',
   styleUrl: './work-item-types-list.component.css',
 })
-export class WorkItemTypesListComponent extends BaseComponent {
+export class WorkItemTypesListComponent extends BaseComponent implements OnInit, OnDestroy {
   @ViewChild('workItemTypesGrid')
   workItemTypesGrid: DnGridComponent;
   dataSource: Observable<WorkItemTypeDto[]>;
@@ -36,9 +37,10 @@ export class WorkItemTypesListComponent extends BaseComponent {
   columns: DnColumnDto[] = [];
   work_item_types_list_title_text: string;
   workItemCategory: any;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private actions$: Actions,
+    private columnsService: ColumnsService,
     @Optional() @Inject('tab') tab: AppTabDto
   ) {
     super();
@@ -52,59 +54,6 @@ export class WorkItemTypesListComponent extends BaseComponent {
     this.getColumns();
   }
 
-  setActionsResults() {
-    this.setInsertDtoSuccessActionResult();
-    this.setUpdateDtoSuccessActionResult();
-    this.setUpdateDtoFailureActionResult();
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
-  }
-
-  setInsertDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(InsertWorkItemTypeDtoSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record inserted');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateWorkItemTypeDtoSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record updated');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoFailureActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateWorkItemTypeDtoFailure))
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
-      });
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteWorkItemTypeByIdSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.getData();
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteWorkItemTypeByIdFailure))
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
-      });
-  }
-
   getData() {
     this.store.dispatch(
       GetAllWorkItemTypesByWorkItemCategory({
@@ -115,39 +64,7 @@ export class WorkItemTypesListComponent extends BaseComponent {
   }
 
   getColumns() {
-    this.columns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'Icon',
-        DataType: 'string',
-        Caption: 'Icon',
-      },
-      {
-        DataField: 'IconColor',
-        DataType: 'string',
-        Caption: 'Icon Color',
-      },
-      {
-        DataField: 'IsDefault',
-        DataType: 'boolean',
-        Caption: 'Is Default',
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
+    this.columns = this.columnsService.getColumns(GridColumns.WorkItemTypes);
   }
 
   onInsertClicked(e: any) {
@@ -155,12 +72,12 @@ export class WorkItemTypesListComponent extends BaseComponent {
   }
 
   onWorkItemTypeSaving(data: WorkItemTypeDto) {
-    let workItemType: WorkItemTypeDto = { ...data };
-    workItemType.Category = this.workItemCategory;
-    if (!workItemType.Id) {
-      this.store.dispatch(InsertWorkItemTypeDto({ dto: workItemType }));
+    let dto: WorkItemTypeDto = { ...data };
+    dto.Category = this.workItemCategory;
+    if (!dto.Id) {
+      this.store.dispatch(InsertWorkItemTypeDto({ dto }));
     } else {
-      this.store.dispatch(UpdateWorkItemTypeDto({ dto: workItemType }));
+      this.store.dispatch(UpdateWorkItemTypeDto({ dto }));
     }
   }
 
@@ -174,5 +91,49 @@ export class WorkItemTypesListComponent extends BaseComponent {
 
   onRefreshClicked(e: any) {
     this.getData();
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertWorkItemTypeDtoSuccess,
+        insertFailure: InsertWorkItemTypeDtoFailure,
+        updateSuccess: UpdateWorkItemTypeDtoSuccess,
+        updateFailure: UpdateWorkItemTypeDtoFailure,
+        deleteSuccess: DeleteWorkItemTypeByIdSuccess,
+        deleteFailure: DeleteWorkItemTypeByIdFailure,
+      },
+      {
+        insertSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

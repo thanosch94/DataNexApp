@@ -7,7 +7,7 @@ export const selectProductsState = createFeatureSelector<ProductsState>('product
 // Select all products
 export const selectAllProducts = createSelector(
   selectProductsState,
-  state => state.products
+  state => state.data
 );
 // export const selectProductById = (productId: Guid) => createSelector(
 //   selectAllProducts,

@@ -17,8 +17,6 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { WooConnectionsDataDto } from '../../../dto/woo-connections-data.dto';
 import { WooConnectionsViewModel } from '../../../view-models/woo-connections.viewmodel';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
-import { RequestTypeEnumList } from '../../../enumLists/request-type.enumlist';
-import { WooEntityEnumList } from '../../../enumLists/woo-entity.enumlist';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ConnectorParametersDto } from '../../../dto/connector-parameters.dto';
@@ -28,6 +26,8 @@ import { dnIcons } from '../../../enumLists/dn-icon.list';
 import { GetAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
 import { selectAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.selectors';
 import { map } from 'rxjs';
+import { ColumnsService } from '../../../services/columns.service';
+import { GridColumns } from '../../../base/grid-columns';
 
 @Component({
   selector: 'app-connector-receive-transfer',
@@ -73,10 +73,10 @@ export class ConnectorReceiveTransferComponent
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private tabsService: TabsService,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private columnsService: ColumnsService
   ) {
     super();
     this.connector_receive_transfer_text = 'Wordpress';
@@ -124,11 +124,8 @@ export class ConnectorReceiveTransferComponent
     );
   }
   onDataSourceSelectionChanged(e: any) {
-    debugger
     this.cntor_target_datasources = this.cntor_datasources.pipe(
       map((data: any) => data.filter((x:any)=>x.Id != e.value)))
-
-
   }
 
   getCredentials() {
@@ -201,62 +198,13 @@ export class ConnectorReceiveTransferComponent
     });
   }
   getWooConnectionsColumns() {
-    this.wooConnectionsColumns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'RequestType',
-        DataType: 'number',
-        Caption: 'Request Type',
-        Lookup: {
-          DataSource: RequestTypeEnumList.value,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
-      {
-        DataField: 'WooEntity',
-        DataType: 'number',
-        Caption: 'Entity',
-        Lookup: {
-          DataSource: WooEntityEnumList.value,
-          ValueExpr: 'Id',
-          DisplayExpr: 'Name',
-        },
-      },
-      {
-        DataField: 'Endpoint',
-        DataType: 'string',
-        Caption: 'Endpoint',
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
+    this.wooConnectionsColumns = this.columnsService.getColumns(GridColumns.WooConnections)
   }
 
   onWooConnectionAdding(e: any) {}
   onWooConnectionSaving(data: WooConnectionsDataDto) {
-    let newWooConnection = new WooConnectionsDataDto();
+    let newWooConnection: WooConnectionsDataDto = {...data};
 
-    if (data.Id) {
-      newWooConnection.Id = data.Id;
-    }
-    newWooConnection.Name = data.Name;
-    newWooConnection.Endpoint = data.Endpoint;
-    newWooConnection.RequestType = data.RequestType;
-    newWooConnection.WooEntity = data.WooEntity;
     if (!newWooConnection.Id) {
       this.wooConnectionsViewModel
         .InsertDto(newWooConnection)

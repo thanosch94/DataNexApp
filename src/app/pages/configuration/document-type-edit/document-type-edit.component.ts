@@ -76,6 +76,7 @@ export class DocumentTypeEditComponent
   priceTypesDataSource: any[];
   uses_prices_text: string = 'Uses Prices';
   affects_customer_balance_text: string = 'Affects Customer Balance';
+  affects_warehouse_stock_text: string = 'Affects Warehouse Stock';
   affects_lot_text: string = 'Affects Lot';
   docTypeAffectBehaviorDataSource: any[];
   docTypeGroupDataSource: any[];
@@ -92,9 +93,7 @@ export class DocumentTypeEditComponent
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private tabsService: TabsService,
     private colsService: ColumnsService,
-    private stateHelperService: StateHelperService
   ) {
     super();
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
@@ -237,132 +236,82 @@ export class DocumentTypeEditComponent
 
   //#region Actions Results
   setActionsResults() {
-    this.getByIdFailureActionResult();
-    this.setInsertDtoSuccessActionResult();
-    this.setInsertDtoFailureActionResult();
-    this.setUpdateDtoSuccessActionResult();
-    this.setUpdateDtoFailureActionResult();
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
+    this.setPostActionsResults(
+      {
+        getByIdDocTypeFailure: GetDocumentTypeByIdFailure,
+        insertDocTypeSuccess: InsertDocumentTypeDtoSuccess,
+        insertDocTypeFailure: InsertDocumentTypeDtoFailure,
+        updateDocTypeSuccess: UpdateDocumentTypeDtoSuccess,
+        updateDocTypeFailure: UpdateDocumentTypeDtoFailure,
+        deleteDocTypeSuccess: DeleteDocumentTypeByIdSuccess,
+        deleteDocTypeFailure: DeleteDocumentTypeByIdFailure,
+      },
+      {
+        getByIdFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        insertSuccess: (result: any) => {
+          this.documentTypeId = result.dto.Id;
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.getToolbarTitle();
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.router.navigate(['document-types-list']);
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+
     //Document Series Actions Results
-    this.setInsertDocSeriesDtoSuccessActionResult();
-    this.setInsertDocSeriesDtoFailureActionResult();
-    this.setUpdateDocSeriesDtoSuccessActionResult();
-    this.setUpdateDocSeriesDtoFailureActionResult();
-    this.setDeleteDocSeriesByIdSuccessActionResult();
-    this.setDeleteDocSeriesByIdFailureActionResult();
-  }
-
-  getByIdFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(GetDocumentTypeByIdFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  setInsertDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertDocumentTypeDtoSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.documentTypeId = result.dto.Id;
-        this.getData();
-        this.displayNotification('Record inserted');
-      });
-  }
-
-  setInsertDtoFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertDocumentTypeDtoFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  setUpdateDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateDocumentTypeDtoSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.getData();
-        this.getToolbarTitle();
-        this.displayNotification('Record updated');
-      });
-  }
-
-  setUpdateDtoFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateDocumentTypeDtoFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteDocumentTypeByIdSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.router.navigate(['document-types-list']);
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteDocumentTypeByIdFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  //Document Series Actions Results
-  setInsertDocSeriesDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertDocumentSeries.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.getDocumentSeriesData();
-        this.displayNotification('Record inserted');
-      });
-  }
-
-  setInsertDocSeriesDtoFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(InsertDocumentSeries.actionFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  setUpdateDocSeriesDtoSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateDocumentSeries.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.getDocumentSeriesData();
-        this.displayNotification('Record updated');
-      });
-  }
-
-  setUpdateDocSeriesDtoFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(UpdateDocumentSeries.actionFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
-  }
-
-  setDeleteDocSeriesByIdSuccessActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteDocumentSeries.actionSuccess, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-      });
-  }
-
-  setDeleteDocSeriesByIdFailureActionResult() {
-    this.stateHelperService
-      .setActionResult(DeleteDocumentSeries.actionFailure, this.destroy$)
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-      });
+    this.setPostActionsResults(
+      {
+        insertDocSeriesSuccess: InsertDocumentSeries.actionSuccess,
+        insertDocSeriesFailure: InsertDocumentSeries.actionFailure,
+        updateDocSeriesSuccess: UpdateDocumentSeries.actionSuccess,
+        updateDocSeriesFailure: UpdateDocumentSeries.actionFailure,
+        deleteDocSeriesSuccess: DeleteDocumentSeries.actionSuccess,
+        deleteDocSeriesFailure: DeleteDocumentSeries.actionFailure,
+      },
+      {
+        insertDocSeriesSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getDocumentSeriesData();
+        },
+        insertDocSeriesFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateDocSeriesSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getDocumentSeriesData();
+        },
+        updateDocSeriesFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteDocSeriesSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getDocumentSeriesData();
+        },
+        deleteDocSeriesFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
   }
 
   //#endregion

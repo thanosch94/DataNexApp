@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { GeneralOptionsDto } from '../../../dto/configuration/general-options.dto';
 import { DnCheckboxComponent } from '../../components/dn-checkbox/dn-checkbox.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { BaseComponent } from '../../components/base/base.component';
 
 @Component({
     selector: 'app-general-options',
@@ -13,12 +14,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     templateUrl: './general-options.component.html',
     styleUrl: './general-options.component.css'
 })
-export class GeneralOptionsComponent {
+export class GeneralOptionsComponent extends BaseComponent {
   general_options_text: string = "General Options";
   generalOptionsViewModel: GeneralOptionsViewModel;
   generalOptions: GeneralOptionsDto = new GeneralOptionsDto();
 
   constructor(private http: HttpClient, private auth: AuthService, private _snackBar:MatSnackBar) {
+    super()
     this.generalOptionsViewModel = new GeneralOptionsViewModel(
       this.http,
       this.auth
@@ -66,11 +68,6 @@ export class GeneralOptionsComponent {
     this.getOrInsertData()
   }
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
+
 
 }

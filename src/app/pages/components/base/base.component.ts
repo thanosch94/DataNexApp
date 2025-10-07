@@ -1,8 +1,9 @@
+import { StateHelperService } from './../../../services/state-helper.service';
 import { Component, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DnAlertComponent } from '../dn-alert/dn-alert.component';
 import { MatDialog } from '@angular/material/dialog';
-import { firstValueFrom, isObservable, Observable, of } from 'rxjs';
+import { firstValueFrom, isObservable, Observable, of, Subject } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Guid } from 'guid-typescript';
 import { AppPermissionDto } from '../../../dto/configuration/app-permission.dto';
@@ -13,6 +14,7 @@ import {
 } from '../../../state/user-app-permissions/user-app-permissions.selectors';
 import { UserAppPermissionDto } from '../../../dto/configuration/user-app-permission.dto';
 import { WebAppBase } from '../../../base/web-app-base';
+import { TabsService } from '../../../services/tabs.service';
 
 @Component({
   selector: 'app-base',
@@ -23,11 +25,34 @@ import { WebAppBase } from '../../../base/web-app-base';
 export class BaseComponent {
   protected snackBar: MatSnackBar = inject(MatSnackBar);
   protected dialog: MatDialog = inject(MatDialog);
+  protected tabsService: TabsService = inject(TabsService);
+
   protected devToolsData: Object;
   protected permissions: any[];
   protected store: Store = inject(Store);
+  protected stateHelperService:StateHelperService = inject(StateHelperService);
   componentPermissions: AppPermissionDto[];
   componentId: string | Guid;
+
+
+    protected setPostActionsResults(
+    actionsMap: { [key: string]: any },
+    callbacks: { [key: string]: (result:any) => void },
+    destroy$: Subject<void>
+  ) {
+    for (const key in actionsMap) {
+      const action = actionsMap[key];
+      const callback = callbacks[key];
+      if (action && callback && this.stateHelperService) {
+        this.stateHelperService
+          .setActionResult(action, destroy$)
+          .subscribe((result: any) => callback(result));
+      }
+    }
+  }
+
+
+
   displayNotification(text: string) {
     this.snackBar.open(text, '', {
       duration: 1000,
@@ -39,8 +64,11 @@ export class BaseComponent {
     let errorMessage;
     if (error?.error?.innerExceptionMessage) {
       errorMessage = error.error?.innerExceptionMessage;
-    } else {
+    } else if(error.message) {
       errorMessage = error.message;
+    }else{
+      errorMessage = error.error;
+
     }
     const dialog = this.dialog.open(DnAlertComponent, {
       data: {
@@ -229,4 +257,5 @@ export class BaseComponent {
     //   return null;
     // }
   }
+
 }

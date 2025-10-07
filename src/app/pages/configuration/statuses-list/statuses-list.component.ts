@@ -1,16 +1,22 @@
-import { TabsService } from './../../../services/tabs.service';
-import { Component, Inject, OnInit, Optional, ViewChild, signal } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  Optional,
+  ViewChild,
+} from '@angular/core';
 import { StatusDto } from '../../../dto/status.dto';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { AsyncPipe } from '@angular/common';
-import { Store } from '@ngrx/store';
 import {
   DeleteStatusById,
   DeleteStatusByIdFailure,
   DeleteStatusByIdSuccess,
   GetAllStatusesByStatusType,
   InsertStatusDto,
+  InsertStatusDtoFailure,
   InsertStatusDtoSuccess,
   UpdateStatusDto,
   UpdateStatusDtoFailure,
@@ -18,90 +24,43 @@ import {
 } from '../../../state/parameters/statuses/statuses.actions';
 import { selectAllStatusesByStatusType } from '../../../state/parameters/statuses/statuses.selectors';
 import { BaseComponent } from '../../components/base/base.component';
-import { Actions, ofType } from '@ngrx/effects';
 import { AppTabDto } from '../../../dto/app-tab.dto';
+import { ColumnsService } from '../../../services/columns.service';
+import { GridColumns } from '../../../base/grid-columns';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-statuses-list',
   imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',
-  providers:[]
+  providers: [],
 })
-export class StatusesListComponent extends BaseComponent implements OnInit {
+export class StatusesListComponent
+  extends BaseComponent
+  implements OnInit, OnDestroy
+{
   @ViewChild('statusGrid')
   statusGrid: DnGridComponent;
   columns: any[];
   dataSource: any;
-  status: any;
   statuses_list_text: string;
   private statusType: any;
+  private destroy$ = new Subject<void>();
+
   constructor(
-    private actions$: Actions,
-    @Optional() @Inject('tab') tab:AppTabDto
+    private columnsService: ColumnsService,
+    @Optional() @Inject('tab') tab: AppTabDto
   ) {
     super();
     this.statuses_list_text = 'Document Statuses List';
-    this.statusType = tab.Params["StatusType"]!
-    }
+    this.statusType = tab.Params['StatusType']!;
+  }
 
   ngOnInit() {
     this.setActionsResults();
     this.getData();
     this.getColumns();
-  }
-
-  setActionsResults() {
-    this.setInsertDtoSuccessActionResult();
-    this.setUpdateDtoSuccessActionResult();
-    this.setUpdateDtoFailureActionResult();
-    this.setDeleteByIdSuccessActionResult();
-    this.setDeleteByIdFailureActionResult();
-  }
-
-  setInsertDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(InsertStatusDtoSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record inserted');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateStatusDtoSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record updated');
-        this.getData();
-      });
-  }
-
-  setUpdateDtoFailureActionResult() {
-    this.actions$
-      .pipe(ofType(UpdateStatusDtoFailure))
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
-      });
-  }
-
-  setDeleteByIdSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteStatusByIdSuccess))
-      .subscribe((result: any) => {
-        this.displayNotification('Record deleted');
-        this.getData();
-      });
-  }
-
-  setDeleteByIdFailureActionResult() {
-    this.actions$
-      .pipe(ofType(DeleteStatusByIdFailure))
-      .subscribe((result: any) => {
-        this.displayErrorAlert(result.error);
-        this.getData();
-      });
   }
 
   getData() {
@@ -111,57 +70,19 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
     this.dataSource = this.store.select(
       selectAllStatusesByStatusType(this.statusType)
     );
-
   }
 
   getColumns() {
-    this.columns = [
-      {
-        DataField: 'Id',
-        DataType: 'string',
-        Caption: 'Id',
-        Visible: false,
-      },
-      {
-        DataField: 'Name',
-        DataType: 'string',
-        Caption: 'Name',
-      },
-      {
-        DataField: 'Icon',
-        DataType: 'string',
-        Caption: 'Icon',
-      },
-      {
-        DataField: 'IconColor',
-        DataType: 'string',
-        Caption: 'Icon Color',
-      },
-      {
-        DataField: 'Order',
-        DataType: 'number',
-        Caption: 'Order',
-      },
-      {
-        DataField: 'IsDefault',
-        DataType: 'boolean',
-        Caption: 'Is Default',
-      },
-      {
-        DataField: 'buttons',
-        DataType: 'buttons',
-        Caption: '',
-      },
-    ];
+    this.columns = this.columnsService.getColumns(GridColumns.Statuses);
   }
 
   onRowSaving(data: any) {
-    let status: StatusDto = { ...data };
-    status.StatusType=this.statusType
-    if (!status.Id) {
-      this.store.dispatch(InsertStatusDto({ dto: status }));
+    let dto: StatusDto = { ...data };
+    dto.StatusType = this.statusType;
+    if (!dto.Id) {
+      this.store.dispatch(InsertStatusDto({ dto }));
     } else {
-      this.store.dispatch(UpdateStatusDto({ dto: status }));
+      this.store.dispatch(UpdateStatusDto({ dto }));
     }
   }
 
@@ -179,5 +100,49 @@ export class StatusesListComponent extends BaseComponent implements OnInit {
 
   onRefreshBtnClicked(e: any) {
     this.getData();
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertStatusDtoSuccess,
+        insertFailure: InsertStatusDtoFailure,
+        updateSuccess: UpdateStatusDtoSuccess,
+        updateFailure: UpdateStatusDtoFailure,
+        deleteSuccess: DeleteStatusByIdSuccess,
+        deleteFailure: DeleteStatusByIdFailure,
+      },
+      {
+        insertSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

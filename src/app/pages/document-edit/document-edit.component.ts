@@ -1,6 +1,9 @@
+import {
+  selectAllWarehouses,
+  selectDefaultWarehouse,
+} from './../../state/parameters/warehouses/warehouses.selectors';
 import { LotsViewModel } from './../../view-models/lots.viewmodel';
 import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
-import { VatClassesViewModel } from './../../view-models/vat-classes.viewmodel';
 import { DocumentAdditionalChargesViewModel } from './../../view-models/document-additional-charges.viewmodel';
 import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
@@ -13,15 +16,12 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   EventEmitter,
   Input,
   OnDestroy,
   OnInit,
   Output,
-  QueryList,
   ViewChild,
-  ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -51,8 +51,7 @@ import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 import { ProductOptionsComponent } from '../inventory/product-options/product-options.component';
 import { AppTabDto } from '../../dto/app-tab.dto';
 import { TabsService } from '../../services/tabs.service';
@@ -80,15 +79,10 @@ import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
 import { ProductsService } from '../../services/products.service';
-import { WarehousesViewModel } from '../../view-models/warehouses.viewmodel';
-import { firstValueFrom } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { firstValueFrom, Observable, take } from 'rxjs';
 import { GetAllStatuses } from '../../state/parameters/statuses/statuses.actions';
 import { selectAllStatuses } from '../../state/parameters/statuses/statuses.selectors';
-import {
-  GetAllVatClasses,
-  GetVatClassById,
-} from '../../state/parameters/vat-classes/vat-classes.actions';
+import { GetAllVatClasses } from '../../state/parameters/vat-classes/vat-classes.actions';
 import {
   selectAllVatClasses,
   selectVatClassById,
@@ -96,6 +90,13 @@ import {
 import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-uploader.component';
 import { GetAllCustomers } from '../../state/parameters/customers/customers.actions';
 import { selectAllCustomers } from '../../state/parameters/customers/customers.selectors';
+import { GetAllWarehouses } from '../../state/parameters/warehouses/warehouses.actions';
+import { BaseComponent } from '../components/base/base.component';
+import { GetAllProducts } from '../../state/products/products.actions';
+import { selectAllProducts } from '../../state/products/products.selectors';
+import { StatusDto } from '../../dto/status.dto';
+import { GetAllDocumentTypes } from '../../state/parameters/document-types/document-types.actions';
+import { selectAllDocumentTypes } from '../../state/parameters/document-types/document-types.selectors';
 
 @Component({
   selector: 'app-document-edit',
@@ -132,7 +133,10 @@ import { selectAllCustomers } from '../../state/parameters/customers/customers.s
   templateUrl: './document-edit.component.html',
   styleUrl: './document-edit.component.css',
 })
-export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DocumentEditComponent
+  extends BaseComponent
+  implements OnInit, AfterViewInit, OnDestroy
+{
   @ViewChild('productstable') productstable: DnGridComponent;
   documentType: any;
   @Input() documentGroup: any;
@@ -141,7 +145,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() onClose = new EventEmitter();
 
   documentsViewModel: DocumentsViewModel;
-  statusesList: any;
+  statusesList$: Observable<StatusDto[]>;
   currency: string;
   total: number = 0;
   addCharges: number = 0;
@@ -151,7 +155,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
   document_must_be_saved_in_order_to_add_charges_text: string;
 
-  vatClassesViewModel: VatClassesViewModel;
+
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
   columns: DnColumnDto[] = [];
@@ -164,7 +168,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   customerPhone: number;
   vatNumber: number;
   documentProduct: DocumentProductDto = new DocumentProductDto();
-  docTypes: Array<DocumentTypeDto>;
+  docTypes$: Observable<DocumentTypeDto[]>;
   productsDataSource: Array<DocumentProductDto> =
     new Array<DocumentProductDto>();
   document: DocumentDto = new DocumentDto();
@@ -172,7 +176,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   documentTypesViewModel: DocumentTypesViewModel;
   productsViewModel: ProductsViewModel;
   lineProduct = new ProductDto();
-  products: ProductDto[];
+  products$: Observable<ProductDto[]>;
 
   productsSizes = new Array<ProductBarcodeDto>();
   productSizesViewModel: ProductSizesViewModel;
@@ -185,8 +189,7 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
   lotSettingsViewModel: LotSettingsViewModel;
   lotStrategyEnum: LotStrategyEnum;
   pdfGeneratorComponent: PdfGeneratorComponent;
-  warehousesViewModel: WarehousesViewModel;
-  warehousesList: any;
+  warehouses$: Observable<any>;
   vatClassesList: any;
   vatClassRate: any;
 
@@ -195,30 +198,26 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     private auth: AuthService,
     private ref: ChangeDetectorRef,
     private router: Router,
-    public dialog: MatDialog,
-    private _snackBar: MatSnackBar,
-    private tabsService: TabsService,
     private viewContainerRef: ViewContainerRef,
-    private productsService: ProductsService,
-    private store: Store
+    private productsService: ProductsService
   ) {
+    super();
     this.initializeViewModels();
 
     this.documentId = WebAppBase.data;
     WebAppBase.data = undefined;
     this.currency = WebAppBase.currency;
 
-      let activeTab = TabsService.tabs.find((x) => x.Active == true);
-      activeTab?.Data.forEach((row: any) => {
-        if (row['Group']) {
-          this.documentGroup = row['Group'];
-        }
+    let activeTab = TabsService.tabs.find((x) => x.Active == true);
+    activeTab?.Data.forEach((row: any) => {
+      if (row['Group']) {
+        this.documentGroup = row['Group'];
+      }
 
-        if (row['Type']) {
-          this.documentType = row['Type'];
-        }
-      });
-
+      if (row['Type']) {
+        this.documentType = row['Type'];
+      }
+    });
 
     this.pdfGeneratorComponent = new PdfGeneratorComponent();
   }
@@ -261,8 +260,6 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
       this.auth
     );
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
-    this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
-    this.warehousesViewModel = new WarehousesViewModel(this.http, this.auth);
 
     this.productsViewModel = new ProductsViewModel(this.productsService);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
@@ -278,41 +275,35 @@ export class DocumentEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
       this.lotStrategyEnum = result.LotStrategy;
     });
+    this.store.dispatch(GetAllWarehouses.action());
+    this.warehouses$ = this.store.select(selectAllWarehouses);
 
     this.store.dispatch(GetAllCustomers.action());
-this.customers = this.store.select(selectAllCustomers)
+    this.customers = this.store.select(selectAllCustomers);
     let suppliersObs$ = this.suppliersViewModel.GetAll();
     this.suppliers = await firstValueFrom(suppliersObs$);
-
-    let wareHousesObs = this.warehousesViewModel.GetAll();
-    this.warehousesList = await firstValueFrom(wareHousesObs);
 
     this.store.dispatch(GetAllVatClasses());
     this.store.select(selectAllVatClasses).subscribe((result: any) => {
       this.vatClassesList = result;
     });
+      this.store.dispatch(GetAllDocumentTypes())
 
-    let activeDocTypesObs =
-      this.documentTypesViewModel.GetActiveDocumentTypesLookupByDocumentTypeGroup(
+      this.docTypes$ =this.documentTypesViewModel.GetActiveDocumentTypesLookupByDocumentTypeGroup(
         this.documentGroup
       );
-    this.docTypes = (await firstValueFrom(
-      activeDocTypesObs
-    )) as Array<DocumentTypeDto>;
 
     let productBarcodesObs = this.productBarcodesViewModel.GetLookup();
     this.barcodesLookupDatasource = await firstValueFrom(productBarcodesObs);
 
     this.store.dispatch(GetAllStatuses());
-    this.store.select(selectAllStatuses).subscribe((result: any) => {
-      this.statusesList = result;
-    });
+    this.statusesList$ = this.store.select(selectAllStatuses)
 
     let productSizesObs = this.productSizesViewModel.GetAll();
     this.productSizesDataSource = await firstValueFrom(productSizesObs);
 
-    let productsObs = this.productsViewModel.GetAll();
-    this.products = (await firstValueFrom(productsObs)) as ProductDto[];
+    this.store.dispatch(GetAllProducts.action())
+    this.products$ = this.store.select(selectAllProducts)
 
     if (this.generalOptions.LotsEnabled) {
       let lotsObs = this.lotsViewModel.GetLookup();
@@ -337,15 +328,16 @@ this.customers = this.store.select(selectAllCustomers)
 
     this.document.DocumentDateTime = new Date();
 
-    let defaultWarehouse = this.getDefaultWareHouse();
-    this.document.WarehouseId = defaultWarehouse.Id;
+    this.getDefaultWarehouse();
   }
 
-  getDefaultWareHouse() {
-    let defaultWarehouse = this.warehousesList.find(
-      (x: any) => x.IsDefault == true
-    );
-    return defaultWarehouse;
+  getDefaultWarehouse() {
+    this.store
+      .select(selectDefaultWarehouse)
+      .pipe(take(1))
+      .subscribe((result: any) => {
+        this.document.WarehouseId = result.Id;
+      });
   }
 
   getDocumentData(documentId: Guid) {
@@ -490,33 +482,25 @@ this.customers = this.store.select(selectAllCustomers)
 
   //#endregion
 
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
-  }
-
   onCloseClicked(e: any) {
-    if(!this.isInPopup){
+    if (!this.isInPopup) {
+      let activeTab = this.tabsService.getActiveTab();
+      activeTab!.Data.forEach((row: any) => {
+        if (row['Group']) {
+          this.documentGroup = row['Group'];
+        }
 
-    let activeTab = this.tabsService.getActiveTab();
-    activeTab!.Data.forEach((row: any) => {
-      if (row['Group']) {
-        this.documentGroup = row['Group'];
-      }
+        if (row['Type']) {
+          this.documentType = row['Type'];
+        }
+      });
+      this.router.navigate(['documents-list'], {
+        queryParams: { Group: this.documentGroup, Type: this.documentType },
+      });
 
-      if (row['Type']) {
-        this.documentType = row['Type'];
-      }
-    });
-    this.router.navigate(['documents-list'], {
-      queryParams: { Group: this.documentGroup, Type: this.documentType },
-    });
-
-    this.tabsService.setActiveTabPreviousName();
-    }else{
-      this.onClose.emit(e)
+      this.tabsService.setActiveTabPreviousName();
+    } else {
+      this.onClose.emit(e);
     }
   }
 
@@ -897,7 +881,7 @@ this.customers = this.store.select(selectAllCustomers)
         DataType: 'string',
         Caption: 'Sku',
         Lookup: {
-          DataSource: this.products,
+          DataSource$: this.products$,
           ValueExpr: 'Sku',
           DisplayExpr: 'Sku',
           DisplayMultExpr: (data: any) => {

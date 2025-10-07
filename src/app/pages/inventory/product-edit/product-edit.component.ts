@@ -1,17 +1,14 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import {
   CUSTOM_ELEMENTS_SCHEMA,
   ChangeDetectorRef,
   Component,
   Inject,
-  NgModule,
-  NgZone,
   OnDestroy,
   OnInit,
   Optional,
   ViewChild,
-  isDevMode,
 } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -23,15 +20,9 @@ import { MatOption, MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { Router } from '@angular/router';
-import {
-  MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogActions,
-  MatDialogModule,
-} from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { map, startWith, take } from 'rxjs/operators';
+import { map, startWith } from 'rxjs/operators';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import {
@@ -41,38 +32,32 @@ import {
 } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Guid } from 'guid-typescript';
-import { firstValueFrom, Observable } from 'rxjs';
-import { WebAppBase } from '../../../base/web-app-base';
-import { BrandDto } from '../../../dto/brand.dto';
+import { Observable, Subject } from 'rxjs';
 import { ProductBarcodeDto } from '../../../dto/product-barcode.dto';
 import { ProductSizeDto } from '../../../dto/product-size.dto';
 import { ProductDto } from '../../../dto/product.dto';
 import { AuthService } from '../../../services/auth.service';
 import { TabsService } from '../../../services/tabs.service';
-import { BrandsViewModel } from '../../../view-models/brands.viewmodel';
 import { ProductBarcodesViewModel } from '../../../view-models/product-barcodes.viewmodel';
 import { ProductSizesViewModel } from '../../../view-models/product-sizes.viewmodel';
-import { ProductsViewModel } from '../../../view-models/products.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
-import { DnPopupComponent } from '../../components/dn-popup/dn-popup.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { VatClassesViewModel } from '../../../view-models/vat-classes.viewmodel';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { ProductsService } from '../../../services/products.service';
-import { Store } from '@ngrx/store';
 import {
-  insertProduct,
-  insertProductSuccess,
-  loadProductById,
-  updateProduct,
-  updateProductSuccess,
+  DeleteProduct,
+  GetProductById,
+  InsertProduct,
+  UpdateProduct,
 } from '../../../state/products/products.actions';
 import { selectProductById } from '../../../state/products/products.selectors';
 import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { DnNumberBoxComponent } from '../../components/dn-number-box/dn-number-box.component';
-import { Actions, ofType } from '@ngrx/effects';
+import { BaseComponent } from '../../components/base/base.component';
+import { GetAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.actions';
+import { selectAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.selectors';
+import { GetAllBrands } from '../../../state/parameters/brands/brands.actions';
+import { selectAllBrands } from '../../../state/parameters/brands/brands.selectors';
 
 @Component({
   selector: 'product-edit',
@@ -110,7 +95,10 @@ import { Actions, ofType } from '@ngrx/effects';
   templateUrl: './product-edit.component.html',
   styleUrl: './product-edit.component.css',
 })
-export class ProductEditComponent implements OnInit, OnDestroy {
+export class ProductEditComponent
+  extends BaseComponent
+  implements OnInit, OnDestroy
+{
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
   @ViewChild('matTable') table: MatTable<ProductBarcodeDto>;
   @ViewChild('optionSelected') optionSelected: MatOption;
@@ -118,7 +106,6 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   brandControl = new FormControl('');
   product: any;
   product_text: string;
-  productsViewModel: ProductsViewModel;
   productId: any;
   barcodesDataSource: MatTableDataSource<ProductBarcodeDto>;
   productBarcodesViewModel: ProductBarcodesViewModel;
@@ -133,28 +120,23 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   isDialog: boolean;
   noImgPath: string;
   sizeName: any;
-  brandsViewModel: BrandsViewModel;
   brands: any;
   previousTabName: string;
   vatClassName: any;
-  vatClassesViewModel: VatClassesViewModel;
   vatClasses: any;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private router: Router,
-    private _snackBar: MatSnackBar,
-    public dialog: MatDialog,
-    private tabsService: TabsService,
     private ref: ChangeDetectorRef,
     private sanitizer: DomSanitizer,
-    private productsService: ProductsService,
-    private store: Store,
-    private actions$: Actions,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
-    this.productsViewModel = new ProductsViewModel(this.productsService);
+    super();
+    this.productId = history.state?.id;
+
     this.productBarcodesViewModel = new ProductBarcodesViewModel(
       this.http,
       this.auth
@@ -163,81 +145,36 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       this.http,
       this.auth
     );
-    this.vatClassesViewModel = new VatClassesViewModel(this.http, this.auth);
-    this.brandsViewModel = new BrandsViewModel(this.http, this.auth);
 
-
-    //If opens from dialog
+    //If opens from
+    debugger
     if (data) {
       this.productId = data.product.ProductId;
       this.isDialog = true;
     } else {
-      this.productId = WebAppBase.data;
-      WebAppBase.data = undefined;
       this.isDialog = false;
     }
 
     this.noImgPath = './assets/images/no-img.jpg';
-    this.getLookups();
   }
 
   ngOnInit() {
-    this.setInsertProductSuccessActionResult();
-    this.setUpdateProductSuccessActionResult();
+    this.setActionsResults();
+    this.getLookups();
     this.getData();
   }
 
-  setUpdateProductSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(updateProductSuccess), take(1))
-      .subscribe((result: any) => {
-        this.previousTabName = this.product_text.toString();
-        this.product = result.product;
-        this.product_text = this.product.Sku + ' - ' + this.product.Name;
-        this.tabsService.setTabNameByOldName(
-          this.product_text,
-          this.previousTabName
-        );
-        this._snackBar.open('Record updated', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-      });
-  }
+  getLookups() {
+    this.store.dispatch(GetAllBrands.action());
+    this.store.dispatch(GetAllVatClasses());
 
-  setInsertProductSuccessActionResult() {
-    this.actions$
-      .pipe(ofType(insertProductSuccess), take(1))
-      .subscribe((result: any) => {
-        this.product = result.product;
-        this.productId = this.product.Id;
-        this.previousTabName = this.product_text.toString();
-        this.product_text = this.product.Sku + ' - ' + this.product.Name;
-        this.tabsService.setTabNameByOldName(
-          this.product_text,
-          this.previousTabName
-        );
-        this.getData()
-        this._snackBar.open('Record inserted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-      });
-  }
-
-  async getLookups() {
-    let obs1 = this.brandsViewModel.GetAll();
-    this.brands = await firstValueFrom(obs1);
-
-    let obs2 = this.vatClassesViewModel.GetAll();
-    this.vatClasses = await firstValueFrom(obs2);
-
-    this.ref.detectChanges();
+    this.brands = this.store.select(selectAllBrands);
+    this.vatClasses = this.store.select(selectAllVatClasses);
   }
 
   getData() {
     if (this.productId) {
-      this.store.dispatch(loadProductById({ id: this.productId }));
+      this.store.dispatch(GetProductById.action({ id: this.productId }));
       this.store
         .select(selectProductById(this.productId))
         .subscribe((product) => {
@@ -300,42 +237,17 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     });
     dialogRef.afterClosed().subscribe((confirm) => {
       if (confirm) {
-        this.deleteItem(this.product);
-      } else {
+        this.store.dispatch(DeleteProduct.action({ id: this.product.Id }));
       }
-    });
-  }
-
-  deleteItem(data: any) {
-    this.productsViewModel.DeleteById(data.Id).subscribe({
-      next: (result) => {
-        this._snackBar.open('Record deleted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
-        this.router.navigate(['products-list']);
-      },
-      error: (err) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          data: {
-            Title: 'Message',
-            Message: err.error.innerExceptionMessage,
-          },
-        });
-      },
     });
   }
 
   onSaveClicked(e: any) {
     if (this.product.Id != null) {
-      this.store.dispatch(updateProduct({ dto: this.product }));
+      this.store.dispatch(UpdateProduct.action({ dto: this.product }));
     } else {
-      this.store.dispatch(insertProduct({ dto: this.product }));
+      this.store.dispatch(InsertProduct.action({ dto: this.product }));
     }
-  }
-
-  ngOnDestroy() {
-    WebAppBase.data = undefined;
   }
 
   addProductBarcode(e: any) {
@@ -379,12 +291,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           this.table.renderRows();
         },
         error: (err) => {
-          const dialog = this.dialog.open(DnAlertComponent, {
-            data: {
-              Title: 'Message',
-              Message: err.error,
-            },
-          });
+          this.displayErrorAlert(err);
         },
       });
     } else {
@@ -402,12 +309,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
           }
         },
         error: (err) => {
-          const dialog = this.dialog.open(DnAlertComponent, {
-            data: {
-              Title: 'Message',
-              Message: err.error,
-            },
-          });
+          this.displayErrorAlert(err);
         },
       });
     }
@@ -473,5 +375,55 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   onRefreshClicked(e: any) {
     this.getData();
+  }
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertProduct.actionSuccess,
+        insertFailure: InsertProduct.actionFailure,
+        updateSuccess: UpdateProduct.actionSuccess,
+        updateFailure: UpdateProduct.actionFailure,
+        deleteSuccess: DeleteProduct.actionSuccess,
+        deleteFailure: DeleteProduct.actionFailure,
+      },
+      {
+        insertSuccess: (result) => {
+          this.product = result.dto;
+          this.productId = this.product.Id;
+          this.product_text = this.product.Sku + ' - ' + this.product.Name;
+          this.tabsService.setActiveTabName(this.product_text)
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: (result) => {
+          this.product = result.dto;
+          this.product_text = this.product.Sku + ' - ' + this.product.Name;
+          this.tabsService.setActiveTabName(this.product_text)
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.router.navigate(['products-list']);
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

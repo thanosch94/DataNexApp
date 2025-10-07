@@ -22,7 +22,6 @@ import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.componen
 import { DnSelectboxComponent } from '../components/dn-selectbox/dn-selectbox.component';
 import { UserDto } from '../../dto/user.dto';
 import { StatusDto } from '../../dto/status.dto';
-import { Store } from '@ngrx/store';
 import {
   selectAllStatusesByStatusType,
   selectDefaultTaskStatus,
@@ -37,7 +36,6 @@ import {
 } from '../../state/parameters/work-item-types/work-item-types.selectors';
 import { WorkItemCategoryEnum } from '../../enums/work-item-category.enum';
 import {
-  GetAllWorkItemTypes,
   GetAllWorkItemTypesByWorkItemCategory,
   GetAllWorkItemTypesByWorkItemCategorySuccess,
 } from '../../state/parameters/work-item-types/work-item-types.actions';
@@ -55,7 +53,6 @@ import {
   UpdateWorkItemDtoSuccess,
 } from '../../state/work-items/work-items.actions';
 import { selectTaskById } from '../../state/work-items/work-items.selectors';
-import { Actions, ofType } from '@ngrx/effects';
 import { GenericFormComponent } from '../components/generic-form/generic-form.component';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnDateBoxComponent } from '../components/dn-date-box/dn-date-box.component';
@@ -65,6 +62,7 @@ import { StateHelperService } from '../../services/state-helper.service';
 import { WorkItemPriority } from '../../enums/work-item-priority.enum';
 import { DevToolsAdd } from '../../decorators/dev-tools-add';
 import { taskEditComponentId, TaskEditPermissionsList } from './task-edit-permissions';
+import { GetAllStatusesByStatusType } from '../../state/parameters/statuses/statuses.actions';
 
 @Component({
   selector: 'app-task-edit',
@@ -114,7 +112,6 @@ export class TaskEditComponent
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
-    private stateHelperService: StateHelperService,
   ) {
     super();
     effect(() => {
@@ -196,7 +193,6 @@ export class TaskEditComponent
           .subscribe((result: any) => {
             this.task.set(result);
             setTimeout(() => {
-              debugger;
               this.form.patchValue(this.task());
             }, 10);
           });
@@ -221,10 +217,6 @@ export class TaskEditComponent
         this.destroy$
       )
       .subscribe(async () => {
-        this.taskTypes = this.store.select(
-          selectAllWorkItemTypesByWorkItemCategory(WorkItemCategoryEnum.Task)
-        );
-
         if (!this.taskId()) {
           const result = await firstValueFrom(
             this.store.select(selectDefaultTaskType)
@@ -265,20 +257,11 @@ export class TaskEditComponent
     this.workItemPrioritiesDatasourse = WorkItemPriorityEnumlist.value;
   }
 
-  async getTaskStatuses() {
+   getTaskStatuses() {
+    this.store.dispatch(GetAllStatusesByStatusType({statusType:StatusTypeEnum.Task}))
     this.taskStatuses = this.store.select(
       selectAllStatusesByStatusType(StatusTypeEnum.Task)
     );
-    if (!this.taskId()) {
-      const result = await firstValueFrom(
-        this.store.select(selectDefaultTaskStatus)
-      );
-
-      this.task.update((task) => ({
-        ...task,
-        StatusId: result?.Id ?? undefined,
-      }));
-    }
   }
 
   getTaskTypes() {
@@ -287,11 +270,13 @@ export class TaskEditComponent
         workItemCategory: WorkItemCategoryEnum.Task,
       })
     );
+    this.taskTypes = this.store.select(
+          selectAllWorkItemTypesByWorkItemCategory(WorkItemCategoryEnum.Task)
+        );
   }
 
   getUsers() {
     this.users = this.store.select(selectAllUsers);
-
     if (this.taskId()) {
       this.task.update((task) => ({
         ...task,

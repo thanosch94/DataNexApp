@@ -1,4 +1,4 @@
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,16 +8,13 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { ProductSizeDto } from '../../dto/product-size.dto';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { NewItemComponent } from '../components/new-item/new-item.component';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
-import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { AuthService } from '../../services/auth.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
+import { BaseComponent } from '../components/base/base.component';
 
 @Component({
     selector: 'app-product-sizes-list',
@@ -29,7 +26,6 @@ import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
         MatInputModule,
         MatFormFieldModule,
         MatTableModule,
-        HttpClientModule,
         DnToolbarComponent,
         MatTooltipModule,
         DnGridComponent,
@@ -37,7 +33,7 @@ import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
     templateUrl: './product-sizes-list.component.html',
     styleUrl: './product-sizes-list.component.css'
 })
-export class ProductSizesListComponent implements OnInit {
+export class ProductSizesListComponent extends BaseComponent implements OnInit {
   @ViewChild('productSizesGrid') productSizesGrid:DnGridComponent
 
   columns: any[];
@@ -49,9 +45,8 @@ export class ProductSizesListComponent implements OnInit {
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    public dialog: MatDialog,
-    private _snackBar: MatSnackBar
   ) {
+    super()
     this.productSizesViewModel = new ProductSizesViewModel(
       this.http,
       this.auth
@@ -99,21 +94,11 @@ export class ProductSizesListComponent implements OnInit {
   deleteProductSize(data: any) {
     this.productSizesViewModel.DeleteById(data.Id).subscribe({
       next: (result) => {
+        this.displayNotification('Record deleted')
         this.getData();
-
-        this._snackBar.open('Record deleted', '', {
-          duration: 1000,
-          panelClass: 'green-snackbar',
-        });
       },
       error: (err) => {
-        const dialog = this.dialog.open(DnAlertComponent, {
-          height:'auto',
-          data: {
-            Title: 'Message',
-            Message: err.error.innerExceptionMessage,
-          },
-        });
+        this.displayErrorAlert(err)
       },
     });
   }
@@ -176,12 +161,5 @@ export class ProductSizesListComponent implements OnInit {
 
   onRefreshClicked(e: any) {
     this.getData();
-  }
-
-  displayNotification(text: string) {
-    this._snackBar.open(text, '', {
-      duration: 1000,
-      panelClass: 'green-snackbar',
-    });
   }
 }

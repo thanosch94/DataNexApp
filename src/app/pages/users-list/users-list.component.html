@@ -8,7 +8,6 @@
 ></dn-toolbar>
 
 <div class="margin">
-
     <dn-grid  #usersGrid
     [dataSource]="dataSource | async"
     [columns]="columns"
@@ -18,6 +17,5 @@
     (onRowEditing)="editUser($event)"
     (onRowDelete)="deleteUser($event)"
     >
-
     </dn-grid>
 </div>

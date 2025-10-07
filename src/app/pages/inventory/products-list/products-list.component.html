@@ -8,16 +8,15 @@
 ></dn-toolbar>
 
 <div class="margin">
-
   <dn-grid  #productsGrid
   [dataSource]="dataSource|async"
   [columns]="columns"
   [canDisplaySearch]="true"
   [enableAddButton]="false"
   [canDelete]="true"
+  [disableLineEditing]="true"
   (onRowEditing)="editProduct($event)"
   (onRowDelete)="deleteProduct($event)"
   >
-
   </dn-grid>
 </div>

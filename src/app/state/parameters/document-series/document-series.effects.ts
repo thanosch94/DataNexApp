@@ -57,13 +57,13 @@ export class DocumentSeriesEffects {
   insert$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
     InsertDocumentSeries,
-    (dto: DocumentSeriesDto) => this.service.InsertDto(dto)
+    (dto: EffectType) => this.service.InsertDto(dto)
   );
 
   update$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
     UpdateDocumentSeries,
-    (dto: DocumentSeriesDto) => this.service.UpdateDto(dto)
+    (dto: EffectType) => this.service.UpdateDto(dto)
   );
 
   deleteById$ = createDeleteByIdEffect<EffectType>(

@@ -29,7 +29,7 @@
           </div>
           <div class="tab1-grid-h-brand">
             <dn-selectbox
-              [dataSource]="brands"
+              [dataSource]="brands|async"
               valueExpr="Id"
               displayExpr="Name"
               [(value)]="product.BrandId"
@@ -71,10 +71,9 @@
             </dn-textbox>
           </div>
 
-          @if(vatClasses){
           <div class="tab1-grid-g-vat-class">
             <dn-selectbox
-              [dataSource]="vatClasses"
+              [dataSource]="vatClasses|async"
               valueExpr="Id"
               displayExpr="Name"
               [(value)]="product.VatClassId"
@@ -82,7 +81,7 @@
             >
             </dn-selectbox>
           </div>
-          }
+
           <div class="tab1-grid-d-image">
             @if(product.ImagePath){
             <img

@@ -61,7 +61,7 @@
   grid-template-areas:
   "a a c c"
   "e f g g"
-  "i j k l";
+  "i j k k";
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-template-rows: 2fr 1fr 1fr;
   gap:2 rem;
@@ -81,6 +81,9 @@
 }
 .basic-info-tab-i{
   grid-area: i;
+}
+.basic-info-tab-k{
+  grid-area: k;
 }
 
 dn-textbox, dn-number-box, dn-date-box{
