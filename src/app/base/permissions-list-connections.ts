@@ -1,3 +1,4 @@
+import { documentEditComponentId, DocumentEditPermissionsList } from "../pages/document-edit/document-edit-permissions";
 import { taskEditComponentId, TaskEditPermissionsList } from "../pages/task-edit/task-edit-permissions";
 import { taskListComponentId, TaskListPermissionsList } from "../pages/task-list/task-list-permissions";
 
@@ -13,6 +14,11 @@ export class PermissionsListConnections {
       Name:"Task Edit",
       MasterEntityId:taskEditComponentId,
       PermissionsList:TaskEditPermissionsList
+    },
+    {
+      Name:"Document Edit",
+      MasterEntityId:documentEditComponentId,
+      PermissionsList:DocumentEditPermissionsList
     },
 
   ]

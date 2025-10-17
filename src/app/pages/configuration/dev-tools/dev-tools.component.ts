@@ -30,6 +30,7 @@ import { selectAllUsers } from '../../../state/users/users.selectors';
 import { Actions, ofType } from '@ngrx/effects';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
+import { DnTextareaComponent } from "../../components/dn-textarea/dn-textarea.component";
 
 @Component({
   selector: 'app-dev-tools',
@@ -48,7 +49,8 @@ import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
     MatIconModule,
     DnTextboxComponent,
     MatButtonModule,
-  ],
+    DnTextareaComponent
+],
   templateUrl: './dev-tools.component.html',
   styleUrl: './dev-tools.component.css',
 })
@@ -56,7 +58,7 @@ export class DevToolsComponent extends BaseComponent implements OnInit {
   displayDevToolsPopup = signal<boolean>(false);
   dev_tools_title_text: string = 'Dev Tools';
   data = signal<any>(null);
-
+  codeSnip:string;
   //APP Permissions Component
   actions$ = inject(Actions);
 
@@ -64,7 +66,7 @@ export class DevToolsComponent extends BaseComponent implements OnInit {
   users: Observable<any[]>;
 
   ngOnInit(): void {
-    this.store.dispatch(GetAllUsers());
+    this.store.dispatch(GetAllUsers.action());
     this.users = this.store.select(selectAllUsers);
 
   }
@@ -225,5 +227,9 @@ export class DevToolsComponent extends BaseComponent implements OnInit {
         })),
       })),
     }));
+  }
+
+  clickTest(){
+    // eval(this.codeSnip)
   }
 }

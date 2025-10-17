@@ -1,4 +1,4 @@
-import { Component, forwardRef, Input, input } from '@angular/core';
+import { Component, forwardRef, Input, input, output } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -19,10 +19,15 @@ import { MatInputModule } from '@angular/material/input';
 export class DnTextareaComponent {
   label = input<string>();
   width = input<number>(100);
+  rows = input<number>(4);
   @Input() value:string;
   placeholder = input<string>('');
-
-
+  valueChange = output()
+onValueChange(e:any){
+  debugger
+  this.value = e
+  this.valueChange.emit(e)
+}
   //#region  Reactive Forms
   onChange: (value: string) => void = () => {
   };

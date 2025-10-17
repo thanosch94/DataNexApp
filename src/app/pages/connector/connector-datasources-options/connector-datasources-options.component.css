@@ -2,16 +2,3 @@
   margin:1%
 }
 
-.flex{
-  display: flex;
-  justify-content: space-between;
-}
-.margin-0{
-  margin:0;
-  padding: 0;
-}
-
-::ng-deep .green-snackbar .mdc-snackbar__surface {
-  background-color:#1b9e1b!important;
-  color: white;
-}

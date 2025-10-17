@@ -57,7 +57,7 @@ export class TaskListComponent
     private columnsService: ColumnsService,
   ) {
     super();
-     taskListComponentId
+    //  taskListComponentId
      this.tabsService.setActiveTabName(this.tasks_list_text);
 
   }

@@ -3,7 +3,7 @@ import { ProductsService } from '../../services/products.service';
 import { Actions } from '@ngrx/effects';
 import { createDeleteByIdEffect, createGetAllEffect, createGetByIdEffect, createInsertUpdateEffect } from '../shared/effects.factory';
 import { ProductDto } from '../../dto/product.dto';
-import { DeleteProduct, GetAllProducts, GetProductById, InsertProduct, UpdateProduct } from './products.actions';
+import { DeleteProduct, GetAllProducts, GetProductById, GetProductBySku, GetProductsLookup, InsertProduct, UpdateProduct } from './products.actions';
 import { Guid } from 'guid-typescript';
 
 type EffectType = ProductDto;
@@ -21,10 +21,22 @@ export class ProductEffects {
     () => this.service.GetAll()
   );
 
+  getLookpu$ = createGetAllEffect<EffectType>(
+    this.actions$,
+    GetProductsLookup,
+    () => this.service.GetLookup()
+  );
+
   getById$ = createGetByIdEffect<EffectType>(
     this.actions$,
     GetProductById,
     (id: Guid) => this.service.GetById(id)
+  );
+
+  getBySku$ = createGetByIdEffect<EffectType>(
+    this.actions$,
+    GetProductBySku,
+    (id: string) => this.service.GetBySku(id)
   );
 
   insert$ = createInsertUpdateEffect<EffectType>(

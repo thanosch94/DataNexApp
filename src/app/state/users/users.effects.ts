@@ -1,42 +1,41 @@
-import { Injectable } from "@angular/core";
-import { Actions, createEffect, ofType } from "@ngrx/effects";
-import { mergeMap, map, catchError, of } from "rxjs";
-import { DeleteUserById, DeleteUserByIdFailure, DeleteUserByIdSuccess, GetAllUsers, GetAllUsersFailure, GetAllUsersSuccess, GetUserById, GetUserByIdFailure, GetUserByIdSuccess, InsertUserDto, InsertUserDtoFailure, InsertUserDtoSuccess, UpdateUserDto, UpdateUserDtoFailure, UpdateUserDtoSuccess } from "./users.actions";
-import { UsersService } from "../../services/users.service";
+import { Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { mergeMap, map, catchError, of } from 'rxjs';
+import {
+  DeleteUser,
+  GetAllUsers,
+  GetUserById,
+  InsertUser,
+  UpdateUser,
+} from './users.actions';
+import { UsersService } from '../../services/users.service';
 
 @Injectable()
 export class UsersEffects {
-  constructor(
-    private usersService: UsersService,
-    private actions$: Actions
-  ) {}
+  constructor(private usersService: UsersService, private actions$: Actions) {}
 
-  loadUsers$ = createEffect(() =>
+  getAllUsers$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GetAllUsers),
+      ofType(GetAllUsers.action),
       mergeMap(() =>
         this.usersService.GetAll().pipe(
-          map((users: any) =>
-            GetAllUsersSuccess({ data: users })
-          ),
+          map((users: any) => GetAllUsers.actionSuccess({ data: users })),
           catchError((error) => {
-            return of(GetAllUsersFailure({ error }));
+            return of(GetAllUsers.actionFailure({ error }));
           })
         )
       )
     )
   );
 
-  loadUserById$ = createEffect(() =>
+  getUserById$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(GetUserById),
-      mergeMap((action:any) =>
+      ofType(GetUserById.action),
+      mergeMap((action: any) =>
         this.usersService.GetById(action.id).pipe(
-          map((user: any) =>
-            GetUserByIdSuccess({ data: user })
-          ),
+          map((user: any) => GetUserById.actionSuccess({ dto: user })),
           catchError((error) => {
-            return of(GetUserByIdFailure({ error }));
+            return of(GetUserById.actionFailure({ error }));
           })
         )
       )
@@ -45,14 +44,14 @@ export class UsersEffects {
 
   insertUser$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(InsertUserDto),
+      ofType(InsertUser.action),
       mergeMap((action: any) =>
         this.usersService.InsertDto(action.dto).pipe(
           map((insertedUser: any) =>
-            InsertUserDtoSuccess({ dto: insertedUser })
+            InsertUser.actionSuccess({ dto: insertedUser })
           ),
           catchError((error) => {
-            return of(InsertUserDtoFailure({ error }));
+            return of(InsertUser.actionFailure({ error }));
           })
         )
       )
@@ -61,29 +60,33 @@ export class UsersEffects {
 
   updateUserDto$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(UpdateUserDto),
+      ofType(UpdateUser.action),
       mergeMap((action: any) =>
         this.usersService.UpdateDto(action.dto).pipe(
           map((updatedUser: any) =>
-            UpdateUserDtoSuccess({ dto: updatedUser })
+            UpdateUser.actionSuccess({ dto: updatedUser })
           ),
           catchError((error) => {
-            return of(UpdateUserDtoFailure({ error }));
+            return of(UpdateUser.actionFailure({ error }));
           })
         )
       )
     )
   );
 
-  deleteUserById$ = createEffect(()=>
-  this.actions$.pipe(
-    ofType(DeleteUserById),
-    mergeMap((action:any)=>
-    this.usersService.DeleteById(action.id).pipe(
-      map((deletedUser:any)=>DeleteUserByIdSuccess({dto:deletedUser})),
-      catchError((error)=>{
-        return of(DeleteUserByIdFailure({error}))
-      })
-    ))
-  ))
+  deleteUserById$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(DeleteUser.action),
+      mergeMap((action: any) =>
+        this.usersService.DeleteById(action.id).pipe(
+          map((deletedUser: any) =>
+            DeleteUser.actionSuccess({ dto: deletedUser })
+          ),
+          catchError((error) => {
+            return of(DeleteUser.actionFailure({ error }));
+          })
+        )
+      )
+    )
+  );
 }

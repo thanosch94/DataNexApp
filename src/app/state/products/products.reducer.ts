@@ -4,18 +4,22 @@ import {
   DeleteProduct,
   GetAllProducts,
   GetProductById,
+  GetProductBySku,
+  GetProductsLookup,
   InsertProduct,
   UpdateProduct,
 } from './products.actions';
 
 export interface ProductsState {
   data: ProductDto[];
+  lookup:ProductDto[];
   selectedProducts: ProductDto[];
   error: string | null;
 }
 
 export const initialProductsState: ProductsState = {
   data: [],
+  lookup: [],
   selectedProducts: [],
   error: null,
 };
@@ -32,6 +36,16 @@ export const productsReducer = createReducer(
     ...state,
     error,
   })),
+  //Get Lookup
+  on(GetProductsLookup.action, (state) => ({ ...state })),
+  on(GetProductsLookup.actionSuccess, (state, { data }) => ({
+    ...state,
+    lookup:data,
+  })),
+  on(GetProductsLookup.actionFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
   //GetById
   on(GetProductById.action, (state) => ({ ...state })),
   on(GetProductById.actionSuccess, (state, { dto }) => {
@@ -45,6 +59,22 @@ export const productsReducer = createReducer(
     };
   }),
   on(GetProductById.actionFailure, (state, { error }) => ({
+    ...state,
+    error,
+  })),
+  //GetBySku
+  on(GetProductBySku.action, (state) => ({ ...state })),
+  on(GetProductBySku.actionSuccess, (state, { dto }) => {
+    const productExists = state.selectedProducts.some((p) => p.Id === dto.Id);
+    return {
+      ...state,
+      data: [...state.data], // Add product to the array
+      selectedProducts: productExists
+        ? state.selectedProducts // Don't add if it already exists
+        : [...state.selectedProducts, dto], // Add product if it doesn't exist
+    };
+  }),
+  on(GetProductBySku.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),

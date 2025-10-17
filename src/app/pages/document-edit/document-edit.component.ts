@@ -8,7 +8,6 @@ import { DocumentAdditionalChargesViewModel } from './../../view-models/document
 import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
-import { ProductsViewModel } from './../../view-models/products.viewmodel';
 import { CommonModule } from '@angular/common';
 import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import { HttpClient } from '@angular/common/http';
@@ -21,7 +20,9 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   ViewChild,
+  ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -78,7 +79,6 @@ import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
 import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
-import { ProductsService } from '../../services/products.service';
 import { firstValueFrom, Observable, take } from 'rxjs';
 import { GetAllStatuses } from '../../state/parameters/statuses/statuses.actions';
 import { selectAllStatuses } from '../../state/parameters/statuses/statuses.selectors';
@@ -92,11 +92,12 @@ import { GetAllCustomers } from '../../state/parameters/customers/customers.acti
 import { selectAllCustomers } from '../../state/parameters/customers/customers.selectors';
 import { GetAllWarehouses } from '../../state/parameters/warehouses/warehouses.actions';
 import { BaseComponent } from '../components/base/base.component';
-import { GetAllProducts } from '../../state/products/products.actions';
-import { selectAllProducts } from '../../state/products/products.selectors';
+import { GetAllProducts, GetProductBySku } from '../../state/products/products.actions';
+import { selectAllProducts, selectProductBySku } from '../../state/products/products.selectors';
 import { StatusDto } from '../../dto/status.dto';
 import { GetAllDocumentTypes } from '../../state/parameters/document-types/document-types.actions';
-import { selectAllDocumentTypes } from '../../state/parameters/document-types/document-types.selectors';
+import { DevToolsAdd } from '../../decorators/dev-tools-add';
+import { documentEditComponentId, DocumentEditPermissionsList } from './document-edit-permissions';
 
 @Component({
   selector: 'app-document-edit',
@@ -138,9 +139,11 @@ export class DocumentEditComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
   @ViewChild('productstable') productstable: DnGridComponent;
+  @ViewChildren('nested') nested!: QueryList<BaseComponent>;
+
   documentType: any;
-  @Input() documentGroup: any;
-  @Input() documentId: any;
+  @DevToolsAdd() @Input() documentGroup: any;
+  @DevToolsAdd() @Input() documentId: any;
   @Input() isInPopup: boolean;
   @Output() onClose = new EventEmitter();
 
@@ -174,7 +177,6 @@ export class DocumentEditComponent
   document: DocumentDto = new DocumentDto();
   documentProductsViewModel: DocumentProductsViewModel;
   documentTypesViewModel: DocumentTypesViewModel;
-  productsViewModel: ProductsViewModel;
   lineProduct = new ProductDto();
   products$: Observable<ProductDto[]>;
 
@@ -193,13 +195,13 @@ export class DocumentEditComponent
   vatClassesList: any;
   vatClassRate: any;
 
+
   constructor(
     private http: HttpClient,
     private auth: AuthService,
     private ref: ChangeDetectorRef,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
-    private productsService: ProductsService
   ) {
     super();
     this.initializeViewModels();
@@ -223,6 +225,8 @@ export class DocumentEditComponent
   }
 
   async ngOnInit() {
+    this.getComponentPermissions(structuredClone(DocumentEditPermissionsList), documentEditComponentId); //Deep clone array of objects
+
     await this.getLookups();
     this.getColumns();
     this.getData();
@@ -261,7 +265,6 @@ export class DocumentEditComponent
     );
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
 
-    this.productsViewModel = new ProductsViewModel(this.productsService);
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
     this.documentAdditionalChargesViewModel =
       new DocumentAdditionalChargesViewModel(this.http, this.auth);
@@ -824,9 +827,8 @@ export class DocumentEditComponent
   }
 
   async onSkuSelection(data: DocumentProductDto, columns: DnColumnDto[]) {
-    this.productsViewModel
-      .GetBySku(data.Sku!)
-      .subscribe(async (result: ProductDto) => {
+    this.store.dispatch(GetProductBySku.action({id:data.Sku!}))
+    this.store.select(selectProductBySku(data.Sku!)).subscribe(async (result:any)=>{
         data.ProductId = result.Id;
         data.ProductName = result.Name;
         data.Quantity = 1;
@@ -842,7 +844,7 @@ export class DocumentEditComponent
         data.IsRowFilled = true;
 
         //this.getProductSizes(data.ProductId, columns);
-      });
+    })
   }
 
   getProductSizes(productId: Guid, columns: DnColumnDto[]) {
@@ -1096,7 +1098,7 @@ export class DocumentEditComponent
       this.GetProductVatAmount(this.document.VatClassId, product);
     } else {
       //Get Price From state
-      let obs = this.productsViewModel.GetBySku(product.Sku!);
+      let obs = this.store.select(selectProductBySku(product.Sku!));
       let result = (await firstValueFrom(obs)) as ProductDto;
       product.ProductRetailPrice = result.RetailPrice;
       product.TotalPrice = product.ProductRetailPrice! * product.Quantity!;

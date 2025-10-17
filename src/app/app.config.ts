@@ -42,6 +42,10 @@ import { documentSeriesReducer } from './state/parameters/document-series/docume
 import { DocumentSeriesEffects } from './state/parameters/document-series/document-series.effects';
 import { warehousesReducer } from './state/parameters/warehouses/warehouses.reducer';
 import { WarehousesEffects } from './state/parameters/warehouses/warehouses.effects';
+import { WooConnectionsEffects } from './state/parameters/woo-connections/woo-connections.effects';
+import { wooConnectionsReducer } from './state/parameters/woo-connections/woo-connections.reducer';
+import { logsReducer } from './state/logs/logs.reducer';
+import { LogsEffects } from './state/logs/logs.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -65,7 +69,9 @@ export const appConfig: ApplicationConfig = {
       connectorDatasourceEntities:cntorDatasourceEntitiesReducer,
       customers:customersReducer,
       documentSeries:documentSeriesReducer,
-      warehouses:warehousesReducer
+      warehouses:warehousesReducer,
+      wooConnections:wooConnectionsReducer,
+      logs:logsReducer
     }),
     provideEffects([
       ProductEffects,
@@ -85,7 +91,9 @@ export const appConfig: ApplicationConfig = {
       CustomersEffects,
       AddressesEffects,
       DocumentSeriesEffects,
-      WarehousesEffects
+      WarehousesEffects,
+      WooConnectionsEffects,
+      LogsEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

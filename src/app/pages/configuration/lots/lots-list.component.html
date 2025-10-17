@@ -12,7 +12,7 @@
 <div class="margin">
   <dn-grid
   #lotsGrid
-    [dataSource]="dataSource"
+    [dataSource]="dataSource$|async"
     [columns]="columns"
     [canDisplaySearch]="true"
     (onRowSaving)="onRowSaving($event)"

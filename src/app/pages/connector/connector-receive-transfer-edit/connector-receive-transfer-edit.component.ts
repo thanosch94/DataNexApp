@@ -2,13 +2,7 @@ import { BaseComponent } from './../../components/base/base.component';
 import { ConnectorJobDto } from './../../../dto/connector-job.dto';
 import { RequestTypeEnum } from './../../../enums/request-type.enum';
 import { WooConnectionsDataDto } from './../../../dto/woo-connections-data.dto';
-import { WooConnectionsViewModel } from './../../../view-models/woo-connections.viewmodel';
-import {
-  Component,
-  Inject,
-  OnInit,
-  Optional,
-} from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -35,11 +29,14 @@ import { ApiResponseDto } from '../../../dto/api-response.dto';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
-import { DnSelectboxComponent } from "../../components/dn-selectbox/dn-selectbox.component";
+import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
+import { GetAllWooConnections } from '../../../state/parameters/woo-connections/woo-connections.actions';
+import { selectAllWooConnections } from '../../../state/parameters/woo-connections/woo-connections.selectors';
+import { Observable } from 'rxjs';
 
 @Component({
-    selector: 'app-connector-receive-transfer-edit',
-    imports: [
+  selector: 'app-connector-receive-transfer-edit',
+  imports: [
     DnToolbarComponent,
     MatFormFieldModule,
     MatInputModule,
@@ -51,12 +48,15 @@ import { DnSelectboxComponent } from "../../components/dn-selectbox/dn-selectbox
     MatButtonModule,
     DnGridComponent,
     DnTextboxComponent,
-    DnSelectboxComponent
-],
-    templateUrl: './connector-receive-transfer-edit.component.html',
-    styleUrl: './connector-receive-transfer-edit.component.css'
+    DnSelectboxComponent,
+  ],
+  templateUrl: './connector-receive-transfer-edit.component.html',
+  styleUrl: './connector-receive-transfer-edit.component.css',
 })
-export class ConnectorReceiveTransferEditComponent extends BaseComponent implements OnInit {
+export class ConnectorReceiveTransferEditComponent
+  extends BaseComponent
+  implements OnInit
+{
   jobId: Guid;
   dataSourcesList: any;
   dataSourceName: any;
@@ -65,14 +65,13 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
   connectorJobsViewModel: ConnectorJobsViewModel;
   wordpressDataSourceId: any;
   connectorJobTypeList: { Id: ConnectorJobTypeEnum; Name: string }[];
-  wooConnectionsViewModel: WooConnectionsViewModel;
-  wooConnectionsDataSource: WooConnectionsDataDto[];
+  wooConnectionsDataSource$: Observable<WooConnectionsDataDto[]>;
   wooConnectionRow: WooConnectionsDataDto = new WooConnectionsDataDto();
   requestTypes: { Id: RequestTypeEnum; Name: string }[];
   firstStepForm: any;
-  connectorJobResponse: ApiResponseDto;
+  connectorJobResponse: ApiResponseDto = new ApiResponseDto();
   wooItemsData: any;
-  wooItemsColumns: any[] =new Array<any>;
+  wooItemsColumns: any[] = new Array<any>();
   isLoading: boolean;
   secondStepForm: any;
   constructor(
@@ -81,13 +80,9 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
     private formBuilder: FormBuilder,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any
   ) {
-    super()
+    super();
     this.connector_receive_transfer_edit_text = 'New Job';
     this.connectorJobsViewModel = new ConnectorJobsViewModel(
-      this.http,
-      this.auth
-    );
-    this.wooConnectionsViewModel = new WooConnectionsViewModel(
       this.http,
       this.auth
     );
@@ -98,20 +93,19 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
   }
 
   ngOnInit() {
-    this.initializeForms()
+    this.initializeForms();
     this.dataSourcesList = WebAppBase.connectorDataSourcesList;
     this.connectorJobTypeList = ConnectorJobTypeEnumList.value;
     this.requestTypes = RequestTypeEnumList.value;
     this.wordpressDataSourceId = WebAppBase.wordpressDataSource;
 
-    this.wooConnectionsViewModel.GetAll().subscribe((result: any) => {
-      this.wooConnectionsDataSource = result;
-      this.getData();
-    });
+    this.store.dispatch(GetAllWooConnections.action());
+    this.wooConnectionsDataSource$ = this.store.select(selectAllWooConnections);
 
+    this.getData();
   }
 
-  initializeForms(){
+  initializeForms() {
     this.firstStepForm = this.formBuilder.group({
       Icon: ['', null],
       Name: ['', Validators.required],
@@ -121,15 +115,11 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
       WooConnectionDataSourceId: ['', null],
       RequestType: ['', null],
       Endpoint: ['', null],
-
     });
 
     this.secondStepForm = this.formBuilder.group({
       IsExecuted: [false, Validators.requiredTrue],
-
-
     });
-
   }
   getData() {
     if (this.jobId) {
@@ -144,7 +134,7 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
           ) {
             this.getWooConnectionRow(result.WooConnectionDataSourceId);
           }
-          this.firstStepForm.patchValue(this.connectorJob)
+          this.firstStepForm.patchValue(this.connectorJob);
         });
     } else {
       this.connectorJob = new ConnectorJobDto();
@@ -171,22 +161,21 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
     }
   }
 
-
   onWooConnectionSelection(data: any) {
     this.getWooConnectionRow(data.value);
   }
 
   getWooConnectionRow(id: any) {
-
-    let wooConnectionDataSource = this.wooConnectionsDataSource.find(
-      (x: any) => x.Id == id
-    );
-    if (wooConnectionDataSource) {
-      this.wooConnectionRow = wooConnectionDataSource;
-      this.firstStepForm.get('Endpoint').setValue(this.wooConnectionRow.Endpoint);
-
-      this.getRequestType();
-    }
+    this.wooConnectionsDataSource$.subscribe((result: any) => {
+      let wooConnectionDataSource = result.find((x: any) => x.Id == id);
+      if (wooConnectionDataSource) {
+        this.wooConnectionRow = wooConnectionDataSource;
+        this.firstStepForm
+          .get('Endpoint')
+          .setValue(this.wooConnectionRow.Endpoint);
+        this.getRequestType();
+      }
+    });
   }
 
   getRequestType() {
@@ -198,38 +187,41 @@ export class ConnectorReceiveTransferEditComponent extends BaseComponent impleme
     }
   }
 
-  onJobExecuteButtonClicked(e:any){
-    this.isLoading =true
-    this.connectorJobsViewModel.GetConnectorJobResult(this.connectorJob).subscribe((result:ApiResponseDto)=>{
-        this.isLoading =false
-      this.connectorJobResponse = result
-     if(result.Success){
-        this.wooItemsData = result.Result
-        for (let key in result.Result[0]){
-          let column = new DnColumnDto()
-          column.DataField = key
-          column.DataType = typeof(result.Result[0][key])
-          column.Caption = key
-          if (/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(result.Result[0][key])){
-              column.DataType='date'
-              column.Format ='dd/MM/yyyy HH:mm:ss'
-          }
-          if(key=='id'){
-            column.Width=100
-          }else if(key=='name'){
-            column.Width=450
-          }else if(key=='description'){
-            column.WrapText=true
-          }else if(key=='feature_image'){
-            column.DataType="image"
-          }
+  onJobExecuteButtonClicked(e: any) {
+    this.isLoading = true;
+    this.connectorJobsViewModel
+      .GetConnectorJobResult(this.connectorJob)
+      .subscribe((result: ApiResponseDto) => {
+        this.isLoading = false;
+        this.connectorJobResponse = result;
+        if (result.Success) {
+          this.wooItemsData = result.Result;
+          for (let key in result.Result[0]) {
+            let column = new DnColumnDto();
+            column.DataField = key;
+            column.DataType = typeof result.Result[0][key];
+            column.Caption = key;
+            if (
+              /\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}/.test(result.Result[0][key])
+            ) {
+              column.DataType = 'date';
+              column.Format = 'dd/MM/yyyy HH:mm:ss';
+            }
+            if (key == 'id') {
+              column.Width = 100;
+            } else if (key == 'name') {
+              column.Width = 450;
+            } else if (key == 'description') {
+              column.WrapText = true;
+            } else if (key == 'feature_image') {
+              column.DataType = 'image';
+            }
 
-          this.wooItemsColumns.push(column)
+            this.wooItemsColumns.push(column);
+          }
+          //this.wooItemsColumns
+          this.secondStepForm.get('IsExecuted').setValue(true);
         }
-        //this.wooItemsColumns
-        this.secondStepForm.get('IsExecuted').setValue(true);
-
-     }
-  })
-}
+      });
+  }
 }

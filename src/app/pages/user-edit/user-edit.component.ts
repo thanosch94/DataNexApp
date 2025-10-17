@@ -1,7 +1,6 @@
 import { WorkItemsService } from './../../services/work-items.service';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import {
   Component,
   OnDestroy,
@@ -27,9 +26,7 @@ import { Router } from '@angular/router';
 import { WebAppBase } from '../../base/web-app-base';
 import { TabsService } from '../../services/tabs.service';
 import { DeleteConfirmComponent } from '../components/delete-confirm/delete-confirm.component';
-import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { UserDto } from '../../dto/user.dto';
-import { UsersViewModel } from '../../view-models/users.viewmodel';
 import { AuthService } from '../../services/auth.service';
 import { DnTextboxComponent } from '../components/dn-textbox/dn-textbox.component';
 import {
@@ -84,7 +81,13 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
 import { WorkItemDto } from '../../dto/work-item.dto';
 import { WorkItemCategoryEnum } from '../../enums/work-item-category.enum';
-import { GetAllUsers } from '../../state/users/users.actions';
+import {
+  DeleteUser,
+  GetAllUsers,
+  GetUserById,
+  InsertUser,
+  UpdateUser,
+} from '../../state/users/users.actions';
 
 @Component({
   selector: 'app-user-edit',
@@ -129,7 +132,6 @@ export class UserEditComponent
 {
   form: FormGroup;
   user_text: string;
-  usersViewModel: UsersViewModel;
   user: UserDto;
   userId: any;
   appRoles: LookupDto[];
@@ -160,7 +162,6 @@ export class UserEditComponent
 
   //#region Constructor
   constructor(
-    private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private viewContainerRef: ViewContainerRef,
@@ -170,19 +171,18 @@ export class UserEditComponent
   ) {
     super();
 
-    this.usersViewModel = new UsersViewModel(this.http, this.auth);
-
     this.appRoles = WebAppBase.AppRoles;
+    this.userId = history.state?.id;
 
     this.getKanbanData();
   }
   //#endregion
   ngOnInit() {
     this.setActionsResults();
+    this.setWorkItemsActionsResults();
 
     this.initializeForm();
-    this.setUser();
-    this.getLookups()
+    this.getLookups();
     this.getData();
     setTimeout(() => {
       this.isComponentReady = true;
@@ -190,14 +190,14 @@ export class UserEditComponent
     }, 1000);
   }
 
-  setActionsResults() {
+  setWorkItemsActionsResults() {
     this.setInsertDtoSuccessActionResult();
     this.setDeleteByIdSuccessActionResult();
     this.setDeleteByIdFailureActionResult();
   }
 
-  getLookups(){
-    this.store.dispatch(GetAllUsers())  //Get Users
+  getLookups() {
+    this.store.dispatch(GetAllUsers.action()); //Get Users
   }
 
   setInsertDtoSuccessActionResult() {
@@ -279,26 +279,11 @@ export class UserEditComponent
   //#endregion
 
   //#region Get User
-  setUser() {
-    this.user = new UserDto();
-    this.userId = WebAppBase.data;
-    WebAppBase.data = undefined;
-  }
+
 
   getData() {
     if (this.userId) {
-      this.usersViewModel.GetById(this.userId).subscribe((result: any) => {
-        result as UserDto;
-        this.user = result;
-        if (!this.user.IsPasswordSet) {
-          this.displayPasswordSetReminder = true;
-        } else {
-          this.displayPasswordSetReminder = false;
-        }
-        this.form.patchValue(this.user);
-        this.user_text = this.user.Name;
-        this.tabsService.setTabName(this.user.Name);
-      });
+      this.store.dispatch(GetUserById.action({ id: this.userId }));
     } else {
       this.user_text = 'New user';
       this.tabsService.setTabName(this.user_text);
@@ -318,24 +303,9 @@ export class UserEditComponent
     this.user.Password = this.newPassword;
     if (this.form.valid) {
       if (this.user.Id) {
-        this.usersViewModel.UpdateDto(this.user).subscribe((result: any) => {
-          if (result) {
-            this.user_text = this.user.Name;
-            this.displayNotification('Record updated');
-            if (!this.user.Password && !result.IsPasswordSet) {
-              this.displayPasswordSetReminder = true;
-            }
-          }
-        });
+        this.store.dispatch(UpdateUser.action({ dto: this.user }));
       } else {
-        this.usersViewModel.InsertDto(this.user).subscribe((result: any) => {
-          this.user = result;
-          this.user_text = this.user.Name;
-          this.displayNotification('Record inserted');
-          if (!this.user.Password && !result.IsPasswordSet) {
-            this.displayPasswordSetReminder = true;
-          }
-        });
+        this.store.dispatch(InsertUser.action({ dto: this.user }));
       }
     } else {
       this.markAllAsTouched(this.form);
@@ -366,16 +336,8 @@ export class UserEditComponent
     this.dialog.closeAll();
   }
 
-  deleteItem(e: any) {
-    this.usersViewModel.DeleteById(this.user.Id).subscribe({
-      next: (result) => {
-        this.displayNotification('Record deleted');
-        this.router.navigate(['users-list']);
-      },
-      error: (err) => {
-        this.displayErrorAlert(err)
-      },
-    });
+  deleteItem(data: any) {
+    this.store.dispatch(DeleteUser.action({ id: data.Id }));
   }
 
   //#endregion
@@ -547,12 +509,73 @@ export class UserEditComponent
     this.taskId.set(null);
   }
 
-  onTaskIdFromChildChange(id:Guid){
-    this.taskId.set(id)
+  onTaskIdFromChildChange(id: Guid) {
+    this.taskId.set(id);
   }
 
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        getByIdSuccess: GetUserById.actionSuccess,
+        insertSuccess: InsertUser.actionSuccess,
+        insertFailure: InsertUser.actionFailure,
+        updateSuccess: UpdateUser.actionSuccess,
+        updateFailure: UpdateUser.actionFailure,
+        deleteSuccess: DeleteUser.actionSuccess,
+        deleteFailure: DeleteUser.actionFailure,
+      },
+      {
+        getByIdSuccess: (result: any) => {
+          debugger
+          this.user = result.dto;
+          if (!this.user.IsPasswordSet) {
+            this.displayPasswordSetReminder = true;
+          } else {
+            this.displayPasswordSetReminder = false;
+          }
+          this.form.patchValue(this.user);
+          this.user_text = this.user.Name;
+          this.tabsService.setTabName(this.user.Name);
+        },
+        insertSuccess: (result: any) => {
+          this.user = result.dto;
+          this.userId = result.dto.Id
+          this.user_text = this.user.Name;
+          this.displayNotification('Record inserted');
+          if (!this.user.Password && !result.dto.IsPasswordSet) {
+            this.displayPasswordSetReminder = true;
+          }
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: (result: any) => {
+          this.user_text = this.user.Name;
+          this.displayNotification('Record updated');
+          if (!this.user.Password && !result.dto.IsPasswordSet) {
+            this.displayPasswordSetReminder = true;
+          }
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.router.navigate(['users-list']);
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
   ngOnDestroy() {
-    WebAppBase.data = undefined;
     this.destroy$.next();
     this.destroy$.complete();
   }

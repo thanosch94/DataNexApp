@@ -4,7 +4,7 @@ import { Guid } from 'guid-typescript';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth.service';
 
-type EntityType = WarehouseDto
+type T = WarehouseDto
 
 @Injectable({
   providedIn: 'root',
@@ -18,31 +18,31 @@ export class WarehousesService {
   }
 
   public GetAll() {
-    return this.http.get<EntityType[]>(this.service + 'Warehouses/getall', {
+    return this.http.get<T[]>(this.service + 'Warehouses/getall', {
       headers: this.auth.headers,
     });
   }
 
   public GetById(id: Guid) {
-    return this.http.get<EntityType>(this.service + 'Warehouses/getbyid/' + id, {
+    return this.http.get<T>(this.service + 'Warehouses/getbyid/' + id, {
       headers: this.auth.headers,
     });
   }
 
-  public InsertDto(dto: EntityType) {
-    return this.http.post<EntityType>(this.service + 'Warehouses/insertdto', dto, {
+  public InsertDto(dto: T) {
+    return this.http.post<T>(this.service + 'Warehouses/insertdto', dto, {
       headers: this.auth.headers,
     });
   }
 
-  public UpdateDto(dto: EntityType) {
-    return this.http.put<EntityType>(this.service + 'Warehouses/updatedto', dto, {
+  public UpdateDto(dto: T) {
+    return this.http.put<T>(this.service + 'Warehouses/updatedto', dto, {
       headers: this.auth.headers,
     });
   }
 
   public DeleteById(id: Guid) {
-    return this.http.delete<EntityType>(this.service + 'Warehouses/deletebyid/' + id, {
+    return this.http.delete<T>(this.service + 'Warehouses/deletebyid/' + id, {
       headers: this.auth.headers,
     });
   }

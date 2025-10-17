@@ -41,14 +41,11 @@
             <div>
               @for(perm of item.entities; track perm){
               <b>{{ perm.appEntity }}</b>
-              <div class="app-entity-place"
-              >
+              <div class="app-entity-place">
                 @for(permItem of perm.permissions; track permItem){
 
                 <div class="margin-1 mb-2 perm-container">
-                  <div
-                    class="flex permission-place-name"
-                  >
+                  <div class="flex permission-place-name">
                     <div class="flex">
                       <mat-icon class="mr-10" color="blue">info</mat-icon>
 
@@ -165,6 +162,12 @@
           </mat-expansion-panel>
 
           }
+        </div>
+      </mat-tab>
+      <mat-tab label="Code Snippets">
+        <div class="margin-1">
+          <dn-textarea [rows]="15" [(value)]="codeSnip"></dn-textarea>
+          <button (click)="clickTest()">Test</button>
         </div>
       </mat-tab>
     </mat-tab-group>

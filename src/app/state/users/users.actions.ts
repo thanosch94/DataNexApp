@@ -1,67 +1,16 @@
 import { createAction, props } from '@ngrx/store';
 import { Guid } from 'guid-typescript';
 import { UserDto } from '../../dto/user.dto';
+import { addDeleteAction, addGetAction, addGetByIdAction, addUpdateAction } from '../shared/actions.factory';
 
-//Get All Users
-export const GetAllUsers = createAction('[Users List] GetAll');
+type T = UserDto;
+export const GetAllUsers = addGetAction<T>("[Users Edit] Get All ");
 
-export const GetAllUsersSuccess = createAction(
-  '[Users List] GetAll Users Success',
-  props<{ data: UserDto[] }>()
-);
-export const GetAllUsersFailure = createAction(
-  '[Users List] GetAll Users Failure',
-  props<{ error: string }>()
-);
+export const GetUserById = addGetByIdAction<T>('[Users Edit] GetById')
 
-//Get User By Id
-export const GetUserById = createAction(
-  '[User Edit] GetById',
-  props<{ id: Guid }>()
-);
+export const InsertUser = addUpdateAction<T>('[Users Edit] InsertDto')
 
-export const GetUserByIdSuccess = createAction(
-  '[User Edit] Get User By Id Success',
-  props<{ data: UserDto }>()
-);
-export const GetUserByIdFailure = createAction(
-  '[User Edit] Get User By Id Failure',
-  props<{ error: string }>()
-);
+export const UpdateUser = addUpdateAction<T>('[Users Edit] UpdateDto')
 
-//Update User
-export const UpdateUserDto = createAction(
-  '[User Edit] UpdateDto',
-  props<{ dto: UserDto }>()
-);
-
-export const UpdateUserDtoSuccess = createAction(
-  '[User Edit] Update User Success',
-  props<{ dto: UserDto }>()
-);
-export const UpdateUserDtoFailure = createAction(
-  '[User Edit] Update User Failure',
-  props<{ error: string }>()
-);
-
-//Insert User
-export const InsertUserDto = createAction(
-  '[User Edit] Insert User',
-  props<{ dto: UserDto }>()
-);
-
-export const InsertUserDtoSuccess = createAction(
-  '[User Edit] Insert User Success',
-  props<{ dto: UserDto }>()
-);
-export const InsertUserDtoFailure = createAction(
-  '[User Edit] Insert User Failure',
-  props<{ error: string }>()
-);
-
-export const DeleteUserById = createAction('[Users List] DeleteById', props<{id:Guid}>())
-
-export const DeleteUserByIdSuccess = createAction('[Users List] DeleteById Success', props<{dto:UserDto}>())
-
-export const DeleteUserByIdFailure = createAction('[Users List] DeleteById Failure ', props<{error:string}>())
+export const DeleteUser = addDeleteAction<T>('[Users Edit] DeleteById')
 

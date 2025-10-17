@@ -1,10 +1,8 @@
-import { CompaniesViewModel } from './view-models/companies.viewmodel';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import {
   AfterViewChecked,
-  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ComponentFactoryResolver,
@@ -36,7 +34,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
 import { TabsService } from './services/tabs.service';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from './services/auth.service';
 import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -108,7 +105,6 @@ export class AppComponent implements AfterViewChecked {
   selectedMenuItem: Guid;
   appVersion: string;
   apiVersion: string;
-  companiesViewModel: CompaniesViewModel;
   loggedInCompanyName: any;
   loggedInUserName: string;
   today: Date;
@@ -118,7 +114,6 @@ export class AppComponent implements AfterViewChecked {
   faHeart: any;
   selectedTabIndex: any;
   constructor(
-    private http: HttpClient,
     private auth: AuthService,
     private router: Router,
     private dialog: MatDialog,
@@ -145,7 +140,6 @@ export class AppComponent implements AfterViewChecked {
     this.tabs = tabsService.getTabs();
 
     this.getMenuItemsForTabs();
-    this.companiesViewModel = new CompaniesViewModel(this.http, this.auth);
   }
   menuItems: MenuItemDto[] = Navigation.menu;
   selectedTab = new FormControl(0);
@@ -398,6 +392,7 @@ export class AppComponent implements AfterViewChecked {
   @HostListener('window:keydown.control.alt.a', ['$event'])
   async onKeyDown(e: KeyboardEvent) {
     //TODO Add check if user role is admin
+    debugger
     let nested =
       this.componentRefs[this.selectedTabIndex].instance?.nested?.toArray();
     this.devToolsService.open(

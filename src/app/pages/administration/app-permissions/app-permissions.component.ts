@@ -59,7 +59,7 @@ export class AppPermissionsComponent extends BaseComponent {
   async ngOnInit() {
     await this.getData();
 
-    this.store.dispatch(GetAllUsers());
+    this.store.dispatch(GetAllUsers.action());
     this.users = this.store.select(selectAllUsers);
     this.setInsertUserAppPermissionDtoSuccessActionResult();
     this.setDeleteUserAppPermissionByIdSuccessActionResult();

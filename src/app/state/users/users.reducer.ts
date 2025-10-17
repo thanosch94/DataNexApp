@@ -1,6 +1,6 @@
 import { createReducer, on } from "@ngrx/store";
 import { UserDto } from "../../dto/user.dto";
-import { DeleteUserByIdFailure, DeleteUserByIdSuccess, GetAllUsers, GetAllUsersFailure, GetAllUsersSuccess, GetUserById, GetUserByIdFailure, GetUserByIdSuccess, InsertUserDto, InsertUserDtoFailure, InsertUserDtoSuccess, UpdateUserDtoFailure, UpdateUserDtoSuccess } from "./users.actions";
+import { DeleteUser, GetAllUsers, GetUserById, InsertUser, UpdateUser } from "./users.actions";
 
 export interface UsersState {
   data: UserDto[];
@@ -16,53 +16,53 @@ export const initialUsersState: UsersState = {
 
 export const usersReducer = createReducer(
   initialUsersState,
-  on(GetAllUsers, (state) => ({ ...state })),
-  on(GetAllUsersSuccess, (state, { data }) => ({
+  on(GetAllUsers.action, (state) => ({ ...state })),
+  on(GetAllUsers.actionSuccess, (state, { data }) => ({
     ...state,
     data:data,
     error: null,
   })),
-  on(GetAllUsersFailure, (state, { error }) => ({ ...state, error })),
+  on(GetAllUsers.actionFailure, (state, { error }) => ({ ...state, error })),
 
   //Get By Id
-  on(GetUserById, (state) => ({ ...state })),
-  on(GetUserByIdSuccess, (state, { data }) => ({
+  on(GetUserById.action, (state) => ({ ...state })),
+  on(GetUserById.actionSuccess, (state, { dto:data }) => ({
     ...state,
     selected:data,
     error: null,
   })),
-  on(GetUserByIdFailure, (state, { error }) => ({ ...state, error })),
+  on(GetUserById.actionFailure, (state, { error }) => ({ ...state, error })),
 
   //InsertDto
-  on(InsertUserDto, (state)=>({...state})),
-  on(InsertUserDtoSuccess,(state, {dto:data})=>({
+  on(InsertUser.action, (state)=>({...state})),
+  on(InsertUser.actionSuccess,(state, {dto:data})=>({
     ...state,
     data:[...state.data, data],
     error:null
   })),
-  on(InsertUserDtoFailure, (state,{error})=>({
+  on(InsertUser.actionFailure, (state,{error})=>({
     ...state,
     error
   })),
 
   //UpdateDto
-  on(UpdateUserDtoSuccess, (state, {dto})=>({
+  on(UpdateUser.actionSuccess, (state, {dto})=>({
     ...state,
     data:[...state.data.map(x=>x.Id==dto.Id?dto:x)],
     error:null
   })),
-  on(UpdateUserDtoFailure, (state, {error})=> ({
+  on(UpdateUser.actionFailure, (state, {error})=> ({
     ...state,
     error
   })),
 
   //DeleteById
-  on(DeleteUserByIdSuccess, (state, {dto})=>({
+  on(DeleteUser.actionSuccess, (state, {dto})=>({
     ...state,
     data:[...state.data.filter(x=>x.Id!=dto.Id)],
     error:null
   })),
-  on(DeleteUserByIdFailure, (state, {error})=>({
+  on(DeleteUser.actionFailure, (state, {error})=>({
     ...state,
     error
   }))

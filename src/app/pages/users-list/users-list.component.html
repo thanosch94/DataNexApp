@@ -9,7 +9,7 @@
 
 <div class="margin">
     <dn-grid  #usersGrid
-    [dataSource]="dataSource | async"
+    [dataSource]="dataSource$ | async"
     [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"

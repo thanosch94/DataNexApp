@@ -229,7 +229,7 @@
     <div class="margin">
       <dn-grid
         #wooConnectionGrid
-        [dataSource]="wooConnectionsDataSource"
+        [dataSource]="wooConnectionsDataSource$|async"
         [columns]="wooConnectionsColumns"
         [canDisplaySearch]="false"
         [enableAddButton]="true"

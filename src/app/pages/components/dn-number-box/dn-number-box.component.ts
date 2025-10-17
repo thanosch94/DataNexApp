@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NumberFormatPipe } from '../../../pipes/number-format.pipe';
 
 @Component({
     selector: 'dn-number-box',
@@ -16,9 +15,7 @@ import { NumberFormatPipe } from '../../../pipes/number-format.pipe';
         FormsModule,
         MatIconModule,
         MatSuffix,
-        MatPrefix,
         MatTooltipModule,
-        NumberFormatPipe
     ],
     providers: [
         {

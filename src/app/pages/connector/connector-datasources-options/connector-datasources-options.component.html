@@ -11,17 +11,18 @@
     <ng-template mat-tab-label>
       <div><fa-icon [icon]="faWordpress"></fa-icon><span> Wordpress</span></div>
     </ng-template>
-    <dn-grid  class="margin" #wooConnectionGrid
-    [dataSource]="wooConnectionsDataSource"
-    [columns]="wooConnectionsColumns"
-    [canDisplaySearch]="false"
-    [enableAddButton]="true"
-    (onRowSaving)="onWooConnectionSaving($event)"
-    (onRowDelete)="onWooConnectionDelete($event)"
-    (onRowStopEditing)="onWooConnectionStopEditing($event)"
-    (onRowAdding)="onWooConnectionAdding($event)"
+    <dn-grid
+      class="margin"
+      #wooConnectionGrid
+      [dataSource]="wooConnectionsDataSource$ | async"
+      [columns]="wooConnectionsColumns"
+      [canDisplaySearch]="false"
+      [enableAddButton]="true"
+      (onRowSaving)="onWooConnectionSaving($event)"
+      (onRowDelete)="onWooConnectionDelete($event)"
+      (onRowStopEditing)="onWooConnectionStopEditing($event)"
+      (onRowAdding)="onWooConnectionAdding($event)"
     >
-
     </dn-grid>
   </mat-tab>
   <mat-tab>

@@ -1,3 +1,4 @@
+import { Observable, Subject } from 'rxjs';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,10 +14,7 @@ import {
   faShopify,
   faWordpress,
 } from '@fortawesome/free-brands-svg-icons';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../services/auth.service';
 import { TabsService } from '../../../services/tabs.service';
-import { WooConnectionsViewModel } from '../../../view-models/woo-connections.viewmodel';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { WooConnectionsDataDto } from '../../../dto/woo-connections-data.dto';
@@ -24,6 +22,14 @@ import { Router } from '@angular/router';
 import { BaseComponent } from '../../components/base/base.component';
 import { ColumnsService } from '../../../services/columns.service';
 import { GridColumns } from '../../../base/grid-columns';
+import {
+  DeleteWooConnection,
+  GetAllWooConnections,
+  InsertWooConnection,
+  UpdateWooConnection,
+} from '../../../state/parameters/woo-connections/woo-connections.actions';
+import { selectAllWooConnections } from '../../../state/parameters/woo-connections/woo-connections.selectors';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-connector-datasources-options',
@@ -37,6 +43,7 @@ import { GridColumns } from '../../../base/grid-columns';
     FormsModule,
     FontAwesomeModule,
     DnGridComponent,
+    AsyncPipe,
   ],
   providers: [TabsService],
   templateUrl: './connector-datasources-options.component.html',
@@ -44,40 +51,30 @@ import { GridColumns } from '../../../base/grid-columns';
 })
 export class ConnectorDatasourcesOptionsComponent extends BaseComponent {
   @ViewChild('wooConnectionGrid') wooConnectionGrid: DnGridComponent;
-  connector_datasource_options_text: any;
+  connector_datasource_options_text: string = 'Connector Datasource Options';
 
   faWordpress = faWordpress;
   faMagento = faMagento;
   faShopify = faShopify;
   faOpenCart = faOpencart;
-  wooConnectionsViewModel: WooConnectionsViewModel;
-  wooConnectionsDataSource: WooConnectionsDataDto;
+  wooConnectionsDataSource$: Observable<WooConnectionsDataDto[]>;
   wooConnectionsColumns: DnColumnDto[] = [];
-  constructor(
-    private http: HttpClient,
-    private auth: AuthService,
-    private router: Router,
-    private columnsService: ColumnsService
-  ) {
-    super();
-    this.wooConnectionsViewModel = new WooConnectionsViewModel(
-      this.http,
-      this.auth
-    );
+  private destroy$ = new Subject<void>();
 
-    this.connector_datasource_options_text = 'Connector Datasource Options';
+  constructor(private router: Router, private columnsService: ColumnsService) {
+    super();
     this.tabsService.setTabName(this.connector_datasource_options_text);
   }
 
   ngOnInit() {
-    this.getData();
+    this.setActionsResults();
     this.getColumns();
+    this.getData();
   }
 
   getData() {
-    this.wooConnectionsViewModel.GetAll().subscribe((result: any) => {
-      this.wooConnectionsDataSource = result;
-    });
+    this.store.dispatch(GetAllWooConnections.action());
+    this.wooConnectionsDataSource$ = this.store.select(selectAllWooConnections);
   }
 
   getColumns() {
@@ -93,38 +90,64 @@ export class ConnectorDatasourcesOptionsComponent extends BaseComponent {
   onWooConnectionAdding(e: any) {}
 
   onWooConnectionSaving(data: WooConnectionsDataDto) {
-    let newWooConnection:WooConnectionsDataDto ={...data}
+    let dto: WooConnectionsDataDto = { ...data };
 
-    if (!newWooConnection.Id) {
-      this.wooConnectionsViewModel
-        .InsertDto(newWooConnection)
-        .subscribe((result: any) => {
-          this.displayNotification('Record inserted');
-          this.getData();
-        });
+    if (!dto.Id) {
+      this.store.dispatch(InsertWooConnection.action({ dto }));
     } else {
-      this.wooConnectionsViewModel
-        .UpdateDto(newWooConnection)
-        .subscribe((result: any) => {
-          this.displayNotification('Record updated');
-          this.getData();
-        });
+      this.store.dispatch(UpdateWooConnection.action({ dto }));
     }
   }
 
   onWooConnectionDelete(data: WooConnectionsDataDto) {
-    this.wooConnectionsViewModel
-      .DeleteById(data.Id)
-      .subscribe((result: any) => {
-        let index = this.wooConnectionGrid.matDataSource.data.indexOf(data);
-        this.wooConnectionGrid.matDataSource.data.splice(index, 1);
-        this.getData();
-        this.wooConnectionGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      });
+    this.store.dispatch(DeleteWooConnection.action({ id: data.Id }));
   }
 
   onWooConnectionStopEditing(e: any) {
     this.getData();
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertWooSuccess: InsertWooConnection.actionSuccess,
+        insertWooFailure: InsertWooConnection.actionFailure,
+        updateWooSuccess: UpdateWooConnection.actionSuccess,
+        updateWooFailure: UpdateWooConnection.actionFailure,
+        deleteWooSuccess: DeleteWooConnection.actionSuccess,
+        deleteWooFailure: DeleteWooConnection.actionFailure,
+      },
+      {
+        insertWooSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateWooSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteWooSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

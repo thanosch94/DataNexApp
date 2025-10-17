@@ -18,6 +18,16 @@ export const selectProductById = (id: Guid) => createSelector(
   selectProductsState,
   (state: ProductsState) => state.selectedProducts.find(product => product.Id === id)
 );
+
+export const selectProductBySku = (sku: string) => createSelector(
+  selectProductsState,
+  (state: ProductsState) => state.data.find(product => product.Sku === sku)
+);
+
+export const selectProductsLookup = createSelector(
+  selectProductsState,
+  state => state.lookup
+);
 // // Select a specific product by ID
 // export const selectSelectedProduct = createSelector(
 //   selectProductsState,

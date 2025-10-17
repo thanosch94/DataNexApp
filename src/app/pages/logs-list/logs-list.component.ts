@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,13 +8,15 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
-import { AuthService } from '../../services/auth.service';
 import { LogDto } from '../../dto/log.dto';
-import { LogsViewModel } from '../../view-models/logs.viewmodel';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { DnColumnDto } from '../../dto/dn-column.dto';
 import { ColumnsService } from '../../services/columns.service';
 import { GridColumns } from '../../base/grid-columns';
+import { BaseComponent } from '../components/base/base.component';
+import { GetAllLogs } from '../../state/logs/logs.actions';
+import { selectAllLogs } from '../../state/logs/logs.selectors';
+import { AsyncPipe } from '@angular/common';
 
 @Component({
   selector: 'app-logs-list',
@@ -28,23 +30,22 @@ import { GridColumns } from '../../base/grid-columns';
     MatTableModule,
     DnToolbarComponent,
     DnGridComponent,
+    AsyncPipe
   ],
   templateUrl: './logs-list.component.html',
   styleUrl: './logs-list.component.css',
 })
-export class LogsListComponent {
+export class LogsListComponent extends BaseComponent {
   columns: DnColumnDto[];
-  dataSource: LogDto[];
-  logsViewModel: LogsViewModel;
+  dataSource$: Observable<LogDto[]>;
   logs_list_text: string;
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
     private columnsService: ColumnsService
   ) {
-    this.logsViewModel = new LogsViewModel(this.http, this.auth);
+    super()
     this.logs_list_text = 'Logs';
+    this.tabsService.setActiveTabName(this.logs_list_text)
   }
 
   ngOnInit() {
@@ -53,9 +54,8 @@ export class LogsListComponent {
   }
 
   getData() {
-    this.logsViewModel.GetAll().subscribe((result: any) => {
-      this.dataSource = result;
-    });
+    this.store.dispatch(GetAllLogs.action())
+    this.dataSource$ = this.store.select(selectAllLogs);
   }
 
   getColumns() {

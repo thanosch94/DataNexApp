@@ -223,7 +223,6 @@ export class BaseComponent {
   //@param value: The name of the permission set in the code
   //This will find if any the code from this.permissions and returns true else false
   async hasPermission(value: string) {
-    debugger
     let appPermissions$ = this.store.select(
       selectAppPermissionsByEntityId(this.componentId)
     );

@@ -9,7 +9,7 @@ export function DevToolsAdd() {
 
     // Add the property name to the __exportProps__ list
     target.__exportProps__.push(propertyKey);
-    // Use Object.defineProperty to add getter and setter for the property
+
     Object.defineProperty(target, propertyKey, {
       get() {
         return value;

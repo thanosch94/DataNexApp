@@ -1,6 +1,5 @@
 import { HttpClient } from "@angular/common/http";
 import { LoginDto } from "../dto/login.dto";
-import { AuthService } from "../services/auth.service";
 import { environment } from "../../environments/environment";
 import { RegisterDto } from "../dto/register.dto";
 

@@ -15,7 +15,6 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { WooConnectionsDataDto } from '../../../dto/woo-connections-data.dto';
-import { WooConnectionsViewModel } from '../../../view-models/woo-connections.viewmodel';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -25,9 +24,17 @@ import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox
 import { dnIcons } from '../../../enumLists/dn-icon.list';
 import { GetAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
 import { selectAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.selectors';
-import { map } from 'rxjs';
+import { map, Observable, Subject } from 'rxjs';
 import { ColumnsService } from '../../../services/columns.service';
 import { GridColumns } from '../../../base/grid-columns';
+import {
+  DeleteWooConnection,
+  GetAllWooConnections,
+  InsertWooConnection,
+  UpdateWooConnection,
+} from '../../../state/parameters/woo-connections/woo-connections.actions';
+import { selectAllWooConnections } from '../../../state/parameters/woo-connections/woo-connections.selectors';
+import { T } from '@angular/cdk/portal-directives.d-efec58af';
 
 @Component({
   selector: 'app-connector-receive-transfer',
@@ -41,7 +48,7 @@ import { GridColumns } from '../../../base/grid-columns';
     DnTextboxComponent,
     ReactiveFormsModule,
     DnSelectboxComponent,
-    DecimalPipe
+    DecimalPipe,
   ],
   providers: [TabsService],
   templateUrl: './connector-receive-transfer.component.html',
@@ -56,12 +63,11 @@ export class ConnectorReceiveTransferComponent
   connector_receive_transfer_text: string;
   faWordpress = faWordpress;
   connectorJobsViewModel: ConnectorJobsViewModel;
-  wooConnectionsViewModel: WooConnectionsViewModel;
   connectorParametersViewModel: ConnectorParametersViewModel;
 
   receiveConnectorJobs: any;
   transferConnectorJobs: any;
-  wooConnectionsDataSource: any;
+  wooConnectionsDataSource$: Observable<WooConnectionsDataDto[]>;
   wooConnectionsColumns: DnColumnDto[];
   consumerKeyHide: boolean = true;
   consumerSecretHide: boolean = true;
@@ -69,6 +75,7 @@ export class ConnectorReceiveTransferComponent
   faIcons = dnIcons;
   cntor_datasources: any;
   cntor_target_datasources: any;
+  private destroy$ = new Subject<void>();
 
   constructor(
     private http: HttpClient,
@@ -82,10 +89,6 @@ export class ConnectorReceiveTransferComponent
     this.connector_receive_transfer_text = 'Wordpress';
     this.tabsService.setTabName(this.connector_receive_transfer_text);
     this.connectorJobsViewModel = new ConnectorJobsViewModel(
-      this.http,
-      this.auth
-    );
-    this.wooConnectionsViewModel = new WooConnectionsViewModel(
       this.http,
       this.auth
     );
@@ -125,7 +128,8 @@ export class ConnectorReceiveTransferComponent
   }
   onDataSourceSelectionChanged(e: any) {
     this.cntor_target_datasources = this.cntor_datasources.pipe(
-      map((data: any) => data.filter((x:any)=>x.Id != e.value)))
+      map((data: any) => data.filter((x: any) => x.Id != e.value))
+    );
   }
 
   getCredentials() {
@@ -193,45 +197,29 @@ export class ConnectorReceiveTransferComponent
   }
 
   getWooConnectionsData() {
-    this.wooConnectionsViewModel.GetAll().subscribe((result: any) => {
-      this.wooConnectionsDataSource = result;
-    });
+    this.store.dispatch(GetAllWooConnections.action());
+    this.wooConnectionsDataSource$ = this.store.select(selectAllWooConnections);
   }
+
   getWooConnectionsColumns() {
-    this.wooConnectionsColumns = this.columnsService.getColumns(GridColumns.WooConnections)
+    this.wooConnectionsColumns = this.columnsService.getColumns(
+      GridColumns.WooConnections
+    );
   }
 
   onWooConnectionAdding(e: any) {}
   onWooConnectionSaving(data: WooConnectionsDataDto) {
-    let newWooConnection: WooConnectionsDataDto = {...data};
+    let dto: WooConnectionsDataDto = { ...data };
 
-    if (!newWooConnection.Id) {
-      this.wooConnectionsViewModel
-        .InsertDto(newWooConnection)
-        .subscribe((result: any) => {
-          this.displayNotification('Record inserted');
-          this.getWooConnectionsData();
-        });
+    if (!dto.Id) {
+      this.store.dispatch(InsertWooConnection.action({ dto }));
     } else {
-      this.wooConnectionsViewModel
-        .UpdateDto(newWooConnection)
-        .subscribe((result: any) => {
-          this.displayNotification('Record updated');
-          this.getWooConnectionsData();
-        });
+      this.store.dispatch(UpdateWooConnection.action({ dto }));
     }
   }
 
   onWooConnectionDelete(data: WooConnectionsDataDto) {
-    this.wooConnectionsViewModel
-      .DeleteById(data.Id)
-      .subscribe((result: any) => {
-        let index = this.wooConnectionGrid.matDataSource.data.indexOf(data);
-        this.wooConnectionGrid.matDataSource.data.splice(index, 1);
-        this.getWooConnectionsData();
-        this.wooConnectionGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      });
+    this.store.dispatch(DeleteWooConnection.action({ id: data.Id }));
   }
 
   onWooConnectionStopEditing(e: any) {
@@ -242,8 +230,53 @@ export class ConnectorReceiveTransferComponent
     this.consumerKeyHide = !this.consumerKeyHide;
     e.stopPropagation();
   }
+
   onConsumerSecretHideClick(e: any) {
     this.consumerSecretHide = !this.consumerSecretHide;
     e.stopPropagation();
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertWooSuccess: InsertWooConnection.actionSuccess,
+        insertWooFailure: InsertWooConnection.actionFailure,
+        updateWooSuccess: UpdateWooConnection.actionSuccess,
+        updateWooFailure: UpdateWooConnection.actionFailure,
+        deleteWooSuccess: DeleteWooConnection.actionSuccess,
+        deleteWooFailure: DeleteWooConnection.actionFailure,
+      },
+      {
+        insertWooSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getWooConnectionsData();
+        },
+        insertWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateWooSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getWooConnectionsData();
+        },
+        updateWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteWooSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getWooConnectionsData();
+        },
+        deleteWooFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

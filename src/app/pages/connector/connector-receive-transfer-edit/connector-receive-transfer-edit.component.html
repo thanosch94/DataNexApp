@@ -53,7 +53,7 @@
         <div class="width-100 woo-connections-field">
           <dn-selectbox
             label="Woo Connections DataSource"
-            [dataSource]="wooConnectionsDataSource"
+            [dataSource]="wooConnectionsDataSource$|async"
             valueExpr="Id"
             displayExpr="Name"
             formControlName="WooConnectionDataSourceId"
@@ -117,7 +117,7 @@
         <div>
           @if(wooItemsData){
           <p>*Job Completed Successfully - Check Results</p>
-          } @if(connectorJobResponse?.Success == false){
+          } @if(connectorJobResponse.Success == false){
           <p>*Job Completed Unsuccessfully - Check Results</p>
           }
         </div>
@@ -149,12 +149,12 @@
     </mat-step>
     <mat-step>
       <ng-template matStepLabel>Results</ng-template>
-      @if(connectorJobResponse?.Success){
+      @if(connectorJobResponse.Success){
       <div class="grid-container">
         @if(wooItemsData && wooItemsData.length == 0){
         <div>
-          <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
-          <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
+          <p><b>Success: </b>{{ connectorJobResponse.Success }}</p>
+          <p><b>Status Code: </b>{{ connectorJobResponse.StatusCode }}</p>
           <p><b>Message: </b>No data found in the website</p>
         </div>
         } @if(wooItemsData && wooItemsData.length > 0){
@@ -169,13 +169,13 @@
 
         }
       </div>
-      } @if(!connectorJobResponse?.Success){
+      } @if(!connectorJobResponse.Success){
       <div>
-        <p><b>Success: </b>{{ connectorJobResponse?.Success }}</p>
-        <p><b>Status Code: </b>{{ connectorJobResponse?.StatusCode }}</p>
-        <p><b>Message: </b>{{ connectorJobResponse?.Message }}</p>
-        <p><b>Result: </b>{{ connectorJobResponse?.Result }}</p>
-        <p>{{ connectorJobResponse?.ExceptionMessage }}</p>
+        <p><b>Success: </b>{{ connectorJobResponse.Success }}</p>
+        <p><b>Status Code: </b>{{ connectorJobResponse.StatusCode }}</p>
+        <p><b>Message: </b>{{ connectorJobResponse.Message }}</p>
+        <p><b>Result: </b>{{ connectorJobResponse.Result }}</p>
+        <p>{{ connectorJobResponse.ExceptionMessage }}</p>
       </div>
       }
       <!-- <div class="job-footer">

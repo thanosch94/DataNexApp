@@ -1,4 +1,4 @@
 <mat-form-field [class]="'width-'+width()">
   <mat-label>{{label()}}</mat-label>
-  <textarea matInput [placeholder]="placeholder()" [(ngModel)]="value"></textarea>
+  <textarea matInput [rows]="rows()" [placeholder]="placeholder()" [(ngModel)]="value" (ngModelChange)="onValueChange($event)"></textarea>
 </mat-form-field>
