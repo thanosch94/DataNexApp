@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { WebAppBase } from '../../base/web-app-base';
 import { ApiResponseDto } from '../../dto/api-response.dto';
-import { UserDto } from '../../dto/user.dto';
 import { AuthService } from '../../services/auth.service';
-import { GeneralOptionsViewModel } from '../../view-models/general-options.viewmodel';
 import { DnAlertComponent } from '../components/dn-alert/dn-alert.component';
 import { CommonModule } from '@angular/common';
 import {
@@ -38,7 +34,6 @@ export class RegisterFormComponent extends GenericFormComponent {
   registerData: RegisterDto = new RegisterDto();
   logoPath: string;
   isLoading: boolean = false;
-  generalOptionsViewModel: GeneralOptionsViewModel;
   isRegistrationCompleted: boolean;
   registerForm: FormGroup;
 

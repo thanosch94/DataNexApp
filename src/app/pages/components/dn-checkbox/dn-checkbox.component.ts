@@ -16,7 +16,7 @@ export class DnCheckboxComponent {
   @Input() value: any;
   @Output() valueChange = new EventEmitter();
 
-  onValueChange(value:string){
+  onValueChange(value:any){
     this.valueChange.emit(value)
   }
 }

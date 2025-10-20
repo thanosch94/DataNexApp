@@ -1,10 +1,14 @@
-import { HttpClient } from "@angular/common/http";
-import { LoginDto } from "../dto/login.dto";
-import { environment } from "../../environments/environment";
-import { RegisterDto } from "../dto/register.dto";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { LoginDto } from '../dto/login.dto';
+import { RegisterDto } from '../dto/register.dto';
+import { environment } from '../../environments/environment';
 
-export class AccountViewModel {
-  service: string;
+@Injectable({
+  providedIn: 'root'
+})
+export class AccountService {
+ service: string;
   userTimeZone: number;
   constructor(private http: HttpClient) {
     this.service = environment.apiUrl

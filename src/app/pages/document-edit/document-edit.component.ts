@@ -3,13 +3,10 @@ import {
   selectDefaultWarehouse,
 } from './../../state/parameters/warehouses/warehouses.selectors';
 import { LotsViewModel } from './../../view-models/lots.viewmodel';
-import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
-import { DocumentAdditionalChargesViewModel } from './../../view-models/document-additional-charges.viewmodel';
 import { WebAppBase } from './../../base/web-app-base';
 import { DocumentsViewModel } from './../../view-models/documents.viewmodel';
 import { ProductBarcodesViewModel } from './../../view-models/product-barcodes.viewmodel';
 import { CommonModule } from '@angular/common';
-import { CustomersViewModel } from './../../view-models/customers.viewmodel';
 import { HttpClient } from '@angular/common/http';
 import {
   AfterViewInit,
@@ -43,7 +40,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
-import { DocumentTypesViewModel } from '../../view-models/document-types.viewmodel';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { ProductDto } from '../../dto/product.dto';
 import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
@@ -98,6 +94,9 @@ import { StatusDto } from '../../dto/status.dto';
 import { GetAllDocumentTypes } from '../../state/parameters/document-types/document-types.actions';
 import { DevToolsAdd } from '../../decorators/dev-tools-add';
 import { documentEditComponentId, DocumentEditPermissionsList } from './document-edit-permissions';
+import { selectActiveDocumentTypesLookupByDocumentTypeGroup } from '../../state/parameters/document-types/document-types.selectors';
+import { GetDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.actions';
+import { selectDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.selectors';
 
 @Component({
   selector: 'app-document-edit',
@@ -155,17 +154,13 @@ export class DocumentEditComponent
   activeTab: AppTabDto | undefined;
 
   previousTabName: string;
-  documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
   document_must_be_saved_in_order_to_add_charges_text: string;
-
-
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
   columns: DnColumnDto[] = [];
   productSizesDataSource: any;
   skuSelected: boolean;
 
-  customersViewModel: CustomersViewModel;
   customers: any;
   document_text: string;
   customerPhone: number;
@@ -176,7 +171,6 @@ export class DocumentEditComponent
     new Array<DocumentProductDto>();
   document: DocumentDto = new DocumentDto();
   documentProductsViewModel: DocumentProductsViewModel;
-  documentTypesViewModel: DocumentTypesViewModel;
   lineProduct = new ProductDto();
   products$: Observable<ProductDto[]>;
 
@@ -184,7 +178,6 @@ export class DocumentEditComponent
   productSizesViewModel: ProductSizesViewModel;
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
-  generalOptionsViewModel: GeneralOptionsViewModel;
   generalOptions: GeneralOptionsDto;
   lotsViewModel: LotsViewModel;
   lotsDataSource: LotDto[];
@@ -194,7 +187,6 @@ export class DocumentEditComponent
   warehouses$: Observable<any>;
   vatClassesList: any;
   vatClassRate: any;
-
 
   constructor(
     private http: HttpClient,
@@ -240,15 +232,7 @@ export class DocumentEditComponent
   }
 
   initializeViewModels() {
-    this.generalOptionsViewModel = new GeneralOptionsViewModel(
-      this.http,
-      this.auth
-    );
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
-    this.documentTypesViewModel = new DocumentTypesViewModel(
-      this.http,
-      this.auth
-    );
     this.productSizesViewModel = new ProductSizesViewModel(
       this.http,
       this.auth
@@ -257,7 +241,6 @@ export class DocumentEditComponent
       this.http,
       this.auth
     );
-    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
     this.suppliersViewModel = new SuppliersViewModel(this.http, this.auth);
     this.documentProductsViewModel = new DocumentProductsViewModel(
       this.http,
@@ -266,15 +249,10 @@ export class DocumentEditComponent
     this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
 
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
-    this.documentAdditionalChargesViewModel =
-      new DocumentAdditionalChargesViewModel(this.http, this.auth);
   }
 
   async getLookups() {
-    this.generalOptions =
-      (await firstValueFrom(this.generalOptionsViewModel.GetAll())) ??
-      new GeneralOptionsDto();
-
+    this.generalOptions = this.auth.appOptions?? new GeneralOptionsDto()
     this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
       this.lotStrategyEnum = result.LotStrategy;
     });
@@ -290,12 +268,9 @@ export class DocumentEditComponent
     this.store.select(selectAllVatClasses).subscribe((result: any) => {
       this.vatClassesList = result;
     });
-      this.store.dispatch(GetAllDocumentTypes())
+      this.store.dispatch(GetAllDocumentTypes.action())
 
-      this.docTypes$ =this.documentTypesViewModel.GetActiveDocumentTypesLookupByDocumentTypeGroup(
-        this.documentGroup
-      );
-
+      this.docTypes$ = this.store.select(selectActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup))
     let productBarcodesObs = this.productBarcodesViewModel.GetLookup();
     this.barcodesLookupDatasource = await firstValueFrom(productBarcodesObs);
 
@@ -368,13 +343,12 @@ export class DocumentEditComponent
 
   getAdditionalCharges(documentId: Guid) {
     this.addCharges = 0;
-    this.documentAdditionalChargesViewModel
-      .GetByDocumentId(documentId)
-      .subscribe((result: any) => {
-        result.map((charge: DocumentAdditionalChargeDto) => {
+    this.store.dispatch(GetDocumentAdditionalChargesByDocumentId.action({id:documentId}))
+    this.store.select(selectDocumentAdditionalChargesByDocumentId(documentId)).subscribe((result:any)=>{
+      result.map((charge: DocumentAdditionalChargeDto) => {
           this.addCharges += charge.AdditionalChargeAmount;
         });
-      });
+    })
   }
 
   async GetProductVatAmount(id: Guid, data: DocumentProductDto) {

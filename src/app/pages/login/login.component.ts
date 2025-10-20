@@ -1,4 +1,3 @@
-import { GeneralOptionsViewModel } from './../../view-models/general-options.viewmodel';
 import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
@@ -26,6 +25,8 @@ import { GenericFormComponent } from '../components/generic-form/generic-form.co
 import { Store } from '@ngrx/store';
 import { GetAllAppPermissions } from '../../state/app-permissions/app-permissions.actions';
 import { GetUserAppPermissionsByUserId } from '../../state/user-app-permissions/user-app-permissions.actions';
+import { GetAllGeneralOptions } from '../../state/parameters/general-options/general-options.actions';
+import { selectAllGeneralOptions } from '../../state/parameters/general-options/general-options.selectors';
 
 @Component({
   selector: 'app-login',
@@ -44,7 +45,6 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
   isLoading: boolean = false;
   //companiesViewModel: CompaniesViewModel;
   //companies: any;
-  generalOptionsViewModel: GeneralOptionsViewModel;
   loginForm: FormGroup;
 
   constructor(
@@ -114,14 +114,10 @@ export class LoginComponent extends GenericFormComponent implements AfterViewIni
             this.store.dispatch(GetAllAppPermissions())
             this.store.dispatch(GetUserAppPermissionsByUserId({id:user.Id}))
             this.router.navigate(['/']);
-            this.generalOptionsViewModel = new GeneralOptionsViewModel(
-              this.http,
-              this.auth
-            );
-            this.generalOptionsViewModel
-              .GetAll()
-              .subscribe((result: GeneralOptionsDto) => {
-                this.auth.appOptions = result;
+            this.store.dispatch(GetAllGeneralOptions.action())
+            this.store.select(selectAllGeneralOptions)
+              .subscribe((result: GeneralOptionsDto[]) => {
+                this.auth.appOptions = result[0];
               });
           } else {
             WebAppBase.isLoggedIn = false;

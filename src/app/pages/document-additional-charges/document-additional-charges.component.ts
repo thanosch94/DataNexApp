@@ -1,12 +1,6 @@
+import { Observable, Subject } from 'rxjs';
 import { BaseComponent } from './../components/base/base.component';
-import {
-  Component,
-  Inject,
-  Input,
-  OnInit,
-  Optional,
-  ViewChild,
-} from '@angular/core';
+import { Component, Inject, OnInit, Optional, ViewChild } from '@angular/core';
 import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -17,16 +11,20 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import { HttpClient } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
-import { DocumentAdditionalChargesViewModel } from '../../view-models/document-additional-charges.viewmodel';
-import { AuthService } from '../../services/auth.service';
 import { Guid } from 'guid-typescript';
 import { DnColumnDto } from '../../dto/dn-column.dto';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ColumnsService } from '../../services/columns.service';
 import { GridColumns } from '../../base/grid-columns';
+import {
+  DeleteDocumentAdditionalCharge,
+  GetDocumentAdditionalChargesByDocumentId,
+  InsertDocumentAdditionalCharge,
+  UpdateDocumentAdditionalCharge,
+} from '../../state/document-additional-charges/document-additional-charges.actions';
+import { selectDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.selectors';
 
 @Component({
   selector: 'app-document-additional-charges',
@@ -55,66 +53,57 @@ export class DocumentAdditionalChargesComponent
   documentAdditionalChargesGrid: DnGridComponent;
   documentId: Guid;
   document_additionl_charges_text: string;
-  dataSource: DocumentAdditionalChargeDto[];
+  dataSource$: Observable<DocumentAdditionalChargeDto[]>;
   columns: DnColumnDto[];
-  documentAdditionalChargesViewModel: DocumentAdditionalChargesViewModel;
+  private destroy$ = new Subject<void>();
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
     private columnsService: ColumnsService,
     @Optional() @Inject(MAT_DIALOG_DATA) public dialogData: any
   ) {
     super();
-    this.documentAdditionalChargesViewModel =
-      new DocumentAdditionalChargesViewModel(this.http, this.auth);
-     this.document_additionl_charges_text = 'Additional Charges';
+    this.document_additionl_charges_text = 'Additional Charges';
 
     this.documentId = dialogData.DocumentId;
-
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.setActionsResults();
     this.getColumns();
     this.getData();
   }
 
   getData() {
     if (this.documentId) {
-      this.documentAdditionalChargesViewModel
-        .GetByDocumentId(this.documentId)
-        .subscribe((result: any) => {
-          if (result) {
-            this.dataSource = result;
-            this.getColumns();
-          }
-        });
+      this.store.dispatch(
+        GetDocumentAdditionalChargesByDocumentId.action({ id: this.documentId })
+      );
+      this.dataSource$ = this.store.select(
+        selectDocumentAdditionalChargesByDocumentId(this.documentId)
+      );
     }
   }
 
   getColumns() {
-    this.columns = this.columnsService.getColumns(GridColumns.DocumentAdditionalCharges)
+    this.columns = this.columnsService.getColumns(
+      GridColumns.DocumentAdditionalCharges
+    );
   }
 
   onCloseBtnClicked(e: any) {}
 
   onDocumentAdditionalChargeRowSaving(data: any) {
-    let newAdditionalCharge:DocumentAdditionalChargeDto = { ...data };
-
+    let newAdditionalCharge: DocumentAdditionalChargeDto = { ...data };
+    newAdditionalCharge.DocumentId = this.documentId;
     if (!newAdditionalCharge.Id) {
-      this.documentAdditionalChargesViewModel
-        .InsertDto(newAdditionalCharge)
-        .subscribe((result: any) => {
-          this.displayNotification('Record inserted');
-          this.getData();
-        });
+      debugger;
+      this.store.dispatch(
+        InsertDocumentAdditionalCharge.action({ dto: newAdditionalCharge })
+      );
     } else {
-      this.documentAdditionalChargesViewModel
-        .UpdateDto(newAdditionalCharge)
-        .subscribe((result: any) => {
-          this.displayNotification('Record updated');
-          this.getData();
-        });
+      this.store.dispatch(
+        UpdateDocumentAdditionalCharge.action({ dto: newAdditionalCharge })
+      );
     }
   }
 
@@ -125,19 +114,54 @@ export class DocumentAdditionalChargesComponent
   }
 
   onDocumentAdditionalChargeRowDeleting(data: any) {
-    this.documentAdditionalChargesViewModel
-      .DeleteById(data.Id)
-      .subscribe((result: any) => {
-        let index =
-          this.documentAdditionalChargesGrid.matDataSource.data.indexOf(data);
-        this.documentAdditionalChargesGrid.matDataSource.data.splice(index, 1);
-        this.getData();
-        this.documentAdditionalChargesGrid.table.renderRows();
-        this.displayNotification('Record deleted');
-      });
+    this.store.dispatch(DeleteDocumentAdditionalCharge.action({ id: data.Id }));
   }
 
   onInsertBtnClicked(e: any) {
     this.documentAdditionalChargesGrid.add(e);
+  }
+
+  //#region Actions Results
+  setActionsResults() {
+    this.setPostActionsResults(
+      {
+        insertSuccess: InsertDocumentAdditionalCharge.actionSuccess,
+        insertFailure: InsertDocumentAdditionalCharge.actionFailure,
+        updateSuccess: UpdateDocumentAdditionalCharge.actionSuccess,
+        updateFailure: UpdateDocumentAdditionalCharge.actionFailure,
+        deleteSuccess: DeleteDocumentAdditionalCharge.actionSuccess,
+        deleteFailure: DeleteDocumentAdditionalCharge.actionFailure,
+      },
+      {
+        insertSuccess: () => {
+          this.displayNotification('Record inserted');
+          this.getData();
+        },
+        insertFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        updateSuccess: () => {
+          this.displayNotification('Record updated');
+          this.getData();
+        },
+        updateFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+        deleteSuccess: () => {
+          this.displayNotification('Record deleted');
+          this.getData();
+        },
+        deleteFailure: (result) => {
+          this.displayErrorAlert(result.error);
+        },
+      },
+      this.destroy$
+    );
+  }
+  //#endregion
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -21,8 +21,13 @@ service: string;
   }
 
   public GetById(id:Guid) {
-
     return this.http.get(this.service + 'Customers/getbyid/'+id, {
+      headers: this.auth.headers,
+    });
+  }
+
+  public GetFromAade(username:string, password:string, afmCalledFor:string, afmCalledBy?:string,) {
+    return this.http.get(this.service + 'Customers/getfromaade/'+username+"/"+password+"/"+afmCalledFor +"/" +afmCalledBy, {
       headers: this.auth.headers,
     });
   }

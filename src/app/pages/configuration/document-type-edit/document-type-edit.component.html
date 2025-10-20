@@ -119,7 +119,7 @@
           >
           </dn-selectbox>
         </div>
-        @if(lotsEnabled){
+        @if((generalOptions$|async)![0].LotsEnabled){
           <div class="basic-info-tab-k flex-row">
           <b>{{ affects_lot_text }}</b>
           <dn-selectbox

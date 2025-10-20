@@ -10,7 +10,7 @@
   <div class="additional-charges">
     <dn-grid
     #documentAdditionalCharges
-      [dataSource]="dataSource"
+      [dataSource]="dataSource$|async"
       [columns]="columns"
       [canDisplaySearch]="false"
       (onRowSaving)="onDocumentAdditionalChargeRowSaving($event)"

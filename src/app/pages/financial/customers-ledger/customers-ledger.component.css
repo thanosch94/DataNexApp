@@ -6,3 +6,7 @@
   flex-direction: column;
   gap:.5rem;
 }
+
+.mb-1{
+  margin-bottom: 1%;
+}

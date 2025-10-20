@@ -46,6 +46,10 @@ import { WooConnectionsEffects } from './state/parameters/woo-connections/woo-co
 import { wooConnectionsReducer } from './state/parameters/woo-connections/woo-connections.reducer';
 import { logsReducer } from './state/logs/logs.reducer';
 import { LogsEffects } from './state/logs/logs.effects';
+import { generalOptionsReducer } from './state/parameters/general-options/general-options.reducer';
+import { GeneralOptionsEffects } from './state/parameters/general-options/general-options.effects';
+import { DocumentAdditionalChargesEffects } from './state/document-additional-charges/document-additional-charges.effects';
+import { documentAdditionalChargesReducer } from './state/document-additional-charges/document-additional-charges.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -71,7 +75,9 @@ export const appConfig: ApplicationConfig = {
       documentSeries:documentSeriesReducer,
       warehouses:warehousesReducer,
       wooConnections:wooConnectionsReducer,
-      logs:logsReducer
+      logs:logsReducer,
+      generalOptions:generalOptionsReducer,
+      documentAdditionalCharges: documentAdditionalChargesReducer
     }),
     provideEffects([
       ProductEffects,
@@ -93,7 +99,9 @@ export const appConfig: ApplicationConfig = {
       DocumentSeriesEffects,
       WarehousesEffects,
       WooConnectionsEffects,
-      LogsEffects
+      LogsEffects,
+      GeneralOptionsEffects,
+      DocumentAdditionalChargesEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

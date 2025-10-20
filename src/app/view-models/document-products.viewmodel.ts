@@ -1,9 +1,7 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import { Guid } from "guid-typescript";
 import { DocumentProductDto } from "../dto/document-product.dto";
 import { AuthService } from "../services/auth.service";
-import { ProductDto } from "../dto/product.dto";
-import { ProductBarcodeDto } from "../dto/product-barcode.dto";
 
 export class DocumentProductsViewModel {
   service: string;
@@ -39,8 +37,6 @@ export class DocumentProductsViewModel {
       headers: this.headers,
     });
   }
-
-
 
   public InsertDto(documentProduct: DocumentProductDto) {
 

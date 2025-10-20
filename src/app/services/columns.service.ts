@@ -50,6 +50,9 @@ export class ColumnsService {
       { Name: GridColumns.UsersList, Columns:this.getUsersListColumns},
       { Name: GridColumns.WarehousesList, Columns:this.getWarehousesListColumns},
       { Name: GridColumns.DocumentAdditionalCharges, Columns:this.getDocumentAdditionalChargesColumns},
+      { Name: GridColumns.AccountsReceivableCustomerDocuments, Columns:this.getAccountsReceivablesCustomerDocumentsColumns},
+      { Name: GridColumns.AccountsReceivable, Columns:this.getAccountsReceivablesColumns},
+      { Name: GridColumns.CustomersLedger, Columns:this.getCustomersLedgerColumns},
     ];
   }
 
@@ -565,7 +568,7 @@ export class ColumnsService {
     ];
 
   private getDocumentsListColumns = (args:any): DnColumnDto[] =>{
-    this.store.dispatch(GetAllDocumentTypes())
+    this.store.dispatch(GetAllDocumentTypes.action())
     this.store.dispatch(GetAllCustomers.action())
     this.store.dispatch(GetAllStatusesByStatusType({statusType:StatusTypeEnum.Document}))
     let docTypes = this.store.select(selectAllDocumentTypes)
@@ -947,6 +950,121 @@ export class ColumnsService {
         DataType: 'buttons',
         Caption: '',
       },
+    ];
+  }
+
+  private getAccountsReceivablesCustomerDocumentsColumns = (): DnColumnDto[] =>{
+    this.store.dispatch(GetAllCustomers.action());
+    let customers$ = this.store.select(selectAllCustomers)
+    return [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'DocumentDateTime',
+        DataType: 'datetime',
+        Caption: 'Date',
+        Visible: true,
+        Format: 'dd/MM/yyyy',
+      },
+      {
+        DataField: 'DocumentCode',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
+        DataField: 'CustomerId',
+        DataType: 'string',
+        Caption: 'Customer',
+        Lookup: {
+          DataSource$: customers$,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+      },
+      {
+        DataField: 'DocumentTotal',
+        DataType: 'number',
+        Caption: 'Total',
+        DisplayColumnTotal: true,
+      },
+      // {
+      //   DataField: 'buttons',
+      //   DataType: 'buttons',
+      //   Caption: '',
+      // }
+    ];
+  }
+
+  private getAccountsReceivablesColumns = (): DnColumnDto[] =>{
+    return [
+      {
+        DataField: 'CustomerName',
+        DataType: 'string',
+        Caption: 'Customer',
+        Visible: true,
+      },
+      {
+        DataField: 'ReceivableTotal',
+        DataType: 'number',
+        Caption: 'Receivable Total',
+        Visible: true,
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
+  }
+
+  private getCustomersLedgerColumns = (): DnColumnDto[] =>{
+    this.store.dispatch(GetAllCustomers.action());
+    let customers$ = this.store.select(selectAllCustomers)
+
+    return [
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'DocumentDateTime',
+        DataType: 'datetime',
+        Caption: 'Date',
+        Visible: true,
+        Format: 'dd/MM/yyyy',
+      },
+      {
+        DataField: 'DocumentCode',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
+        DataField: 'CustomerId',
+        DataType: 'string',
+        Caption: 'Customer',
+        Lookup: {
+          DataSource$: customers$,
+          ValueExpr: 'Id',
+          DisplayExpr: 'Name',
+        },
+      },
+      {
+        DataField: 'DocumentTotal',
+        DataType: 'number',
+        Caption: 'Total',
+        DisplayColumnTotal: true,
+      },
+      // {
+      //   DataField: 'buttons',
+      //   DataType: 'buttons',
+      //   Caption: '',
+      // }
     ];
   }
 }

@@ -8,7 +8,7 @@
 <div class="accounts-receivable-list">
   <dn-grid
     #accountsReceivable
-    [dataSource]="dataSource"
+    [dataSource]="dataSource$|async"
     [columns]="columns"
     [canDisplaySearch]="true"
     [canDelete]="false"

@@ -1,28 +1,19 @@
-import { TabsService } from './../../../services/tabs.service';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
-import { DocumentTypeGroupEnumList } from '../../../enumLists/document-type-group.enumlist';
-import { DocumentTypesViewModel } from '../../../view-models/document-types.viewmodel';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
-import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
 import { Router } from '@angular/router';
-import { Store } from '@ngrx/store';
 import {
-  DeleteDocumentTypeById,
-  DeleteDocumentTypeByIdFailure,
-  DeleteDocumentTypeByIdSuccess,
+  DeleteDocumentType,
   GetAllDocumentTypes,
 } from '../../../state/parameters/document-types/document-types.actions';
 import { selectAllDocumentTypes } from '../../../state/parameters/document-types/document-types.selectors';
 import { AsyncPipe } from '@angular/common';
-import { Actions, ofType } from '@ngrx/effects';
 import { BaseComponent } from '../../components/base/base.component';
 import { ColumnsService } from '../../../services/columns.service';
 import { GridColumns } from '../../../base/grid-columns';
-import { StateHelperService } from '../../../services/state-helper.service';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -56,7 +47,7 @@ export class DocumentTypesListComponent
   }
 
   getData() {
-    this.store.dispatch(GetAllDocumentTypes());
+    this.store.dispatch(GetAllDocumentTypes.action());
     this.dataSource = this.store.select(selectAllDocumentTypes);
   }
 
@@ -69,7 +60,7 @@ export class DocumentTypesListComponent
   }
 
   onDocumentTypeDelete(data: DocumentTypeDto) {
-    this.store.dispatch(DeleteDocumentTypeById({ id: data.Id }));
+    this.store.dispatch(DeleteDocumentType.action({ id: data.Id }));
   }
 
   onDocumentTypesStopEditing(e: any) {
@@ -92,7 +83,7 @@ export class DocumentTypesListComponent
 
   setDeleteByIdSuccessActionResult() {
     this.stateHelperService
-      .setActionResult(DeleteDocumentTypeByIdSuccess, this.destroy$)
+      .setActionResult(DeleteDocumentType.actionSuccess, this.destroy$)
       .subscribe((result: any) => {
         this.displayNotification('Record deleted');
         this.getData();
@@ -101,7 +92,7 @@ export class DocumentTypesListComponent
 
   setDeleteByIdFailureActionResult() {
     this.stateHelperService
-      .setActionResult(DeleteDocumentTypeByIdFailure, this.destroy$)
+      .setActionResult(DeleteDocumentType.actionFailure, this.destroy$)
       .subscribe((result: any) => {
         this.displayErrorAlert(result.error);
         this.getData();

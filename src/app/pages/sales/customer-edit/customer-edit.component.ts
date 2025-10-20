@@ -1,7 +1,4 @@
 import { dnIcons } from './../../../enumLists/dn-icon.list';
-
-import { HttpClient } from '@angular/common/http';
-
 import { Component, OnDestroy, OnInit, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -21,9 +18,7 @@ import { CommonModule } from '@angular/common';
 import { MatDialogModule } from '@angular/material/dialog';
 import { WebAppBase } from '../../../base/web-app-base';
 import { CustomerDto } from '../../../dto/customer.dto';
-import { AuthService } from '../../../services/auth.service';
 import { TabsService } from '../../../services/tabs.service';
-import { CustomersViewModel } from '../../../view-models/customers.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnAlertComponent } from '../../components/dn-alert/dn-alert.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
@@ -99,9 +94,7 @@ export class CustomerEditComponent
   implements OnInit, OnDestroy
 {
   @DevToolsAdd() customer_text: string;
-  customersViewModel: CustomersViewModel;
   @DevToolsAdd() customer = signal<CustomerDto>(new CustomerDto());
-  @DevToolsAdd() customerId: Guid;
   previousTabName: string;
   form: FormGroup;
   faIcons = dnIcons;
@@ -110,14 +103,11 @@ export class CustomerEditComponent
   customerAddresses: CustomerAddressDto[];
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
     private router: Router,
     private fb: FormBuilder,
   ) {
     super();
-    this.customersViewModel = new CustomersViewModel(this.http, this.auth);
-    this.customerId = WebAppBase.data;
+    this.customer().Id = WebAppBase.data;
     WebAppBase.data = undefined;
   }
 
@@ -174,10 +164,10 @@ export class CustomerEditComponent
   }
 
   getData() {
-    if (this.customerId) {
-      this.store.dispatch(GetCustomerById.action({ id: this.customerId }));
+    if (this.customer().Id) {
+      this.store.dispatch(GetCustomerById.action({ id: this.customer().Id }));
       this.store
-        .select(selectCustomerById(this.customerId))
+        .select(selectCustomerById(this.customer().Id))
         .subscribe((result: any) => {
           this.customer.set(result as CustomerDto);
           this.customerAddresses = [...this.customer().CustomerAddresses];
@@ -204,7 +194,7 @@ export class CustomerEditComponent
     if (this.form.valid) {
       this.customer.set({ ...this.customer(), ...this.form.value });
 
-      if (this.customerId) {
+      if (this.customer().Id) {
         this.store.dispatch(UpdateCustomer.action({ dto: this.customer() }));
       } else {
         this.customer.update((c) => ({
@@ -249,7 +239,7 @@ export class CustomerEditComponent
   }
 
   deleteItem(e: any) {
-    this.store.dispatch(DeleteCustomer.action({ id: this.customerId }));
+    this.store.dispatch(DeleteCustomer.action({ id: this.customer().Id }));
   }
 
   async onVatIdValueChanged(e: any) {
@@ -457,7 +447,6 @@ export class CustomerEditComponent
       },
       {
         insertCustomerSuccess: (result: any) => {
-          this.customerId = result.dto.Id;
           this.customer.set(result.dto);
           this.displayNotification('Record inserted');
           this.getData();

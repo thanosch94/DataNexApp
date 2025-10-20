@@ -1,9 +1,9 @@
-import { AsyncPipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, ContentChild, EventEmitter, forwardRef, input, Input, Output, TemplateRef, ViewChild } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatPseudoCheckboxModule } from '@angular/material/core';
-import { MatFormFieldModule, MatPrefix, MatSuffix } from '@angular/material/form-field';
+import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -21,7 +21,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
         MatPseudoCheckboxModule,
         MatIconModule,
         MatSuffix,
-        MatPrefix,
         MatTooltipModule,
         MatSelectModule,
     ],

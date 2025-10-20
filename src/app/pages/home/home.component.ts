@@ -1,8 +1,6 @@
-import { firstValueFrom } from 'rxjs';
 import { Component, OnInit } from '@angular/core';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import { ReportsService } from '../../services/reports.service';
-import { DnToolbarComponent } from '../components/dn-toolbar/dn-toolbar.component';
 import { NGX_ECHARTS_CONFIG, NgxEchartsModule } from 'ngx-echarts';
 import { DnColumnDto } from '../../dto/dn-column.dto';
 import { BaseComponent } from '../components/base/base.component';
@@ -21,7 +19,7 @@ import { WebAppBase } from '../../base/web-app-base';
 
 @Component({
   selector: 'app-home',
-  imports: [NgxEchartsModule, DnToolbarComponent, DnGridComponent, DnPopupComponent, DocumentEditComponent],
+  imports: [NgxEchartsModule, DnGridComponent, DnPopupComponent, DocumentEditComponent],
   providers: [
     {
       provide: NGX_ECHARTS_CONFIG,

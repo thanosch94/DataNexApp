@@ -1,21 +1,12 @@
 import { createReducer, on } from '@ngrx/store';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
 import {
-  DeleteDocumentTypeByIdFailure,
-  DeleteDocumentTypeByIdSuccess,
+  DeleteDocumentType,
   GetAllDocumentTypes,
-  GetAllDocumentTypesFailure,
-  GetAllDocumentTypesSuccess,
   GetDocumentTypeById,
-  GetDocumentTypeByIdFailure,
-  GetDocumentTypeByIdSuccess,
   GetDocumentTypesLookup,
-  GetDocumentTypesLookupFailure,
-  GetDocumentTypesLookupSuccess,
-  InsertDocumentTypeDtoFailure,
-  InsertDocumentTypeDtoSuccess,
-  UpdateDocumentTypeDtoFailure,
-  UpdateDocumentTypeDtoSuccess,
+  InsertDocumentType,
+  UpdateDocumentType,
 } from './document-types.actions';
 
 export interface DocumentTypesState {
@@ -35,69 +26,69 @@ export const initialDocumentTypesState: DocumentTypesState = {
 export const documentTypesReducer = createReducer(
   initialDocumentTypesState,
   //GetAll
-  on(GetAllDocumentTypes, (state) => ({ ...state })),
-  on(GetAllDocumentTypesSuccess, (state, { data }) => ({
+  on(GetAllDocumentTypes.action, (state) => ({ ...state })),
+  on(GetAllDocumentTypes.actionSuccess, (state, { data }) => ({
     ...state,
     data,
   })),
-  on(GetAllDocumentTypesFailure, (state, { error }) => ({
+  on(GetAllDocumentTypes.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //GetLookup
-  on(GetDocumentTypesLookup, (state) => ({ ...state })),
-  on(GetDocumentTypesLookupSuccess, (state, { data }) => ({
+  on(GetDocumentTypesLookup.action, (state) => ({ ...state })),
+  on(GetDocumentTypesLookup.actionSuccess, (state, { data }) => ({
     ...state,
     lookup:data,
   })),
-  on(GetDocumentTypesLookupFailure, (state, { error }) => ({
+  on(GetDocumentTypesLookup.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //GetById
-  on(GetDocumentTypeById, (state) => ({ ...state })),
-  on(GetDocumentTypeByIdSuccess, (state, { dto }) => ({
+  on(GetDocumentTypeById.action, (state) => ({ ...state })),
+  on(GetDocumentTypeById.actionSuccess, (state, { dto }) => ({
     ...state,
     selected:dto,
   })),
-  on(GetDocumentTypeByIdFailure, (state, { error }) => ({
+  on(GetDocumentTypeById.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //InsertDto
-  on(InsertDocumentTypeDtoSuccess, (state, { dto }) => ({
+  on(InsertDocumentType.actionSuccess, (state, { dto }) => ({
     ...state,
     data: [...state.data, dto],
     selected:dto,
     error: null,
   })),
-  on(InsertDocumentTypeDtoFailure, (state, { error }) => ({
+  on(InsertDocumentType.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //UpdateDto
-  on(UpdateDocumentTypeDtoSuccess, (state, { dto }) => ({
+  on(UpdateDocumentType.actionSuccess, (state, { dto }) => ({
     ...state,
     data: [...state.data.map((x) => (x.Id == dto.Id ? dto : x))],
     selected: dto,
     error: null,
   })),
-  on(UpdateDocumentTypeDtoFailure, (state, { error }) => ({
+  on(UpdateDocumentType.actionFailure, (state, { error }) => ({
     ...state,
     error,
   })),
 
   //DeleteById
-  on(DeleteDocumentTypeByIdSuccess, (state, { dto }) => ({
+  on(DeleteDocumentType.actionSuccess, (state, { dto }) => ({
     ...state,
     data: [...state.data.filter((x) => x.Id != dto.Id)],
     error: null,
   })),
-  on(DeleteDocumentTypeByIdFailure, (state, { error }) => ({
+  on(DeleteDocumentType.actionFailure, (state, { error }) => ({
     ...state,
     error,
   }))

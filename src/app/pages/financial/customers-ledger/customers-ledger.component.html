@@ -7,20 +7,21 @@
 ></dn-toolbar>
 
 <div class="margin">
-  <div class="flex-column">
+  <div class="flex-column mb-1">
     <b>Select a Customer</b>
     <dn-selectbox
-      [dataSource]="customers"
+      [width]="20"
+      [dataSource]="customers$|async"
       valueExpr="Id"
       displayExpr="Name"
       (valueChange)="onCustomerChange($event)"
     ></dn-selectbox>
   </div>
-  @if(dataSource){
+  @if(dataSource$|async){
   <ng-container>
     <dn-grid
       #customersLedger
-      [dataSource]="dataSource"
+      [dataSource]="dataSource$|async"
       [columns]="columns"
       [canDisplaySearch]="true"
       [canDelete]="false"

@@ -39,7 +39,6 @@ import { ConfirmComponent } from './pages/components/confirm/confirm.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Navigation } from './base/navigation';
 import { dnIcons } from './enumLists/dn-icon.list';
-import { SalesReportsComponent } from './pages/sales/sales-reports/sales-reports.component';
 import { MatButtonModule, MatMiniFabButton } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -65,7 +64,6 @@ import { HomeComponent } from "./pages/home/home.component";
     MatTabsModule,
     MatDialogModule,
     MatTooltipModule,
-    SalesReportsComponent,
     MatMiniFabButton,
     MatFormFieldModule,
     MatInputModule,

@@ -5,6 +5,7 @@ import { Guid } from 'guid-typescript';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 
+type T = DocumentTypeDto
 @Injectable({
   providedIn: 'root'
 })
@@ -16,42 +17,42 @@ export class DocumentTypesService {
   }
 
   public GetAll() {
-    return this.http.get(this.service + 'DocumentTypes/getall', {
+    return this.http.get<T[]>(this.service + 'DocumentTypes/getall', {
       headers: this.auth.headers,
     });
   }
 
   public GetLookup() {
-    return this.http.get(this.service + 'DocumentTypes/getLookup', {
+    return this.http.get<T[]>(this.service + 'DocumentTypes/getLookup', {
       headers: this.auth.headers,
     });
   }
 
   public GetById(id: Guid) {
-    return this.http.get(this.service + 'DocumentTypes/getbyid/' + id, {
+    return this.http.get<T>(this.service + 'DocumentTypes/getbyid/' + id, {
       headers: this.auth.headers,
     });
   }
   public GetActiveDocumentTypesLookupByDocumentTypeGroup(documentTypeGroup: DocumentTypeGroupEnum) {
-    return this.http.get(this.service + 'DocumentTypes/getactivedocumenttypeslookupbydocumententity/' + documentTypeGroup, {
+    return this.http.get<T[]>(this.service + 'DocumentTypes/getactivedocumenttypeslookupbydocumententity/' + documentTypeGroup, {
       headers: this.auth.headers,
     });
   }
 
   public InsertDto(documentType: DocumentTypeDto) {
-    return this.http.post(this.service + 'DocumentTypes/insertdto', documentType, {
+    return this.http.post<T>(this.service + 'DocumentTypes/insertdto', documentType, {
       headers: this.auth.headers,
     });
   }
 
   public UpdateDto(documentType: DocumentTypeDto) {
-    return this.http.put(this.service + 'DocumentTypes/updatedto', documentType, {
+    return this.http.put<T>(this.service + 'DocumentTypes/updatedto', documentType, {
       headers: this.auth.headers,
     });
   }
 
   public DeleteById(id: Guid) {
-    return this.http.delete(this.service + 'DocumentTypes/deletebyid/' + id, {
+    return this.http.delete<T>(this.service + 'DocumentTypes/deletebyid/' + id, {
       headers: this.auth.headers,
     });
   }

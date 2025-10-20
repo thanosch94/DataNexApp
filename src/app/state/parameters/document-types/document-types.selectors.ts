@@ -8,6 +8,11 @@ export const selectAllDocumentTypes = createSelector(
   (state)=>state.data
 )
 
+export const selectActiveDocumentTypesLookupByDocumentTypeGroup = (docTypeGroup:any) => createSelector(
+  selectDocumentTypesState,
+  (state: DocumentTypesState) => state.data.filter(x => x.IsActive==true && x.DocumentTypeGroup == docTypeGroup)
+);
+
 export const selectDocumentTypesLookup = createSelector(
   selectDocumentTypesState,
   (state)=>state.lookup

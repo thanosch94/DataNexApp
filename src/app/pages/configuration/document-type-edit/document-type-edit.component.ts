@@ -1,12 +1,11 @@
 import { GetDocumentSeriesByDocumentTypeId } from './../../../state/parameters/document-series/document-series.actions';
-import { StateHelperService } from './../../../services/state-helper.service';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import {
+  DeleteDocumentType,
   GetDocumentTypesLookup,
-  InsertDocumentTypeDto,
-  UpdateDocumentTypeDto,
+  InsertDocumentType,
+  UpdateDocumentType,
 } from './../../../state/parameters/document-types/document-types.actions';
-import { GeneralOptionsViewModel } from './../../../view-models/general-options.viewmodel';
 import { PriceTypeEnumlist } from './../../../enumLists/price-type.enumlist';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
@@ -15,8 +14,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
 import { Guid } from 'guid-typescript';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../../../services/auth.service';
 import { DnCheckboxComponent } from '../../components/dn-checkbox/dn-checkbox.component';
 import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
 import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
@@ -26,14 +23,8 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { TabsService } from '../../../services/tabs.service';
 import { GeneralOptionsDto } from '../../../dto/configuration/general-options.dto';
 import {
-  DeleteDocumentTypeByIdFailure,
-  DeleteDocumentTypeByIdSuccess,
+
   GetDocumentTypeById,
-  GetDocumentTypeByIdFailure,
-  InsertDocumentTypeDtoFailure,
-  InsertDocumentTypeDtoSuccess,
-  UpdateDocumentTypeDtoFailure,
-  UpdateDocumentTypeDtoSuccess,
 } from '../../../state/parameters/document-types/document-types.actions';
 import { BaseComponent } from '../../components/base/base.component';
 import {
@@ -50,6 +41,8 @@ import {
 } from '../../../state/parameters/document-series/document-series.actions';
 import { DocumentSeriesDto } from '../../../dto/configuration/document-series.dto';
 import { selectDocumentSeriesByDocumetTypeId } from '../../../state/parameters/document-series/document-series.selectors';
+import { GetAllGeneralOptions } from '../../../state/parameters/general-options/general-options.actions';
+import { selectAllGeneralOptions } from '../../../state/parameters/general-options/general-options.selectors';
 
 @Component({
   selector: 'app-document-type-edit',
@@ -83,29 +76,19 @@ export class DocumentTypeEditComponent
   docTypesDataSource: any;
   documentTypeSeriesDataSource: any;
   documentTypeSeriesColumns: DnColumnDto[];
-  lotsEnabled: boolean;
-  generalOptionsViewModel: GeneralOptionsViewModel;
   documentTypesTransformationsDataSource: any;
   documentTypesTransformationsColumns: DnColumnDto[];
+  generalOptions$ : Observable<GeneralOptionsDto[]>;
   private destroy$ = new Subject<void>();
 
   constructor(
-    private http: HttpClient,
-    private auth: AuthService,
     private router: Router,
     private colsService: ColumnsService,
   ) {
     super();
-    this.generalOptionsViewModel = new GeneralOptionsViewModel(
-      this.http,
-      this.auth
-    );
     this.getLookups();
-    this.generalOptionsViewModel
-      .GetAll()
-      .subscribe((result: GeneralOptionsDto) => {
-        this.lotsEnabled = result.LotsEnabled;
-      });
+    this.store.dispatch(GetAllGeneralOptions.action())
+    this.generalOptions$ = this.store.select(selectAllGeneralOptions)
     this.documentTypeId = history.state?.id;
   }
 
@@ -119,7 +102,7 @@ export class DocumentTypeEditComponent
   getData() {
     if (this.documentTypeId) {
       this.documentTypesTransformationsDataSource = [];
-      this.store.dispatch(GetDocumentTypeById({ id: this.documentTypeId }));
+      this.store.dispatch(GetDocumentTypeById.action({ id: this.documentTypeId }));
 
       this.store.select(selectSelectedDocumentType).subscribe((result: any) => {
         this.documentType = { ...result };
@@ -156,7 +139,7 @@ export class DocumentTypeEditComponent
     this.docTypeGroupDataSource = DocumentTypeGroupEnumList.value;
 
     //Document Types
-    this.store.dispatch(GetDocumentTypesLookup());
+    this.store.dispatch(GetDocumentTypesLookup.action());
     this.docTypesDataSource = this.store.select(selectDocumentTypesLookup);
   }
 
@@ -202,9 +185,9 @@ export class DocumentTypeEditComponent
 
   onSaveClicked(e: any) {
     if (this.documentType.Id) {
-      this.store.dispatch(UpdateDocumentTypeDto({ dto: this.documentType }));
+      this.store.dispatch(UpdateDocumentType.action({ dto: this.documentType }));
     } else {
-      this.store.dispatch(InsertDocumentTypeDto({ dto: this.documentType }));
+      this.store.dispatch(InsertDocumentType.action({ dto: this.documentType }));
     }
   }
 
@@ -238,39 +221,39 @@ export class DocumentTypeEditComponent
   setActionsResults() {
     this.setPostActionsResults(
       {
-        getByIdDocTypeFailure: GetDocumentTypeByIdFailure,
-        insertDocTypeSuccess: InsertDocumentTypeDtoSuccess,
-        insertDocTypeFailure: InsertDocumentTypeDtoFailure,
-        updateDocTypeSuccess: UpdateDocumentTypeDtoSuccess,
-        updateDocTypeFailure: UpdateDocumentTypeDtoFailure,
-        deleteDocTypeSuccess: DeleteDocumentTypeByIdSuccess,
-        deleteDocTypeFailure: DeleteDocumentTypeByIdFailure,
+        getByIdDocTypeFailure: GetDocumentTypeById.actionFailure,
+        insertDocTypeSuccess: InsertDocumentType.actionSuccess,
+        insertDocTypeFailure: InsertDocumentType.actionFailure,
+        updateDocTypeSuccess: UpdateDocumentType.actionSuccess,
+        updateDocTypeFailure: UpdateDocumentType.actionFailure,
+        deleteDocTypeSuccess: DeleteDocumentType.actionSuccess,
+        deleteDocTypeFailure: DeleteDocumentType.actionFailure,
       },
       {
-        getByIdFailure: (result) => {
+        getByIdDocTypeFailure: (result) => {
           this.displayErrorAlert(result.error);
         },
-        insertSuccess: (result: any) => {
+        insertDocTypeSuccess: (result: any) => {
           this.documentTypeId = result.dto.Id;
           this.displayNotification('Record inserted');
           this.getData();
         },
-        insertFailure: (result) => {
+        insertDocTypeFailure: (result) => {
           this.displayErrorAlert(result.error);
         },
-        updateSuccess: () => {
+        updateDocTypeSuccess: () => {
           this.getToolbarTitle();
           this.displayNotification('Record updated');
           this.getData();
         },
-        updateFailure: (result) => {
+        updateDocTypeFailure: (result) => {
           this.displayErrorAlert(result.error);
         },
-        deleteSuccess: () => {
+        deleteDocTypeSuccess: () => {
           this.displayNotification('Record deleted');
           this.router.navigate(['document-types-list']);
         },
-        deleteFailure: (result) => {
+        deleteDocTypeFailure: (result) => {
           this.displayErrorAlert(result.error);
         },
       },
