@@ -11,8 +11,8 @@
 ></dn-toolbar>
 <div class="margin">
   <dn-grid
-  #lotsGrid
-    [dataSource]="dataSource$|async"
+    #lotsGrid
+    [dataSource]="dataSource$ | async"
     [columns]="columns"
     [canDisplaySearch]="true"
     (onRowSaving)="onRowSaving($event)"

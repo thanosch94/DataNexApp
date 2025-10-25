@@ -8,9 +8,8 @@
 ></dn-toolbar>
 
 <div class="margin">
-
   <dn-grid  #productSizesGrid
-  [dataSource]="dataSource"
+  [dataSource]="dataSource$|async"
   [columns]="columns"
   [canDisplaySearch]="true"
   [enableAddButton]="false"
@@ -18,6 +17,5 @@
   (onRowSaving)="onRowSaving($event)"
   (onRowDelete)="deleteProductSize($event)"
   >
-
   </dn-grid>
  </div>

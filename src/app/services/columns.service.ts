@@ -53,6 +53,7 @@ export class ColumnsService {
       { Name: GridColumns.AccountsReceivableCustomerDocuments, Columns:this.getAccountsReceivablesCustomerDocumentsColumns},
       { Name: GridColumns.AccountsReceivable, Columns:this.getAccountsReceivablesColumns},
       { Name: GridColumns.CustomersLedger, Columns:this.getCustomersLedgerColumns},
+      { Name: GridColumns.ProductSizesList, Columns:this.getProductSizesListColumns},
     ];
   }
 
@@ -71,6 +72,11 @@ export class ColumnsService {
       DataType: 'string',
       Caption: 'Id',
       Visible: false,
+    },
+    {
+      DataField: 'Code',
+      DataType: 'string',
+      Caption: 'Code',
     },
     {
       DataField: 'Abbreviation',
@@ -122,6 +128,11 @@ export class ColumnsService {
       DataType: 'string',
       Caption: 'Id',
       Visible: false,
+    },
+    {
+      DataField: 'Code',
+      DataType: 'string',
+      Caption: 'Code',
     },
     {
       DataField: 'Name',
@@ -192,6 +203,11 @@ export class ColumnsService {
       Visible: false,
     },
     {
+      DataField: 'Code',
+      DataType: 'string',
+      Caption: 'Code',
+    },
+    {
       DataField: 'Name',
       DataType: 'string',
       Caption: 'Name',
@@ -209,6 +225,11 @@ export class ColumnsService {
       DataType: 'string',
       Caption: 'Id',
       Visible: false,
+    },
+    {
+      DataField: 'Code',
+      DataType: 'string',
+      Caption: 'Code',
     },
     {
       DataField: 'Name',
@@ -285,6 +306,11 @@ export class ColumnsService {
         Visible: false,
       },
       {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
         DataField: 'Name',
         DataType: 'string',
         Caption: 'Name',
@@ -316,6 +342,11 @@ export class ColumnsService {
         DataType: 'string',
         Caption: 'Id',
         Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
       },
       {
         DataField: 'Name',
@@ -355,6 +386,11 @@ export class ColumnsService {
         DataType: 'string',
         Caption: 'Id',
         Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
       },
       {
         DataField: 'Abbreviation',
@@ -398,6 +434,11 @@ export class ColumnsService {
         Visible: false,
       },
       {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
         DataField: 'Name',
         DataType: 'string',
         Caption: 'Name',
@@ -430,6 +471,11 @@ export class ColumnsService {
         DataType: 'string',
         Caption: 'Id',
         Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
       },
       {
         DataField: 'Name',
@@ -529,6 +575,11 @@ export class ColumnsService {
         DataType: 'string',
         Caption: 'Id',
         Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
       },
       {
         DataField: 'Name',
@@ -665,6 +716,11 @@ export class ColumnsService {
         DataType: 'string',
         Caption: 'Id',
         Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
       },
       {
         DataField: 'Sku',
@@ -860,6 +916,11 @@ export class ColumnsService {
         Visible: false,
       },
       {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+      },
+      {
         DataField: 'Name',
         DataType: 'string',
         Caption: 'Full Name',
@@ -921,7 +982,7 @@ export class ColumnsService {
     ];
 
   private getDocumentAdditionalChargesColumns = (): DnColumnDto[] =>{
-    this.store.dispatch(GetAllAdditionalCharges());
+    this.store.dispatch(GetAllAdditionalCharges.action());
     let additionalCharges$ = this.store.select(selectAllAdditionalCharges)
     return [
       {
@@ -1067,4 +1128,30 @@ export class ColumnsService {
       // }
     ];
   }
-}
+
+
+  private getProductSizesListColumns  = (): DnColumnDto[] =>[
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'Abbreviation',
+        DataType: 'string',
+        Caption: 'Abbreviation',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
+  }
+

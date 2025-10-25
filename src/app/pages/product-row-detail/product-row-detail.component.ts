@@ -1,3 +1,4 @@
+import { BaseComponent } from './../components/base/base.component';
 import { LotsViewModel } from './../../view-models/lots.viewmodel';
 import { DnToolbarComponent } from './../components/dn-toolbar/dn-toolbar.component';
 import {
@@ -11,7 +12,6 @@ import { MatTabGroup, MatTabsModule } from '@angular/material/tabs';
 import { DnGridComponent } from '../components/dn-grid/dn-grid.component';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
   MatDialogModule,
   MatDialogRef,
 } from '@angular/material/dialog';
@@ -20,25 +20,26 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { LotDto } from '../../dto/configuration/lot.dto';
 import { LotsListComponent } from '../configuration/lots/lots-list.component';
-import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
 import { DocumentProductDto } from '../../dto/document-product.dto';
+import { GetAllLotSettings } from '../../state/parameters/lot-settings/lot-settings.actions';
+import { selectAllLotSettings } from '../../state/parameters/lot-settings/lot-settings.selectors';
 
 @Component({
-    selector: 'app-product-row-detail',
-    imports: [
-        DnToolbarComponent,
-        MatTabsModule,
-        MatTabGroup,
-        DnGridComponent,
-        MatDialogModule,
-    ],
-    templateUrl: './product-row-detail.component.html',
-    styleUrl: './product-row-detail.component.css'
+  selector: 'app-product-row-detail',
+  imports: [
+    DnToolbarComponent,
+    MatTabsModule,
+    MatTabGroup,
+    DnGridComponent,
+    MatDialogModule,
+  ],
+  templateUrl: './product-row-detail.component.html',
+  styleUrl: './product-row-detail.component.css',
 })
-export class ProductRowDetailComponent implements OnInit {
+export class ProductRowDetailComponent extends BaseComponent implements OnInit {
   product_row_detail_text: string = 'Details';
   rowData: any;
   lotsQuantitiesDataSource: any[] = [];
@@ -48,30 +49,33 @@ export class ProductRowDetailComponent implements OnInit {
   areLotsEnabled: boolean;
   documentGroup: any;
   supplierIdSelected: any;
-  lotSettingsViewModel: LotSettingsViewModel;
   lotSettings: LotSettingsDto;
   canEdit: boolean;
   constructor(
     private http: HttpClient,
     private auth: AuthService,
-    private dialog: MatDialog,
     private viewContainerRef: ViewContainerRef,
     private dialogRef: MatDialogRef<ProductRowDetailComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    super();
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
-    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
-    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
-      this.lotSettings = result;
+    this.store.dispatch(GetAllLotSettings.action());
+    this.store
+      .select(selectAllLotSettings)
+      .subscribe((result: LotSettingsDto[]) => {
+        if (result.length > 0) {
+          this.lotSettings = result[0];
+          this.canEdit =
+            (this.documentGroup == DocumentTypeGroupEnum.Sales &&
+              this.lotSettings.LotStrategy == LotStrategyEnum.FIFORec) ||
+            this.lotSettings.LotStrategy == LotStrategyEnum.LIFORec ||
+            this.documentGroup == DocumentTypeGroupEnum.Purchasing;
 
-      this.canEdit =
-        (this.documentGroup == DocumentTypeGroupEnum.Sales &&
-          this.lotSettings.LotStrategy == LotStrategyEnum.FIFORec) ||
-        this.lotSettings.LotStrategy == LotStrategyEnum.LIFORec ||
-        this.documentGroup == DocumentTypeGroupEnum.Purchasing;
+          this.getLotsQuantitiesColumns();
+        }
+      });
 
-      this.getLotsQuantitiesColumns();
-    });
     if (data) {
       this.rowData = data?.Row as DocumentProductDto;
       this.supplierIdSelected = data.Supplier;

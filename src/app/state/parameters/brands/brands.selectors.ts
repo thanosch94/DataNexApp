@@ -1,9 +1,10 @@
 import { createFeatureSelector, createSelector } from "@ngrx/store";
-import { BrandsState } from "./brands.reducer";
+import { GeneralState } from "../../shared/reducers.factory";
 
-export const selectBrandState = createFeatureSelector<BrandsState>('brands')
+const selectGeneralState = createFeatureSelector<GeneralState>('brands')
 
 export const selectAllBrands = createSelector(
-  selectBrandState,
+  selectGeneralState,
   state=>state.data
 )
+

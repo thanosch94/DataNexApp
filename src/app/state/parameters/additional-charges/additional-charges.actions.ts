@@ -1,35 +1,13 @@
-import { createAction, props } from "@ngrx/store"
 import { AdditionalChargeDto } from "../../../dto/additional-charge.dto"
-import { Guid } from "guid-typescript"
 
-//Get All
-export const GetAllAdditionalCharges = createAction('[Additional Charges List] GetAll')
-
-export const GetAllAdditionalChargesSuccess = createAction('[Additional Charges List] GetAll Success', props<{data:AdditionalChargeDto[]}>())
-
-export const GetAllAdditionalChargesFailure = createAction('[Additional Charges List] GetAll Failure', props<{error:string}>())
+import { addGetAction, addInsertAction, addUpdateAction, addDeleteAction } from "../../shared/actions.factory";
 
 
-//InsertDto
-export const InsertAdditionalChargeDto = createAction('[Additional Charges List] InsertDto', props<{dto:AdditionalChargeDto}>())
+export const GetAllAdditionalCharges = addGetAction<AdditionalChargeDto>("[Additional Charges] Get All ");
 
-export const InsertAdditionalChargeDtoSuccess = createAction('[Additional Charges List] InsertDto Success', props<{dto:AdditionalChargeDto}>())
+export const InsertAdditionalCharge = addInsertAction<AdditionalChargeDto>("[Additional Charges] Insert Dto")
 
-export const InsertAdditionalChargeDtoFailure = createAction('[Additional Charges List] InsertDto Failure', props<{error:string}>())
+export const UpdateAdditionalCharge = addUpdateAction<AdditionalChargeDto>("[Additional Charges] Update Dto")
 
-
-//UpdateDto
-export const UpdateAdditionalChargeDto = createAction('[Additional Charges List] UpdateDto', props<{dto:AdditionalChargeDto}>())
-
-export const UpdateAdditionalChargeDtoSuccess = createAction('[Additional Charges List] UpdateDto Success', props<{dto:AdditionalChargeDto}>())
-
-export const UpdateAdditionalChargeDtoFailure = createAction('[Additional Charges List] UpdateDto Failure', props<{error:string}>())
-
-//DeleteById
-
-export const DeleteAdditionalChargeById = createAction('[Additional Charges List] DeleteById', props<{id:Guid}>())
-
-export const DeleteAdditionalChargeByIdSuccess = createAction('[Additional Charges List] DeleteById Success', props<{dto:AdditionalChargeDto}>())
-
-export const DeleteAdditionalChargeByIdFailure = createAction('[Additional Charges List] DeleteById Failure ', props<{error:string}>())
+export const DeleteAdditionalCharge = addDeleteAction<AdditionalChargeDto>("[Additional Charges] Delete By Id")
 

@@ -230,6 +230,6 @@ export class DevToolsComponent extends BaseComponent implements OnInit {
   }
 
   clickTest(){
-    // eval(this.codeSnip)
+    eval(this.codeSnip)
   }
 }

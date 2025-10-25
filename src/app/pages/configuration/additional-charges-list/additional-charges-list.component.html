@@ -1,11 +1,10 @@
 <dn-toolbar
-  [canExit]="true"
   [canInsert]="true"
+  [canRefresh]="true"
   [isDialog]="false"
   [title]="additionl_charges_text"
   (onInsertBtnClicked)="onInsertBtnClicked($event)"
-  (onCloseBtnClicked)="onCloseBtnClicked($event)"
-  (onInsertBtnClicked)="onInsertBtnClicked($event)"
+  (onRefreshBtnClicked)="onRefreshBtnClicked($event)"
 ></dn-toolbar>
 <div class="margin">
   <dn-grid

@@ -42,7 +42,6 @@ import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
 import { DocumentTypeDto } from '../../dto/document-type.dto';
 import { ProductDto } from '../../dto/product.dto';
-import { ProductSizesViewModel } from '../../view-models/product-sizes.viewmodel';
 import { ProductBarcodeDto } from '../../dto/product-barcode.dto';
 import { Router } from '@angular/router';
 import { Guid } from 'guid-typescript';
@@ -72,7 +71,6 @@ import { ProductRowDetailComponent } from '../product-row-detail/product-row-det
 import { DocumentProductLotQuantityDto } from '../../dto/document-product-lot-quantity.dto';
 import { DocumentTypeGroupEnum } from '../../enums/document-type-group.enum';
 import { LotStrategyEnum } from '../../enums/lot-strategy.enum';
-import { LotSettingsViewModel } from '../../view-models/lot-settings.viewmodel';
 import { LotSettingsDto } from '../../dto/configuration/lot-settings.dto';
 import { PdfGeneratorComponent } from '../components/pdf-generator/pdf-generator.component';
 import { firstValueFrom, Observable, take } from 'rxjs';
@@ -88,15 +86,29 @@ import { GetAllCustomers } from '../../state/parameters/customers/customers.acti
 import { selectAllCustomers } from '../../state/parameters/customers/customers.selectors';
 import { GetAllWarehouses } from '../../state/parameters/warehouses/warehouses.actions';
 import { BaseComponent } from '../components/base/base.component';
-import { GetAllProducts, GetProductBySku } from '../../state/products/products.actions';
-import { selectAllProducts, selectProductBySku } from '../../state/products/products.selectors';
+import {
+  GetAllProducts,
+  GetProductBySku,
+} from '../../state/products/products.actions';
+import {
+  selectAllProducts,
+  selectProductBySku,
+} from '../../state/products/products.selectors';
 import { StatusDto } from '../../dto/status.dto';
 import { GetAllDocumentTypes } from '../../state/parameters/document-types/document-types.actions';
 import { DevToolsAdd } from '../../decorators/dev-tools-add';
-import { documentEditComponentId, DocumentEditPermissionsList } from './document-edit-permissions';
+import {
+  documentEditComponentId,
+  DocumentEditPermissionsList,
+} from './document-edit-permissions';
 import { selectActiveDocumentTypesLookupByDocumentTypeGroup } from '../../state/parameters/document-types/document-types.selectors';
 import { GetDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.actions';
 import { selectDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.selectors';
+import { GetAllLotSettings } from '../../state/parameters/lot-settings/lot-settings.actions';
+import { selectAllLotSettings } from '../../state/parameters/lot-settings/lot-settings.selectors';
+import { GetAllProductSizes } from '../../state/parameters/product-sizes/product-sizes.actions';
+import { selectAllProductSizes } from '../../state/parameters/product-sizes/product-sizes.selectors';
+import { ProductSizeDto } from '../../dto/product-size.dto';
 
 @Component({
   selector: 'app-document-edit',
@@ -158,7 +170,7 @@ export class DocumentEditComponent
   suppliersViewModel: SuppliersViewModel;
   suppliers: any;
   columns: DnColumnDto[] = [];
-  productSizesDataSource: any;
+  productSizes$: Observable<ProductSizeDto[]>;
   skuSelected: boolean;
 
   customers: any;
@@ -175,13 +187,11 @@ export class DocumentEditComponent
   products$: Observable<ProductDto[]>;
 
   productsSizes = new Array<ProductBarcodeDto>();
-  productSizesViewModel: ProductSizesViewModel;
   productBarcodesViewModel: ProductBarcodesViewModel;
   barcodesLookupDatasource: any;
   generalOptions: GeneralOptionsDto;
   lotsViewModel: LotsViewModel;
   lotsDataSource: LotDto[];
-  lotSettingsViewModel: LotSettingsViewModel;
   lotStrategyEnum: LotStrategyEnum;
   pdfGeneratorComponent: PdfGeneratorComponent;
   warehouses$: Observable<any>;
@@ -193,7 +203,7 @@ export class DocumentEditComponent
     private auth: AuthService,
     private ref: ChangeDetectorRef,
     private router: Router,
-    private viewContainerRef: ViewContainerRef,
+    private viewContainerRef: ViewContainerRef
   ) {
     super();
     this.initializeViewModels();
@@ -217,7 +227,10 @@ export class DocumentEditComponent
   }
 
   async ngOnInit() {
-    this.getComponentPermissions(structuredClone(DocumentEditPermissionsList), documentEditComponentId); //Deep clone array of objects
+    this.getComponentPermissions(
+      structuredClone(DocumentEditPermissionsList),
+      documentEditComponentId
+    ); //Deep clone array of objects
 
     await this.getLookups();
     this.getColumns();
@@ -233,10 +246,6 @@ export class DocumentEditComponent
 
   initializeViewModels() {
     this.lotsViewModel = new LotsViewModel(this.http, this.auth);
-    this.productSizesViewModel = new ProductSizesViewModel(
-      this.http,
-      this.auth
-    );
     this.productBarcodesViewModel = new ProductBarcodesViewModel(
       this.http,
       this.auth
@@ -246,16 +255,21 @@ export class DocumentEditComponent
       this.http,
       this.auth
     );
-    this.lotSettingsViewModel = new LotSettingsViewModel(this.http, this.auth);
 
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
   }
 
   async getLookups() {
-    this.generalOptions = this.auth.appOptions?? new GeneralOptionsDto()
-    this.lotSettingsViewModel.GetAll().subscribe((result: LotSettingsDto) => {
-      this.lotStrategyEnum = result.LotStrategy;
-    });
+    this.generalOptions = this.auth.appOptions ?? new GeneralOptionsDto();
+    this.store.dispatch(GetAllLotSettings.action());
+    this.store
+      .select(selectAllLotSettings)
+      .subscribe((result: LotSettingsDto[]) => {
+        if (result.length > 0) {
+          this.lotStrategyEnum = result[0].LotStrategy;
+        }
+      });
+
     this.store.dispatch(GetAllWarehouses.action());
     this.warehouses$ = this.store.select(selectAllWarehouses);
 
@@ -268,20 +282,23 @@ export class DocumentEditComponent
     this.store.select(selectAllVatClasses).subscribe((result: any) => {
       this.vatClassesList = result;
     });
-      this.store.dispatch(GetAllDocumentTypes.action())
+    this.store.dispatch(GetAllDocumentTypes.action());
 
-      this.docTypes$ = this.store.select(selectActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup))
+    this.docTypes$ = this.store.select(
+      selectActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
+    );
     let productBarcodesObs = this.productBarcodesViewModel.GetLookup();
     this.barcodesLookupDatasource = await firstValueFrom(productBarcodesObs);
 
     this.store.dispatch(GetAllStatuses());
-    this.statusesList$ = this.store.select(selectAllStatuses)
+    this.statusesList$ = this.store.select(selectAllStatuses);
 
-    let productSizesObs = this.productSizesViewModel.GetAll();
-    this.productSizesDataSource = await firstValueFrom(productSizesObs);
+    this.store.dispatch(GetAllProductSizes.action());
+    this.productSizes$ = this.store.select(selectAllProductSizes)
 
-    this.store.dispatch(GetAllProducts.action())
-    this.products$ = this.store.select(selectAllProducts)
+
+    this.store.dispatch(GetAllProducts.action());
+    this.products$ = this.store.select(selectAllProducts);
 
     if (this.generalOptions.LotsEnabled) {
       let lotsObs = this.lotsViewModel.GetLookup();
@@ -343,12 +360,16 @@ export class DocumentEditComponent
 
   getAdditionalCharges(documentId: Guid) {
     this.addCharges = 0;
-    this.store.dispatch(GetDocumentAdditionalChargesByDocumentId.action({id:documentId}))
-    this.store.select(selectDocumentAdditionalChargesByDocumentId(documentId)).subscribe((result:any)=>{
-      result.map((charge: DocumentAdditionalChargeDto) => {
+    this.store.dispatch(
+      GetDocumentAdditionalChargesByDocumentId.action({ id: documentId })
+    );
+    this.store
+      .select(selectDocumentAdditionalChargesByDocumentId(documentId))
+      .subscribe((result: any) => {
+        result.map((charge: DocumentAdditionalChargeDto) => {
           this.addCharges += charge.AdditionalChargeAmount;
         });
-    })
+      });
   }
 
   async GetProductVatAmount(id: Guid, data: DocumentProductDto) {
@@ -801,8 +822,10 @@ export class DocumentEditComponent
   }
 
   async onSkuSelection(data: DocumentProductDto, columns: DnColumnDto[]) {
-    this.store.dispatch(GetProductBySku.action({id:data.Sku!}))
-    this.store.select(selectProductBySku(data.Sku!)).subscribe(async (result:any)=>{
+    this.store.dispatch(GetProductBySku.action({ id: data.Sku! }));
+    this.store
+      .select(selectProductBySku(data.Sku!))
+      .subscribe(async (result: any) => {
         data.ProductId = result.Id;
         data.ProductName = result.Name;
         data.Quantity = 1;
@@ -818,18 +841,18 @@ export class DocumentEditComponent
         data.IsRowFilled = true;
 
         //this.getProductSizes(data.ProductId, columns);
-    })
+      });
   }
 
   getProductSizes(productId: Guid, columns: DnColumnDto[]) {
-    this.productBarcodesViewModel
-      .GetByProductId(productId)
-      .subscribe(async (result: any) => {
-        this.productSizesDataSource = result;
-        this.skuSelected = true;
-        columns = this.getColumns();
-        this.ref.detectChanges();
-      });
+    // this.productBarcodesViewModel
+    //   .GetByProductId(productId)
+    //   .subscribe(async (result: any) => {
+    //     this.productSizesDataSource = result;
+    //     this.skuSelected = true;
+    //     columns = this.getColumns();
+    //     this.ref.detectChanges();
+    //   });
   }
   onSupplierValueChange(e: any) {
     this.getColumns();

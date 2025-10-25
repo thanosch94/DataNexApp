@@ -1,42 +1,42 @@
-import { AdditionalChargesService } from './../../../services/parameters/additional-charges.service';
-import { DeleteAdditionalCharge, GetAllAdditionalCharges, InsertAdditionalCharge, UpdateAdditionalCharge } from './additional-charges.actions';
-import { AdditionalChargeDto } from '../../../dto/additional-charge.dto';
 import { Actions } from '@ngrx/effects';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { createDeleteByIdEffect, createGetAllEffect, createInsertUpdateEffect } from '../../shared/effects.factory';
 import { Guid } from 'guid-typescript';
+import { ConnectorParametersDto } from '../../../dto/connector-parameters.dto';
+import { CntorParametersService } from '../../../services/parameters/cntor-parameters.service';
+import { DeleteCntorParameters, GetAllCntorParameters, InsertCntorParameters, UpdateCntorParameters } from './cntor-parameters.actions';
 
-type EffectType = AdditionalChargeDto;
+type EffectType = ConnectorParametersDto;
 
 @Injectable()
-export class AdditionalChargesEffects {
+export class CntorParametersEffects {
 
   constructor(
-    private service: AdditionalChargesService,
+    private service: CntorParametersService,
     private actions$: Actions
   ) {}
 
   getAll$ = createGetAllEffect<EffectType>(
     this.actions$,
-    GetAllAdditionalCharges,
+    GetAllCntorParameters,
     () => this.service.GetAll()
   );
 
   insert$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
-    InsertAdditionalCharge,
+    InsertCntorParameters,
     (dto: EffectType) => this.service.InsertDto(dto)
   );
 
   update$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
-    UpdateAdditionalCharge,
+    UpdateCntorParameters,
     (dto: EffectType) => this.service.UpdateDto(dto)
   );
 
   deleteById$ = createDeleteByIdEffect<EffectType>(
     this.actions$,
-    DeleteAdditionalCharge,
+    DeleteCntorParameters,
     (id: Guid) => this.service.DeleteById(id)
   );
 }

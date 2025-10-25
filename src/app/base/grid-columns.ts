@@ -22,4 +22,5 @@ export class GridColumns {
   static AccountsReceivableCustomerDocuments = "AccountsReceivableCustomerDocuments";
   static AccountsReceivable = "AccountsReceivable";
   static CustomersLedger = "CustomersLedger";
+  static ProductSizesList = "ProductSizesList";
 }

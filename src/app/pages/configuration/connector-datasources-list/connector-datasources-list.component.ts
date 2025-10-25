@@ -12,7 +12,6 @@ import {
   UpdateCntorDatasource,
 } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
 import { CntorDatasourceDto } from '../../../dto/configuration/cntor-datasource.dto';
-import { StateHelperService } from '../../../services/state-helper.service';
 import { ColumnsService } from '../../../services/columns.service';
 import { Subject } from 'rxjs';
 import { GridColumns } from '../../../base/grid-columns';

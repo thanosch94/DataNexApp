@@ -38,6 +38,7 @@ export class BrandsListComponent
     super();
     this.product_brands_list_text = 'Product Brands List';
   }
+
   ngOnInit() {
     this.setActionsResults();
     this.getData();

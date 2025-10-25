@@ -19,7 +19,6 @@ import { DnColumnDto } from '../../../dto/dn-column.dto';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ConnectorParametersDto } from '../../../dto/connector-parameters.dto';
-import { ConnectorParametersViewModel } from '../../../view-models/connector-parameters.viewmodel';
 import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
 import { dnIcons } from '../../../enumLists/dn-icon.list';
 import { GetAllCntorDatasources } from '../../../state/parameters/connector-datasources/cntor-datasources.actions';
@@ -34,7 +33,8 @@ import {
   UpdateWooConnection,
 } from '../../../state/parameters/woo-connections/woo-connections.actions';
 import { selectAllWooConnections } from '../../../state/parameters/woo-connections/woo-connections.selectors';
-import { T } from '@angular/cdk/portal-directives.d-efec58af';
+import { GetAllCntorParameters } from '../../../state/parameters/cntor-parameters/cntor-parameters.actions';
+import { selectAllCntorParameters } from '../../../state/parameters/cntor-parameters/cntor-parameters.selectors';
 
 @Component({
   selector: 'app-connector-receive-transfer',
@@ -63,7 +63,6 @@ export class ConnectorReceiveTransferComponent
   connector_receive_transfer_text: string;
   faWordpress = faWordpress;
   connectorJobsViewModel: ConnectorJobsViewModel;
-  connectorParametersViewModel: ConnectorParametersViewModel;
 
   receiveConnectorJobs: any;
   transferConnectorJobs: any;
@@ -89,10 +88,6 @@ export class ConnectorReceiveTransferComponent
     this.connector_receive_transfer_text = 'Wordpress';
     this.tabsService.setTabName(this.connector_receive_transfer_text);
     this.connectorJobsViewModel = new ConnectorJobsViewModel(
-      this.http,
-      this.auth
-    );
-    this.connectorParametersViewModel = new ConnectorParametersViewModel(
       this.http,
       this.auth
     );
@@ -133,7 +128,8 @@ export class ConnectorReceiveTransferComponent
   }
 
   getCredentials() {
-    this.connectorParametersViewModel.GetAll().subscribe((result: any) => {
+    this.store.dispatch(GetAllCntorParameters.action());
+    this.store.select(selectAllCntorParameters).subscribe((result: any) => {
       if (result) {
         this.credentialsForm.patchValue(result);
       } else {

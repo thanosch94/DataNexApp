@@ -1,4 +1,4 @@
-import { DeleteAdditionalChargeByIdFailure, DeleteAdditionalChargeByIdSuccess, GetAllAdditionalCharges, GetAllAdditionalChargesFailure, GetAllAdditionalChargesSuccess, InsertAdditionalChargeDto, InsertAdditionalChargeDtoFailure, InsertAdditionalChargeDtoSuccess, UpdateAdditionalChargeDto, UpdateAdditionalChargeDtoFailure, UpdateAdditionalChargeDtoSuccess } from './additional-charges.actions';
+import { DeleteAdditionalCharge, GetAllAdditionalCharges, InsertAdditionalCharge, UpdateAdditionalCharge } from './additional-charges.actions';
 import { AdditionalChargeDto } from "../../../dto/additional-charge.dto";
 import { createReducer, on } from '@ngrx/store';
 
@@ -14,40 +14,40 @@ export const initialAdditionalChargesState:AdditionalChargesState ={
 
 export const additionalChargesReducer = createReducer(
   initialAdditionalChargesState,
-  on(GetAllAdditionalCharges, (state)=>({...state})),
-  on(GetAllAdditionalChargesSuccess, (state, {data})=>({
+  on(GetAllAdditionalCharges.action, (state)=>({...state})),
+  on(GetAllAdditionalCharges.actionSuccess, (state, {data})=>({
     ...state,
     data
   })),
-  on(GetAllAdditionalChargesFailure, (state, {error})=>({
+  on(GetAllAdditionalCharges.actionFailure, (state, {error})=>({
     ...state,
     error
   })),
-  on(InsertAdditionalChargeDtoSuccess, (state, {dto})=>({
+  on(InsertAdditionalCharge.actionSuccess, (state, {dto})=>({
     ...state,
     data:[...state.data, dto],
     error:null
   })),
-  on(InsertAdditionalChargeDtoFailure, (state, {error})=>({
+  on(InsertAdditionalCharge.actionFailure, (state, {error})=>({
     ...state,
     error
   })),
-  on(UpdateAdditionalChargeDtoSuccess, (state, {dto})=>({
+  on(UpdateAdditionalCharge.actionSuccess, (state, {dto})=>({
     ...state,
     data:[...state.data.map(x=>x.Id==dto.Id?dto:x)],
     error:null
   })),
-  on(UpdateAdditionalChargeDtoFailure, (state, {error})=>({
+  on(UpdateAdditionalCharge.actionFailure, (state, {error})=>({
     ...state,
     error
   })
   ),
-  on(DeleteAdditionalChargeByIdSuccess, (state,{dto})=>({
+  on(DeleteAdditionalCharge.actionSuccess, (state,{dto})=>({
     ...state,
     data:[...state.data.filter(x=>x.Id!=dto.Id)],
     error:null
   })),
-  on(DeleteAdditionalChargeByIdFailure, (state, {error} )=>({
+  on(DeleteAdditionalCharge.actionFailure, (state, {error} )=>({
     ...state,
     error
   }))

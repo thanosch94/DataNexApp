@@ -7,14 +7,15 @@
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
-    <dn-grid #vatClassesGrid
-    [dataSource]="dataSource |async"
+  <dn-grid
+    #vatClassesGrid
+    [dataSource]="dataSource | async"
     [columns]="columns"
     [canDisplaySearch]="true"
     [enableAddButton]="false"
     (onRowSaving)="onVatClassSaving($event)"
     (onRowDelete)="onVatClassDelete($event)"
     (onRowStopEditing)="onVatClassStopEditing($event)"
-    >
-    </dn-grid>
+  >
+  </dn-grid>
 </div>

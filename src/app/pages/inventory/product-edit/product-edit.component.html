@@ -29,7 +29,7 @@
           </div>
           <div class="tab1-grid-h-brand">
             <dn-selectbox
-              [dataSource]="brands|async"
+              [dataSource]="brands$|async"
               valueExpr="Id"
               displayExpr="Name"
               [(value)]="product.BrandId"
@@ -73,7 +73,7 @@
 
           <div class="tab1-grid-g-vat-class">
             <dn-selectbox
-              [dataSource]="vatClasses|async"
+              [dataSource]="vatClasses$|async"
               valueExpr="Id"
               displayExpr="Name"
               [(value)]="product.VatClassId"

@@ -5,16 +5,10 @@ import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { BaseComponent } from '../../components/base/base.component';
 import {
-  DeleteAdditionalChargeById,
-  DeleteAdditionalChargeByIdFailure,
-  DeleteAdditionalChargeByIdSuccess,
+  DeleteAdditionalCharge,
   GetAllAdditionalCharges,
-  InsertAdditionalChargeDto,
-  InsertAdditionalChargeDtoFailure,
-  InsertAdditionalChargeDtoSuccess,
-  UpdateAdditionalChargeDto,
-  UpdateAdditionalChargeDtoFailure,
-  UpdateAdditionalChargeDtoSuccess,
+  InsertAdditionalCharge,
+  UpdateAdditionalCharge,
 } from '../../../state/parameters/additional-charges/additional-charges.actions';
 import { selectAllAdditionalCharges } from '../../../state/parameters/additional-charges/additional-charges.selectors';
 import { Observable, Subject } from 'rxjs';
@@ -54,7 +48,7 @@ export class AdditionalChargesListComponent
   }
 
   getData() {
-    this.store.dispatch(GetAllAdditionalCharges());
+    this.store.dispatch(GetAllAdditionalCharges.action());
     this.dataSource = this.store.select(selectAllAdditionalCharges);
   }
 
@@ -64,19 +58,21 @@ export class AdditionalChargesListComponent
     );
   }
 
-  onCloseBtnClicked(e: any) {}
-
   onInsertBtnClicked(e: any) {
     this.additionalChargesGrid.add(e);
+  }
+
+  onRefreshBtnClicked(e:any){
+    this.getData()
   }
 
   onAdditionalChargeRowSaving(data: any) {
     let dto: AdditionalChargeDto = { ...data };
 
     if (!dto.Id) {
-      this.store.dispatch(InsertAdditionalChargeDto({ dto }));
+      this.store.dispatch(InsertAdditionalCharge.action({ dto }));
     } else {
-      this.store.dispatch(UpdateAdditionalChargeDto({ dto }));
+      this.store.dispatch(UpdateAdditionalCharge.action({ dto }));
     }
   }
 
@@ -85,19 +81,19 @@ export class AdditionalChargesListComponent
   }
 
   onAdditionalChargeRowDelete(data: AdditionalChargeDto) {
-    this.store.dispatch(DeleteAdditionalChargeById({ id: data.Id }));
+    this.store.dispatch(DeleteAdditionalCharge.action({ id: data.Id }));
   }
 
   //#region Actions Results
   setActionsResults() {
     this.setPostActionsResults(
       {
-        insertSuccess: InsertAdditionalChargeDtoSuccess,
-        insertFailure: InsertAdditionalChargeDtoFailure,
-        updateSuccess: UpdateAdditionalChargeDtoSuccess,
-        updateFailure: UpdateAdditionalChargeDtoFailure,
-        deleteSuccess: DeleteAdditionalChargeByIdSuccess,
-        deleteFailure: DeleteAdditionalChargeByIdFailure,
+        insertSuccess: InsertAdditionalCharge.actionSuccess,
+        insertFailure: InsertAdditionalCharge.actionFailure,
+        updateSuccess: UpdateAdditionalCharge.actionSuccess,
+        updateFailure: UpdateAdditionalCharge.actionFailure,
+        deleteSuccess: DeleteAdditionalCharge.actionSuccess,
+        deleteFailure: DeleteAdditionalCharge.actionFailure,
       },
       {
         insertSuccess: () => {

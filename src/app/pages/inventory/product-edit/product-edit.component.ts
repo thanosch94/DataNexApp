@@ -22,7 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { Router } from '@angular/router';
 import { MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { CdkTextareaAutosize, TextFieldModule } from '@angular/cdk/text-field';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, switchMap } from 'rxjs/operators';
 import { MatSort, MatSortHeader, MatSortModule } from '@angular/material/sort';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import {
@@ -39,7 +39,6 @@ import { ProductDto } from '../../../dto/product.dto';
 import { AuthService } from '../../../services/auth.service';
 import { TabsService } from '../../../services/tabs.service';
 import { ProductBarcodesViewModel } from '../../../view-models/product-barcodes.viewmodel';
-import { ProductSizesViewModel } from '../../../view-models/product-sizes.viewmodel';
 import { DeleteConfirmComponent } from '../../components/delete-confirm/delete-confirm.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
@@ -58,6 +57,8 @@ import { GetAllVatClasses } from '../../../state/parameters/vat-classes/vat-clas
 import { selectAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.selectors';
 import { GetAllBrands } from '../../../state/parameters/brands/brands.actions';
 import { selectAllBrands } from '../../../state/parameters/brands/brands.selectors';
+import { selectAllProductSizes } from '../../../state/parameters/product-sizes/product-sizes.selectors';
+import { GetAllProductSizes } from '../../../state/parameters/product-sizes/product-sizes.actions';
 
 @Component({
   selector: 'product-edit',
@@ -111,8 +112,7 @@ export class ProductEditComponent
   productBarcodesViewModel: ProductBarcodesViewModel;
   filteredSizes: Observable<ProductSizeDto[]>;
   displayedColumns = ['Barcode', 'SizeId', 'buttons'];
-  productSizesViewModel: ProductSizesViewModel;
-  productsSizes = new Array<ProductSizeDto>();
+  productSizes$: Observable<ProductSizeDto[]>;
   newBarcodeLine: any;
   selected: any;
   isEditable: boolean;
@@ -120,10 +120,9 @@ export class ProductEditComponent
   isDialog: boolean;
   noImgPath: string;
   sizeName: any;
-  brands: any;
-  previousTabName: string;
+  brands$: any;
   vatClassName: any;
-  vatClasses: any;
+  vatClasses$: any;
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -141,13 +140,8 @@ export class ProductEditComponent
       this.http,
       this.auth
     );
-    this.productSizesViewModel = new ProductSizesViewModel(
-      this.http,
-      this.auth
-    );
 
     //If opens from
-    debugger
     if (data) {
       this.productId = data.product.ProductId;
       this.isDialog = true;
@@ -168,8 +162,8 @@ export class ProductEditComponent
     this.store.dispatch(GetAllBrands.action());
     this.store.dispatch(GetAllVatClasses());
 
-    this.brands = this.store.select(selectAllBrands);
-    this.vatClasses = this.store.select(selectAllVatClasses);
+    this.brands$ = this.store.select(selectAllBrands);
+    this.vatClasses$ = this.store.select(selectAllVatClasses);
   }
 
   getData() {
@@ -186,9 +180,8 @@ export class ProductEditComponent
 
           this.getProductBarcodesData();
 
-          this.productSizesViewModel.GetAll().subscribe((result: any) => {
-            this.productsSizes = result as ProductSizeDto[];
-          });
+          this.store.dispatch(GetAllProductSizes.action());
+          this.productSizes$ = this.store.select(selectAllProductSizes);
         });
     } else {
       this.product_text = 'New Product';
@@ -198,7 +191,7 @@ export class ProductEditComponent
 
     this.filteredSizes = this.sizeControl.valueChanges.pipe(
       startWith(''),
-      map((value: string | null) => this.sizefilter(value || ''))
+      switchMap((value: string | null) => this.sizefilter(value || ''))
     );
   }
 
@@ -214,10 +207,13 @@ export class ProductEditComponent
     return this.sanitizer.bypassSecurityTrustUrl(url);
   }
 
-  private sizefilter(value: string): ProductSizeDto[] {
+  private sizefilter(value: string): Observable<ProductSizeDto[]> {
     const filterValue = value.toLowerCase();
-    return this.productsSizes.filter((size: ProductSizeDto) =>
-      size.Name.toLowerCase().includes(filterValue)
+
+    return this.productSizes$.pipe(
+      map((sizes: ProductSizeDto[]) =>
+        sizes.filter((size) => size.Name.toLowerCase().includes(filterValue))
+      )
     );
   }
 
@@ -360,12 +356,13 @@ export class ProductEditComponent
 
   onSizeSelectionChanged(data: any) {
     this.newBarcodeLine.SizeId = data.Id;
+
     this.filteredSizes = this.sizeControl.valueChanges.pipe(
       startWith(''),
-      map((value: string | null) => this.sizefilter(value || ''))
+      switchMap((value: string | null) => this.sizefilter(value || ''))
     );
-    this.table.renderRows();
 
+    this.table.renderRows();
     this.sizeName = data.Name;
   }
 
@@ -392,7 +389,7 @@ export class ProductEditComponent
           this.product = result.dto;
           this.productId = this.product.Id;
           this.product_text = this.product.Sku + ' - ' + this.product.Name;
-          this.tabsService.setActiveTabName(this.product_text)
+          this.tabsService.setActiveTabName(this.product_text);
           this.displayNotification('Record inserted');
           this.getData();
         },
@@ -402,7 +399,7 @@ export class ProductEditComponent
         updateSuccess: (result) => {
           this.product = result.dto;
           this.product_text = this.product.Sku + ' - ' + this.product.Name;
-          this.tabsService.setActiveTabName(this.product_text)
+          this.tabsService.setActiveTabName(this.product_text);
           this.displayNotification('Record updated');
           this.getData();
         },

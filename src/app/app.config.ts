@@ -50,6 +50,12 @@ import { generalOptionsReducer } from './state/parameters/general-options/genera
 import { GeneralOptionsEffects } from './state/parameters/general-options/general-options.effects';
 import { DocumentAdditionalChargesEffects } from './state/document-additional-charges/document-additional-charges.effects';
 import { documentAdditionalChargesReducer } from './state/document-additional-charges/document-additional-charges.reducer';
+import { lotSettingsReducer } from './state/parameters/lot-settings/lot-settings.reducer';
+import { LotSettingsEffects } from './state/parameters/lot-settings/lot-settings.effects';
+import { ProductSizesEffects } from './state/parameters/product-sizes/product-sizes.effects';
+import { productSizesReducer } from './state/parameters/product-sizes/prooduct-sizes.reducer';
+import { CntorParametersReducer } from './state/parameters/cntor-parameters/cntor-parameters.reducer';
+import { CntorParametersEffects } from './state/parameters/cntor-parameters/cntor-parameters.effects';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -77,7 +83,10 @@ export const appConfig: ApplicationConfig = {
       wooConnections:wooConnectionsReducer,
       logs:logsReducer,
       generalOptions:generalOptionsReducer,
-      documentAdditionalCharges: documentAdditionalChargesReducer
+      documentAdditionalCharges: documentAdditionalChargesReducer,
+      lotSettings:lotSettingsReducer,
+      productSizes:productSizesReducer,
+      cntorParameters:CntorParametersReducer
     }),
     provideEffects([
       ProductEffects,
@@ -101,7 +110,10 @@ export const appConfig: ApplicationConfig = {
       WooConnectionsEffects,
       LogsEffects,
       GeneralOptionsEffects,
-      DocumentAdditionalChargesEffects
+      DocumentAdditionalChargesEffects,
+      LotSettingsEffects,
+      ProductSizesEffects,
+      CntorParametersEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states

@@ -86,7 +86,6 @@ export class DocumentTypeEditComponent
     private colsService: ColumnsService,
   ) {
     super();
-    this.getLookups();
     this.store.dispatch(GetAllGeneralOptions.action())
     this.generalOptions$ = this.store.select(selectAllGeneralOptions)
     this.documentTypeId = history.state?.id;
@@ -94,6 +93,7 @@ export class DocumentTypeEditComponent
 
   ngOnInit(): void {
     this.setActionsResults();
+    this.getLookups();
     this.getData();
     this.getDocumentTypeSeriesColumns();
     this.getDocumentTypesTransformationsColumns();

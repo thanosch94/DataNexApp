@@ -7,16 +7,16 @@
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>
 <div class="margin">
-  <dn-grid  #cntorDatasourceEntitiesGrid
-  [dataSource]="dataSource |async"
-  [columns]="columns"
-  [canDisplaySearch]="true"
-  [enableAddButton]="false"
-  [canDelete]="true"
-  (onRowSaving)="onRowSaving($event)"
-  (onRowDelete)="onRowDelete($event)"
-  (onRowStopEditing)="onRowStopEditing($event)"
+  <dn-grid
+    #cntorDatasourceEntitiesGrid
+    [dataSource]="dataSource | async"
+    [columns]="columns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    [canDelete]="true"
+    (onRowSaving)="onRowSaving($event)"
+    (onRowDelete)="onRowDelete($event)"
+    (onRowStopEditing)="onRowStopEditing($event)"
   >
-
   </dn-grid>
 </div>

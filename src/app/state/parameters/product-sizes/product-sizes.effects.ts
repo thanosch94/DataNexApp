@@ -1,42 +1,42 @@
-import { AdditionalChargesService } from './../../../services/parameters/additional-charges.service';
-import { DeleteAdditionalCharge, GetAllAdditionalCharges, InsertAdditionalCharge, UpdateAdditionalCharge } from './additional-charges.actions';
-import { AdditionalChargeDto } from '../../../dto/additional-charge.dto';
 import { Actions } from '@ngrx/effects';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 import { createDeleteByIdEffect, createGetAllEffect, createInsertUpdateEffect } from '../../shared/effects.factory';
 import { Guid } from 'guid-typescript';
+import { ProductSizeDto } from '../../../dto/product-size.dto';
+import { DeleteProductSize, GetAllProductSizes, InsertProductSize, UpdateProductSize } from './product-sizes.actions';
+import { ProductSizesService } from '../../../services/parameters/product-sizes.service';
 
-type EffectType = AdditionalChargeDto;
+type EffectType = ProductSizeDto;
 
 @Injectable()
-export class AdditionalChargesEffects {
+export class ProductSizesEffects {
 
   constructor(
-    private service: AdditionalChargesService,
+    private service: ProductSizesService,
     private actions$: Actions
   ) {}
 
   getAll$ = createGetAllEffect<EffectType>(
     this.actions$,
-    GetAllAdditionalCharges,
+    GetAllProductSizes,
     () => this.service.GetAll()
   );
 
   insert$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
-    InsertAdditionalCharge,
+    InsertProductSize,
     (dto: EffectType) => this.service.InsertDto(dto)
   );
 
   update$ = createInsertUpdateEffect<EffectType>(
     this.actions$,
-    UpdateAdditionalCharge,
+    UpdateProductSize,
     (dto: EffectType) => this.service.UpdateDto(dto)
   );
 
   deleteById$ = createDeleteByIdEffect<EffectType>(
     this.actions$,
-    DeleteAdditionalCharge,
+    DeleteProductSize,
     (id: Guid) => this.service.DeleteById(id)
   );
 }

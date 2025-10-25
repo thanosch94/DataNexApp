@@ -32,7 +32,6 @@ export class CntorDatasourceEntitiesListComponent
   connector_datasource_entities_list_text: string;
   columns: DnColumnDto[];
   dataSource: any;
-  cntorDatasources: any;
   private destroy$ = new Subject<void>();
 
   constructor(private columnsService: ColumnsService) {
