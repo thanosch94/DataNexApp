@@ -56,6 +56,10 @@ import { ProductSizesEffects } from './state/parameters/product-sizes/product-si
 import { productSizesReducer } from './state/parameters/product-sizes/prooduct-sizes.reducer';
 import { CntorParametersReducer } from './state/parameters/cntor-parameters/cntor-parameters.reducer';
 import { CntorParametersEffects } from './state/parameters/cntor-parameters/cntor-parameters.effects';
+import { shippingMethodsReducer } from './state/parameters/shipping-methods/shipping-methods.reducer';
+import { ShippingMethodsEffects } from './state/parameters/shipping-methods/shipping-methods.effects';
+import { PaymentMethodsEffects } from './state/parameters/payment-methods/payment-methods.effects';
+import { paymentMethodsReducer } from './state/parameters/payment-methods/payment-methods.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -86,7 +90,9 @@ export const appConfig: ApplicationConfig = {
       documentAdditionalCharges: documentAdditionalChargesReducer,
       lotSettings:lotSettingsReducer,
       productSizes:productSizesReducer,
-      cntorParameters:CntorParametersReducer
+      cntorParameters:CntorParametersReducer,
+      shippingMethods:shippingMethodsReducer,
+      paymentMethods:paymentMethodsReducer
     }),
     provideEffects([
       ProductEffects,
@@ -113,7 +119,9 @@ export const appConfig: ApplicationConfig = {
       DocumentAdditionalChargesEffects,
       LotSettingsEffects,
       ProductSizesEffects,
-      CntorParametersEffects
+      CntorParametersEffects,
+      ShippingMethodsEffects,
+      PaymentMethodsEffects
     ]),
     provideStoreDevtools({
       maxAge: 25, // Retains last 25 states
