@@ -2,41 +2,19 @@
   border-radius: 10px;
   }
 
-
-.date-box ::ng-deep  .mat-mdc-form-field-infix{
-  padding: 0!important;
-  height: 45px!important;
+  /* Fixes the datepicker icon position  */
+.date-box ::ng-deep .mat-mdc-icon-button.mat-mdc-button-base {
+    --mdc-icon-button-state-layer-size: unset;
+    width: var(--mdc-icon-button-state-layer-size);
+    height: var(--mdc-icon-button-state-layer-size);
+    padding: 5px;
+}
+::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
+padding: 0!important;
 }
 
-
-.date-box ::ng-deep .mat-mdc-text-field-wrapper,
-.date-box ::ng-deep .mdc-text-field {
-  height: 45px !important;
-  border-radius: 10px;
-  padding: 0 !important;
-  padding-left:16px!important;
-  align-items: center; /* Keeps the alignment correct. The bottom line stays in its place*/
+::ng-deep .mat-mdc-icon-button{
+  width:32px !important;
+  height:32px!important;
 }
-
-
-.date-box ::ng-deep  .mat-mdc-form-field{
-  height:45px!important;
-}
-
-.date-box ::ng-deep  .mat-mdc-text-field-wrapper, .mdc-text-field{
-  height:45px!important;
-}
-
-.date-box ::ng-deep .mat-mdc-input-element{
-  margin-top:24px;
-}
-
-
-::ng-deep mat-form-field {
-  min-width: 0 !important;
-  width: 100%;
-}
-
-
-
 

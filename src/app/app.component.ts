@@ -30,7 +30,7 @@ import {
   faHeart,
   faHeartCirclePlus,
 } from '@fortawesome/free-solid-svg-icons';
-import { MatTabsModule } from '@angular/material/tabs';
+import { MAT_TABS_CONFIG, MatTabsModule } from '@angular/material/tabs';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppTabDto } from './dto/app-tab.dto';
 import { TabsService } from './services/tabs.service';
@@ -76,6 +76,12 @@ import { HomeComponent } from "./pages/home/home.component";
     DevToolsComponent,
     HomeComponent
 ],
+providers: [
+    {
+      provide: MAT_TABS_CONFIG,
+      useValue: { animationDuration: '500ms' }
+    }
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

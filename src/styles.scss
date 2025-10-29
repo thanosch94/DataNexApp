@@ -33,6 +33,9 @@ body { margin: 0; font-family: Roboto,"Helvetica Neue Light","Helvetica Neue","H
 .width-20{
   width:20%;
 }
+.width-10{
+  width:10%;
+}
 /* width */
 ::-webkit-scrollbar {
   width: 7px!important;
@@ -91,3 +94,25 @@ input, span
 // Rich Text Editor
 @import "../node_modules/@syncfusion/ej2-base/styles/material.css";
 @import "../node_modules/@syncfusion/ej2-angular-richtexteditor/styles/material.css";
+
+
+
+mat-form-field {
+  --mat-form-field-container-height: 30px;
+  --mat-form-field-container-vertical-padding: 4px;
+}
+
+
+::ng-deep .mat-mdc-icon-button.mat-mdc-button-base {
+    --mdc-icon-button-state-layer-size: unset;
+    width: var(--mdc-icon-button-state-layer-size);
+    height: var(--mdc-icon-button-state-layer-size);
+    padding: 5px;
+}
+::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
+padding: 0!important;
+}
+::ng-deep .mat-mdc-icon-button{
+  width:30px !important;
+  height:30px!important;
+}

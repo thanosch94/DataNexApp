@@ -205,8 +205,6 @@
 
           @for(tab of tabs; track tab.Id; let i = $index){
             <mat-tab
-            [ngClass]="tab.Active ? 'active-tab' : ''"
-            class="app-tab"
             [id]="i.toString()"
           >
             <div class="tab-header"

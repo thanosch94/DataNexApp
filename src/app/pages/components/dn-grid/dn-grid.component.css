@@ -113,14 +113,7 @@
 
 }
 
-::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
-padding: 0!important;
-}
 
-::ng-deep .mat-mdc-icon-button{
-  width:35px !important;
-  height:35px!important;
-}
 ::ng-deep .mat-row {
   height: 35px; /* Set the desired height */
 }
@@ -138,6 +131,21 @@ tr{
   margin-top:3%
 } */
 
+::ng-deep .mat-mdc-icon-button.mat-mdc-button-base {
+    --mdc-icon-button-state-layer-size: unset;
+    width: var(--mdc-icon-button-state-layer-size);
+    height: var(--mdc-icon-button-state-layer-size);
+    padding: 5px;
+}
+::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
+padding: 0!important;
+}
+::ng-deep .mat-mdc-icon-button{
+  width:25px !important;
+  height:25px!important;
+}
+
+
 .iconbutton{
     display: flex;
     align-items: center;
@@ -145,6 +153,9 @@ tr{
 
 }
 
+.mat-icon{
+  overflow: unset;
+}
 .inline{
   display: inline-flex;
 }

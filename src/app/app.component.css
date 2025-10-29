@@ -184,7 +184,7 @@ margin-right: auto;
 }
 .tab-group{
   overflow: hidden;
-  height: 94%;
+  height: 100%;
 }
 
 ::ng-deep .tab-header{
@@ -330,3 +330,13 @@ margin-right: auto;
   /* :host ::ng-deep .mat-mdc-tab-body-wrapper{
     height:100vh
   } */
+::ng-deep .mat-mdc-tab-body {
+  transition:  transform 900ms ease;
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+::ng-deep .mat-mdc-tab-body.mat-mdc-tab-body-active {
+  opacity: 1;
+  transform: translateX(0);
+}

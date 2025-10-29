@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, input, Input, Output } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
+import { MatFormFieldAppearance, MatFormFieldModule, MatSuffix } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -28,6 +28,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     styleUrl: './dn-number-box.component.css'
 })
 export class DnNumberBoxComponent {
+  appearance =input<MatFormFieldAppearance>("outline")
   @Input() label: string;
   @Input() hideArrows: boolean = false;
   @Input() min: number|null;

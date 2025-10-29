@@ -64,7 +64,9 @@ export class BaseComponent {
     let errorMessage;
     if (error?.error?.innerExceptionMessage) {
       errorMessage = error.error?.innerExceptionMessage;
-    } else if(error.message) {
+    } else if(error.error) {
+      errorMessage = error.error;
+    }else if(error.message) {
       errorMessage = error.message;
     }else{
       errorMessage = error.error;

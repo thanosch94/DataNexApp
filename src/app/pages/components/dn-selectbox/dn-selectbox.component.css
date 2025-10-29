@@ -4,9 +4,6 @@ border-radius: 10px;
 }
 
 
-.select-box ::ng-deep  .mat-mdc-form-field-infix{
-  padding: 0!important;
-}
 
 /* Mat Options row height */
  .select-box ::ng-deep  .mat-mdc-option, .mat-mdc-option{
@@ -15,14 +12,6 @@ border-radius: 10px;
 
 .select-box ::ng-deep  .mat-mdc-form-field{
   height:45px!important;
-}
-
- .select-box ::ng-deep  .mat-mdc-text-field-wrapper, .mdc-text-field{
-  height:45px!important;
-}
-
-.select-box ::ng-deep .mat-mdc-input-element{
-  margin-top:19px;
 }
 
 ::ng-deep span{
@@ -82,4 +71,7 @@ border-radius: 10px;
 
 .select-only-box{
   margin-top:13%
+}
+::ng-deep  .mat-mdc-option {
+  border-bottom: 1px dotted lightgrey; /* light grey line */
 }

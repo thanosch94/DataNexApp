@@ -95,7 +95,7 @@
 }
 
 .name, .birthday, .occupation, .button-container, .username, .address, .postal-code, .country, .city, .phone1, .phone2, .social-container, .facebook-url, .instagram-url, .linkedIn-url{
-  margin-bottom: 2%;
+  margin-bottom: 4%;
 }
 
 .social-container{
@@ -288,3 +288,5 @@ cursor: pointer;
       font-weight: bold;
 
   }
+
+

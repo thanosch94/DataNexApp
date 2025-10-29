@@ -1,5 +1,5 @@
-<mat-form-field class="text-box" [class]="'width-' + width">
-  <mat-label>{{ label }}</mat-label>
+<mat-form-field class="text-box" [class]="'width-' + width" [appearance]="appearance()">
+  @if(label){<mat-label>{{ label }}</mat-label>}
   <div class="text-box-flex-row">
     <input
       #input

@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, forwardRef, Input, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, input, Input, Output } from '@angular/core';
 import { ReactiveFormsModule, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldAppearance, MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
@@ -26,6 +26,7 @@ import { MatInputModule } from '@angular/material/input';
     styleUrl: './dn-date-box.component.css'
 })
 export class DnDateBoxComponent {
+  appearance =input<MatFormFieldAppearance>("outline")
   @Input() label: string;
   @Input() readOnly: boolean;
   @Input() placeholder: string;

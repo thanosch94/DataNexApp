@@ -1,41 +1,40 @@
-<mat-form-field class="select-box" [class]="'width-' + width">
-  <mat-label>{{ label }}</mat-label>
+<mat-form-field class="select-box" [class]="'width-' + width" [appearance]="appearance()">
+  @if(label){<mat-label>{{ label }}</mat-label>}
   @if(allowInput){
     <!-- AutoComplete -->
     <input
-
       matInput
       [type]="inputType"
       [placeholder]="placeholder"
       [name]="name"
-      [(ngModel)]="value"
+      [formControl]="myControl"
       [matAutocomplete]="auto"
       (click)="onInputClick(value)"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
-      [disabled]="disabled"
       (blur)="onInputBlur($event)"
+      (input)="onInput($event)"
+
     />}@else {
       <!-- Select -->
       <mat-select
       class="select-only-box"
       [placeholder]="placeholder"
-      [name]="name"
+      [formControl]="myControl"
+
       (selectionChange)="onValueChanged($event.value)"
       [panelWidth]="'auto'"
-      [(ngModel)]="value"
       (click)="onInputClick(value)"
       [compareWith]="compareFn"
       [ngClass]="useCustomValueTemplate?'transparent-text':''"
-      [disabled]="disabled"
       (blur)="onInputBlur($event)"
 
     >
     <mat-select-trigger>
-      {{ display(value)}}
+      {{ display(value())}}
     </mat-select-trigger>
       <ng-container *ngIf="isOptionsPanelEnabled">
         <mat-option
-          *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
+          *ngFor="let option of dataSource(); trackBy: optionsTrackBy.bind(this)"
           [value]="option"
         >
           <ng-container *ngIf="!optionsTemplate">{{
@@ -74,17 +73,17 @@
 
    <mat-autocomplete
       #matAutoComplete
+      autoActiveFirstOption
       #auto="matAutocomplete"
       (optionSelected)="onValueChanged($event.option.value)"
       [displayWith]="display.bind(this)"
       [panelWidth]="panelWidth"
 
-
     >
 
       <ng-container *ngIf="isOptionsPanelEnabled">
+        @for(option of filteredOptions|async; track option.Id){
         <mat-option
-          *ngFor="let option of dataSource; trackBy: optionsTrackBy.bind(this)"
           [value]="option"
         >
           <ng-container *ngIf="!optionsTemplate">{{
@@ -99,7 +98,7 @@
 
 
           </ng-container>
-        </mat-option>
+        </mat-option> }
       </ng-container>
 
     </mat-autocomplete>

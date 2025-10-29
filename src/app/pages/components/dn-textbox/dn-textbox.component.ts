@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   forwardRef,
+  input,
   Input,
   output,
   Output,
@@ -14,6 +15,7 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import {
+  MatFormFieldAppearance,
   MatFormFieldModule,
   MatSuffix,
 } from '@angular/material/form-field';
@@ -44,6 +46,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   styleUrl: './dn-textbox.component.css',
 })
 export class DnTextboxComponent implements ControlValueAccessor {
+  appearance =input<MatFormFieldAppearance>("outline")
   @Input() label: string;
   @Input() readOnly: boolean;
   @Input() placeholder: string;
