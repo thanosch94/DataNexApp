@@ -14,7 +14,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DnTextboxComponent } from '../../components/dn-textbox/dn-textbox.component';
 import { DocumentTypeDto } from '../../../dto/document-type.dto';
 import { Guid } from 'guid-typescript';
-import { DnCheckboxComponent } from '../../components/dn-checkbox/dn-checkbox.component';
 import { DnSelectboxComponent } from '../../components/dn-selectbox/dn-selectbox.component';
 import { DocTypeAffectBehaviorEnumList } from '../../../enumLists/doc-type-affect-behavior.enumList';
 import { DocumentTypeGroupEnumList } from '../../../enumLists/document-type-group.enumlist';
@@ -43,6 +42,9 @@ import { DocumentSeriesDto } from '../../../dto/configuration/document-series.dt
 import { selectDocumentSeriesByDocumetTypeId } from '../../../state/parameters/document-series/document-series.selectors';
 import { GetAllGeneralOptions } from '../../../state/parameters/general-options/general-options.actions';
 import { selectAllGeneralOptions } from '../../../state/parameters/general-options/general-options.selectors';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-document-type-edit',
@@ -50,9 +52,10 @@ import { selectAllGeneralOptions } from '../../../state/parameters/general-optio
     DnToolbarComponent,
     MatTabsModule,
     DnTextboxComponent,
-    DnCheckboxComponent,
     DnSelectboxComponent,
     DnGridComponent,
+    MatSlideToggleModule,
+    FormsModule,
     AsyncPipe,
   ],
   providers: [TabsService],
@@ -120,7 +123,7 @@ export class DocumentTypeEditComponent
       GetDocumentSeriesByDocumentTypeId.action({ id: this.documentTypeId })
     );
     this.documentTypeSeriesDataSource = this.store.select(
-      selectDocumentSeriesByDocumetTypeId(this.documentType.Id)
+      selectDocumentSeriesByDocumetTypeId(this.documentTypeId)
     );
   }
 
@@ -247,6 +250,7 @@ export class DocumentTypeEditComponent
           this.getData();
         },
         updateDocTypeFailure: (result) => {
+          debugger
           this.displayErrorAlert(result.error);
         },
         deleteDocTypeSuccess: () => {

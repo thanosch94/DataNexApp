@@ -30,10 +30,8 @@
     </div>
 
     <div class="active">
-      <dn-checkbox
-        [(value)]="documentType.IsActive"
-        label="Active"
-      ></dn-checkbox>
+     <mat-slide-toggle [(ngModel)]="documentType.IsActive" labelPosition="after">Active</mat-slide-toggle>
+
     </div>
 
     <div class="abbreviation-description">
@@ -68,7 +66,7 @@
 
     <div class="cancellation-doc-code">
       <dn-selectbox
-      [(value)]="documentType.CancellationDocumentId"
+      [(value)]="documentType.CancellationDocTypeId"
       [dataSource]="docTypesDataSource|async"
       valueExpr="Id"
       displayExpr="Name"
@@ -90,7 +88,7 @@
             [dataSource]="priceTypesDataSource"
             valueExpr="Id"
             displayExpr="Name"
-            [(value)]="documentType.UsesPrice"
+            [(value)]="documentType.UsesPrices"
             [width]="100"
           >
           </dn-selectbox>
@@ -134,20 +132,11 @@
         </div>
       }
         <div class="basic-info-tab-e">
-          <dn-checkbox
-          [(value)]="documentType.AutoIncrementCodeEnabled"
-          label="Uses Auto Increment Code"
-          >
+          <mat-slide-toggle [(ngModel)]="documentType.AutoIncrementCodeEnabled" labelPosition="after">Uses Auto Increment Code</mat-slide-toggle>
 
-          </dn-checkbox>
         </div>
         <div class="basic-info-tab-i">
-          <dn-checkbox
-          [(value)]="documentType.ChecksWareHouseStockOnLineAdded"
-          label="Checks Warehouse Stock"
-          >
-
-          </dn-checkbox>
+                    <mat-slide-toggle [(ngModel)]="documentType.ChecksWareHouseStockOnLineAdded" labelPosition="after">Checks Warehouse Stock</mat-slide-toggle>
         </div>
       </div>
     </mat-tab>

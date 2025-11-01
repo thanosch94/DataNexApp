@@ -25,7 +25,7 @@ import { AdditionalChargesListComponent } from './pages/configuration/additional
 import { DocumentTypesListComponent } from './pages/configuration/document-types-list/document-types-list.component';
 import { StatusesListComponent } from './pages/configuration/statuses-list/statuses-list.component';
 import { SupplierEditComponent } from './pages/purchasing/supplier-edit/supplier-edit.component';
-import { VatClassesComponent } from './pages/configuration/vat-classes/vat-classes.component';
+import { VatClassesListComponent } from './pages/configuration/vat-classes-list/vat-classes-list.component';
 import { CompaniesListComponent } from './pages/configuration/companies-list/companies-list.component';
 import { AccountsPayableComponent } from './pages/financial/accounts-payable/accounts-payable.component';
 import { AccountsReceivableComponent } from './pages/financial/accounts-receivable/accounts-receivable.component';
@@ -39,6 +39,8 @@ import { TaskListComponent } from './pages/task-list/task-list.component';
 import { AppPermissionsComponent } from './pages/administration/app-permissions/app-permissions.component';
 import { ConnectorDatasourcesListComponent } from './pages/configuration/connector-datasources-list/connector-datasources-list.component';
 import { CntorDatasourceEntitiesListComponent } from './pages/configuration/cntor-datasource-entities-list/cntor-datasource-entities-list.component';
+import { ShippingMethodsListComponent } from './pages/configuration/shipping-methods-list/shipping-methods-list.component';
+import { PaymentMethodsListComponent } from './pages/configuration/payment-methods-list/payment-methods-list.component';
 
 export const routes: Routes = [
   {
@@ -203,7 +205,17 @@ export const routes: Routes = [
   },
   {
     path:'vat-classes-list',
-    component:VatClassesComponent,
+    component:VatClassesListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'shipping-methods-list',
+    component:ShippingMethodsListComponent,
+    canActivate:[authGuard]
+  },
+  {
+    path:'payment-methods-list',
+    component:PaymentMethodsListComponent,
     canActivate:[authGuard]
   },
   {

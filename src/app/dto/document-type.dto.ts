@@ -1,7 +1,8 @@
 import { Guid } from "guid-typescript";
 import { DocumentTypeGroupEnum } from "../enums/document-type-group.enum";
 import { DocTypeAffectBehaviorEnum } from "../enums/doc-type-affect-behavior.enum";
-import { PriceTypeEnum } from "../enums/price-type.enum";
+import { PriceTypesEnum } from "../enums/price-type.enum";
+import { DocumentSeriesDto } from "./configuration/document-series.dto";
 
 export class DocumentTypeDto {
   Id:Guid;
@@ -14,9 +15,10 @@ export class DocumentTypeDto {
   IsActive:boolean;
   PersonBalanceAffectBehavior:DocTypeAffectBehaviorEnum;
   WareHouseAffectBehavior:DocTypeAffectBehaviorEnum;
-  UsesPrice: PriceTypeEnum;
-  CancellationDocumentId: Guid;
+  UsesPrices: PriceTypesEnum;
+  CancellationDocTypeId: Guid;
   AutoIncrementCodeEnabled: boolean;
   ChecksWareHouseStockOnLineAdded: boolean;
   LotAffectBehavior: DocTypeAffectBehaviorEnum;
+  DocumentSeries:DocumentSeriesDto[]
 }

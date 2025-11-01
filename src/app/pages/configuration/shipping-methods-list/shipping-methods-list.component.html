@@ -1,0 +1,23 @@
+<dn-toolbar
+  [canInsert]="true"
+  [canRefresh]="true"
+  [isDialog]="false"
+  [canExit]="isInPopup"
+  [title]="shipping_methods_list_title_text"
+  (onCloseBtnClicked)="onClose()"
+  (onInsertBtnClicked)="onInsertClicked($event)"
+  (onRefreshBtnClicked)="onRefreshClicked($event)"
+></dn-toolbar>
+<div class="margin">
+  <dn-grid
+    #shippingMethodsGrid
+    [dataSource]="dataSource | async"
+    [columns]="columns"
+    [canDisplaySearch]="true"
+    [enableAddButton]="false"
+    (onRowSaving)="onSaving($event)"
+    (onRowDelete)="onDelete($event)"
+    (onRowStopEditing)="onStopEditing($event)"
+  >
+  </dn-grid>
+</div>

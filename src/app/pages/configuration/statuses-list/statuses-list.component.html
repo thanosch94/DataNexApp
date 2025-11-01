@@ -3,7 +3,9 @@
 [canRefresh]="true"
 [canInsert]="true"
 [isDialog]="false"
+[canExit]="isInPopup"
 [title]="statuses_list_text"
+(onCloseBtnClicked)="onClose()"
 (onInsertBtnClicked)="onInsertClicked($event)"
 (onRefreshBtnClicked)="onRefreshBtnClicked($event)"
 ></dn-toolbar>

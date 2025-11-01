@@ -3,6 +3,7 @@
   [canRefresh]="documentId ? true : false"
   [canExit]="true"
   [canSave]="true"
+  [canTransform]="documentId ? true : false"
   [canPrint]="documentId ? true : false"
   [isDialog]="false"
   [title]="document_text"
@@ -12,6 +13,7 @@
   (onSaveBtnClicked)="onSaveClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
   (onPrintBtnClicked)="onPrintClicked($event)"
+  (onTransformedBtnClicked)="onTransformClicked($event)"
 ></dn-toolbar>
 @if(document && columns){
 <form class="form">
@@ -19,79 +21,92 @@
     <mat-tab label="Basic Info">
       <div class="tab-1">
         <div class="tab1-grid">
-          <div class="grid-a-doctype-series">
+          <div class="tab1-grid-a">
             <dn-selectbox
               class="doc-type"
+              [(value)]="document.DocumentTypeId"
               [dataSource]="docTypes$ | async"
               valueExpr="Id"
               displayExpr="Abbreviation"
-              label="Doc. Type"
+              label="Doc. Type*"
+              name="Doc. Type*"
               [width]="45"
-              [(value)]="document.DocumentTypeId"
+              (selectionChange)="onDocTypeChange($event)"
             >
             </dn-selectbox>
 
             <dn-selectbox
-              class="doc-series"
-              [dataSource]="docTypes$ |async "
+              [dataSource]="docTypeSeries$ | async"
               valueExpr="Id"
-              displayExpr="Abbreviation"
-              label="Doc. Series"
+              displayExpr="Prefix"
+              label="Doc. Series*"
               [width]="45"
-              [(value)]="document.DocumentTypeId"
+              [(value)]="document.DocumentSeriesId"
+              (selectionChange)="onDocSeriesChange($event)"
             >
             </dn-selectbox>
           </div>
+          <dn-textbox
+            class="tab1-grid-b"
+            name="document-code"
+            [(value)]="document.DocumentCode"
+            label="Code"
+            [width]="100"
+            [disabled]="docTypeSettings.AutoIncrementCodeEnabled"
+          >
+          </dn-textbox>
+
           <dn-date-box
-            class="grid-b-docdate"
+            class="tab1-grid-c"
             name="DocumentDateTime"
             [(value)]="document.DocumentDateTime"
-            label="Date"
+            label="Date*"
             [width]="100"
           >
           </dn-date-box>
+          <dn-selectbox
+            class="tab1-grid-d"
+            name="warehouse"
+            [dataSource]="warehouses$ | async"
+            valueExpr="Id"
+            displayExpr="Name"
+            [(value)]="document.WarehouseId"
+            label="Warehouse*"
+            [width]="100"
+          >
+          </dn-selectbox>
 
           @if(this.documentGroup == 1){
           <dn-selectbox
-            class="grid-c-customer-supplier"
+            class="tab1-grid-e"
             [width]="100"
-            label="Customer"
+            label="Customer*"
             name="Customer"
             placeholder="Select a Customer"
             [(value)]="document.CustomerId"
             [dataSource]="customers | async"
             valueExpr="Id"
             displayExpr="Name"
+            [icon]="'add_circle'"
+            (onIconClicked)="onFieldAddIconClicked($event,'customers')"
+            (selectionChange)="onCustomerChange($event)"
           ></dn-selectbox>
           } @if(this.documentGroup == 2){
           <dn-selectbox
-            class="grid-c-customer-supplier"
+            class="tab1-grid-e"
             [width]="100"
-            label="Supplier"
+            label="Supplier*"
             name="Supplier"
             placeholder="Select a Supplier"
             [(value)]="document.SupplierId"
-            [dataSource]="suppliers"
+            [dataSource]="suppliers$|async"
             (valueChange)="onSupplierValueChange($event)"
             valueExpr="Id"
             displayExpr="Name"
           ></dn-selectbox>
           }
-
-          <dn-selectbox
-          class="grid-d-warehouse"
-          name="warehouse"
-          [dataSource]="warehouses$ |async"
-          valueExpr="Id"
-          displayExpr="Name"
-          [(value)]="document.WarehouseId"
-          label="Warehouse"
-          [width]="100"
-        >
-          </dn-selectbox>
-
           <dn-textbox
-            class="grid-g-customerphone"
+            class="tab1-grid-f"
             name="phone"
             [(value)]="document.CustomerPhone1"
             label="Phone"
@@ -99,24 +114,54 @@
           >
           </dn-textbox>
           <dn-selectbox
-            class="grid-e-vatClasses"
+            class="tab1-grid-l"
+            [dataSource]="statusesList$ | async"
+            valueExpr="Id"
+            displayExpr="Name"
+            label="Status*"
+            [width]="100"
+            [(value)]="document.DocumentStatusId"
+            [icon]="'add_circle'"
+            (onIconClicked)="onFieldAddIconClicked($event,'statuses')"
+
+          >
+          </dn-selectbox>
+          <dn-selectbox
+            class="tab1-grid-g"
+            [dataSource]="shippingMethods$|async"
+            valueExpr="Id"
+            displayExpr="Name"
+            label="Shipping Method"
+            [width]="100"
+            [(value)]="document.ShippingMethodId"
+            [icon]="'add_circle'"
+            (onIconClicked)="onFieldAddIconClicked($event,'shipping-methods')"
+          >
+          </dn-selectbox>
+          <dn-selectbox
+            class="tab1-grid-h"
+            [dataSource]="paymentMethods$|async"
+            valueExpr="Id"
+            displayExpr="Name"
+            label="Payment Method"
+            [width]="100"
+            [(value)]="document.PaymentMethodId"
+            [icon]="'add_circle'"
+            (onIconClicked)="onFieldAddIconClicked($event,'payment-methods')"
+
+          >
+          </dn-selectbox>
+          <dn-selectbox
+            class="tab1-grid-j"
             [dataSource]="vatClassesList"
             valueExpr="Id"
             displayExpr="Name"
             label="Vat Class"
             [width]="100"
             [(value)]="document.VatClassId"
+            [icon]="'add_circle'"
+            (onIconClicked)="onFieldAddIconClicked($event,'vat-classes')"
             (selectionChange)="onVatClassSelectionChanged($event)"
-          >
-          </dn-selectbox>
-          <dn-selectbox
-            class="grid-f-docstatus"
-            [dataSource]="statusesList$|async"
-            valueExpr="Id"
-            displayExpr="Name"
-            label="Status"
-            [width]="100"
-            [(value)]="document.DocumentStatusId"
           >
           </dn-selectbox>
         </div>
@@ -333,7 +378,8 @@
 <div class="margin">
   <div>
     @if(productsDataSource && columns){
-    <dn-grid class="products-grid"
+    <dn-grid
+      class="products-grid"
       #productstable
       tableHeaderBackgroundColor="#0B6AA5"
       tableHeaderFontColor="white"
@@ -373,10 +419,93 @@
         </button>
       </mat-form-field>
       <b class="total-title">Total</b>
-      <mat-form-field appearance="outline" style="width: 120px; height: 50px">
-        <input matInput [readonly]="true" [(ngModel)]="document.DocumentTotal" />
-      </mat-form-field>
+      <dn-number-box
+        [width]="10"
+        [readOnly]="true"
+        [(value)]="document.DocumentTotal"
+      ></dn-number-box>
     </div>
   </div>
 </div>
+}
+
+<dn-popup
+  *ngIf="isTransformPreparePopupVisible"
+  [isPopupVisible]="isTransformPreparePopupVisible"
+  [hideOnOutsideClick]="true"
+  (onHiding)="onTransformPrepareHiding($event)"
+  width="450px"
+  height="350px"
+  ><dn-toolbar
+    [canExit]="true"
+    [isDialog]="false"
+    (onCloseBtnClicked)="onTransformPrepareHiding($event)"
+  ></dn-toolbar>
+  <div class="transform-prepare-popup">
+    <div class="mb-5 flex">
+      <div>
+        <button class="button" mat-button>
+          <mat-icon class="transorm-prepare-icon">compare_arrows</mat-icon>
+        </button>
+      </div>
+      <div>
+        <p>
+          {{ document.DocumentCode }} -
+          {{ document.DocumentDateTime | date : "dd/MM/yyyy" }}
+        </p>
+        <p>{{ document.CustomerName }}</p>
+      </div>
+    </div>
+    <div class="tranform-fields-container">
+      <div class="mb-5">
+        <dn-selectbox
+          [dataSource]="docTypeSeries$ | async"
+          valueExpr="Id"
+          displayExpr="Abbreviation"
+          label="Doc. Series"
+          [disabled]="true"
+          [(value)]="document.DocumentSeriesId"
+        >
+        </dn-selectbox>
+      </div>
+      <div class="mb-5">
+        <p>
+          Select the document series you want the selected document to be
+          transformed into:
+        </p>
+      </div>
+      <div>
+        <dn-selectbox
+          [dataSource]="docTypeSeries$ | async"
+          valueExpr="Id"
+          displayExpr="Abbreviation"
+          label="Doc. Series"
+          [(value)]="document.DocumentSeriesId"
+        >
+        </dn-selectbox>
+      </div>
+    </div>
+    <div class="transform-proceed-btn">
+      <button mat-button color="primary">Proceed</button>
+    </div>
+  </div>
+</dn-popup>
+
+
+
+@if(isAddEntityPopupVisible){
+  <dn-popup
+  [isPopupVisible]="isAddEntityPopupVisible"
+  [isFullScreen]="true"
+  [hideOnOutsideClick]="true"
+  (onHiding)="onAddEntityPopupHiding($event)"
+  >
+  <ng-container [ngSwitch]="activeAddEntity">
+    <shipping-methods-list  [isInPopup]="true" *ngSwitchCase="'shipping-methods'" (close)="onAddEntityPopupHiding($event)"></shipping-methods-list>
+    <payment-methods-list  [isInPopup]="true" *ngSwitchCase="'payment-methods'" (close)="onAddEntityPopupHiding($event)"></payment-methods-list>
+    <vat-classes-list  [isInPopup]="true" *ngSwitchCase="'vat-classes'" (close)="onAddEntityPopupHiding($event)"></vat-classes-list>
+    <statuses-list [statusType]="1" [isInPopup]="true" *ngSwitchCase="'statuses'" (close)="onAddEntityPopupHiding($event)"></statuses-list>
+    <app-customer-edit [isInPopup]="true" *ngSwitchCase="'customers'" (close)="onAddEntityPopupHiding($event)"></app-customer-edit>
+  </ng-container>
+</dn-popup>
 }

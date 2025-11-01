@@ -30,8 +30,8 @@ export class ColumnsService {
 
   constructor(private store: Store) {
     this.columns = [
-      { Name: GridColumns.DocumentTypes, Columns: this.getDocumentTypeSeriesColumns },
-      { Name: GridColumns.DocumentSeries, Columns: this.getDocumentTypesColumns },
+      { Name: GridColumns.DocumentTypes, Columns: this.getDocumentTypesColumns },
+      { Name: GridColumns.DocumentSeries, Columns: this.getDocumentTypeSeriesColumns  },
       { Name: GridColumns.AdditionalCharges, Columns: this.getAdditionalChargesColumns },
       { Name: GridColumns.Brands, Columns: this.getBrandsColumns },
       { Name: GridColumns.CntorDatasourceEntities, Columns:this.getCntorDatasourceEntitiesColumns},
@@ -54,6 +54,8 @@ export class ColumnsService {
       { Name: GridColumns.AccountsReceivable, Columns:this.getAccountsReceivablesColumns},
       { Name: GridColumns.CustomersLedger, Columns:this.getCustomersLedgerColumns},
       { Name: GridColumns.ProductSizesList, Columns:this.getProductSizesListColumns},
+      { Name: GridColumns.ShippingMethodsList, Columns:this.getShippingMethodsListColumns},
+      { Name: GridColumns.PaymentMethodsList, Columns:this.getPaymentMethodsListColumns},
     ];
   }
 
@@ -1146,6 +1148,76 @@ export class ColumnsService {
         DataField: 'Abbreviation',
         DataType: 'string',
         Caption: 'Abbreviation',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
+
+  private getShippingMethodsListColumns  = (): DnColumnDto[] =>[
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+        ReadOnly:true
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'Notes',
+        DataType: 'string',
+        Caption: 'Notes',
+      },
+      {
+        DataField: 'IsActive',
+        DataType: 'boolean',
+        Caption: 'Active',
+      },
+      {
+        DataField: 'buttons',
+        DataType: 'buttons',
+        Caption: '',
+      },
+    ];
+
+  private getPaymentMethodsListColumns  = (): DnColumnDto[] =>[
+      {
+        DataField: 'Id',
+        DataType: 'string',
+        Caption: 'Id',
+        Visible: false,
+      },
+      {
+        DataField: 'Code',
+        DataType: 'string',
+        Caption: 'Code',
+        ReadOnly:true
+      },
+      {
+        DataField: 'Name',
+        DataType: 'string',
+        Caption: 'Name',
+      },
+      {
+        DataField: 'Notes',
+        DataType: 'string',
+        Caption: 'Notes',
+      },
+      {
+        DataField: 'IsActive',
+        DataType: 'boolean',
+        Caption: 'Active',
       },
       {
         DataField: 'buttons',

@@ -29,7 +29,7 @@ export class DocumentsViewModel {
   }
 
   public GetById(id: Guid) {
-    return this.http.get(this.service + 'Documents/getbyid/' + id, {
+    return this.http.get<DocumentDto>(this.service + 'Documents/getbyid/' + id, {
       headers: this.headers,
     });
   }

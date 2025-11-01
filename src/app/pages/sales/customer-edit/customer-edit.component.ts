@@ -1,5 +1,5 @@
 import { dnIcons } from './../../../enumLists/dn-icon.list';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, output, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -101,6 +101,8 @@ export class CustomerEditComponent
   vatClassesDataSource: Observable<VatClassDto[]>;
   private destroy$ = new Subject<void>();
   customerAddresses: CustomerAddressDto[];
+  @Input() isInPopup:boolean;
+  close= output()
 
   constructor(
     private router: Router,
@@ -186,8 +188,12 @@ export class CustomerEditComponent
   }
 
   onCloseClicked(e: any) {
+    if(this.isInPopup){
+      this.close.emit();
+    }else{
     this.router.navigate(['customers-list']);
     this.tabsService.setActiveTabPreviousName();
+    }
   }
 
   onSaveClicked(e: any) {

@@ -1,8 +1,10 @@
 <dn-toolbar
   [canInsert]="true"
   [canRefresh]="true"
+  [canExit]="isInPopup"
   [isDialog]="false"
   [title]="vat_classes_list_title_text"
+  (onCloseBtnClicked)="onClose()"
   (onInsertBtnClicked)="onInsertClicked($event)"
   (onRefreshBtnClicked)="onRefreshClicked($event)"
 ></dn-toolbar>

@@ -310,6 +310,16 @@ export class Navigation {
           Path: 'vat-classes-list',
         },
         {
+          Id: Guid.parse('85cb30ef-ac61-432b-b82b-4191f9bb9b5c'),
+          Name: 'Shipping Methods',
+          Path: 'shipping-methods-list',
+        },
+        {
+          Id: Guid.parse('a6b8b44a-b03b-4864-89d4-6efc85466ee3'),
+          Name: 'Payement Methods',
+          Path: 'payment-methods-list',
+        },
+        {
           Id: Guid.parse('3ae1d555-105e-4cd6-8a40-d1b0a5a46481'),
           Name: 'Connector Datasources',
           Path: 'connector-datasources-list',

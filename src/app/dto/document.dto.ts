@@ -1,4 +1,5 @@
 import { Guid } from "guid-typescript";
+import { DocumentProductDto } from "./document-product.dto";
 
 export class DocumentDto {
   Id:Guid;
@@ -34,8 +35,12 @@ export class DocumentDto {
   UserDate3?:Date;
   UserDate4?:Date;
 DocumentStatusName: any;
-  DocumentCode: string;
+  DocumentCode: string|undefined;
 SupplierId?: Guid;
 WarehouseId: Guid;
 VatClassId: Guid;
+DocumentSeriesId: Guid|undefined
+ShippingMethodId: Guid;
+PaymentMethodId: Guid;
+DocumentProducts:DocumentProductDto[]
 }

@@ -1,9 +1,13 @@
 import {
   Component,
   Inject,
+  Input,
+  input,
   OnDestroy,
   OnInit,
   Optional,
+  output,
+  Output,
   ViewChild,
 } from '@angular/core';
 import { StatusDto } from '../../../dto/status.dto';
@@ -28,9 +32,10 @@ import { AppTabDto } from '../../../dto/app-tab.dto';
 import { ColumnsService } from '../../../services/columns.service';
 import { GridColumns } from '../../../base/grid-columns';
 import { Subject } from 'rxjs';
+import { StatusTypeEnum } from '../../../enums/status-type.enum';
 
 @Component({
-  selector: 'app-statuses-list',
+  selector: 'statuses-list',
   imports: [DnToolbarComponent, DnGridComponent, AsyncPipe],
   templateUrl: './statuses-list.component.html',
   styleUrl: './statuses-list.component.css',
@@ -45,7 +50,9 @@ export class StatusesListComponent
   columns: any[];
   dataSource: any;
   statuses_list_text: string;
-  private statusType: any;
+  @Input() statusType: StatusTypeEnum;
+  @Input() isInPopup: boolean;
+  close = output();
   private destroy$ = new Subject<void>();
 
   constructor(
@@ -54,7 +61,7 @@ export class StatusesListComponent
   ) {
     super();
     this.statuses_list_text = 'Document Statuses List';
-    this.statusType = tab.Params['StatusType']!;
+    this.statusType =  tab?.Params?.['StatusType'] ?? this.statusType;
   }
 
   ngOnInit() {
@@ -64,6 +71,7 @@ export class StatusesListComponent
   }
 
   getData() {
+    debugger;
     this.store.dispatch(
       GetAllStatusesByStatusType({ statusType: this.statusType })
     );
@@ -100,6 +108,12 @@ export class StatusesListComponent
 
   onRefreshBtnClicked(e: any) {
     this.getData();
+  }
+
+  onClose() {
+    if (this.isInPopup) {
+      this.close.emit();
+    }
   }
 
   //#region Actions Results

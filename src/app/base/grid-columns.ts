@@ -1,4 +1,5 @@
 export class GridColumns {
+
   static DocumentSeries = 'DocumentSeries';
   static DocumentTypes = 'DocumentTypes';
   static AdditionalCharges = 'AdditionalCharges';
@@ -23,4 +24,6 @@ export class GridColumns {
   static AccountsReceivable = "AccountsReceivable";
   static CustomersLedger = "CustomersLedger";
   static ProductSizesList = "ProductSizesList";
+  static ShippingMethodsList = "ShippingMethodsList";
+  static PaymentMethodsList = "PaymentsMethodsList"
 }

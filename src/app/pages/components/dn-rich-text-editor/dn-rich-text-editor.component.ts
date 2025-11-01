@@ -2,6 +2,8 @@
  * Rich Text Editor Overview Sample
  */
 import {
+  AfterContentChecked,
+  AfterViewChecked,
   Component,
   forwardRef,
   ViewChild,
@@ -87,7 +89,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
   standalone: true,
   imports: [RichTextEditorModule, MentionModule, NgStyle],
 })
-export class DnRichTextEditorComponent {
+export class DnRichTextEditorComponent implements AfterViewChecked {
   @ViewChild('toolsRTE')
   public rteObj: RichTextEditorComponent;
 
@@ -236,6 +238,11 @@ export class DnRichTextEditorComponent {
   };
   public codeMirror: any;
   value: string;
+
+
+  ngAfterViewChecked(): void {
+  this.rteObj.refreshUI();
+  }
 
   public mirrorConversion(e?: any): void {
     const id: string = this.rteObj.getID() + 'mirror-view';

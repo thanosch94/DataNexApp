@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { VatClassesComponent } from './vat-classes.component';
+import { VatClassesListComponent } from './vat-classes-list.component';
 
 describe('VatClassesComponent', () => {
-  let component: VatClassesComponent;
-  let fixture: ComponentFixture<VatClassesComponent>;
+  let component: VatClassesListComponent;
+  let fixture: ComponentFixture<VatClassesListComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [VatClassesComponent]
+      imports: [VatClassesListComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(VatClassesComponent);
+
+    fixture = TestBed.createComponent(VatClassesListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

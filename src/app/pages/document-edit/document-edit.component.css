@@ -3,7 +3,7 @@
   width:100%;
 }
 
-.flexbox{
+.flex{
   display:flex;
 }
 
@@ -46,6 +46,7 @@
 ::ng-deep .products-table .mat-mdc-header-row{
   height: 50px!important;
 }
+
 
 ::ng-deep .input-position{
   position: relative;
@@ -98,13 +99,6 @@ border-right: 0px!important; }
   background:  #f3f3f3!important;
 }
 
-mat-form-field{
-  height:95%;
-}
-
-::ng-deep .products-table mat-form-field{
-  height:50px!important;
-}
 
 .tab-1, .tab-2, .tab-3,.tab-4, .tab-5{
   margin-top: 1%;
@@ -119,49 +113,65 @@ mat-form-field{
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
-.grid-a-doctype-series{
+.tab1-grid-a{
   grid-area: a;
   gap:1rem;
   width:99%;
 }
-.grid-d-warehouse{
-  grid-area: d;
-  gap:1rem;
-}
 
-.doc-type{
-  margin-right:5% ;
-}
-
-
-.grid-b-docdate{
+.tab1-grid-b{
   grid-area: b;
   gap:2rem;
   width:90%;
 }
 
-.grid-g-customerphone{
-  grid-area: g;
-  width:90%;
-  gap:2rem;
-}
-
-.grid-c-customer-supplier{
+.tab1-grid-c{
   grid-area: c;
   gap:2rem;
-  width:90%;
+  width:95%;
 }
 
+.tab1-grid-d{
+  grid-area: d;
+  gap:1rem;
+}
 
-.grid-f-docstatus{
+.tab1-grid-e{
+  grid-area: e;
+  gap:2rem;
+  width:95%;
+}
+
+.tab1-grid-f{
   grid-area: f;
   gap:2rem;
   width:90%;
 }
-.grid-e-vatClasses{
-  grid-area: e;
-  gap:2rem;
+
+.tab1-grid-g{
+  grid-area: g;
   width:95%;
+  gap:2rem;
+}
+.tab1-grid-h{
+  grid-area: h;
+  gap:2rem;
+}
+
+.tab1-grid-j{
+  grid-area: j;
+  width:95%;
+  gap:2rem;
+}
+
+.tab1-grid-l{
+  grid-area: l;
+  width:95%;
+  gap:2rem;
+}
+
+.doc-type{
+  margin-right:5% ;
 }
 
 .notes{
@@ -227,7 +237,6 @@ width: 100%;
   "e f g h"
   "i j k l";
   grid-template-columns: 1fr 1fr 1fr 1fr;
-  gap:2 rem;
 }
 
 .tab4-grid-a-user-text1{
@@ -315,10 +324,6 @@ width: 100%;
   margin-right: 5%;
 }
 
-::ng-deep .mdc-notched-outline{
-  height: 50px !important;;
-}
-
 .addcharges-title, .total-title{
   margin-right: 2%;
 }
@@ -350,14 +355,7 @@ width: 100%;
 .add-charges-btn{
   margin-bottom:20%
 }
-::ng-deep .mat-icon-button, .mat-mdc-icon-button.mat-mdc-button-base {
-  padding: 0!important;
-  }
 
-::ng-deep .mat-mdc-icon-button{
-  width:35px !important;
-  height:35px!important;
-}
 .add-charges-btn{
   display: flex;
   align-items: center;
@@ -370,10 +368,26 @@ width: 100%;
 }
 
 dn-textbox, dn-number-box, dn-date-box{
-  margin-bottom: 4%;
-
+  margin-bottom: 7%;
 }
 
 .products-grid ::ng-deep .table-container{
   border-radius: 7px;
+}
+
+.transform-prepare-popup{
+  margin:5%;
+}
+
+.mb-5{
+  margin-bottom: 5%;
+}
+
+.transform-proceed-btn{
+  position:absolute;
+  bottom: 10px;
+  right:17px;
+}
+.transorm-prepare-icon{
+  font-size: 20px;
 }

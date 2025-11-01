@@ -24,7 +24,7 @@ export const documentSeriesReducer = createReducer(
 
   //GetAll
   on(GetDocumentSeriesByDocumentTypeId.action, (state) => ({ ...state })),
-  on(GetDocumentSeriesByDocumentTypeId.actionSuccess, (state, { data }) => ({ ...state, data, error:null })),
+  on(GetDocumentSeriesByDocumentTypeId.actionSuccess, (state, { data }) => ({ ...state, data:[...data], error:null })),
   on(GetDocumentSeriesByDocumentTypeId.actionFailure, (state, { error }) => ({ ...state, error })),
 
   //GetLookup

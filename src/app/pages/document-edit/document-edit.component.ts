@@ -22,21 +22,15 @@ import {
   ViewChildren,
   ViewContainerRef,
 } from '@angular/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { DocumentDto } from '../../dto/document.dto';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import {
   MAT_DATE_LOCALE,
   provideNativeDateAdapter,
 } from '@angular/material/core';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
 import { MatButtonModule } from '@angular/material/button';
 import { DocumentProductDto } from '../../dto/document-product.dto';
 import { DocumentProductsViewModel } from '../../view-models/document-products.viewmodel';
@@ -82,8 +76,8 @@ import {
   selectVatClassById,
 } from '../../state/parameters/vat-classes/vat-classes.selectors';
 import { DnFileUploaderComponent } from '../components/dn-file-uploader/dn-file-uploader.component';
-import { GetAllCustomers } from '../../state/parameters/customers/customers.actions';
-import { selectAllCustomers } from '../../state/parameters/customers/customers.selectors';
+import { GetAllCustomers, GetCustomerById } from '../../state/parameters/customers/customers.actions';
+import { selectAllCustomers, selectCustomerById } from '../../state/parameters/customers/customers.selectors';
 import { GetAllWarehouses } from '../../state/parameters/warehouses/warehouses.actions';
 import { BaseComponent } from '../components/base/base.component';
 import {
@@ -101,7 +95,11 @@ import {
   documentEditComponentId,
   DocumentEditPermissionsList,
 } from './document-edit-permissions';
-import { selectActiveDocumentTypesLookupByDocumentTypeGroup } from '../../state/parameters/document-types/document-types.selectors';
+import {
+  selectActiveDocumentTypesLookupByDocumentTypeGroup,
+  selectDocTypeById,
+  selectDocTypeSeriesByDocTypeId,
+} from '../../state/parameters/document-types/document-types.selectors';
 import { GetDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.actions';
 import { selectDocumentAdditionalChargesByDocumentId } from '../../state/document-additional-charges/document-additional-charges.selectors';
 import { GetAllLotSettings } from '../../state/parameters/lot-settings/lot-settings.actions';
@@ -109,6 +107,25 @@ import { selectAllLotSettings } from '../../state/parameters/lot-settings/lot-se
 import { GetAllProductSizes } from '../../state/parameters/product-sizes/product-sizes.actions';
 import { selectAllProductSizes } from '../../state/parameters/product-sizes/product-sizes.selectors';
 import { ProductSizeDto } from '../../dto/product-size.dto';
+import { DocumentSeriesDto } from '../../dto/configuration/document-series.dto';
+import { DnPopupComponent } from '../components/dn-popup/dn-popup.component';
+import { selectDocumentSeriesById } from '../../state/parameters/document-series/document-series.selectors';
+import {
+  GetDocumentSeriesByDocumentTypeId,
+  GetDocumentSeriesById,
+} from '../../state/parameters/document-series/document-series.actions';
+import { CustomerDto } from '../../dto/customer.dto';
+import { GetAllPaymentMethods } from '../../state/parameters/payment-methods/payment-methods.actions';
+import { selectAllPaymentMethods } from '../../state/parameters/payment-methods/payment-methods.selectors';
+import { PaymentMethodDto } from '../../dto/payment-method.dto';
+import { ShippingMethodDto } from '../../dto/shipping-method.dto';
+import { GetAllShippingMethods } from '../../state/parameters/shipping-methods/shipping-methods.actions';
+import { selectAllShippingMethods } from '../../state/parameters/shipping-methods/shipping-methods.selectors';
+import { ShippingMethodsListComponent } from '../configuration/shipping-methods-list/shipping-methods-list.component';
+import { PaymentMethodsListComponent } from '../configuration/payment-methods-list/payment-methods-list.component';
+import { StatusesListComponent } from '../configuration/statuses-list/statuses-list.component';
+import { VatClassesListComponent } from '../configuration/vat-classes-list/vat-classes-list.component';
+import { CustomerEditComponent } from "../sales/customer-edit/customer-edit.component";
 
 @Component({
   selector: 'app-document-edit',
@@ -116,19 +133,12 @@ import { ProductSizeDto } from '../../dto/product-size.dto';
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
     ReactiveFormsModule,
-    MatToolbarModule,
     MatIconModule,
     CommonModule,
-    MatSelectModule,
-    MatDatepickerModule,
-    MatPaginatorModule,
-    MatTableModule,
     MatButtonModule,
     MatTabsModule,
     DnToolbarComponent,
-    MatDialogModule,
     MatTooltipModule,
     DnGridComponent,
     DnSelectboxComponent,
@@ -136,7 +146,14 @@ import { ProductSizeDto } from '../../dto/product-size.dto';
     DnNumberBoxComponent,
     DnDateBoxComponent,
     DnFileUploaderComponent,
-  ],
+    MatDialogModule,
+    DnPopupComponent,
+    ShippingMethodsListComponent,
+    PaymentMethodsListComponent,
+    StatusesListComponent,
+    VatClassesListComponent,
+    CustomerEditComponent
+],
   providers: [
     provideNativeDateAdapter(),
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
@@ -168,12 +185,14 @@ export class DocumentEditComponent
   previousTabName: string;
   document_must_be_saved_in_order_to_add_charges_text: string;
   suppliersViewModel: SuppliersViewModel;
-  suppliers: any;
+  suppliers$: any;
   columns: DnColumnDto[] = [];
   productSizes$: Observable<ProductSizeDto[]>;
   skuSelected: boolean;
 
-  customers: any;
+  customers: Observable<CustomerDto[]>;
+  activeAddEntity: "shipping-methods"|"payment-methods"|"customers"|"statuses"|"vat-classes";
+
   document_text: string;
   customerPhone: number;
   vatNumber: number;
@@ -197,6 +216,12 @@ export class DocumentEditComponent
   warehouses$: Observable<any>;
   vatClassesList: any;
   vatClassRate: any;
+  docTypeSeries$: Observable<DocumentSeriesDto[] | undefined>;
+  paymentMethods$: Observable<PaymentMethodDto[]>;
+  shippingMethods$: Observable<ShippingMethodDto[]>;
+  isTransformPreparePopupVisible: boolean = false;
+  docTypeSettings: DocumentTypeDto = new DocumentTypeDto();
+  isAddEntityPopupVisible:boolean = false
 
   constructor(
     private http: HttpClient,
@@ -224,15 +249,15 @@ export class DocumentEditComponent
     });
 
     this.pdfGeneratorComponent = new PdfGeneratorComponent();
+
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.getComponentPermissions(
       structuredClone(DocumentEditPermissionsList),
       documentEditComponentId
     ); //Deep clone array of objects
-
-    await this.getLookups();
+    this.getLookups();
     this.getColumns();
     this.getData();
 
@@ -259,7 +284,7 @@ export class DocumentEditComponent
     this.documentsViewModel = new DocumentsViewModel(this.http, this.auth);
   }
 
-  async getLookups() {
+  getLookups() {
     this.generalOptions = this.auth.appOptions ?? new GeneralOptionsDto();
     this.store.dispatch(GetAllLotSettings.action());
     this.store
@@ -275,8 +300,7 @@ export class DocumentEditComponent
 
     this.store.dispatch(GetAllCustomers.action());
     this.customers = this.store.select(selectAllCustomers);
-    let suppliersObs$ = this.suppliersViewModel.GetAll();
-    this.suppliers = await firstValueFrom(suppliersObs$);
+    this.suppliers$ = this.suppliersViewModel.GetAll();
 
     this.store.dispatch(GetAllVatClasses());
     this.store.select(selectAllVatClasses).subscribe((result: any) => {
@@ -287,22 +311,29 @@ export class DocumentEditComponent
     this.docTypes$ = this.store.select(
       selectActiveDocumentTypesLookupByDocumentTypeGroup(this.documentGroup)
     );
-    let productBarcodesObs = this.productBarcodesViewModel.GetLookup();
-    this.barcodesLookupDatasource = await firstValueFrom(productBarcodesObs);
+    this.productBarcodesViewModel.GetLookup().subscribe((result:any)=>{
+      this.barcodesLookupDatasource = result
+    });
 
     this.store.dispatch(GetAllStatuses());
     this.statusesList$ = this.store.select(selectAllStatuses);
 
     this.store.dispatch(GetAllProductSizes.action());
-    this.productSizes$ = this.store.select(selectAllProductSizes)
+    this.productSizes$ = this.store.select(selectAllProductSizes);
 
+    this.store.dispatch(GetAllPaymentMethods.action());
+    this.paymentMethods$ = this.store.select(selectAllPaymentMethods);
+
+    this.store.dispatch(GetAllShippingMethods.action());
+    this.shippingMethods$ = this.store.select(selectAllShippingMethods);
 
     this.store.dispatch(GetAllProducts.action());
     this.products$ = this.store.select(selectAllProducts);
 
     if (this.generalOptions.LotsEnabled) {
-      let lotsObs = this.lotsViewModel.GetLookup();
-      this.lotsDataSource = await firstValueFrom(lotsObs);
+      this.lotsViewModel.GetLookup().subscribe((result:any)=>{
+        this.lotsDataSource=result
+      });
     }
   }
 
@@ -338,10 +369,27 @@ export class DocumentEditComponent
   getDocumentData(documentId: Guid) {
     this.documentsViewModel.GetById(documentId).subscribe((result: any) => {
       this.document = result;
+      this.docTypeSeries$ = this.store.select(
+        selectDocTypeSeriesByDocTypeId(this.document.DocumentTypeId)
+      );
+      this.getAutoIncrementSettings(this.document.DocumentTypeId);
+
       this.ref.detectChanges();
-      this.document_text = this.document.DocumentCode;
+      this.document_text = this.document.DocumentCode!;
       this.tabsService.setTabName(this.document_text);
-      this.getDocumentProducts(documentId);
+      this.productsDataSource = result.DocumentProducts;
+      this.productsDataSource.forEach((product: any) => {
+        product.SerialNumber = this.productsDataSource.indexOf(product) + 1;
+      });
+      this.getColumns();
+      this.calculateDocumentTotal();
+      // this.getDocumentProducts(documentId);
+    });
+  }
+
+  getAutoIncrementSettings(docTypeId: Guid) {
+    this.store.select(selectDocTypeById(docTypeId)).subscribe((result: any) => {
+      this.docTypeSettings = result;
     });
   }
 
@@ -412,8 +460,8 @@ export class DocumentEditComponent
             .subscribe((result: any) => {
               this.document = result;
               this.previousTabName = this.document_text.toString();
-              this.document_text = this.document.DocumentCode;
-              this.tabsService.setActiveTabNameWithoutChangingPreviousName(
+              this.document_text = this.document.DocumentCode!;
+              this.tabsService.setActiveTabName(
                 this.document_text
               );
 
@@ -454,7 +502,7 @@ export class DocumentEditComponent
                           (x) => x.IsRowFilled == true
                         ).length
                       ) {
-                        this.document_text = this.document.DocumentCode;
+                        this.document_text = this.document.DocumentCode!;
                         this.ref.detectChanges();
 
                         this.displayNotification('Record inserted');
@@ -1105,4 +1153,63 @@ export class DocumentEditComponent
 
     this.productsDataSource = [...this.productsDataSource];
   }
+
+  onDocTypeChange(e: any) {
+    this.document.DocumentSeriesId = undefined;
+    this.document.DocumentCode = undefined;
+    this.store.dispatch(
+      GetDocumentSeriesByDocumentTypeId.action({ id: e.value })
+    );
+    this.docTypeSeries$ = this.store.select(
+      selectDocTypeSeriesByDocTypeId(e.value)
+    );
+    this.getAutoIncrementSettings(this.document.DocumentTypeId);
+  }
+
+  onTransformClicked(e: any) {
+    this.isTransformPreparePopupVisible = true;
+  }
+
+  onTransformPrepareHiding(e: any) {
+    this.isTransformPreparePopupVisible = false;
+  }
+
+  onDocSeriesChange(e: any) {
+    if (this.document.DocumentSeriesId) {
+      this.store.dispatch(
+        GetDocumentSeriesById.action({ id: this.document.DocumentSeriesId! })
+      );
+      this.store
+        .select(selectDocumentSeriesById(this.document.DocumentSeriesId))
+        .pipe(take(1))
+        .subscribe((result: any) => {
+          if (this.docTypeSettings.AutoIncrementCodeEnabled) {
+            this.document.DocumentCode =
+              result.Prefix +
+              (result.CurrentNumber + 1).toString().padStart(6, '0') +
+              result.Suffix;
+          } else {
+            this.document.DocumentCode = result.Prefix;
+          }
+        });
+    }
+  }
+
+  onCustomerChange(e:any){
+    this.store.dispatch(GetCustomerById.action({id:this.document.CustomerId}))
+    this.store.select(selectCustomerById(this.document.CustomerId)).pipe(take(1)).subscribe((result:any)=>{
+      this.document.CustomerPhone1 = result.Phone1
+      this.document.VatClassId = result.VatClassId
+    })
+  }
+
+  onAddEntityPopupHiding(e:any){
+    this.isAddEntityPopupVisible = false
+  }
+
+  onFieldAddIconClicked(e:any, entity:"shipping-methods"|"payment-methods"|"customers"|"statuses"|"vat-classes"){
+    this.activeAddEntity =  entity
+    this.isAddEntityPopupVisible = true
+  }
+
 }

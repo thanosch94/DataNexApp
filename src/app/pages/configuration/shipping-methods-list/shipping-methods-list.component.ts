@@ -1,49 +1,41 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, output, ViewChild } from '@angular/core';
 import { DnGridComponent } from '../../components/dn-grid/dn-grid.component';
 import { DnToolbarComponent } from '../../components/dn-toolbar/dn-toolbar.component';
 import { DnColumnDto } from '../../../dto/dn-column.dto';
-import { VatClassDto } from '../../../dto/vat-class.dto';
-import {
-  DeleteVatClassById,
-  DeleteVatClassByIdFailure,
-  DeleteVatClassByIdSuccess,
-  GetAllVatClasses,
-  InsertVatClassDto,
-  InsertVatClassDtoFailure,
-  InsertVatClassDtoSuccess,
-  UpdateVatClassDto,
-  UpdateVatClassDtoFailure,
-  UpdateVatClassDtoSuccess,
-} from '../../../state/parameters/vat-classes/vat-classes.actions';
-import { selectAllVatClasses } from '../../../state/parameters/vat-classes/vat-classes.selectors';
 import { AsyncPipe } from '@angular/common';
 import { Observable, Subject } from 'rxjs';
 import { BaseComponent } from '../../components/base/base.component';
 import { ColumnsService } from '../../../services/columns.service';
 import { GridColumns } from '../../../base/grid-columns';
+import { ShippingMethodDto } from '../../../dto/shipping-method.dto';
+import { DeleteShippingMethod, GetAllShippingMethods, InsertShippingMethod, UpdateShippingMethod } from '../../../state/parameters/shipping-methods/shipping-methods.actions';
+import { selectAllShippingMethods } from '../../../state/parameters/shipping-methods/shipping-methods.selectors';
 
 @Component({
-  selector: 'app-vat-classes',
+  selector: 'shipping-methods-list',
   imports: [DnGridComponent, DnToolbarComponent, AsyncPipe],
-  templateUrl: './vat-classes.component.html',
-  styleUrl: './vat-classes.component.css',
+  templateUrl: './shipping-methods-list.component.html',
+  styleUrls: ['./shipping-methods-list.component.css']
 })
-export class VatClassesComponent
+export class ShippingMethodsListComponent
   extends BaseComponent
   implements OnInit, OnDestroy
 {
-  @ViewChild('vatClassesGrid')
-  vatClassesGrid: DnGridComponent;
-  dataSource: Observable<VatClassDto[]>;
+  @ViewChild('shippingMethodsGrid')
+  shippingMethodsGrid: DnGridComponent;
+  dataSource: Observable<ShippingMethodDto[]>;
   columns: DnColumnDto[] = [];
-  vat_classes_list_title_text: string;
+  shipping_methods_list_title_text: string;
+  @Input() isInPopup:boolean;
+  close= output()
+
   private destroy$ = new Subject<void>();
 
   constructor(
     private columnsService: ColumnsService,
   ) {
     super();
-    this.vat_classes_list_title_text = 'Vat Classes List';
+    this.shipping_methods_list_title_text = 'Shipping Methods List';
   }
 
   ngOnInit() {
@@ -53,33 +45,33 @@ export class VatClassesComponent
   }
 
   getData() {
-    this.store.dispatch(GetAllVatClasses());
-    this.dataSource = this.store.select(selectAllVatClasses);
+    this.store.dispatch(GetAllShippingMethods.action());
+    this.dataSource = this.store.select(selectAllShippingMethods);
   }
 
   getColumns() {
-    this.columns = this.columnsService.getColumns(GridColumns.VatClasses);
+    this.columns = this.columnsService.getColumns(GridColumns.ShippingMethodsList);
   }
 
   onInsertClicked(e: any) {
-    this.vatClassesGrid.add(e);
+    this.shippingMethodsGrid.add(e);
   }
 
-  onVatClassSaving(data: VatClassDto) {
-    let dto: VatClassDto = { ...data };
+  onSaving(data: ShippingMethodDto) {
+    let dto: ShippingMethodDto = { ...data };
 
     if (!dto.Id) {
-      this.store.dispatch(InsertVatClassDto({ dto }));
+      this.store.dispatch(InsertShippingMethod.action({ dto }));
     } else {
-      this.store.dispatch(UpdateVatClassDto({ dto }));
+      this.store.dispatch(UpdateShippingMethod.action({ dto }));
     }
   }
 
-  onVatClassDelete(data: VatClassDto) {
-    this.store.dispatch(DeleteVatClassById({ id: data.Id }));
+  onDelete(data: ShippingMethodDto) {
+    this.store.dispatch(DeleteShippingMethod.action({ id: data.Id }));
   }
 
-  onVatClassStopEditing(e: any) {
+  onStopEditing(e: any) {
     this.getData();
   }
 
@@ -87,16 +79,21 @@ export class VatClassesComponent
     this.getData();
   }
 
+  onClose(){
+    if(this.isInPopup){
+      this.close.emit()
+    }
+  }
   //#region Actions Results
   setActionsResults() {
     this.setPostActionsResults(
       {
-        insertSuccess: InsertVatClassDtoSuccess,
-        insertFailure: InsertVatClassDtoFailure,
-        updateSuccess: UpdateVatClassDtoSuccess,
-        updateFailure: UpdateVatClassDtoFailure,
-        deleteSuccess: DeleteVatClassByIdSuccess,
-        deleteFailure: DeleteVatClassByIdFailure,
+        insertSuccess: InsertShippingMethod.actionSuccess,
+        insertFailure: InsertShippingMethod.actionFailure,
+        updateSuccess: UpdateShippingMethod.actionSuccess,
+        updateFailure: UpdateShippingMethod.actionFailure,
+        deleteSuccess: DeleteShippingMethod.actionSuccess,
+        deleteFailure: DeleteShippingMethod.actionFailure,
       },
       {
         insertSuccess: () => {

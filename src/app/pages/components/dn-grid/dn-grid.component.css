@@ -247,3 +247,8 @@ padding-bottom: 5px;
 .grid-paginator{
   border-radius: 10px;
 }
+
+/* Width is by default 100% but when 100% horizontal scrollbar is being displayed so we make it 95% */
+::ng-deep .mat-mdc-paginator-container{
+  width:95%!important;
+}
